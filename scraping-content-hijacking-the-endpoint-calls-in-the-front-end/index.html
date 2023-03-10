@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:description" content="">
+    <meta property="og:type" content="website">
+    <meta name="description" content="">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>
+        
+        Scraping content hijacking the endpoint calls in the front-end - Nacho Mascort&#39;s personal site
+        
+    </title>
+
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/aircloud.css">
+
+    
+<link rel="stylesheet" href="/css/gitment.css">
+
+    <!--<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">-->
+    <link href="//at.alicdn.com/t/font_620856_28hi1hpxx24.css" rel="stylesheet" type="text/css">
+    <!-- ga & ba script hoook -->
+    <script></script>
+
+    
+
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+
+<div class="site-nav-toggle" id="site-nav-toggle">
+    <button>
+        <span class="btn-bar"></span>
+        <span class="btn-bar"></span>
+        <span class="btn-bar"></span>
+    </button>
+</div>
+
+<div class="index-about">
+    <i> SEO + Development + Data Analysis + Product </i>
+</div>
+
+<div class="index-container">
+    
+    <div class="index-left">
+        
+<div class="nav" id="nav">
+    <div class="avatar-name">
+        <div class="avatar radius">
+            <img src="/./img/nacho.jpeg" />
+        </div>
+        <div class="name">
+            <i>Nacho Mascort</i>
+        </div>
+    </div>
+    <div class="contents" id="nav-content">
+        <ul>
+            <li >
+                <a href="/">
+                    <i class="iconfont icon-shouye1"></i>
+                    <span>HOME</span>
+                </a>
+            </li>
+            <li >
+                <a href="/tags/">
+                    <i class="iconfont icon-biaoqian1"></i>
+                    <span>TAGS</span>
+                </a>
+            </li>
+            <li >
+                <a href="/archives/">
+                    <i class="iconfont icon-guidang2"></i>
+                    <span>ARCHIVES</span>
+                </a>
+            </li>
+            
+            <li >
+                <a href="/about/">
+                    <i class="iconfont icon-guanyu2"></i>
+                    <span>ABOUT</span>
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+    
+        <div id="toc" class="toc-article">
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#How-can-scraping-be-done-without-needing-the-DOM"><span class="toc-text">How can scraping be done without needing the DOM?</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Identify-the-endpoint-calls"><span class="toc-text">Identify the endpoint calls</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Emulate-the-same-payload"><span class="toc-text">Emulate the same payload</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Fecth-in-local-with-cURL"><span class="toc-text">Fecth in local with cURL</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Decode-unicode-format"><span class="toc-text">Decode unicode format</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Scaling-the-scraping-with-NodeJS"><span class="toc-text">Scaling the scraping with NodeJS</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Iterate-for-each-letter-to-obtain-more-data"><span class="toc-text">Iterate for each letter to obtain more data</span></a></li></ol></li></ol>
+</div>
+    
+</div>
+
+
+<div class="search-field" id="search-field">
+    <div class="search-bg" id="search-bg"></div>
+    <div class="search-container">
+        <div class="search-input">
+            <span id="esc-search"> <i class="icon-fanhui iconfont"></i></span>
+            <input id="search-input"/>
+            <span id="begin-search">search</span>
+        </div>
+        <div class="search-result-container" id="search-result-container">
+
+        </div>
+    </div>
+</div>
+
+        <div class="index-about-mobile">
+            <i> SEO + Development + Data Analysis + Product </i>
+        </div>
+    </div>
+    
+    <div class="index-middle">
+        <!-- Main Content -->
+        
+
+
+<div class="post-container">
+    <div class="post-title">
+        Scraping content hijacking the endpoint calls in the front-end
+    </div>
+
+    <div class="post-meta">
+        <span class="attr">Post：<span>2023-01-30 00:00:00</span></span>
+        
+        <span class="attr">Tags：/
+        
+        <a class="tag" href="/tags/#Scraping" title="Scraping">Scraping</a>
+        <span>/</span>
+        
+        
+        </span>
+        
+</span>
+</span>
+    </div>
+    <div class="post-content no-indent">
+        <p>Whenever Scraping is talked about, XPATH, CSS, or RegEx are usually mentioned, but there is another way to extract content from a site, and that is by intercepting the calls made by the site to its services, like Google.</p>
+<p>Let’s use Google site as an example on how we can achieve that. Just for practical reason obviously.</p>
+<p>For those who are not familiar, Scraping is a practice that involves extracting information from one or several sites. Although the legality of this practice is a bit gray, companies of all types do it, with Google being the king of it.</p>
+<p>Googlebot is the most active bot on the internet.</p>
+<h2 id="How-can-scraping-be-done-without-needing-the-DOM"><a href="#How-can-scraping-be-done-without-needing-the-DOM" class="headerlink" title="How can scraping be done without needing the DOM?"></a>How can scraping be done without needing the DOM?</h2><h3 id="Identify-the-endpoint-calls"><a href="#Identify-the-endpoint-calls" class="headerlink" title="Identify the endpoint calls"></a>Identify the endpoint calls</h3><p>Let’s take the last script I made as an example, which extracts data from autocomplete.</p>
+<p>The script: <a target="_blank" rel="noopener" href="https://github.com/NachoSEO/google-autocomplete-extractor">https://github.com/NachoSEO/google-autocomplete-extractor</a></p>
+<p>The first thing to do is to see what calls the site makes when certain actions happen.</p>
+<p>For example, in Google, when we type something in the search bar and autocomplete appears, a call is made to request that data. You can see it in <code>Dev Tools &gt; Network &gt; Fetch/XHR</code>.</p>
+<img src="/img/dev-tools-network-fetch-xhr.jpeg" width="100%">
+
+<h3 id="Emulate-the-same-payload"><a href="#Emulate-the-same-payload" class="headerlink" title="Emulate the same payload"></a>Emulate the same payload</h3><p>Once we have identified which request the site is making, we click on it to see what payload it is sending.</p>
+<p>That is the body of the request and what it needs to receive in order to return the autocomplete data.</p>
+<p>Let’s continue.</p>
+<img src="/img/query-string-endpoint.jpeg" width="100%">
+
+<p>To be able to quickly emulate that call, we can right-click on the URL and select copy &gt; copy as cURL.</p>
+<p>This way, we have the entire call copied so we can paste it into our terminal.</p>
+<h3 id="Fecth-in-local-with-cURL"><a href="#Fecth-in-local-with-cURL" class="headerlink" title="Fecth in local with cURL"></a>Fecth in local with cURL</h3><img src="/img/copy-as-curl-dev-tools.jpeg" width="100%">
+
+<p>We open the terminal and paste the call to see which elements we will need and which ones we won’t (in order to format it in the language of our choice, whether it be Python, NodeJS, or another).</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">curl <span class="string">&#x27;https://www.google.com/complete/search?q=link%20building&amp;cp=13&amp;client=gws-wiz&amp;xssi=t&amp;hl=en-ES&amp;authuser=0&amp;psi=PigLZIWHI9iYkdUPxp2_yAs.1678452798806&amp;dpr=2&#x27;</span> \</span><br><span class="line">  -H <span class="string">&#x27;authority: www.google.com&#x27;</span> \</span><br><span class="line">  -H <span class="string">&#x27;accept: */*&#x27;</span> \</span><br><span class="line">  -H <span class="string">&#x27;accept-language: es-ES,es;q=0.9,en;q=0.8,ca;q=0.7,fr;q=0.6&#x27;</span> \</span><br><span class="line">  -H <span class="string">&#x27;cookie: CONSENT=PENDING+991; SEARCH_SAMESITE=CgQIlJcB; OTZ=6913057_52_52_123900_48_436380; AEC=ARSKqsJXaqgLDe6YwmWFTloKnjeR_pCnzMZUJhlTq-Ew0RDKP7G7ltgg6w; SID=UQgvW7iZEjY_02qA9q9PPjsUUFBGYgl9qFT6J86LteGaiznHD5KyLF4HCoxRR8GiLPn1UA.; __Secure-1PSID=UQgvW7iZEjY_02qA9q9PPjsUUFBGYgl9qFT6J86LteGaiznHn7YrSdJ1zIZKVAEdo-FZBw.; __Secure-3PSID=UQgvW7iZEjY_02qA9q9PPjsUUFBGYgl9qFT6J86LteGaiznH8BfVTB2FoRBrwSyOIbhsog.; HSID=A0drwesvEjmVEgxbT; SSID=A8b7OnD1Fi4u4iy3m; APISID=kzHaE227KsSo55hy/A661mO1od2n0wD1wu; SAPISID=fLQVdWihk3F5G-IU/A3lj769Bph4Rh2Ij4; __Secure-1PAPISID=fLQVdWihk3F5G-IU/A3lj769Bph4Rh2Ij4; __Secure-3PAPISID=fLQVdWihk3F5G-IU/A3lj769Bph4Rh2Ij4; NID=511=AezPyYk9hzd_SCQkog8QjAtpQxnWfgJRQdHn3ghud_k8HGR-rUEosgMY8LQ8U0FPK_snAJ4I6pou4HfUgkF8IcbNMdpN5ikExSQlJJJv12NqtdtcNXVX8XSK73FasKkNBccnqArzQMFp0JjY_Wxrrn0bK3qcNHtIgG47OFNKmQfT0KCCNhwzu_XjRmWqiczrF3CkuHa3XmfdnfH9x3gM6is; 1P_JAR=2023-3-10-12; __Secure-ENID=10.SE=ZOl9sem1YrQ9Mt4TDHt4yTTFgg3-gSczPwePDZODS9rZK4uJnhryIpualYtAtEygItJw57GC3Q7BhXyu3cJ0Ted6Ys8tswsy5ceuf9A7-BWz8pQYBinCAvDBKAUbab0zNfELUsnegB2yNZp6yuA1NtF67VuoMiF92oIC6vjqHPQTYVeQvxq5UkLrjmghwSHnZS66k0vtc2adIiGoFTXwsyvReCqjA7Kuitgv9nuZXC7x9iq4c3e10zB3Whwk2OiXwTFjZaBemItiD3Pf0Ww7_fk; SIDCC=AFvIBn_wkMWN80NiedsB9KtK6SnzmE69g4AmBzg3t6g7GxkA8muUgAWAxcn5zwP1McfsBsB1dFE; __Secure-1PSIDCC=AFvIBn-aELKi757awA4jsmPUZEsOuEkbglyNVZ22fl4uo6GVlZmpef9bsAybaiUXCedsk85Ub1M; __Secure-3PSIDCC=AFvIBn_aQhdSjQv42XCzIk4tKl2Nq-VO86usyPf68wu3eAe1GfZQpFZX4AzeQRwcqrzs4t_xpw&#x27;</span> \</span><br><span class="line">  -H <span class="string">&#x27;referer: https://www.google.com/&#x27;</span> \</span><br><span class="line">  -H <span class="string">&#x27;sec-ch-ua: &quot;Chromium&quot;;v=&quot;110&quot;, &quot;Not A(Brand&quot;;v=&quot;24&quot;, &quot;Google Chrome&quot;;v=&quot;110&quot;&#x27;</span> \</span><br><span class="line">  -H <span class="string">&#x27;sec-ch-ua-arch;&#x27;</span> \</span><br><span class="line">  -H <span class="string">&#x27;sec-ch-ua-bitness: &quot;64&quot;&#x27;</span> \</span><br><span class="line">  -H <span class="string">&#x27;sec-ch-ua-full-version: &quot;110.0.5481.177&quot;&#x27;</span> \</span><br><span class="line">  -H <span class="string">&#x27;sec-ch-ua-full-version-list: &quot;Chromium&quot;;v=&quot;110.0.5481.177&quot;, &quot;Not A(Brand&quot;;v=&quot;24.0.0.0&quot;, &quot;Google Chrome&quot;;v=&quot;110.0.5481.177&quot;&#x27;</span> \</span><br><span class="line">  -H <span class="string">&#x27;sec-ch-ua-mobile: ?1&#x27;</span> \</span><br><span class="line">  -H <span class="string">&#x27;sec-ch-ua-model: &quot;Nexus 5&quot;&#x27;</span> \</span><br><span class="line">  -H <span class="string">&#x27;sec-ch-ua-platform: &quot;Android&quot;&#x27;</span> \</span><br><span class="line">  -H <span class="string">&#x27;sec-ch-ua-platform-version: &quot;6.0&quot;&#x27;</span> \</span><br><span class="line">  -H <span class="string">&#x27;sec-ch-ua-wow64: ?0&#x27;</span> \</span><br><span class="line">  -H <span class="string">&#x27;sec-fetch-dest: empty&#x27;</span> \</span><br><span class="line">  -H <span class="string">&#x27;sec-fetch-mode: cors&#x27;</span> \</span><br><span class="line">  -H <span class="string">&#x27;sec-fetch-site: same-origin&#x27;</span> \</span><br><span class="line">  -H <span class="string">&#x27;user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Mobile Safari/537.36&#x27;</span> \</span><br><span class="line">  -H <span class="string">&#x27;x-client-data: CIy2yQEIpLbJAQjAtskBCKmdygEIzPrKAQiVocsBCOb1zAEIkIzNAQjolc0BCKeWzQEI4pfNAQjjl80BCMyYzQEI85nNAQi1ms0BCNLhrAI=&#x27;</span> \</span><br><span class="line">  --compressed</span><br></pre></td></tr></table></figure>
+<p>The output:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">)]&#125;<span class="string">&#x27;</span></span><br><span class="line"><span class="string">[[[&quot;link building&quot;,0,[273]],[&quot;link building\u003cb\u003e que es\u003c\/b\u003e&quot;,0,[512,203]],[&quot;link building\u003cb\u003e ejemplos\u003c\/b\u003e&quot;,0,[512,203]],[&quot;link building\u003cb\u003e seo\u003c\/b\u003e&quot;,0,[512,203]],[&quot;link building\u003cb\u003e gratis\u003c\/b\u003e&quot;,0,[512,203]],[&quot;link building\u003cb\u003e strategy\u003c\/b\u003e&quot;,0,[512,203]],[&quot;link building\u003cb\u003e definición\u003c\/b\u003e&quot;,0,[512,203]],[&quot;link building\u003cb\u003e strategies\u003c\/b\u003e&quot;,0,[512]],[&quot;link building\u003cb\u003e marketing\u003c\/b\u003e&quot;,0,[512,203]],[&quot;link building\u003cb\u003e metrics\u003c\/b\u003e&quot;,0,[512]]],&#123;&quot;q&quot;:&quot;FJZXCRMlW5nhmIhHSFMGfZ1QSPw&quot;&#125;]</span></span><br></pre></td></tr></table></figure>
+<p>Viewing the terminal like this is a bit like seeing the matrix, I know.</p>
+<p>Now we will change that.</p>
+<p>We execute the request to see what the response is: a list of terms in Unicode format.</p>
+<h2 id="Decode-unicode-format"><a href="#Decode-unicode-format" class="headerlink" title="Decode unicode format"></a>Decode unicode format</h2><p>To make it more readable, we can use a converter.</p>
+<p>Now it’s a little clearer.</p>
+<img src="/img/unicode-decoded.jpeg" width="100%">
+
+<p>We have to capture the data, but let’s make it a little more scalable.</p>
+<p>Let’s use NodeJS.</p>
+<h2 id="Scaling-the-scraping-with-NodeJS"><a href="#Scaling-the-scraping-with-NodeJS" class="headerlink" title="Scaling the scraping with NodeJS"></a>Scaling the scraping with NodeJS</h2><p>We transform the cURL request to Axios (a library for making requests).</p>
+<p>We will pass it the query for which we want the information and the language to modify the hl attribute (I’m not sure if using a VPN when executing it would be optimal for getting results by country).</p>
+<p>It would look like this:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="title function_">_requestAutocomplete</span>(<span class="params">query, lang</span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> res = <span class="keyword">await</span> <span class="variable language_">this</span>.<span class="property">requestRepository</span>.<span class="title function_">request</span>(&#123;</span><br><span class="line">      <span class="attr">url</span>: <span class="string">&#x27;https://www.google.com/complete/search&#x27;</span>,</span><br><span class="line">      <span class="attr">method</span>: <span class="string">&#x27;get&#x27;</span>,</span><br><span class="line">      <span class="attr">params</span>: &#123;</span><br><span class="line">        <span class="attr">q</span>: query,</span><br><span class="line">        <span class="attr">hl</span>: lang,</span><br><span class="line">        <span class="attr">authuser</span>: <span class="number">0</span>,</span><br><span class="line">        <span class="attr">cp</span>: <span class="number">2</span>,</span><br><span class="line">        <span class="attr">client</span>: <span class="string">&#x27;gws-wiz&#x27;</span>,</span><br><span class="line">        <span class="attr">xssi</span>: <span class="string">&#x27;t&#x27;</span>,</span><br><span class="line">        <span class="attr">psi</span>: <span class="string">&#x27;_HDNY_H-KZC6gAbssLaQBQ.1674408188910&#x27;</span>,</span><br><span class="line">        <span class="attr">dpr</span>: <span class="string">&#x27;1&#x27;</span></span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="attr">headers</span>: &#123;</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;)</span><br></pre></td></tr></table></figure>
+
+<p>Since the response comes in Unicode, we have to convert and parse the output.</p>
+<p>This way, we get a list without annoying formats.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">_parse</span>(<span class="params">data</span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> convert = <span class="variable language_">this</span>.<span class="title function_">compile</span>(&#123;</span><br><span class="line">      <span class="attr">wordwrap</span>: <span class="number">130</span></span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> unicodeQueries = data.<span class="title function_">map</span>(<span class="function"><span class="params">unicodeResponse</span> =&gt;</span> &#123;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">return</span> unicodeResponse.<span class="title function_">replace</span>(<span class="string">&#x27;)]&#125;\&#x27;\n[[[&#x27;</span>, <span class="string">&#x27;&#x27;</span>).<span class="title function_">split</span>(<span class="string">&#x27;,&#x27;</span>)</span><br><span class="line">    &#125;).<span class="title function_">flat</span>()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> decodedQueries = unicodeQueries.<span class="title function_">map</span>(<span class="function"><span class="params">queries</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">try</span> &#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">decodeURIComponent</span>(</span><br><span class="line">          <span class="title class_">JSON</span>.<span class="title function_">parse</span>(queries.<span class="title function_">replace</span>(<span class="string">&#x27;[&#x27;</span>, <span class="string">&#x27;&#x27;</span>))</span><br><span class="line">        )</span><br><span class="line">      &#125; <span class="keyword">catch</span> (err) &#123;</span><br><span class="line">        <span class="string">&#x27;&#x27;</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">      .<span class="title function_">filter</span>(<span class="title class_">Boolean</span>)</span><br><span class="line">      .<span class="title function_">filter</span>(<span class="function"><span class="params">query</span> =&gt;</span> <span class="built_in">isNaN</span>(query))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> decodedQueries.<span class="title function_">map</span>(convert);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Iterate-for-each-letter-to-obtain-more-data"><a href="#Iterate-for-each-letter-to-obtain-more-data" class="headerlink" title="Iterate for each letter to obtain more data"></a>Iterate for each letter to obtain more data</h3><p>And we add to the script that it iterates over each letter of the alphabet to extract the autocomplete of the query + letter and save the result in a .txt file.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="title function_">execute</span>(<span class="params">query, lang</span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> dataP = <span class="variable language_">this</span>.<span class="property">abc</span>.<span class="title function_">map</span>(<span class="function"><span class="params">letter</span> =&gt;</span> &#123;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="title function_">_requestAutocomplete</span>(<span class="string">`<span class="subst">$&#123;letter&#125;</span> <span class="subst">$&#123;query&#125;</span>`</span>, lang)</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> data = <span class="keyword">await</span> <span class="title class_">Promise</span>.<span class="title function_">all</span>(dataP)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> queries = <span class="variable language_">this</span>.<span class="title function_">_parse</span>(data);</span><br><span class="line"></span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">fileRepository</span>.<span class="title function_">saveToFile</span>(<span class="string">&#x27;./src/output/queries.txt&#x27;</span>, queries.<span class="title function_">join</span>(<span class="string">&#x27;\n&#x27;</span>))</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<img src="/img/output-scraping.png" width="100%">
+
+<p>Finally, we add that it reads the arguments we pass it from the terminal, and voilà!</p>
+
+        
+        <br />
+        <div id="comment-container">
+            
+                <script>
+                  var disqus_shortname = 'nachomascort';
+                  
+                  var disqus_url = 'https://NachoSEO.github.io//scraping-content-hijacking-the-endpoint-calls-in-the-front-end/';
+                  
+                  (function(){
+                    var dsq = document.createElement('script');
+                    dsq.type = 'text/javascript';
+                    dsq.async = true;
+                    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                  })();
+                </script>
+                
+        </div>
+        <div id="disqus_thread"></div>
+        <div id="lv-container"></div>
+        <div class="giscus"></div>
+    </div>
+</div>
+
+    </div>
+</div>
+
+
+<footer class="footer">
+    <ul class="list-inline text-center">
+        
+        <li>
+            <a target="_blank" href="https://twitter.com/NachoMascort">
+                            <span class="fa-stack fa-lg">
+                                <i class="iconfont icon-twitter"></i>
+                            </span>
+            </a>
+        </li>
+        
+        
+
+        
+
+        
+
+        
+        <li>
+            <a target="_blank"  href="https://github.com/NachoSEO">
+                            <span class="fa-stack fa-lg">
+                                <i class="iconfont icon-github"></i>
+                            </span>
+            </a>
+        </li>
+        
+
+        
+        <li>
+            <a target="_blank"  href="https://www.linkedin.com/in/nachomascort">
+                            <span class="fa-stack fa-lg">
+                                <i class="iconfont icon-linkedin"></i>
+                            </span>
+            </a>
+        </li>
+        
+
+    </ul>
+    
+</footer>
+
+
+
+
+</body>
+
+
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+
+<script src="/js/index.js"></script>
+
+
+
+
+    <script>
+        /**
+         *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+         *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
+        */
+        if( '' || '')
+        var disqus_config = function () {
+            this.page.url = '';  // Replace PAGE_URL with your page's canonical URL variable
+            this.page.identifier = ''; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+        };
+
+        (function() { // DON'T EDIT BELOW THIS LINE
+            var d = document, s = d.createElement('script');
+            s.src = '';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();
+    </script>
+
+
+
+
+
+</html>

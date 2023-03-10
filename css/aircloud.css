@@ -89,7 +89,7 @@ body {
 }
 .no-indent ul,
 .no-indent ol {
-  text-indent: 2em !important;
+  text-indent: 0.5em !important;
 }
 .no-indent ul ul,
 .no-indent ol ul,
@@ -743,7 +743,7 @@ body {
   font-size: 16px;
   line-height: 170%;
   letter-spacing: 1px;
-  word-break: break-all;
+  word-break: break-word;
 }
 .post-content ul li:hover,
 .post-content ol li:hover {

@@ -33,7 +33,7 @@ const articleNode = {
 
 <Base
   lang={lang}
-  title={`${entry.data.title} — Nacho Mascort`}
+  title={entry.data.title.length > 45 ? entry.data.title : `${entry.data.title} — Nacho Mascort`}
   description={entry.data.description}
   path={path}
   alternatePath={alternatePath}

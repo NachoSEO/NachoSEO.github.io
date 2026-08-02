@@ -43,7 +43,7 @@ const tagBase = lang === 'es' ? '/blog/etiquetas/' : '/en/blog/tags/';
 
 <Base
   lang={lang}
-  title={`${entry.data.title} — Nacho Mascort`}
+  title={entry.data.title.length > 45 ? entry.data.title : `${entry.data.title} — Nacho Mascort`}
   description={entry.data.description}
   path={path}
   alternatePath={alternatePath}
@@ -67,7 +67,7 @@ const tagBase = lang === 'es' ? '/blog/etiquetas/' : '/en/blog/tags/';
           entry.data.tags.map((tag) => (
             <>
               {' · '}
-              <a href={`${tagBase}${tag}/`} class="text-accent hover:underline">
+              <a href={`${tagBase}${tag}/`} class="text-accent underline">
                 #{tag}
               </a>
             </>

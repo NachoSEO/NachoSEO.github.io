@@ -43,7 +43,21 @@ const t = useTranslations(lang);
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {/* GitHub Pages no permite cabeceras de servidor: CSP estricta vía meta (sin unsafe-inline) */}
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests"
+    />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link
+      rel="preload"
+      href="/fonts/bricolage-grotesque-latin-wght-normal.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <script src="/theme.js" is:inline></script>
     <SEO
       title={title}
       description={description}
@@ -61,22 +75,6 @@ const t = useTranslations(lang);
       href={lang === 'es' ? '/rss.xml' : '/en/rss.xml'}
     />
     <Schema lang={lang} breadcrumbs={breadcrumbs} faq={faq} extraNodes={extraSchemaNodes} />
-    <script is:inline>
-      (() => {
-        const root = document.documentElement;
-        const stored = localStorage.getItem('theme');
-        const preferred =
-          stored ?? (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-        root.dataset.theme = preferred;
-        addEventListener('DOMContentLoaded', () => {
-          document.getElementById('theme-toggle')?.addEventListener('click', () => {
-            const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
-            root.dataset.theme = next;
-            localStorage.setItem('theme', next);
-          });
-        });
-      })();
-    </script>
   </head>
   <body class="flex min-h-screen flex-col">
     <a

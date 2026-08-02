@@ -40,7 +40,10 @@ export default defineConfig({
     }),
   ],
   vite: { plugins: [tailwindcss()] },
+  // Tema de código con contraste AA (github-dark falla WCAG en comentarios)
+  markdown: { shikiConfig: { theme: 'github-dark-default' } },
   redirects: legacyRedirects,
-  build: { inlineStylesheets: 'auto' },
+  // CSS siempre en archivo externo para poder servir una CSP sin 'unsafe-inline'
+  build: { inlineStylesheets: 'never' },
   image: { service: { entrypoint: 'astro/assets/services/sharp' } },
 });

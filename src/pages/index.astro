@@ -1,23 +1,17 @@
 ---
-import '../styles/global.css';
+import Base from '../layouts/Base.astro';
 ---
 
-<!doctype html>
-<html lang="es">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Nacho Mascort — Growth, IA y SEO</title>
-    <meta
-      name="description"
-      content="Growth, IA y SEO. Head of AI y de Marketing Orgánico. He liderado webs con más de 2M de visitas diarias."
-    />
-    <link rel="canonical" href="https://nachomascort.com/" />
-  </head>
-  <body>
-    <main class="mx-auto max-w-2xl px-6 py-24">
-      <h1 class="text-4xl font-bold">Nacho Mascort</h1>
-      <p class="mt-4 text-lg">Growth · IA · SEO. Nueva web en construcción.</p>
-    </main>
-  </body>
-</html>
+<Base
+  lang="es"
+  title="Nacho Mascort — Growth, IA y SEO"
+  description="Growth, IA y SEO. Head of AI y de Marketing Orgánico. He liderado webs con más de 2M de visitas diarias."
+  path="/"
+  alternatePath="/en/"
+>
+  <div class="mx-auto max-w-5xl px-6 py-24">
+    <p class="eyebrow">growth · ia · seo</p>
+    <h1 class="font-display mt-4 text-5xl font-bold tracking-tight">Nacho Mascort</h1>
+    <p class="mt-4 max-w-xl text-lg text-muted">Nueva web en construcción.</p>
+  </div>
+</Base>

@@ -1,0 +1,94 @@
+---
+import '../styles/global.css';
+import SEO from '../components/SEO.astro';
+import Schema from '../components/Schema.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { useTranslations } from '../i18n/utils';
+import type { Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  title: string;
+  description: string;
+  path: string;
+  alternatePath?: string;
+  ogImage?: string;
+  ogType?: 'website' | 'article';
+  noindex?: boolean;
+  breadcrumbs?: { name: string; path: string }[];
+  faq?: { question: string; answer: string }[];
+  extraSchemaNodes?: Record<string, unknown>[];
+}
+
+const {
+  lang,
+  title,
+  description,
+  path,
+  alternatePath,
+  ogImage,
+  ogType,
+  noindex,
+  breadcrumbs,
+  faq,
+  extraSchemaNodes,
+} = Astro.props;
+
+const t = useTranslations(lang);
+---
+
+<!doctype html>
+<html lang={lang} data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <SEO
+      title={title}
+      description={description}
+      path={path}
+      lang={lang}
+      alternatePath={alternatePath}
+      ogImage={ogImage}
+      ogType={ogType}
+      noindex={noindex}
+    />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="Nacho Mascort"
+      href={lang === 'es' ? '/rss.xml' : '/en/rss.xml'}
+    />
+    <Schema lang={lang} breadcrumbs={breadcrumbs} faq={faq} extraNodes={extraSchemaNodes} />
+    <script is:inline>
+      (() => {
+        const root = document.documentElement;
+        const stored = localStorage.getItem('theme');
+        const preferred =
+          stored ?? (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        root.dataset.theme = preferred;
+        addEventListener('DOMContentLoaded', () => {
+          document.getElementById('theme-toggle')?.addEventListener('click', () => {
+            const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+            root.dataset.theme = next;
+            localStorage.setItem('theme', next);
+          });
+        });
+      })();
+    </script>
+  </head>
+  <body class="flex min-h-screen flex-col">
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:bg-paper focus:px-3 focus:py-2"
+    >
+      {t('a11y.skip')}
+    </a>
+    <Header lang={lang} alternatePath={alternatePath} />
+    <main id="main" class="flex-1">
+      <slot />
+    </main>
+    <Footer lang={lang} />
+  </body>
+</html>

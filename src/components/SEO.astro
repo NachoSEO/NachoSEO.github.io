@@ -1,0 +1,69 @@
+---
+import type { Lang } from '../i18n/ui';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Ruta absoluta local con trailing slash, p. ej. "/servicios/" */
+  path: string;
+  lang: Lang;
+  /** Ruta de la versión en el otro idioma; si falta, no se emite cluster hreflang */
+  alternatePath?: string;
+  ogImage?: string;
+  ogType?: 'website' | 'article';
+  noindex?: boolean;
+}
+
+const {
+  title,
+  description,
+  path,
+  lang,
+  alternatePath,
+  ogImage = '/og-fallback.png',
+  ogType = 'website',
+  noindex = false,
+} = Astro.props;
+
+const site = Astro.site!.origin;
+const canonical = new URL(path, site).href;
+const alternate = alternatePath ? new URL(alternatePath, site).href : undefined;
+const ogImageUrl = new URL(ogImage, site).href;
+const esUrl = lang === 'es' ? canonical : alternate;
+const enUrl = lang === 'en' ? canonical : alternate;
+const ogLocale = lang === 'es' ? 'es_ES' : 'en_US';
+const ogLocaleAlt = lang === 'es' ? 'en_US' : 'es_ES';
+---
+
+<title>{title}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+{noindex && <meta name="robots" content="noindex" />}
+
+{
+  alternate && esUrl && enUrl && (
+    <>
+      <link rel="alternate" hreflang="es" href={esUrl} />
+      <link rel="alternate" hreflang="en" href={enUrl} />
+      <link rel="alternate" hreflang="x-default" href={esUrl} />
+    </>
+  )
+}
+
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:type" content={ogType} />
+<meta property="og:site_name" content="Nacho Mascort" />
+<meta property="og:locale" content={ogLocale} />
+{alternate && <meta property="og:locale:alternate" content={ogLocaleAlt} />}
+<meta property="og:image" content={ogImageUrl} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@NachoMascort" />
+<meta name="twitter:creator" content="@NachoMascort" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImageUrl} />

@@ -1,0 +1,72 @@
+---
+import { localizedRoute, otherLang, useTranslations } from '../i18n/utils';
+import type { Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  /** URL de la versión traducida exacta; si no existe, la home del otro idioma */
+  alternatePath?: string;
+}
+
+const { lang, alternatePath } = Astro.props;
+const t = useTranslations(lang);
+const other = otherLang(lang);
+const switchUrl = alternatePath ?? localizedRoute('home', other);
+
+const nav = [
+  { href: localizedRoute('services', lang), label: t('nav.services') },
+  { href: localizedRoute('cases', lang), label: t('nav.cases') },
+  { href: localizedRoute('blog', lang), label: t('nav.blog') },
+  { href: localizedRoute('about', lang), label: t('nav.about') },
+] as const;
+---
+
+<header class="border-b border-line">
+  <div class="mx-auto flex max-w-5xl items-center justify-between gap-4 px-6 py-4">
+    <a
+      href={localizedRoute('home', lang)}
+      class="font-display text-lg font-bold tracking-tight hover:text-accent"
+    >
+      nacho<span class="text-accent">mascort</span>
+    </a>
+
+    <nav aria-label={lang === 'es' ? 'Principal' : 'Main'} class="hidden gap-6 sm:flex">
+      {
+        nav.map((item) => (
+          <a href={item.href} class="text-sm text-muted hover:text-ink">
+            {item.label}
+          </a>
+        ))
+      }
+    </nav>
+
+    <div class="flex items-center gap-3">
+      <a
+        href={switchUrl}
+        hreflang={other}
+        lang={other}
+        aria-label={t('a11y.switchLang')}
+        class="font-mono text-xs uppercase text-muted hover:text-ink"
+      >
+        {other}
+      </a>
+      <button
+        id="theme-toggle"
+        type="button"
+        aria-label={t('a11y.theme')}
+        class="text-muted hover:text-ink"
+      >
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"></circle>
+          <path d="M8 1a7 7 0 0 1 0 14Z" fill="currentColor"></path>
+        </svg>
+      </button>
+      <a
+        href={localizedRoute('contact', lang)}
+        class="rounded-full bg-accent px-4 py-1.5 text-sm font-medium text-paper hover:opacity-90"
+      >
+        {t('cta.book')}
+      </a>
+    </div>
+  </div>
+</header>

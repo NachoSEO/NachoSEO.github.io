@@ -1,0 +1,106 @@
+---
+/**
+ * Emite un único bloque JSON-LD con @graph por página.
+ * WebSite + Person van siempre (consistencia de entidad para GEO/AEO);
+ * el resto de nodos se añaden vía props según el tipo de página.
+ */
+import type { Lang } from '../i18n/ui';
+
+interface Breadcrumb {
+  name: string;
+  path: string;
+}
+
+interface Faq {
+  question: string;
+  answer: string;
+}
+
+interface Props {
+  lang: Lang;
+  breadcrumbs?: Breadcrumb[];
+  faq?: Faq[];
+  /** Nodos extra ya construidos (Article, Service…) que se anexan al @graph */
+  extraNodes?: Record<string, unknown>[];
+}
+
+const { lang, breadcrumbs, faq, extraNodes = [] } = Astro.props;
+const site = Astro.site!.origin;
+
+const personId = `${site}/#person`;
+const websiteId = `${site}/#website`;
+
+const person = {
+  '@type': 'Person',
+  '@id': personId,
+  name: 'Nacho Mascort',
+  url: `${site}/`,
+  image: `${site}/img/nacho.jpeg`,
+  jobTitle: 'Head of AI & Organic Marketing',
+  worksFor: { '@type': 'Organization', name: 'Reverse Tech' },
+  description:
+    lang === 'es'
+      ? 'Líder de Growth, IA y SEO. Ha dirigido el crecimiento orgánico de webs con más de 2M de visitas diarias (Softonic, word.tips) y construye sistemas de automatización con agentes de IA.'
+      : 'Growth, AI and SEO leader. Has led organic growth for sites with 2M+ daily visits (Softonic, word.tips) and builds AI-agent automation systems.',
+  knowsAbout: [
+    'Growth marketing',
+    'AI agents',
+    'Marketing automation',
+    'SEO',
+    'Generative Engine Optimization (GEO)',
+    'Answer Engine Optimization (AEO)',
+    'Team management',
+  ],
+  alumniOf: [
+    {
+      '@type': 'CollegeOrUniversity',
+      name: 'Universitat Pompeu Fabra',
+    },
+  ],
+  sameAs: [
+    'https://twitter.com/NachoMascort',
+    'https://github.com/NachoSEO',
+    'https://www.linkedin.com/in/nachomascort',
+  ],
+};
+
+const website = {
+  '@type': 'WebSite',
+  '@id': websiteId,
+  url: `${site}/`,
+  name: 'Nacho Mascort',
+  inLanguage: lang === 'es' ? 'es-ES' : 'en',
+  publisher: { '@id': personId },
+};
+
+const graph: Record<string, unknown>[] = [website, person];
+
+if (breadcrumbs?.length) {
+  graph.push({
+    '@type': 'BreadcrumbList',
+    itemListElement: breadcrumbs.map((crumb, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: crumb.name,
+      item: new URL(crumb.path, site).href,
+    })),
+  });
+}
+
+if (faq?.length) {
+  graph.push({
+    '@type': 'FAQPage',
+    mainEntity: faq.map((item) => ({
+      '@type': 'Question',
+      name: item.question,
+      acceptedAnswer: { '@type': 'Answer', text: item.answer },
+    })),
+  });
+}
+
+graph.push(...extraNodes);
+
+const jsonLd = JSON.stringify({ '@context': 'https://schema.org', '@graph': graph });
+---
+
+<script type="application/ld+json" set:html={jsonLd} />

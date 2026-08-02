@@ -1,0 +1,44 @@
+---
+import { localizedRoute, useTranslations } from '../i18n/utils';
+import type { Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const year = new Date().getFullYear();
+---
+
+<footer class="mt-24 border-t border-line">
+  <div
+    class="mx-auto flex max-w-5xl flex-col gap-6 px-6 py-10 sm:flex-row sm:items-end sm:justify-between"
+  >
+    <div>
+      <p class="font-display font-bold">Nacho Mascort</p>
+      <p class="mt-1 text-sm text-muted">{t('footer.role')}</p>
+      <p class="text-sm text-muted">{t('footer.location')}</p>
+    </div>
+
+    <div class="flex flex-col gap-2 sm:items-end">
+      <div class="flex gap-4 font-mono text-xs">
+        <a href="https://www.linkedin.com/in/nachomascort" rel="me" class="text-muted hover:text-ink">
+          LinkedIn
+        </a>
+        <a href="https://twitter.com/NachoMascort" rel="me" class="text-muted hover:text-ink">
+          Twitter/X
+        </a>
+        <a href="https://github.com/NachoSEO" rel="me" class="text-muted hover:text-ink">
+          GitHub
+        </a>
+        <a href={lang === 'es' ? '/rss.xml' : '/en/rss.xml'} class="text-muted hover:text-ink">
+          RSS
+        </a>
+      </div>
+      <p class="font-mono text-xs text-muted">
+        © {year} · <a href={localizedRoute('contact', lang)} class="hover:text-ink">{t('nav.contact')}</a>
+      </p>
+    </div>
+  </div>
+</footer>

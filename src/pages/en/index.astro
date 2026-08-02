@@ -1,23 +1,17 @@
 ---
-import '../../styles/global.css';
+import Base from '../../layouts/Base.astro';
 ---
 
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Nacho Mascort — Growth, AI & SEO</title>
-    <meta
-      name="description"
-      content="Growth, AI and SEO. Head of AI and Organic Marketing. I've led websites with 2M+ daily visits."
-    />
-    <link rel="canonical" href="https://nachomascort.com/en/" />
-  </head>
-  <body>
-    <main class="mx-auto max-w-2xl px-6 py-24">
-      <h1 class="text-4xl font-bold">Nacho Mascort</h1>
-      <p class="mt-4 text-lg">Growth · AI · SEO. New site under construction.</p>
-    </main>
-  </body>
-</html>
+<Base
+  lang="en"
+  title="Nacho Mascort — Growth, AI & SEO"
+  description="Growth, AI and SEO. Head of AI and Organic Marketing. I've led websites with 2M+ daily visits."
+  path="/en/"
+  alternatePath="/"
+>
+  <div class="mx-auto max-w-5xl px-6 py-24">
+    <p class="eyebrow">growth · ai · seo</p>
+    <h1 class="font-display mt-4 text-5xl font-bold tracking-tight">Nacho Mascort</h1>
+    <p class="mt-4 max-w-xl text-lg text-muted">New site under construction.</p>
+  </div>
+</Base>

@@ -1,0 +1,40 @@
+---
+/** Marquee de empresas e instituciones donde hay historial real. Solo texto: sin assets. */
+import type { Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const label = lang === 'es' ? 'He trabajado con y para' : "I've worked with and for";
+
+const names = [
+  'Softonic',
+  'word.tips',
+  'Reverse Tech',
+  'Grupo Planeta',
+  'Cliqpod',
+  'Universitat Pompeu Fabra',
+  'Webpositer Academy',
+  'casadellibro.com',
+  'lonelyplanet.es',
+];
+---
+
+<section class="mt-16 border-y border-line py-6" aria-label={label}>
+  <p class="eyebrow mx-auto max-w-5xl px-6">{label.toLowerCase()}</p>
+  <div class="marquee mt-4">
+    <div class="marquee-track">
+      {
+        [0, 1].map((copy) => (
+          <ul class="flex shrink-0 items-center gap-16" aria-hidden={copy === 1 ? 'true' : undefined}>
+            {names.map((name) => (
+              <li class="font-display whitespace-nowrap text-xl font-bold text-muted">{name}</li>
+            ))}
+          </ul>
+        ))
+      }
+    </div>
+  </div>
+</section>

@@ -1,0 +1,124 @@
+---
+/**
+ * Panel oscuro "sistema en producción": diagrama de workflow agéntico animado
+ * + terminal ejecutando un run real. El módulo firma de la web.
+ */
+import type { Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+
+const copy =
+  lang === 'es'
+    ? {
+        eyebrow: 'sistema en producción',
+        title: 'Así trabaja un sistema mientras tú no miras',
+        body: 'Esto no es un diagrama de venta: es la anatomía de los sistemas que construyo. Una señal entra, un agente decide con tus reglas, las acciones se ejecutan y el resultado queda medido.',
+        nodes: [
+          { badge: 'señal', title: 'Algo ocurre', detail: 'Nuevo lead · keyword detectada · dato que cambia' },
+          { badge: 'agente ia', title: 'El agente decide', detail: 'Analiza, prioriza y redacta con tus reglas y tu tono', live: true },
+          { badge: 'acciones', title: 'Se ejecuta', detail: 'CRM actualizado · contenido publicado · informe enviado' },
+          { badge: 'resultado', title: 'Queda medido', detail: 'Horas ahorradas cada semana, con log de cada decisión' },
+        ],
+        terminalLines: [
+          '$ sistema/nuevo-lead --fuente formulario-web',
+          '→ lead recibido: maria@empresa.com',
+          '→ agente: analizando encaje… ICP 87/100',
+          '→ agente: redactando respuesta personalizada… ok',
+          '→ crm: contacto creado + etiqueta "alta prioridad"',
+          '→ email: enviado en 42s',
+          '✓ hecho — 0 intervenciones humanas',
+        ],
+        cta: 'Quiero un sistema así',
+        ctaHref: '/servicios/ia-automatizacion/',
+      }
+    : {
+        eyebrow: 'system in production',
+        title: "This is how a system works while you're not looking",
+        body: "This isn't a sales diagram: it's the anatomy of the systems I build. A signal comes in, an agent decides with your rules, actions execute and the result gets measured.",
+        nodes: [
+          { badge: 'signal', title: 'Something happens', detail: 'New lead · keyword detected · data changes' },
+          { badge: 'ai agent', title: 'The agent decides', detail: 'Analyzes, prioritizes and writes with your rules and tone', live: true },
+          { badge: 'actions', title: 'It executes', detail: 'CRM updated · content published · report sent' },
+          { badge: 'result', title: 'It gets measured', detail: 'Hours saved every week, with a log of every decision' },
+        ],
+        terminalLines: [
+          '$ system/new-lead --source web-form',
+          '→ lead received: maria@company.com',
+          '→ agent: scoring fit… ICP 87/100',
+          '→ agent: drafting personalized reply… ok',
+          '→ crm: contact created + tag "high priority"',
+          '→ email: sent in 42s',
+          '✓ done — 0 human interventions',
+        ],
+        cta: 'I want a system like this',
+        ctaHref: '/en/services/ai-automation/',
+      };
+---
+
+<section class="panel-system relative mt-24 overflow-hidden py-20">
+  <div class="glow-orb parallax-slow absolute -top-24 right-[10%] h-72 w-72" aria-hidden="true">
+  </div>
+
+  <div class="relative mx-auto max-w-5xl px-6">
+    <div class="reveal">
+      <p class="eyebrow">{copy.eyebrow}</p>
+      <h2 class="font-display mt-4 max-w-2xl text-3xl font-bold tracking-tight sm:text-4xl">
+        {copy.title}
+      </h2>
+      <p class="mt-4 max-w-2xl text-muted">{copy.body}</p>
+    </div>
+
+    <div class="reveal mt-12" style="--reveal-delay: 120ms">
+      <div class="flex flex-col items-stretch gap-0 lg:flex-row lg:items-center">
+        {
+          copy.nodes.map((node, index) => (
+            <>
+              {index > 0 && (
+                <>
+                  <div class="flow-line hidden min-w-8 flex-1 lg:block" aria-hidden="true" />
+                  <div class="flow-line-v mx-auto lg:hidden" aria-hidden="true" />
+                </>
+              )}
+              <div class:list={['flow-node p-5 lg:max-w-56', node.live && 'flow-node--live']}>
+                <p class="eyebrow">{node.badge}</p>
+                <h3 class="font-display mt-2 font-bold">{node.title}</h3>
+                <p class="mt-1 text-xs leading-relaxed text-muted">{node.detail}</p>
+              </div>
+            </>
+          ))
+        }
+      </div>
+    </div>
+
+    <div class="mt-12 grid items-center gap-8 lg:grid-cols-[1fr_auto]">
+      <div class="terminal reveal p-5" role="img" aria-label={copy.terminalLines.join('. ')}>
+        {
+          copy.terminalLines.map((line, index) => (
+            <p
+              class:list={[
+                'terminal-line',
+                index === copy.terminalLines.length - 1 && 'terminal-cursor',
+                line.startsWith('✓') ? 'text-[#7ee787]' : line.startsWith('$') ? 'text-ink' : 'text-muted',
+              ]}
+              style={`--line-index: ${index}`}
+            >
+              {line}
+            </p>
+          ))
+        }
+      </div>
+      <div class="reveal" style="--reveal-delay: 200ms">
+        <a
+          href={copy.ctaHref}
+          class="inline-block rounded-full bg-accent px-8 py-3 font-medium text-paper hover:opacity-90"
+        >
+          {copy.cta}
+        </a>
+      </div>
+    </div>
+  </div>
+</section>

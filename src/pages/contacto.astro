@@ -1,0 +1,54 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../site';
+---
+
+<Base
+  lang="es"
+  title="Contacto — Nacho Mascort"
+  description="Agenda una llamada de 30 minutos con Nacho Mascort para hablar de growth, IA o SEO. Sin compromiso: te digo con franqueza si puedo ayudarte."
+  path="/contacto/"
+  alternatePath="/en/contact/"
+  breadcrumbs={[
+    { name: 'Inicio', path: '/' },
+    { name: 'Contacto', path: '/contacto/' },
+  ]}
+>
+  <div class="mx-auto max-w-2xl px-6 pt-16">
+    <p class="eyebrow">contacto</p>
+    <h1 class="font-display mt-4 text-4xl font-bold tracking-tight sm:text-5xl">
+      Cuéntame tu caso
+    </h1>
+    <p class="mt-4 text-lg text-muted">
+      Lo más rápido: agenda directamente una llamada de 30 minutos. Me cuentas dónde estás, qué
+      quieres hacer crecer, y te digo con franqueza si puedo ayudarte y por dónde empezaría.
+    </p>
+
+    <a
+      href={site.calUrl}
+      class="mt-8 inline-block rounded-full bg-accent px-8 py-3 font-medium text-paper hover:opacity-90"
+    >
+      Agenda una llamada
+    </a>
+
+    <section class="mt-12 border-t border-line pt-8">
+      <h2 class="font-display text-xl font-bold">Qué esperar de la llamada</h2>
+      <ul class="mt-4 space-y-2 text-muted">
+        <li>· 30 minutos, sin guion de venta.</li>
+        <li>· Si no soy la persona adecuada, te lo digo y, si puedo, te refiero a quien sí.</li>
+        <li>· Saldrás con al menos una idea accionable, trabajemos juntos o no.</li>
+      </ul>
+    </section>
+
+    <section class="mt-10 border-t border-line pt-8">
+      <h2 class="font-display text-xl font-bold">Otras vías</h2>
+      <p class="mt-4 text-muted">
+        Email: <a href={`mailto:${site.email}`} class="text-accent hover:underline">{site.email}</a
+        ><br />
+        LinkedIn: <a href={site.social.linkedin} class="text-accent hover:underline"
+          >linkedin.com/in/nachomascort</a
+        >
+      </p>
+    </section>
+  </div>
+</Base>

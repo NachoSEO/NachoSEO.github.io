@@ -1,0 +1,51 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../../layouts/Base.astro';
+import Cta from '../../../components/Cta.astro';
+
+const services = (await getCollection('services', (entry) => entry.data.lang === 'en')).sort(
+  (a, b) => a.data.order - b.data.order
+);
+---
+
+<Base
+  lang="en"
+  title="Services — Nacho Mascort"
+  description="Fractional Head of Growth, AI systems and automation, SEO/GEO consulting and training. Services for companies that want to grow with systems, not smoke."
+  path="/en/services/"
+  alternatePath="/servicios/"
+  breadcrumbs={[
+    { name: 'Home', path: '/en/' },
+    { name: 'Services', path: '/en/services/' },
+  ]}
+>
+  <div class="mx-auto max-w-5xl px-6 pt-16">
+    <p class="eyebrow">services</p>
+    <h1 class="font-display mt-4 text-4xl font-bold tracking-tight sm:text-5xl">
+      Systems, not smoke
+    </h1>
+    <p class="mt-4 max-w-2xl text-lg text-muted">
+      Four ways to work with me. They all share one principle: build growth machines that keep
+      running after I'm gone.
+    </p>
+
+    <div class="mt-12 grid gap-6 sm:grid-cols-2">
+      {
+        services.map((service) => (
+          <a
+            href={`/en/services/${service.data.slug}/`}
+            class="group rounded-2xl border border-line p-6 transition-colors hover:border-accent"
+          >
+            <h2 class="font-display text-xl font-bold group-hover:text-accent">
+              {service.data.title}
+            </h2>
+            <p class="mt-2 text-sm text-muted">{service.data.tagline}</p>
+            <p class="mt-4 font-mono text-xs text-accent">→</p>
+          </a>
+        ))
+      }
+    </div>
+  </div>
+
+  <Cta lang="en" />
+</Base>

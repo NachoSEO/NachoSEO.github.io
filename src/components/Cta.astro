@@ -1,0 +1,42 @@
+---
+import { site } from '../site';
+import type { Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  title?: string;
+}
+
+const { lang, title } = Astro.props;
+
+const copy =
+  lang === 'es'
+    ? {
+        heading: title ?? '¿Hablamos de tu caso?',
+        body: 'Una llamada de 30 minutos, sin compromiso. Me cuentas dónde estás y te digo con franqueza si puedo ayudarte y por dónde empezaría.',
+        button: 'Agenda una llamada',
+        alt: 'O escríbeme a',
+      }
+    : {
+        heading: title ?? 'Want to talk about your case?',
+        body: "A 30-minute call, no strings attached. Tell me where you are and I'll tell you honestly whether I can help and where I'd start.",
+        button: 'Book a call',
+        alt: 'Or email me at',
+      };
+---
+
+<section class="mx-auto max-w-5xl px-6 py-16">
+  <div class="rounded-2xl bg-raised px-8 py-12 text-center">
+    <h2 class="font-display text-3xl font-bold tracking-tight">{copy.heading}</h2>
+    <p class="mx-auto mt-3 max-w-xl text-muted">{copy.body}</p>
+    <a
+      href={site.calUrl}
+      class="mt-6 inline-block rounded-full bg-accent px-8 py-3 font-medium text-paper hover:opacity-90"
+    >
+      {copy.button}
+    </a>
+    <p class="mt-4 font-mono text-xs text-muted">
+      {copy.alt} <a href={`mailto:${site.email}`} class="text-accent hover:underline">{site.email}</a>
+    </p>
+  </div>
+</section>

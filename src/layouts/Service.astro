@@ -1,0 +1,84 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { render } from 'astro:content';
+import Base from './Base.astro';
+import Cta from '../components/Cta.astro';
+import { localizedRoute } from '../i18n/utils';
+import type { Lang } from '../i18n/ui';
+
+interface Props {
+  entry: CollectionEntry<'services'>;
+  path: string;
+  alternatePath?: string;
+}
+
+const { entry, path, alternatePath } = Astro.props;
+const lang = entry.data.lang as Lang;
+const { Content } = await render(entry);
+
+const labels =
+  lang === 'es'
+    ? { services: 'Servicios', home: 'Inicio', faq: 'Preguntas frecuentes', proof: 'prueba' }
+    : { services: 'Services', home: 'Home', faq: 'Frequently asked questions', proof: 'proof' };
+
+const serviceNode = {
+  '@type': 'Service',
+  name: entry.data.title,
+  description: entry.data.description,
+  serviceType: entry.data.title,
+  provider: { '@id': `${Astro.site!.origin}/#person` },
+  areaServed: 'Worldwide',
+  availableLanguage: ['es', 'en'],
+  url: new URL(path, Astro.site).href,
+};
+---
+
+<Base
+  lang={lang}
+  title={`${entry.data.title} — Nacho Mascort`}
+  description={entry.data.description}
+  path={path}
+  alternatePath={alternatePath}
+  breadcrumbs={[
+    { name: labels.home, path: localizedRoute('home', lang) },
+    { name: labels.services, path: localizedRoute('services', lang) },
+    { name: entry.data.title, path },
+  ]}
+  faq={entry.data.faq}
+  extraSchemaNodes={[serviceNode]}
+>
+  <article class="mx-auto max-w-3xl px-6 pt-16">
+    <p class="eyebrow">{labels.services.toLowerCase()}</p>
+    <h1 class="font-display mt-4 text-4xl font-bold tracking-tight sm:text-5xl">
+      {entry.data.title}
+    </h1>
+    <p class="mt-4 text-xl text-muted">{entry.data.tagline}</p>
+
+    <aside class="mt-8 border-l-2 border-accent bg-raised px-5 py-4">
+      <p class="eyebrow">{labels.proof}</p>
+      <p class="mt-1 text-sm">{entry.data.proof}</p>
+    </aside>
+
+    <div
+      class="prose-headings:font-display mt-10 space-y-4 [&_h2]:mt-10 [&_h2]:text-2xl [&_h2]:font-bold [&_li]:mt-2 [&_li]:list-disc [&_p]:text-ink/90 [&_strong]:font-semibold [&_ul]:pl-5"
+    >
+      <Content />
+    </div>
+
+    <section class="mt-14">
+      <h2 class="font-display text-2xl font-bold">{labels.faq}</h2>
+      <dl class="mt-6 divide-y divide-line">
+        {
+          entry.data.faq.map((item) => (
+            <div class="py-5">
+              <dt class="font-semibold">{item.question}</dt>
+              <dd class="mt-2 text-muted">{item.answer}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </section>
+  </article>
+
+  <Cta lang={lang} />
+</Base>

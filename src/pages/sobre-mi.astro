@@ -1,0 +1,126 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Cta from '../components/Cta.astro';
+import avatar from '../assets/img/nacho.jpeg';
+
+const timeline = [
+  {
+    period: '2026 — hoy',
+    role: 'Head of AI (Marketing Automation) · Reverse Tech',
+    detail: 'Sistemas agénticos y automatización que ejecutan trabajo real de marketing.',
+  },
+  {
+    period: '2025 — hoy',
+    role: 'Head of Organic Marketing · Reverse Tech',
+    detail: 'Dirección de SEO, email, social y afiliados: estrategia, equipo y resultados.',
+  },
+  {
+    period: '2024 — 2025',
+    role: 'Head of SEO · Cliqpod',
+    detail: 'Dirección SEO, incluyendo word.tips: picos de 2M de visitas diarias.',
+  },
+  {
+    period: '2019 — 2024',
+    role: 'SEO Manager / Product Owner · Softonic',
+    detail:
+      'Portfolio de 6 webs con 1.000M+ usuarios/año. +40 % YoY. Programa de contenido de 0 a 20M sesiones/mes; catálogo de 100k a 1M+ páginas.',
+  },
+  {
+    period: '2017 — 2019',
+    role: 'SEO Manager · Grupo Planeta',
+    detail:
+      'Estrategia SEO del grupo: casadellibro.com, lonelyplanet.es, planetadelibros.com y más.',
+  },
+  {
+    period: '2015 — 2017',
+    role: 'Agencias · SUMA y Tesubi',
+    detail: 'SEO y dirección de proyectos para clientes como Gas Natural Fenosa o Kids&Us.',
+  },
+];
+---
+
+<Base
+  lang="es"
+  title="Sobre mí — Nacho Mascort"
+  description="Trayectoria de Nacho Mascort: de dirigir el SEO de Softonic (1.000M+ usuarios/año) a construir sistemas de IA como Head of AI. Profesor en UPF y Webpositer durante 8+ años."
+  path="/sobre-mi/"
+  alternatePath="/en/about/"
+  breadcrumbs={[
+    { name: 'Inicio', path: '/' },
+    { name: 'Sobre mí', path: '/sobre-mi/' },
+  ]}
+>
+  <article class="mx-auto max-w-3xl px-6 pt-16">
+    <p class="eyebrow">sobre mí</p>
+    <div class="mt-6 flex items-start gap-6">
+      <div>
+        <h1 class="font-display text-4xl font-bold tracking-tight sm:text-5xl">
+          Construyo sistemas que crecen solos
+        </h1>
+      </div>
+      <Image
+        src={avatar}
+        alt="Nacho Mascort"
+        width={112}
+        height={112}
+        class="hidden rounded-2xl sm:block"
+        loading="eager"
+      />
+    </div>
+
+    <div class="mt-8 space-y-4 text-lg leading-relaxed">
+      <p>
+        Llevo más de diez años haciendo crecer negocios digitales. Empecé en el SEO técnico, acabé
+        dirigiendo equipos completos de growth y hoy construyo sistemas de IA que ejecutan ese
+        trabajo a escala.
+      </p>
+      <p>
+        La cifra de la que más orgulloso estoy: en Softonic monté un programa de contenido que pasó
+        de <strong>0 a 20 millones de sesiones orgánicas al mes en dos años</strong>, dentro de un
+        portfolio que superaba los 1.000 millones de usuarios anuales. Después dirigí el SEO de
+        word.tips, con picos de 2 millones de visitas al día.
+      </p>
+      <p>
+        Mi mejor carta de presentación: <strong
+          >ingenieros de Google me han contratado para hacer el SEO de sus propias webs</strong
+        >. Cuando la gente que construye el buscador busca ayuda para posicionar, saber a quién
+        llamar dice mucho.
+      </p>
+      <p>
+        No creo en tácticas sueltas. Creo en sistemas: procesos, automatización y equipos bien
+        dirigidos que siguen produciendo cuando el consultor ya no está. Eso es lo que instalo en
+        las empresas con las que trabajo.
+      </p>
+    </div>
+
+    <section class="mt-14">
+      <h2 class="font-display text-2xl font-bold">Trayectoria</h2>
+      <ol class="mt-6 divide-y divide-line">
+        {
+          timeline.map((item) => (
+            <li class="grid gap-1 py-5 sm:grid-cols-[140px_1fr] sm:gap-6">
+              <span class="font-mono text-xs text-muted">{item.period}</span>
+              <div>
+                <h3 class="font-semibold">{item.role}</h3>
+                <p class="mt-1 text-sm text-muted">{item.detail}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </section>
+
+    <section class="mt-14">
+      <h2 class="font-display text-2xl font-bold">Docencia</h2>
+      <p class="mt-4 text-muted">
+        Profesor del <strong class="text-ink">Máster en Buscadores de la Universitat Pompeu Fabra</strong>
+        (2015–2024) y del <strong class="text-ink">Máster SEO de Webpositer Academy</strong> (2018–2024).
+        Ponente en SEOnTheBeach, Clinic SEO, Ensalada SEO y SEOPLUS. Mencionado en el blog de Google
+        Search Central, El Confidencial y ABC, entre otros.
+      </p>
+    </section>
+  </article>
+
+  <Cta lang="es" />
+</Base>

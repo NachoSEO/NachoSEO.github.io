@@ -1,0 +1,51 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Cta from '../../components/Cta.astro';
+
+const services = (await getCollection('services', (entry) => entry.data.lang === 'es')).sort(
+  (a, b) => a.data.order - b.data.order
+);
+---
+
+<Base
+  lang="es"
+  title="Servicios — Nacho Mascort"
+  description="Head of Growth fraccional, sistemas de IA y automatización, consultoría SEO/GEO y formación. Servicios para empresas que quieren crecer con sistemas, no con humo."
+  path="/servicios/"
+  alternatePath="/en/services/"
+  breadcrumbs={[
+    { name: 'Inicio', path: '/' },
+    { name: 'Servicios', path: '/servicios/' },
+  ]}
+>
+  <div class="mx-auto max-w-5xl px-6 pt-16">
+    <p class="eyebrow">servicios</p>
+    <h1 class="font-display mt-4 text-4xl font-bold tracking-tight sm:text-5xl">
+      Sistemas, no humo
+    </h1>
+    <p class="mt-4 max-w-2xl text-lg text-muted">
+      Cuatro formas de trabajar conmigo. Todas comparten el mismo principio: construir máquinas de
+      crecimiento que sigan funcionando cuando yo ya no esté.
+    </p>
+
+    <div class="mt-12 grid gap-6 sm:grid-cols-2">
+      {
+        services.map((service) => (
+          <a
+            href={`/servicios/${service.data.slug}/`}
+            class="group rounded-2xl border border-line p-6 transition-colors hover:border-accent"
+          >
+            <h2 class="font-display text-xl font-bold group-hover:text-accent">
+              {service.data.title}
+            </h2>
+            <p class="mt-2 text-sm text-muted">{service.data.tagline}</p>
+            <p class="mt-4 font-mono text-xs text-accent">→</p>
+          </a>
+        ))
+      }
+    </div>
+  </div>
+
+  <Cta lang="es" />
+</Base>

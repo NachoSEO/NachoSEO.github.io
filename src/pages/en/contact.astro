@@ -1,0 +1,54 @@
+---
+import Base from '../../layouts/Base.astro';
+import { site } from '../../site';
+---
+
+<Base
+  lang="en"
+  title="Contact — Nacho Mascort"
+  description="Book a 30-minute call with Nacho Mascort to talk growth, AI or SEO. No strings attached: I'll tell you honestly whether I can help."
+  path="/en/contact/"
+  alternatePath="/contacto/"
+  breadcrumbs={[
+    { name: 'Home', path: '/en/' },
+    { name: 'Contact', path: '/en/contact/' },
+  ]}
+>
+  <div class="mx-auto max-w-2xl px-6 pt-16">
+    <p class="eyebrow">contact</p>
+    <h1 class="font-display mt-4 text-4xl font-bold tracking-tight sm:text-5xl">
+      Tell me about your case
+    </h1>
+    <p class="mt-4 text-lg text-muted">
+      The fastest way: book a 30-minute call. Tell me where you are and what you want to grow, and
+      I'll tell you honestly whether I can help and where I'd start.
+    </p>
+
+    <a
+      href={site.calUrl}
+      class="mt-8 inline-block rounded-full bg-accent px-8 py-3 font-medium text-paper hover:opacity-90"
+    >
+      Book a call
+    </a>
+
+    <section class="mt-12 border-t border-line pt-8">
+      <h2 class="font-display text-xl font-bold">What to expect from the call</h2>
+      <ul class="mt-4 space-y-2 text-muted">
+        <li>· 30 minutes, no sales script.</li>
+        <li>· If I'm not the right person, I'll say so — and refer you to someone who is, if I can.</li>
+        <li>· You'll leave with at least one actionable idea, whether we work together or not.</li>
+      </ul>
+    </section>
+
+    <section class="mt-10 border-t border-line pt-8">
+      <h2 class="font-display text-xl font-bold">Other ways</h2>
+      <p class="mt-4 text-muted">
+        Email: <a href={`mailto:${site.email}`} class="text-accent hover:underline">{site.email}</a
+        ><br />
+        LinkedIn: <a href={site.social.linkedin} class="text-accent hover:underline"
+          >linkedin.com/in/nachomascort</a
+        >
+      </p>
+    </section>
+  </div>
+</Base>

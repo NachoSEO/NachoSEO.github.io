@@ -1,17 +1,97 @@
 ---
+import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
+import Cta from '../../components/Cta.astro';
+import GrowthCurve from '../../components/GrowthCurve.astro';
+import { site } from '../../site';
+
+const services = (await getCollection('services', (entry) => entry.data.lang === 'en')).sort(
+  (a, b) => a.data.order - b.data.order
+);
+
+const stats = [
+  { value: '1B+', label: 'annual users in portfolio' },
+  { value: '2M', label: 'daily visits (peak)' },
+  { value: '0→20M', label: 'sessions/mo in 2 years' },
+  { value: '+40%', label: 'organic traffic YoY' },
+];
 ---
 
 <Base
   lang="en"
-  title="Nacho Mascort — Growth, AI & SEO"
-  description="Growth, AI and SEO. Head of AI and Organic Marketing. I've led websites with 2M+ daily visits."
+  title="Nacho Mascort — Growth, AI & SEO that run as a system"
+  description="Fractional Head of Growth, AI systems and SEO/GEO consulting. I've led sites with 2M daily visits and I build AI systems that execute growth work. Book a call."
   path="/en/"
   alternatePath="/"
 >
-  <div class="mx-auto max-w-5xl px-6 py-24">
+  <section class="mx-auto max-w-5xl px-6 pt-20">
     <p class="eyebrow">growth · ai · seo</p>
-    <h1 class="font-display mt-4 text-5xl font-bold tracking-tight">Nacho Mascort</h1>
-    <p class="mt-4 max-w-xl text-lg text-muted">New site under construction.</p>
-  </div>
+    <h1 class="font-display mt-5 max-w-3xl text-5xl font-bold tracking-tight sm:text-6xl">
+      Scale your growth without scaling your headcount
+    </h1>
+    <p class="mt-6 max-w-2xl text-lg text-muted">
+      I'm Nacho Mascort. I've led organic growth for sites with up to
+      <strong class="text-ink">2 million visits a day</strong>, and now I build AI systems that
+      execute that work. Even Google engineers have hired me to do their SEO.
+    </p>
+    <div class="mt-8 flex flex-wrap items-center gap-4">
+      <a
+        href={site.calUrl}
+        class="rounded-full bg-accent px-8 py-3 font-medium text-paper hover:opacity-90"
+      >
+        Book a call
+      </a>
+      <a href="/en/services/" class="font-medium text-accent hover:underline"> See services → </a>
+    </div>
+
+    <GrowthCurve lang="en" />
+  </section>
+
+  <section class="mx-auto max-w-5xl px-6 pt-16" aria-label="Numbers">
+    <dl class="grid grid-cols-2 gap-6 border-y border-line py-8 sm:grid-cols-4">
+      {
+        stats.map((stat) => (
+          <div>
+            <dt class="font-mono text-xs text-muted">{stat.label}</dt>
+            <dd class="font-display mt-1 text-3xl font-bold text-accent">{stat.value}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </section>
+
+  <section class="mx-auto max-w-5xl px-6 pt-20">
+    <p class="eyebrow">services</p>
+    <h2 class="font-display mt-4 text-3xl font-bold tracking-tight">Four ways to work with me</h2>
+    <div class="mt-10 grid gap-6 sm:grid-cols-2">
+      {
+        services.map((service) => (
+          <a
+            href={`/en/services/${service.data.slug}/`}
+            class="group rounded-2xl border border-line p-6 transition-colors hover:border-accent"
+          >
+            <h3 class="font-display text-xl font-bold group-hover:text-accent">
+              {service.data.title}
+            </h3>
+            <p class="mt-2 text-sm text-muted">{service.data.tagline}</p>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-5xl px-6 pt-20">
+    <p class="eyebrow">teaching</p>
+    <p class="mt-4 max-w-2xl text-lg">
+      8+ years teaching what I execute: professor at
+      <strong>Universitat Pompeu Fabra's Master in Search Engines</strong> and
+      <strong>Webpositer Academy's SEO Master</strong>. Speaker at SEOnTheBeach, Clinic SEO and
+      SEOPLUS.
+    </p>
+    <a href="/en/about/" class="mt-4 inline-block font-medium text-accent hover:underline">
+      My full track record →
+    </a>
+  </section>
+
+  <Cta lang="en" title="Tell me what you want to grow" />
 </Base>

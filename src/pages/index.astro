@@ -1,17 +1,99 @@
 ---
+import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
+import Cta from '../components/Cta.astro';
+import GrowthCurve from '../components/GrowthCurve.astro';
+import { site } from '../site';
+
+const services = (await getCollection('services', (entry) => entry.data.lang === 'es')).sort(
+  (a, b) => a.data.order - b.data.order
+);
+
+const stats = [
+  { value: '1.000M+', label: 'usuarios/año en portfolio' },
+  { value: '2M', label: 'visitas diarias (pico)' },
+  { value: '0→20M', label: 'sesiones/mes en 2 años' },
+  { value: '+40%', label: 'tráfico orgánico YoY' },
+];
 ---
 
 <Base
   lang="es"
-  title="Nacho Mascort — Growth, IA y SEO"
-  description="Growth, IA y SEO. Head of AI y de Marketing Orgánico. He liderado webs con más de 2M de visitas diarias."
+  title="Nacho Mascort — Growth, IA y SEO que funcionan como un sistema"
+  description="Head of Growth fraccional, sistemas de IA y consultoría SEO/GEO. He dirigido webs con 2M de visitas diarias y construyo sistemas de IA que ejecutan el crecimiento. Agenda una llamada."
   path="/"
   alternatePath="/en/"
 >
-  <div class="mx-auto max-w-5xl px-6 py-24">
+  <section class="mx-auto max-w-5xl px-6 pt-20">
     <p class="eyebrow">growth · ia · seo</p>
-    <h1 class="font-display mt-4 text-5xl font-bold tracking-tight">Nacho Mascort</h1>
-    <p class="mt-4 max-w-xl text-lg text-muted">Nueva web en construcción.</p>
-  </div>
+    <h1 class="font-display mt-5 max-w-3xl text-5xl font-bold tracking-tight sm:text-6xl">
+      Escala tu crecimiento sin escalar tu equipo
+    </h1>
+    <p class="mt-6 max-w-2xl text-lg text-muted">
+      Soy Nacho Mascort. He dirigido el crecimiento orgánico de webs con hasta
+      <strong class="text-ink">2 millones de visitas al día</strong> y hoy construyo sistemas de IA
+      que ejecutan ese trabajo. Hasta los ingenieros de Google me han contratado para hacer su SEO.
+    </p>
+    <div class="mt-8 flex flex-wrap items-center gap-4">
+      <a
+        href={site.calUrl}
+        class="rounded-full bg-accent px-8 py-3 font-medium text-paper hover:opacity-90"
+      >
+        Agenda una llamada
+      </a>
+      <a href="/servicios/" class="font-medium text-accent hover:underline"> Ver servicios → </a>
+    </div>
+
+    <GrowthCurve lang="es" />
+  </section>
+
+  <section class="mx-auto max-w-5xl px-6 pt-16" aria-label="Cifras">
+    <dl class="grid grid-cols-2 gap-6 border-y border-line py-8 sm:grid-cols-4">
+      {
+        stats.map((stat) => (
+          <div>
+            <dt class="font-mono text-xs text-muted">{stat.label}</dt>
+            <dd class="font-display mt-1 text-3xl font-bold text-accent">{stat.value}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </section>
+
+  <section class="mx-auto max-w-5xl px-6 pt-20">
+    <p class="eyebrow">servicios</p>
+    <h2 class="font-display mt-4 text-3xl font-bold tracking-tight">
+      Cuatro formas de trabajar conmigo
+    </h2>
+    <div class="mt-10 grid gap-6 sm:grid-cols-2">
+      {
+        services.map((service) => (
+          <a
+            href={`/servicios/${service.data.slug}/`}
+            class="group rounded-2xl border border-line p-6 transition-colors hover:border-accent"
+          >
+            <h3 class="font-display text-xl font-bold group-hover:text-accent">
+              {service.data.title}
+            </h3>
+            <p class="mt-2 text-sm text-muted">{service.data.tagline}</p>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-5xl px-6 pt-20">
+    <p class="eyebrow">docencia</p>
+    <p class="mt-4 max-w-2xl text-lg">
+      Más de 8 años enseñando lo que ejecuto: profesor del
+      <strong>Máster en Buscadores de la Universitat Pompeu Fabra</strong> y del
+      <strong>Máster SEO de Webpositer Academy</strong>. Ponente en SEOnTheBeach, Clinic SEO y
+      SEOPLUS.
+    </p>
+    <a href="/sobre-mi/" class="mt-4 inline-block font-medium text-accent hover:underline">
+      Mi trayectoria completa →
+    </a>
+  </section>
+
+  <Cta lang="es" title="Cuéntame qué quieres hacer crecer" />
 </Base>

@@ -304,6 +304,147 @@ body {
   50% { opacity: 0; }
 }
 
+/* ============ Escenas animadas de servicios ============ */
+.scene {
+  border: 1px solid var(--tone-line);
+  border-radius: 1rem;
+  background: var(--tone-raised);
+}
+
+/* Barras de progreso que se llenan al entrar en viewport */
+.meter {
+  height: 8px;
+  border-radius: 999px;
+  background: var(--tone-line);
+  overflow: hidden;
+}
+.meter > span {
+  display: block;
+  height: 100%;
+  width: var(--to);
+  border-radius: inherit;
+  background: var(--tone-accent);
+}
+@media (prefers-reduced-motion: no-preference) {
+  html.js .reveal .meter > span {
+    width: 0;
+  }
+  html.js .reveal.in .meter > span {
+    animation: meter-fill 1.3s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    animation-delay: var(--d, 0ms);
+  }
+}
+@keyframes meter-fill {
+  to { width: var(--to); }
+}
+
+/* Checks que aparecen con rebote */
+.check-pop {
+  display: inline-flex;
+}
+@media (prefers-reduced-motion: no-preference) {
+  html.js .reveal .check-pop {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  html.js .reveal.in .check-pop {
+    animation: check-pop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    animation-delay: var(--d, 0ms);
+  }
+}
+@keyframes check-pop {
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* Feed de tareas en bucle: líneas que aparecen escalonadas y se reinician */
+@media (prefers-reduced-motion: no-preference) {
+  .task-feed > * {
+    opacity: 0;
+    animation: feed-line 7s linear infinite;
+    animation-delay: calc(var(--i, 0) * 1s);
+  }
+}
+@keyframes feed-line {
+  0% { opacity: 0; transform: translateY(4px); }
+  6% { opacity: 1; transform: none; }
+  72% { opacity: 1; }
+  80%, 100% { opacity: 0; }
+}
+
+/* Ciclo de 3 estados apilados (badges de posición, slides…) */
+.cycle-3 {
+  position: relative;
+  display: inline-grid;
+}
+.cycle-3 > * {
+  grid-area: 1 / 1;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .cycle-3 > * {
+    opacity: 0;
+    animation: cycle-3 9s infinite;
+  }
+  .cycle-3 > *:nth-child(1) { animation-delay: 0s; }
+  .cycle-3 > *:nth-child(2) { animation-delay: 3s; }
+  .cycle-3 > *:nth-child(3) { animation-delay: 6s; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cycle-3 > *:not(:last-child) { opacity: 0; }
+}
+html:not(.js) .cycle-3 > *:not(:last-child) { opacity: 0; }
+@keyframes cycle-3 {
+  0%, 30% { opacity: 1; }
+  33.3%, 100% { opacity: 0; }
+}
+
+/* Puntos de "escribiendo…" */
+.type-dot {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 999px;
+  background: var(--tone-muted);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .type-dot {
+    animation: type-bounce 1.2s ease-in-out infinite;
+    animation-delay: calc(var(--i, 0) * 0.18s);
+  }
+}
+@keyframes type-bounce {
+  0%, 60%, 100% { transform: none; opacity: 0.5; }
+  30% { transform: translateY(-4px); opacity: 1; }
+}
+
+/* Sparkline que se dibuja al entrar en viewport */
+@media (prefers-reduced-motion: no-preference) {
+  html.js .reveal .spark-draw {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+  }
+  html.js .reveal.in .spark-draw {
+    animation: draw-line 1.4s cubic-bezier(0.65, 0, 0.35, 1) 0.3s forwards;
+  }
+}
+
+/* Estado "en vivo" */
+.live-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #34d399;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .live-dot {
+    animation: live-pulse 1.8s ease-in-out infinite;
+  }
+}
+@keyframes live-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgb(52 211 153 / 0.5); }
+  60% { box-shadow: 0 0 0 6px rgb(52 211 153 / 0); }
+}
+
 /* Tarjetas con vida */
 .card-lift {
   transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.3s ease,

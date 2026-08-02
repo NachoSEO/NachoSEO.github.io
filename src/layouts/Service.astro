@@ -3,6 +3,7 @@ import type { CollectionEntry } from 'astro:content';
 import { render } from 'astro:content';
 import Base from './Base.astro';
 import Cta from '../components/Cta.astro';
+import ServiceShowcase from '../components/ServiceShowcase.astro';
 import { localizedRoute } from '../i18n/utils';
 import type { Lang } from '../i18n/ui';
 
@@ -47,14 +48,18 @@ const serviceNode = {
   faq={entry.data.faq}
   extraSchemaNodes={[serviceNode]}
 >
-  <article class="mx-auto max-w-3xl px-6 pt-16">
-    <p class="eyebrow">{labels.services.toLowerCase()}</p>
-    <h1 class="font-display mt-4 text-4xl font-bold tracking-tight sm:text-5xl">
-      {entry.data.title}
-    </h1>
-    <p class="mt-4 text-xl text-muted">{entry.data.tagline}</p>
+  <article class="mx-auto max-w-4xl px-6 pt-16">
+    <div class="hero-seq">
+      <p class="eyebrow">{labels.services.toLowerCase()}</p>
+      <h1 class="font-display mt-4 text-4xl font-bold tracking-tight sm:text-5xl">
+        {entry.data.title}
+      </h1>
+      <p class="mt-4 max-w-2xl text-xl text-muted">{entry.data.tagline}</p>
+    </div>
 
-    <aside class="reveal mt-8 border-l-2 border-accent bg-raised px-5 py-4">
+    <ServiceShowcase serviceKey={entry.data.translationKey} lang={lang} />
+
+    <aside class="reveal mt-10 border-l-2 border-accent bg-raised px-5 py-4">
       <p class="eyebrow">{labels.proof}</p>
       <p class="mt-1 text-sm">{entry.data.proof}</p>
     </aside>

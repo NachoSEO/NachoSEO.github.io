@@ -1,0 +1,69 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { render } from 'astro:content';
+import Base from './Base.astro';
+import Cta from '../components/Cta.astro';
+import { localizedRoute } from '../i18n/utils';
+import type { Lang } from '../i18n/ui';
+
+interface Props {
+  entry: CollectionEntry<'caseStudies'>;
+  path: string;
+  alternatePath?: string;
+}
+
+const { entry, path, alternatePath } = Astro.props;
+const lang = entry.data.lang as Lang;
+const { Content } = await render(entry);
+
+const labels =
+  lang === 'es'
+    ? { cases: 'Casos', home: 'Inicio', eyebrow: 'caso de éxito' }
+    : { cases: 'Case studies', home: 'Home', eyebrow: 'case study' };
+
+const articleNode = {
+  '@type': 'Article',
+  headline: entry.data.title,
+  description: entry.data.description,
+  inLanguage: lang === 'es' ? 'es-ES' : 'en',
+  author: { '@id': `${Astro.site!.origin}/#person` },
+  mainEntityOfPage: new URL(path, Astro.site).href,
+};
+---
+
+<Base
+  lang={lang}
+  title={`${entry.data.title} — Nacho Mascort`}
+  description={entry.data.description}
+  path={path}
+  alternatePath={alternatePath}
+  ogType="article"
+  breadcrumbs={[
+    { name: labels.home, path: localizedRoute('home', lang) },
+    { name: labels.cases, path: localizedRoute('cases', lang) },
+    { name: entry.data.title, path },
+  ]}
+  extraSchemaNodes={[articleNode]}
+>
+  <article class="mx-auto max-w-3xl px-6 pt-16">
+    <p class="eyebrow">{labels.eyebrow}</p>
+    <h1 class="font-display mt-4 text-4xl font-bold tracking-tight">{entry.data.title}</h1>
+
+    <dl class="mt-8 grid grid-cols-2 gap-4 border-y border-line py-6 sm:grid-cols-4">
+      {
+        entry.data.metrics.map((metric) => (
+          <div>
+            <dd class="font-display text-2xl font-bold text-accent">{metric.value}</dd>
+            <dt class="mt-1 font-mono text-xs text-muted">{metric.label}</dt>
+          </div>
+        ))
+      }
+    </dl>
+
+    <div class="article-body mt-8">
+      <Content />
+    </div>
+  </article>
+
+  <Cta lang={lang} />
+</Base>

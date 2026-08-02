@@ -1,0 +1,57 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Cta from '../../components/Cta.astro';
+
+const cases = (await getCollection('caseStudies', (entry) => entry.data.lang === 'es')).sort(
+  (a, b) => a.data.order - b.data.order
+);
+---
+
+<Base
+  lang="es"
+  title="Casos de éxito — Nacho Mascort"
+  description="Casos reales con cifras reales: Softonic de 0 a 20M de sesiones/mes, word.tips con 2M de visitas diarias. Así se ve un sistema de crecimiento funcionando."
+  path="/casos/"
+  alternatePath="/en/case-studies/"
+  breadcrumbs={[
+    { name: 'Inicio', path: '/' },
+    { name: 'Casos', path: '/casos/' },
+  ]}
+>
+  <div class="mx-auto max-w-5xl px-6 pt-16">
+    <p class="eyebrow">casos de éxito</p>
+    <h1 class="font-display mt-4 text-4xl font-bold tracking-tight sm:text-5xl">
+      Cifras, no adjetivos
+    </h1>
+    <p class="mt-4 max-w-2xl text-lg text-muted">
+      Dos casos que explican cómo trabajo: sistemas que producen resultados medibles y que siguen
+      funcionando en el tiempo.
+    </p>
+
+    <div class="mt-12 grid gap-6 sm:grid-cols-2">
+      {
+        cases.map((caseStudy) => (
+          <a
+            href={`/casos/${caseStudy.data.slug}/`}
+            class="group rounded-2xl border border-line p-6 transition-colors hover:border-accent"
+          >
+            <h2 class="font-display text-xl font-bold group-hover:text-accent">
+              {caseStudy.data.title}
+            </h2>
+            <dl class="mt-4 flex flex-wrap gap-x-6 gap-y-2">
+              {caseStudy.data.metrics.slice(0, 2).map((metric) => (
+                <div>
+                  <dd class="font-display text-lg font-bold text-accent">{metric.value}</dd>
+                  <dt class="font-mono text-xs text-muted">{metric.label}</dt>
+                </div>
+              ))}
+            </dl>
+          </a>
+        ))
+      }
+    </div>
+  </div>
+
+  <Cta lang="es" title="¿Quieres cifras así en tu web?" />
+</Base>

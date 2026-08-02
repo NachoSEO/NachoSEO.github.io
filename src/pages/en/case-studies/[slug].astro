@@ -1,0 +1,25 @@
+---
+import { getCollection } from 'astro:content';
+import CaseStudy from '../../../layouts/CaseStudy.astro';
+
+export async function getStaticPaths() {
+  const enCases = await getCollection('caseStudies', (entry) => entry.data.lang === 'en');
+  const esCases = await getCollection('caseStudies', (entry) => entry.data.lang === 'es');
+
+  return enCases.map((entry) => {
+    const translation = esCases.find(
+      (candidate) => candidate.data.translationKey === entry.data.translationKey
+    );
+    return {
+      params: { slug: entry.data.slug },
+      props: { entry, translationSlug: translation?.data.slug },
+    };
+  });
+}
+
+const { entry, translationSlug } = Astro.props;
+const path = `/en/case-studies/${entry.data.slug}/`;
+const alternatePath = translationSlug ? `/casos/${translationSlug}/` : undefined;
+---
+
+<CaseStudy entry={entry} path={path} alternatePath={alternatePath} />

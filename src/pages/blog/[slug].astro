@@ -1,0 +1,25 @@
+---
+import { getCollection } from 'astro:content';
+import Post from '../../layouts/Post.astro';
+
+export async function getStaticPaths() {
+  const esPosts = await getCollection('blog', (entry) => entry.data.lang === 'es');
+  const enPosts = await getCollection('blog', (entry) => entry.data.lang === 'en');
+
+  return esPosts.map((entry) => {
+    const translation = enPosts.find(
+      (candidate) => candidate.data.translationKey === entry.data.translationKey
+    );
+    return {
+      params: { slug: entry.data.slug },
+      props: { entry, translationSlug: translation?.data.slug },
+    };
+  });
+}
+
+const { entry, translationSlug } = Astro.props;
+const path = `/blog/${entry.data.slug}/`;
+const alternatePath = translationSlug ? `/en/blog/${translationSlug}/` : undefined;
+---
+
+<Post entry={entry} path={path} alternatePath={alternatePath} />

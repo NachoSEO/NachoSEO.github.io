@@ -68,6 +68,56 @@ body {
   outline-offset: 2px;
 }
 
+/* Cuerpo de artículo (MDX renderizado) */
+.article-body {
+  line-height: 1.75;
+}
+.article-body h2 {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-top: 2.5rem;
+}
+.article-body h3 {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-top: 1.75rem;
+}
+.article-body p,
+.article-body ul,
+.article-body ol {
+  margin-top: 1rem;
+}
+.article-body ul {
+  list-style: disc;
+  padding-left: 1.25rem;
+}
+.article-body a {
+  color: var(--tone-accent);
+  text-decoration: underline;
+}
+.article-body img {
+  margin-top: 1.5rem;
+  border-radius: 0.75rem;
+  border: 1px solid var(--tone-line);
+  height: auto;
+}
+.article-body pre {
+  margin-top: 1.5rem;
+  padding: 1rem 1.25rem;
+  border-radius: 0.75rem;
+  font-size: 0.875rem;
+  overflow-x: auto;
+}
+.article-body :not(pre) > code {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  background: var(--tone-raised);
+  padding: 0.15em 0.4em;
+  border-radius: 0.35em;
+}
+
 /* Eyebrow: etiqueta mono de sección */
 .eyebrow {
   font-family: var(--font-mono);

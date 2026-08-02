@@ -1,0 +1,57 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../../layouts/Base.astro';
+import Cta from '../../../components/Cta.astro';
+
+const cases = (await getCollection('caseStudies', (entry) => entry.data.lang === 'en')).sort(
+  (a, b) => a.data.order - b.data.order
+);
+---
+
+<Base
+  lang="en"
+  title="Case studies — Nacho Mascort"
+  description="Real cases with real numbers: Softonic from 0 to 20M sessions/mo, word.tips at 2M daily visits. This is what a working growth system looks like."
+  path="/en/case-studies/"
+  alternatePath="/casos/"
+  breadcrumbs={[
+    { name: 'Home', path: '/en/' },
+    { name: 'Case studies', path: '/en/case-studies/' },
+  ]}
+>
+  <div class="mx-auto max-w-5xl px-6 pt-16">
+    <p class="eyebrow">case studies</p>
+    <h1 class="font-display mt-4 text-4xl font-bold tracking-tight sm:text-5xl">
+      Numbers, not adjectives
+    </h1>
+    <p class="mt-4 max-w-2xl text-lg text-muted">
+      Two cases that explain how I work: systems that produce measurable results and keep working
+      over time.
+    </p>
+
+    <div class="mt-12 grid gap-6 sm:grid-cols-2">
+      {
+        cases.map((caseStudy) => (
+          <a
+            href={`/en/case-studies/${caseStudy.data.slug}/`}
+            class="group rounded-2xl border border-line p-6 transition-colors hover:border-accent"
+          >
+            <h2 class="font-display text-xl font-bold group-hover:text-accent">
+              {caseStudy.data.title}
+            </h2>
+            <dl class="mt-4 flex flex-wrap gap-x-6 gap-y-2">
+              {caseStudy.data.metrics.slice(0, 2).map((metric) => (
+                <div>
+                  <dd class="font-display text-lg font-bold text-accent">{metric.value}</dd>
+                  <dt class="font-mono text-xs text-muted">{metric.label}</dt>
+                </div>
+              ))}
+            </dl>
+          </a>
+        ))
+      }
+    </div>
+  </div>
+
+  <Cta lang="en" title="Want numbers like these on your site?" />
+</Base>

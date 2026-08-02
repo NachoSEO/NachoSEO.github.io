@@ -1,0 +1,28 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../../layouts/Base.astro';
+import PostList from '../../../components/PostList.astro';
+
+const posts = await getCollection('blog', (entry) => entry.data.lang === 'en');
+---
+
+<Base
+  lang="en"
+  title="Blog — Nacho Mascort"
+  description="Articles on growth, AI applied to marketing, SEO, GEO/AEO and automation, written from real execution."
+  path="/en/blog/"
+  alternatePath="/blog/"
+  breadcrumbs={[
+    { name: 'Home', path: '/en/' },
+    { name: 'Blog', path: '/en/blog/' },
+  ]}
+>
+  <div class="mx-auto max-w-3xl px-6 pt-16 pb-8">
+    <p class="eyebrow">blog</p>
+    <h1 class="font-display mt-4 text-4xl font-bold tracking-tight">Blog</h1>
+    <p class="mt-4 text-lg text-muted">
+      Growth, applied AI, SEO and automation. Written from the trenches, not from theory.
+    </p>
+    <PostList posts={posts} lang="en" />
+  </div>
+</Base>

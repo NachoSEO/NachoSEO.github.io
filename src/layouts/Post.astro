@@ -1,0 +1,85 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { render } from 'astro:content';
+import Base from './Base.astro';
+import Cta from '../components/Cta.astro';
+import { localizedRoute } from '../i18n/utils';
+import type { Lang } from '../i18n/ui';
+
+interface Props {
+  entry: CollectionEntry<'blog'>;
+  path: string;
+  alternatePath?: string;
+}
+
+const { entry, path, alternatePath } = Astro.props;
+const lang = entry.data.lang as Lang;
+const { Content } = await render(entry);
+
+const labels =
+  lang === 'es' ? { blog: 'Blog', home: 'Inicio' } : { blog: 'Blog', home: 'Home' };
+
+const dateFormatter = new Intl.DateTimeFormat(lang === 'es' ? 'es-ES' : 'en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+
+const articleNode = {
+  '@type': 'BlogPosting',
+  headline: entry.data.title,
+  description: entry.data.description,
+  inLanguage: lang === 'es' ? 'es-ES' : 'en',
+  datePublished: entry.data.pubDate.toISOString(),
+  ...(entry.data.updatedDate && { dateModified: entry.data.updatedDate.toISOString() }),
+  author: { '@id': `${Astro.site!.origin}/#person` },
+  publisher: { '@id': `${Astro.site!.origin}/#person` },
+  mainEntityOfPage: new URL(path, Astro.site).href,
+  keywords: entry.data.tags.join(', '),
+};
+
+const tagBase = lang === 'es' ? '/blog/etiquetas/' : '/en/blog/tags/';
+---
+
+<Base
+  lang={lang}
+  title={`${entry.data.title} — Nacho Mascort`}
+  description={entry.data.description}
+  path={path}
+  alternatePath={alternatePath}
+  ogType="article"
+  breadcrumbs={[
+    { name: labels.home, path: localizedRoute('home', lang) },
+    { name: labels.blog, path: localizedRoute('blog', lang) },
+    { name: entry.data.title, path },
+  ]}
+  extraSchemaNodes={[articleNode]}
+>
+  <article class="mx-auto max-w-3xl px-6 pt-16">
+    <header>
+      <p class="eyebrow">blog</p>
+      <h1 class="font-display mt-4 text-4xl font-bold tracking-tight">{entry.data.title}</h1>
+      <p class="mt-4 font-mono text-xs text-muted">
+        <time datetime={entry.data.pubDate.toISOString().slice(0, 10)}>
+          {dateFormatter.format(entry.data.pubDate)}
+        </time>
+        {
+          entry.data.tags.map((tag) => (
+            <>
+              {' · '}
+              <a href={`${tagBase}${tag}/`} class="text-accent hover:underline">
+                #{tag}
+              </a>
+            </>
+          ))
+        }
+      </p>
+    </header>
+
+    <div class="article-body mt-8">
+      <Content />
+    </div>
+  </article>
+
+  <Cta lang={lang} />
+</Base>

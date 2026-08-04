@@ -1,0 +1,103 @@
+---
+import type { Lang } from '../../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  serviceKey: string;
+  deliverables: { title: string; detail: string }[];
+}
+
+const { lang, serviceKey, deliverables } = Astro.props;
+const es = lang === 'es';
+
+/* Mock del entregable real por servicio: "lo que llega a tu inbox" */
+const artifacts: Record<string, { title: string; rows: { label: string; to: string }[] }> = {
+  'ai-automation': {
+    title: es ? 'Mapa de automatización.pdf' : 'Automation map.pdf',
+    rows: [
+      { label: es ? 'informes semanales' : 'weekly reports', to: '92%' },
+      { label: es ? 'clasificación de leads' : 'lead triage', to: '78%' },
+      { label: es ? 'contenido repetitivo' : 'repetitive content', to: '64%' },
+    ],
+  },
+  'fractional-growth': {
+    title: es ? 'Dashboard de canales.xlsx' : 'Channel dashboard.xlsx',
+    rows: [
+      { label: 'SEO', to: '88%' },
+      { label: 'Email · CRM', to: '64%' },
+      { label: 'Affiliates', to: '52%' },
+    ],
+  },
+  'seo-geo': {
+    title: es ? 'Auditoría priorizada.pdf' : 'Prioritized audit.pdf',
+    rows: [
+      { label: es ? 'impacto alto · 12 acciones' : 'high impact · 12 actions', to: '100%' },
+      { label: es ? 'impacto medio · 23 acciones' : 'medium impact · 23 actions', to: '60%' },
+      { label: es ? 'capa GEO/AEO · 9 acciones' : 'GEO/AEO layer · 9 actions', to: '35%' },
+    ],
+  },
+  training: {
+    title: es ? 'Programa a medida.pdf' : 'Custom program.pdf',
+    rows: [
+      { label: es ? 'módulo 1 · fundamentos' : 'module 1 · foundations', to: '100%' },
+      { label: es ? 'módulo 2 · vuestro caso' : 'module 2 · your case', to: '70%' },
+      { label: es ? 'módulo 3 · ejercicios' : 'module 3 · exercises', to: '40%' },
+    ],
+  },
+};
+
+const artifact = artifacts[serviceKey];
+---
+
+<section class="mx-auto max-w-5xl px-6 pt-24">
+  <div class="reveal">
+    <p class="eyebrow">{es ? 'entregables' : 'deliverables'}</p>
+    <h2 class="font-display mt-4 text-3xl font-bold tracking-tight">
+      {es ? 'Qué obtienes' : 'What you get'}
+    </h2>
+  </div>
+
+  <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    {
+      deliverables.map((deliverable, index) => (
+        <div
+          class="card-lift reveal rounded-2xl border border-line p-6"
+          style={`--reveal-delay: ${index * 90}ms`}
+        >
+          <span class="check-pop text-accent" style={`--d: ${300 + index * 120}ms`} aria-hidden="true">
+            ✓
+          </span>
+          <h3 class="font-display mt-2 font-bold">{deliverable.title}</h3>
+          <p class="mt-1 text-sm text-muted">{deliverable.detail}</p>
+        </div>
+      ))
+    }
+
+    {
+      artifact && (
+        <div
+          class="scene reveal p-5"
+          style={`--reveal-delay: ${deliverables.length * 90}ms`}
+          aria-hidden="true"
+        >
+          <p class="eyebrow">{es ? 'lo que llega a tu inbox' : 'what lands in your inbox'}</p>
+          <div class="mt-3 rounded-lg border border-line bg-paper p-4">
+            <p class="flex items-center gap-2 font-mono text-xs">
+              <span class="text-accent">▤</span> {artifact.title}
+            </p>
+            <div class="mt-3 space-y-2.5">
+              {artifact.rows.map((row, index) => (
+                <div>
+                  <p class="font-mono text-[10px] text-muted">{row.label}</p>
+                  <div class="meter mt-1" style={`--to: ${row.to}; --d: ${index * 150}ms`}>
+                    <span />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )
+    }
+  </div>
+</section>

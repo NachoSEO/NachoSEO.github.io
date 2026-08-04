@@ -1,0 +1,38 @@
+---
+import type { Lang } from '../../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  problem: { intro: string[]; pains: string[] };
+}
+
+const { lang, problem } = Astro.props;
+const es = lang === 'es';
+---
+
+<section class="mx-auto max-w-5xl px-6 pt-24">
+  <div class="grid items-start gap-10 lg:grid-cols-2">
+    <div class="reveal">
+      <p class="eyebrow">{es ? 'el problema' : 'the problem'}</p>
+      <h2 class="font-display mt-4 text-3xl font-bold tracking-tight">
+        {es ? '¿Te suena?' : 'Sound familiar?'}
+      </h2>
+      {problem.intro.map((paragraph) => <p class="mt-4 text-lg text-muted">{paragraph}</p>)}
+    </div>
+    <ul class="scene reveal space-y-3 p-6" style="--reveal-delay: 150ms">
+      {
+        problem.pains.map((pain, index) => (
+          <li
+            class="reveal flex items-start gap-3 font-mono text-sm"
+            style={`--reveal-delay: ${200 + index * 120}ms`}
+          >
+            <span class="mt-0.5 text-[#e0245e]" aria-hidden="true">
+              ✕
+            </span>
+            <span class="text-muted">{pain}</span>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>

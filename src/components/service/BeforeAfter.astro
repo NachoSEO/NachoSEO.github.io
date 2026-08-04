@@ -1,0 +1,61 @@
+---
+import type { Lang } from '../../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  transformation: { before: string[]; after: string[] };
+}
+
+const { lang, transformation } = Astro.props;
+const es = lang === 'es';
+---
+
+<section class="mx-auto max-w-5xl px-6 pt-24">
+  <div class="reveal">
+    <p class="eyebrow">{es ? 'transformación' : 'transformation'}</p>
+    <h2 class="font-display mt-4 text-3xl font-bold tracking-tight">
+      {es ? 'Dónde estás → dónde llegas' : 'Where you are → where you land'}
+    </h2>
+  </div>
+
+  <div class="mt-10 grid items-stretch gap-6 lg:grid-cols-[1fr_auto_1fr]">
+    <div class="reveal rounded-2xl border border-line p-6">
+      <p class="font-mono text-xs uppercase text-muted">{es ? 'hoy' : 'today'}</p>
+      <ul class="mt-4 space-y-3">
+        {
+          transformation.before.map((item) => (
+            <li class="flex items-start gap-3 text-sm text-muted">
+              <span class="mt-0.5 text-[#e0245e]" aria-hidden="true">
+                ✕
+              </span>
+              {item}
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <div class="hidden items-center lg:flex" aria-hidden="true">
+      <div class="flow-line w-16"></div>
+    </div>
+    <div class="flow-line-v mx-auto lg:hidden" aria-hidden="true"></div>
+
+    <div class="reveal rounded-2xl border border-accent bg-raised p-6" style="--reveal-delay: 150ms">
+      <p class="font-mono text-xs uppercase text-accent">
+        {es ? 'con el sistema' : 'with the system'}
+      </p>
+      <ul class="mt-4 space-y-3">
+        {
+          transformation.after.map((item, index) => (
+            <li class="flex items-start gap-3 text-sm">
+              <span class="check-pop mt-0.5 text-[#0e9f6e]" style={`--d: ${400 + index * 150}ms`} aria-hidden="true">
+                ✓
+              </span>
+              {item}
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</section>

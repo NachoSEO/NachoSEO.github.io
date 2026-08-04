@@ -1,0 +1,38 @@
+---
+import type { Lang } from '../../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  metrics: { value: string; label: string; delta?: string }[];
+  proof: string;
+}
+
+const { metrics, proof } = Astro.props;
+---
+
+<section class="mx-auto max-w-5xl px-6 pt-14">
+  <dl class="reveal grid gap-6 rounded-2xl border border-line bg-raised p-8 sm:grid-cols-3">
+    {
+      metrics.map((metric, index) => (
+        <div class="flex flex-col-reverse">
+          <dt class="mt-1 font-mono text-xs text-muted">{metric.label}</dt>
+          <dd class="font-display text-3xl font-bold text-accent">
+            {metric.value}
+            {metric.delta && (
+              <span
+                class="check-pop ml-2 rounded-full border border-[#34d399]/40 px-2 py-0.5 align-middle font-mono text-[10px] font-normal text-[#0e9f6e]"
+                style={`--d: ${600 + index * 200}ms`}
+              >
+                {metric.delta}
+              </span>
+            )}
+          </dd>
+        </div>
+      ))
+    }
+  </dl>
+  <p class="reveal mt-4 flex items-start gap-2 font-mono text-xs text-muted" style="--reveal-delay: 150ms">
+    <span class="live-dot mt-1 shrink-0"></span>
+    <span>{proof}</span>
+  </p>
+</section>

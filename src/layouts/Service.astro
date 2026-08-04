@@ -2,8 +2,19 @@
 import type { CollectionEntry } from 'astro:content';
 import { render } from 'astro:content';
 import Base from './Base.astro';
-import Cta from '../components/Cta.astro';
-import ServiceShowcase from '../components/ServiceShowcase.astro';
+import LogoMarquee from '../components/LogoMarquee.astro';
+import ServiceHero from '../components/service/ServiceHero.astro';
+import MetricsBar from '../components/service/MetricsBar.astro';
+import ProblemSection from '../components/service/ProblemSection.astro';
+import WorkflowBlueprint from '../components/service/WorkflowBlueprint.astro';
+import EngagementTimeline from '../components/service/EngagementTimeline.astro';
+import DeliverablesGrid from '../components/service/DeliverablesGrid.astro';
+import BeforeAfter from '../components/service/BeforeAfter.astro';
+import MaturityLadder from '../components/service/MaturityLadder.astro';
+import Packages from '../components/service/Packages.astro';
+import ComparisonTable from '../components/service/ComparisonTable.astro';
+import FaqAccordion from '../components/service/FaqAccordion.astro';
+import NextStepCta from '../components/service/NextStepCta.astro';
 import { localizedRoute } from '../i18n/utils';
 import type { Lang } from '../i18n/ui';
 
@@ -16,11 +27,12 @@ interface Props {
 const { entry, path, alternatePath } = Astro.props;
 const lang = entry.data.lang as Lang;
 const { Content } = await render(entry);
+const hasBody = Boolean(entry.body?.trim());
 
 const labels =
   lang === 'es'
-    ? { services: 'Servicios', home: 'Inicio', faq: 'Preguntas frecuentes', proof: 'prueba' }
-    : { services: 'Services', home: 'Home', faq: 'Frequently asked questions', proof: 'proof' };
+    ? { services: 'Servicios', home: 'Inicio' }
+    : { services: 'Services', home: 'Home' };
 
 const serviceNode = {
   '@type': 'Service',
@@ -32,6 +44,8 @@ const serviceNode = {
   availableLanguage: ['es', 'en'],
   url: new URL(path, Astro.site).href,
 };
+
+const serviceKey = entry.data.translationKey;
 ---
 
 <Base
@@ -48,42 +62,45 @@ const serviceNode = {
   faq={entry.data.faq}
   extraSchemaNodes={[serviceNode]}
 >
-  <article class="mx-auto max-w-4xl px-6 pt-16">
-    <div class="hero-seq">
-      <p class="eyebrow">{labels.services.toLowerCase()}</p>
-      <h1 class="font-display mt-4 text-4xl font-bold tracking-tight sm:text-5xl">
-        {entry.data.title}
-      </h1>
-      <p class="mt-4 max-w-2xl text-xl text-muted">{entry.data.tagline}</p>
-    </div>
+  <ServiceHero
+    lang={lang}
+    serviceKey={serviceKey}
+    title={entry.data.title}
+    tagline={entry.data.tagline}
+  />
 
-    <ServiceShowcase serviceKey={entry.data.translationKey} lang={lang} />
+  <MetricsBar lang={lang} metrics={entry.data.metrics} proof={entry.data.proof} />
 
-    <aside class="reveal mt-10 border-l-2 border-accent bg-raised px-5 py-4">
-      <p class="eyebrow">{labels.proof}</p>
-      <p class="mt-1 text-sm">{entry.data.proof}</p>
-    </aside>
+  <LogoMarquee lang={lang} />
 
-    <div
-      class="prose-headings:font-display mt-10 space-y-4 [&_h2]:mt-10 [&_h2]:text-2xl [&_h2]:font-bold [&_li]:mt-2 [&_li]:list-disc [&_p]:text-ink/90 [&_strong]:font-semibold [&_ul]:pl-5"
-    >
-      <Content />
-    </div>
+  <ProblemSection lang={lang} problem={entry.data.problem} />
 
-    <section class="reveal mt-14">
-      <h2 class="font-display text-2xl font-bold">{labels.faq}</h2>
-      <dl class="mt-6 divide-y divide-line">
-        {
-          entry.data.faq.map((item) => (
-            <div class="py-5">
-              <dt class="font-semibold">{item.question}</dt>
-              <dd class="mt-2 text-muted">{item.answer}</dd>
-            </div>
-          ))
-        }
-      </dl>
-    </section>
-  </article>
+  <WorkflowBlueprint lang={lang} serviceKey={serviceKey} approach={entry.data.approach} />
 
-  <Cta lang={lang} />
+  <EngagementTimeline lang={lang} serviceKey={serviceKey} timeline={entry.data.timeline} />
+
+  <DeliverablesGrid lang={lang} serviceKey={serviceKey} deliverables={entry.data.deliverables} />
+
+  {serviceKey === 'ai-automation' && <MaturityLadder lang={lang} />}
+  {
+    serviceKey !== 'ai-automation' && entry.data.transformation && (
+      <BeforeAfter lang={lang} transformation={entry.data.transformation} />
+    )
+  }
+
+  <Packages lang={lang} packages={entry.data.packages} />
+
+  {entry.data.comparison && <ComparisonTable lang={lang} comparison={entry.data.comparison} />}
+
+  {
+    hasBody && (
+      <div class="article-body mx-auto max-w-3xl px-6 pt-24">
+        <Content />
+      </div>
+    )
+  }
+
+  <FaqAccordion lang={lang} faq={entry.data.faq} />
+
+  <NextStepCta lang={lang} />
 </Base>

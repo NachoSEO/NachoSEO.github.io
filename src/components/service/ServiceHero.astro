@@ -1,0 +1,44 @@
+---
+import ServiceShowcase from '../ServiceShowcase.astro';
+import { site } from '../../site';
+import type { Lang } from '../../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  serviceKey: string;
+  title: string;
+  tagline: string;
+}
+
+const { lang, serviceKey, title, tagline } = Astro.props;
+const es = lang === 'es';
+---
+
+<section class="relative overflow-hidden">
+  <div class="grid-bg absolute inset-0" aria-hidden="true"></div>
+  <div class="glow-orb parallax-slow absolute -top-28 left-[5%] h-80 w-80" aria-hidden="true"></div>
+  <div class="glow-orb parallax-fast absolute top-32 right-[-8%] h-64 w-64" aria-hidden="true"></div>
+
+  <div class="relative mx-auto max-w-5xl px-6 pt-20">
+    <div class="hero-seq">
+      <p class="eyebrow">{es ? 'servicios' : 'services'}</p>
+      <h1 class="font-display mt-4 max-w-3xl text-4xl font-bold tracking-tight sm:text-6xl">
+        {title}
+      </h1>
+      <p class="mt-5 max-w-2xl text-xl text-muted">{tagline}</p>
+      <div class="mt-8 flex flex-wrap items-center gap-4">
+        <a
+          href={site.calUrl}
+          class="rounded-full bg-accent px-8 py-3 font-medium text-paper hover:opacity-90"
+        >
+          {es ? 'Agenda una llamada' : 'Book a call'}
+        </a>
+        <a href="#sistema" class="font-medium text-accent hover:underline">
+          {es ? 'Ver cómo trabajo ↓' : 'See how I work ↓'}
+        </a>
+      </div>
+    </div>
+
+    <ServiceShowcase serviceKey={serviceKey} lang={lang} />
+  </div>
+</section>

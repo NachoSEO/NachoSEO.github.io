@@ -1,0 +1,36 @@
+---
+import type { Lang } from '../../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  faq: { question: string; answer: string }[];
+}
+
+const { lang, faq } = Astro.props;
+const es = lang === 'es';
+---
+
+<section class="mx-auto max-w-3xl px-6 pt-24">
+  <div class="reveal">
+    <p class="eyebrow">faq</p>
+    <h2 class="font-display mt-4 text-3xl font-bold tracking-tight">
+      {es ? 'Preguntas frecuentes' : 'Frequently asked questions'}
+    </h2>
+  </div>
+
+  <div class="reveal mt-8 divide-y divide-line border-y border-line" style="--reveal-delay: 120ms">
+    {
+      faq.map((item) => (
+        <details name="faq" class="faq-item group py-4">
+          <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold [&::-webkit-details-marker]:hidden">
+            {item.question}
+            <span class="faq-marker shrink-0 font-mono text-accent" aria-hidden="true">
+              +
+            </span>
+          </summary>
+          <p class="pt-3 text-muted">{item.answer}</p>
+        </details>
+      ))
+    }
+  </div>
+</section>

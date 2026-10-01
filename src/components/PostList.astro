@@ -1,5 +1,7 @@
 ---
 import type { CollectionEntry } from 'astro:content';
+import PostDate from './PostDate.astro';
+import { localizedRoute } from '../i18n/utils';
 import type { Lang } from '../i18n/ui';
 
 interface Props {
@@ -8,12 +10,7 @@ interface Props {
 }
 
 const { posts, lang } = Astro.props;
-const base = lang === 'es' ? '/blog/' : '/en/blog/';
-const dateFormatter = new Intl.DateTimeFormat(lang === 'es' ? 'es-ES' : 'en-US', {
-  year: 'numeric',
-  month: 'short',
-  day: 'numeric',
-});
+const base = localizedRoute('blog', lang);
 const sorted = [...posts].sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 ---
 
@@ -23,9 +20,7 @@ const sorted = [...posts].sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDa
       <li>
         <a href={`${base}${post.data.slug}/`} class="row-link group block py-6 sm:px-2">
           <p class="meta">
-            <time datetime={post.data.pubDate.toISOString().slice(0, 10)}>
-              {dateFormatter.format(post.data.pubDate)}
-            </time>
+            <PostDate date={post.data.pubDate} lang={lang} month="short" />
           </p>
           <h2 class="display-3 mt-1 transition-colors group-hover:text-accent-ink">
             {post.data.title}

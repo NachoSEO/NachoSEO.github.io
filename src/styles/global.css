@@ -1,29 +1,20 @@
 @import "tailwindcss";
 
 @font-face {
-  font-family: "Newsreader Variable";
+  font-family: "Instrument Sans Variable";
   font-style: normal;
   font-display: swap;
-  font-weight: 200 800;
-  src: url("/fonts/newsreader-latin-wght-normal.woff2") format("woff2-variations");
+  font-weight: 400 700;
+  src: url("/fonts/instrument-sans-latin-wght-normal.woff2") format("woff2-variations");
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F,
     U+20AC, U+2122, U+2190-2193, U+2212;
 }
 @font-face {
-  font-family: "Newsreader Variable";
-  font-style: italic;
-  font-display: swap;
-  font-weight: 200 800;
-  src: url("/fonts/newsreader-latin-wght-italic.woff2") format("woff2-variations");
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F,
-    U+20AC, U+2122, U+2190-2193, U+2212;
-}
-@font-face {
-  font-family: "Hanken Grotesk Variable";
+  font-family: "Geist Variable";
   font-style: normal;
   font-display: swap;
   font-weight: 100 900;
-  src: url("/fonts/hanken-grotesk-latin-wght-normal.woff2") format("woff2-variations");
+  src: url("/fonts/geist-latin-wght-normal.woff2") format("woff2-variations");
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F,
     U+20AC, U+2122, U+2190-2193, U+2212;
 }
@@ -38,8 +29,8 @@
 }
 
 @theme {
-  --font-display: "Newsreader Variable", Georgia, "Times New Roman", serif;
-  --font-sans: "Hanken Grotesk Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Instrument Sans Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono Variable", ui-monospace, "SF Mono", Menlo, monospace;
 
   --color-paper: var(--tone-paper);
@@ -118,453 +109,465 @@ body {
   outline-offset: 3px;
 }
 
-/* ============ Tipografía ============ */
+/* Componentes propios en su capa: las utilidades de Tailwind pueden sobrescribirlos */
+@layer components {
+  /* ============ Tipografía ============ */
 
-.display-1 {
-  font-family: var(--font-display);
-  font-size: clamp(2.1rem, 1.2rem + 3.2vw, 4rem);
-  font-weight: 500;
-  line-height: 1.05;
-  letter-spacing: -0.02em;
-  max-width: 20ch;
-  text-wrap: balance;
-}
-.display-2 {
-  font-family: var(--font-display);
-  font-size: clamp(1.6rem, 1.2rem + 1.6vw, 2.5rem);
-  font-weight: 500;
-  line-height: 1.12;
-  letter-spacing: -0.015em;
-  text-wrap: balance;
-}
-.display-3 {
-  font-family: var(--font-display);
-  font-size: clamp(1.3rem, 1.15rem + 0.5vw, 1.5rem);
-  font-weight: 500;
-  line-height: 1.2;
-  letter-spacing: -0.01em;
-}
-.lede {
-  font-size: clamp(1.05rem, 0.98rem + 0.3vw, 1.15rem);
-  line-height: 1.55;
-  color: var(--tone-muted);
-  max-width: 58ch;
-  text-wrap: pretty;
-}
-.meta {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--tone-muted);
-}
-
-/* En pantallas estrechas, los titulares parten palabras largas en lugar de desbordar */
-@media (max-width: 47.99rem) {
-  .display-1,
-  .display-2,
+  .display-1 {
+    font-family: var(--font-display);
+    font-size: clamp(2.1rem, 1.2rem + 3.2vw, 4rem);
+    font-weight: 600;
+    line-height: 1.04;
+    letter-spacing: -0.035em;
+    max-width: 20ch;
+    text-wrap: balance;
+  }
+  .display-2 {
+    font-family: var(--font-display);
+    font-size: clamp(1.6rem, 1.2rem + 1.6vw, 2.5rem);
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    text-wrap: balance;
+  }
   .display-3 {
-    hyphens: auto;
-    overflow-wrap: break-word;
+    font-family: var(--font-display);
+    font-size: clamp(1.3rem, 1.15rem + 0.5vw, 1.5rem);
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
   }
-}
-
-/* Etiqueta de sección: antetítulo corto en frambuesa */
-.section-label {
-  font-family: var(--font-sans);
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--tone-accent-ink);
-}
-.on-dark .section-label {
-  color: var(--tone-accent-on-dark);
-}
-
-/* ============ Acciones ============ */
-
-.btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: var(--tone-accent);
-  color: #fff;
-  border: 1px solid var(--tone-accent);
-  border-radius: 999px;
-  padding: 0.75rem 1.4rem;
-  font-weight: 600;
-  font-size: 0.95rem;
-  line-height: 1.2;
-  transition: background-color 0.15s ease, border-color 0.15s ease;
-}
-.btn:hover {
-  background: var(--tone-accent-ink);
-  border-color: var(--tone-accent-ink);
-}
-.btn--ghost {
-  background: transparent;
-  color: var(--tone-ink);
-  border-color: var(--tone-line);
-}
-.btn--ghost:hover {
-  background: var(--tone-raised);
-  border-color: var(--tone-ink);
-}
-.on-dark .btn--ghost {
-  color: var(--tone-on-dark);
-  border-color: rgb(255 255 255 / 0.35);
-}
-.on-dark .btn--ghost:hover {
-  background: var(--tone-dark-2);
-  border-color: var(--tone-on-dark);
-}
-.btn--small {
-  padding: 0.5rem 1rem;
-  font-size: 0.85rem;
-}
-.link-arrow {
-  font-weight: 600;
-  color: var(--tone-ink);
-  text-decoration: underline;
-  text-decoration-color: var(--tone-accent);
-  text-decoration-thickness: 1px;
-  text-underline-offset: 0.25em;
-  transition: color 0.15s ease;
-}
-.link-arrow::after {
-  content: " →";
-}
-.link-arrow:hover {
-  color: var(--tone-accent-ink);
-}
-
-/* Tarjeta blanca sobre el gris de fondo */
-.card {
-  background: var(--tone-raised);
-  border: 1px solid var(--tone-line);
-  border-radius: 0.875rem;
-  padding: 1.75rem;
-}
-a.card {
-  display: block;
-  transition: border-color 0.15s ease;
-}
-a.card:hover {
-  border-color: var(--tone-ink);
-}
-a.card:hover .card-title {
-  color: var(--tone-accent-ink);
-}
-
-/* Menú móvil: oculto hasta que se pulsa el botón (sin JS lo muestra un <noscript> en Base.astro) */
-.mobile-menu:not(.is-open) {
-  display: none;
-}
-.menu-toggle:focus-visible {
-  outline-color: var(--tone-accent-on-dark);
-}
-.menu-icon,
-.menu-icon::before,
-.menu-icon::after {
-  display: block;
-  width: 20px;
-  height: 2px;
-  border-radius: 2px;
-  background: currentColor;
-  transition: transform 0.2s ease, background-color 0.2s ease;
-}
-.menu-icon {
-  position: relative;
-}
-.menu-icon::before,
-.menu-icon::after {
-  content: '';
-  position: absolute;
-  left: 0;
-}
-.menu-icon::before {
-  top: -6px;
-}
-.menu-icon::after {
-  top: 6px;
-}
-[aria-expanded='true'] .menu-icon {
-  background: transparent;
-}
-[aria-expanded='true'] .menu-icon::before {
-  transform: translateY(6px) rotate(45deg);
-}
-[aria-expanded='true'] .menu-icon::after {
-  transform: translateY(-6px) rotate(-45deg);
-}
-
-/* Logos de clientes: silueta en tinta; al pasar el ratón, el logo en su color original */
-.client-logo {
-  position: relative;
-  display: block;
-}
-.client-logo-mono {
-  opacity: 0.7;
-  transition: opacity 0.2s ease;
-}
-.client-logo-color {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  transition: opacity 0.2s ease;
-}
-.client-logo:hover .client-logo-mono {
-  opacity: 0;
-}
-.client-logo:hover .client-logo-color {
-  opacity: 1;
-}
-
-/* Retrato del hero: sombra que sigue la silueta y círculo con luz cenital para dar volumen */
-.portrait-backdrop {
-  background: radial-gradient(circle at 50% 30%, #2b5a6a 0%, var(--tone-dark-2) 55%, #173a47 100%);
-  box-shadow: inset 0 -30px 60px rgb(0 0 0 / 0.18);
-}
-.portrait-cutout {
-  filter: drop-shadow(0 0 1px rgb(255 255 255 / 0.18)) drop-shadow(-14px 22px 30px rgb(4 18 24 / 0.55));
-}
-
-/* Filas de casos sobre petróleo: logos en blanco y realce al pasar el ratón */
-.case-row {
-  transition: background-color 0.15s ease;
-}
-.case-row:hover {
-  background-color: var(--tone-dark-2);
-}
-img.case-logo {
-  filter: brightness(0) invert(1);
-  opacity: 0.85;
-}
-span.case-logo {
-  opacity: 0.85;
-}
-.case-arrow {
-  transition: transform 0.15s ease, color 0.15s ease;
-}
-.case-row:hover .case-arrow {
-  color: var(--tone-accent-on-dark);
-  transform: translateX(4px);
-}
-
-/* Fila de logos: carrusel automático en móvil, cuadrícula en escritorio */
-.logo-list {
-  display: flex;
-  align-items: center;
-  gap: 2.5rem;
-  padding-right: 2.5rem;
-}
-@media (max-width: 47.99rem) and (prefers-reduced-motion: no-preference) {
-  .logo-marquee {
-    overflow: hidden;
-    mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent);
+  .lede {
+    font-size: clamp(1.05rem, 0.98rem + 0.3vw, 1.15rem);
+    line-height: 1.55;
+    color: var(--tone-muted);
+    max-width: 58ch;
+    text-wrap: pretty;
   }
-  .logo-track {
-    display: flex;
-    width: max-content;
-    animation: logo-scroll 40s linear infinite;
+  .meta {
+    font-family: var(--font-sans);
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--tone-muted);
   }
-}
-@media (min-width: 48rem), (prefers-reduced-motion: reduce) {
-  .logo-list {
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 1.75rem 2.5rem;
-    padding-right: 0;
+
+  /* En pantallas estrechas, los titulares parten palabras largas en lugar de desbordar */
+  @media (max-width: 47.99rem) {
+    .display-1,
+    .display-2,
+    .display-3 {
+      hyphens: auto;
+      overflow-wrap: break-word;
+    }
   }
-  .logo-list[aria-hidden='true'] {
+
+  /* Etiqueta de sección: antetítulo corto en frambuesa */
+  .section-label {
+    font-family: var(--font-sans);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--tone-accent-ink);
+  }
+  .on-dark .section-label {
+    color: var(--tone-accent-on-dark);
+  }
+
+  /* ============ Acciones ============ */
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--tone-accent);
+    color: #fff;
+    border: 1px solid var(--tone-accent);
+    border-radius: 999px;
+    padding: 0.75rem 1.4rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+    line-height: 1.2;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+  }
+  .btn:hover {
+    background: var(--tone-accent-ink);
+    border-color: var(--tone-accent-ink);
+  }
+  .btn--ghost {
+    background: transparent;
+    color: var(--tone-ink);
+    border-color: var(--tone-line);
+  }
+  .btn--ghost:hover {
+    background: var(--tone-raised);
+    border-color: var(--tone-ink);
+  }
+  .on-dark .btn--ghost {
+    color: var(--tone-on-dark);
+    border-color: rgb(255 255 255 / 0.35);
+  }
+  .on-dark .btn--ghost:hover {
+    background: var(--tone-dark-2);
+    border-color: var(--tone-on-dark);
+  }
+  .btn--small {
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+  }
+  .link-arrow {
+    font-weight: 600;
+    color: var(--tone-ink);
+    text-decoration: underline;
+    text-decoration-color: var(--tone-accent);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.25em;
+    transition: color 0.15s ease;
+  }
+  .link-arrow::after {
+    content: " →";
+  }
+  .link-arrow:hover {
+    color: var(--tone-accent-ink);
+  }
+
+  /* Tarjeta blanca sobre el gris de fondo */
+  .card {
+    background: var(--tone-raised);
+    border: 1px solid var(--tone-line);
+    border-radius: 0.875rem;
+    padding: 1.75rem;
+  }
+  a.card {
+    display: block;
+    transition: border-color 0.15s ease;
+  }
+  a.card:hover {
+    border-color: var(--tone-ink);
+  }
+  a.card:hover .card-title {
+    color: var(--tone-accent-ink);
+  }
+
+  /* Menú móvil: oculto hasta que se pulsa el botón (sin JS lo muestra un <noscript> en Base.astro) */
+  .mobile-menu:not(.is-open) {
     display: none;
   }
-}
-@keyframes logo-scroll {
-  to {
-    transform: translateX(-50%);
+  .menu-toggle:focus-visible {
+    outline-color: var(--tone-accent-on-dark);
   }
-}
+  .menu-icon,
+  .menu-icon::before,
+  .menu-icon::after {
+    display: block;
+    width: 20px;
+    height: 2px;
+    border-radius: 2px;
+    background: currentColor;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+  }
+  .menu-icon {
+    position: relative;
+  }
+  .menu-icon::before,
+  .menu-icon::after {
+    content: '';
+    position: absolute;
+    left: 0;
+  }
+  .menu-icon::before {
+    top: -6px;
+  }
+  .menu-icon::after {
+    top: 6px;
+  }
+  [aria-expanded='true'] .menu-icon {
+    background: transparent;
+  }
+  [aria-expanded='true'] .menu-icon::before {
+    transform: translateY(6px) rotate(45deg);
+  }
+  [aria-expanded='true'] .menu-icon::after {
+    transform: translateY(-6px) rotate(-45deg);
+  }
 
-/* Banda oscura petróleo (hero, CTA, pie) */
-.on-dark {
-  background: var(--tone-dark);
-  color: var(--tone-on-dark);
-}
-.on-dark .lede,
-.on-dark .meta {
-  color: var(--tone-on-dark-muted);
-}
-/* Palabras destacadas en titulares grandes sobre petróleo: el mismo frambuesa
-   que los botones, aclarado lo justo para el 3:1 que exige el texto grande */
-.on-dark .accent {
-  color: #f0154f;
-}
-.accent {
-  color: var(--tone-accent-ink);
-}
-
-/* ============ Listas con reglas ============ */
-
-.row-list > * {
-  border-top: 1px solid var(--tone-line);
-}
-.row-list > *:last-child {
-  border-bottom: 1px solid var(--tone-line);
-}
-.row-link {
-  transition: background-color 0.15s ease;
-}
-.row-link:hover {
-  background-color: var(--tone-raised);
-}
-.row-link:hover .row-title {
-  color: var(--tone-accent-ink);
-}
-
-/* ============ Reveal discreto (una vez, sin JS se ve todo) ============ */
-
-@media (prefers-reduced-motion: no-preference) {
-  html.js .reveal {
+  /* Logos de clientes: silueta en tinta; al pasar el ratón, el logo en su color original */
+  .client-logo {
+    position: relative;
+    display: block;
+  }
+  .client-logo-mono {
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+  }
+  /* La versión a color solo existe donde hay hover; display:none evita que el navegador la descargue (loading=lazy) */
+  .client-logo-color {
+    display: none;
+    position: absolute;
+    inset: 0;
     opacity: 0;
-    transform: translateY(8px);
-    transition:
-      opacity 0.5s ease,
-      transform 0.5s ease;
+    transition: opacity 0.2s ease;
   }
-  html.js .reveal.in {
+  @media (hover: hover) and (min-width: 48rem) {
+    .client-logo-color {
+      display: block;
+    }
+  }
+  .client-logo:hover .client-logo-mono {
+    opacity: 0;
+  }
+  .client-logo:hover .client-logo-color {
     opacity: 1;
-    transform: none;
   }
-}
 
-/* ============ FAQ nativo ============ */
+  /* Retrato del hero: sombra que sigue la silueta y círculo con luz cenital para dar volumen */
+  .portrait-backdrop {
+    background: radial-gradient(circle at 50% 30%, #2b5a6a 0%, var(--tone-dark-2) 55%, #173a47 100%);
+    box-shadow: inset 0 -30px 60px rgb(0 0 0 / 0.18);
+  }
+  .portrait-cutout {
+    filter: drop-shadow(0 0 1px rgb(255 255 255 / 0.18)) drop-shadow(-14px 22px 30px rgb(4 18 24 / 0.55));
+  }
 
-.faq-item::details-content {
-  height: 0;
-  overflow: clip;
-  transition:
-    height 0.25s ease,
-    content-visibility 0.25s allow-discrete;
-}
-.faq-item[open]::details-content {
-  height: auto;
-}
-.faq-item summary::-webkit-details-marker {
-  display: none;
-}
-.faq-marker {
-  transition: rotate 0.2s ease;
-}
-.faq-item[open] .faq-marker {
-  rotate: 45deg;
-}
+  /* Filas de casos sobre petróleo: logos en blanco y realce al pasar el ratón */
+  .case-row {
+    transition: background-color 0.15s ease;
+  }
+  .case-row:hover {
+    background-color: var(--tone-dark-2);
+  }
+  img.case-logo {
+    filter: brightness(0) invert(1);
+    opacity: 0.85;
+  }
+  span.case-logo {
+    opacity: 0.85;
+  }
+  .case-arrow {
+    transition: transform 0.15s ease, color 0.15s ease;
+  }
+  .case-row:hover .case-arrow {
+    color: var(--tone-accent-on-dark);
+    transform: translateX(4px);
+  }
 
-/* ============ Cuerpo de artículo (MDX) ============ */
+  /* Fila de logos: carrusel automático en móvil, cuadrícula en escritorio */
+  .logo-list {
+    display: flex;
+    align-items: center;
+    gap: 2.5rem;
+    padding-right: 2.5rem;
+  }
+  @media (max-width: 47.99rem) and (prefers-reduced-motion: no-preference) {
+    .logo-marquee {
+      overflow: hidden;
+      mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent);
+    }
+    .logo-track {
+      display: flex;
+      width: max-content;
+      animation: logo-scroll 40s linear infinite;
+    }
+    .logo-marquee.is-offscreen .logo-track {
+      animation-play-state: paused;
+    }
+  }
+  @media (min-width: 48rem), (prefers-reduced-motion: reduce) {
+    .logo-list {
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.75rem 2.5rem;
+      padding-right: 0;
+    }
+    .logo-list[aria-hidden='true'] {
+      display: none;
+    }
+  }
+  @keyframes logo-scroll {
+    to {
+      transform: translateX(-50%);
+    }
+  }
 
-.article-body {
-  font-size: clamp(1rem, 0.95rem + 0.25vw, 1.05rem);
-  line-height: 1.75;
-  max-width: 65ch;
-}
-/* Índice lateral del artículo: el enlace de la sección visible se marca en frambuesa */
-.toc-link.is-active {
-  color: var(--tone-ink);
-  border-left-color: var(--tone-accent);
-  font-weight: 600;
-}
-.article-body h2,
-.article-body h3 {
-  scroll-margin-top: 2rem;
-}
+  /* Banda oscura petróleo (hero, CTA, pie) */
+  .on-dark {
+    background: var(--tone-dark);
+    color: var(--tone-on-dark);
+  }
+  .on-dark .lede,
+  .on-dark .meta {
+    color: var(--tone-on-dark-muted);
+  }
+  /* Palabras destacadas en titulares grandes sobre petróleo: el mismo frambuesa
+     que los botones, aclarado lo justo para el 3:1 que exige el texto grande */
+  .on-dark .accent {
+    color: #f0154f;
+  }
+  .accent {
+    color: var(--tone-accent-ink);
+  }
 
-.article-body h2 {
-  font-family: var(--font-display);
-  font-size: 1.75rem;
-  font-weight: 500;
-  line-height: 1.2;
-  letter-spacing: -0.01em;
-  margin-top: 3rem;
-}
-.article-body h3 {
-  font-family: var(--font-display);
-  font-size: 1.3rem;
-  font-weight: 600;
-  margin-top: 2rem;
-}
-.article-body p,
-.article-body ul,
-.article-body ol,
-.article-body blockquote,
-.article-body table {
-  margin-top: 1.1rem;
-}
-.article-body ul {
-  list-style: disc;
-  padding-left: 1.25rem;
-}
-.article-body ol {
-  list-style: decimal;
-  padding-left: 1.25rem;
-}
-.article-body li + li {
-  margin-top: 0.35rem;
-}
-.article-body li::marker {
-  color: var(--tone-muted);
-}
-.article-body a {
-  text-decoration: underline;
-  text-decoration-color: var(--tone-accent);
-  text-underline-offset: 0.2em;
-}
-.article-body a:hover {
-  color: var(--tone-accent-ink);
-}
-.article-body strong {
-  font-weight: 650;
-}
-.article-body blockquote {
-  border-left: 2px solid var(--tone-accent);
-  padding-left: 1.25rem;
-  font-family: var(--font-display);
-  font-size: 1.25rem;
-  font-style: italic;
-}
-.article-body table {
-  width: 100%;
-  font-size: 0.9rem;
-  border-collapse: collapse;
-}
-.article-body th,
-.article-body td {
-  text-align: left;
-  padding: 0.5rem 0.75rem 0.5rem 0;
-  border-bottom: 1px solid var(--tone-line);
-}
-.article-body th {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--tone-muted);
-}
-.article-body img {
-  margin-top: 1.5rem;
-  border: 1px solid var(--tone-line);
-  height: auto;
-}
-.article-body pre {
-  margin-top: 1.5rem;
-  padding: 1rem 1.25rem;
-  font-size: 0.85rem;
-  overflow-x: auto;
-}
-.article-body :not(pre) > code {
-  font-family: var(--font-mono);
-  font-size: 0.85em;
-  background: var(--tone-raised);
-  padding: 0.1em 0.35em;
+  /* ============ Listas con reglas ============ */
+
+  .row-list > * {
+    border-top: 1px solid var(--tone-line);
+  }
+  .row-list > *:last-child {
+    border-bottom: 1px solid var(--tone-line);
+  }
+  .row-link {
+    transition: background-color 0.15s ease;
+  }
+  .row-link:hover {
+    background-color: var(--tone-raised);
+  }
+  .row-link:hover .row-title {
+    color: var(--tone-accent-ink);
+  }
+
+  /* ============ Reveal discreto (una vez, sin JS se ve todo) ============ */
+
+  @media (prefers-reduced-motion: no-preference) {
+    html.js .reveal {
+      opacity: 0;
+      transform: translateY(8px);
+      transition:
+        opacity 0.5s ease,
+        transform 0.5s ease;
+    }
+    html.js .reveal.in {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  /* ============ FAQ nativo ============ */
+
+  .faq-item::details-content {
+    height: 0;
+    overflow: clip;
+    transition:
+      height 0.25s ease,
+      content-visibility 0.25s allow-discrete;
+  }
+  .faq-item[open]::details-content {
+    height: auto;
+  }
+  .faq-item summary::-webkit-details-marker {
+    display: none;
+  }
+  .faq-marker {
+    transition: rotate 0.2s ease;
+  }
+  .faq-item[open] .faq-marker {
+    rotate: 45deg;
+  }
+
+  /* ============ Cuerpo de artículo (MDX) ============ */
+
+  .article-body {
+    font-size: clamp(1rem, 0.95rem + 0.25vw, 1.05rem);
+    line-height: 1.75;
+    max-width: 65ch;
+  }
+  /* Índice lateral del artículo: el enlace de la sección visible se marca en frambuesa */
+  .toc-link.is-active {
+    color: var(--tone-ink);
+    border-left-color: var(--tone-accent);
+    font-weight: 600;
+  }
+  .article-body h2,
+  .article-body h3 {
+    scroll-margin-top: 2rem;
+  }
+
+  .article-body h2 {
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    font-weight: 500;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    margin-top: 3rem;
+  }
+  .article-body h3 {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-top: 2rem;
+  }
+  .article-body p,
+  .article-body ul,
+  .article-body ol,
+  .article-body blockquote,
+  .article-body table {
+    margin-top: 1.1rem;
+  }
+  .article-body ul {
+    list-style: disc;
+    padding-left: 1.25rem;
+  }
+  .article-body ol {
+    list-style: decimal;
+    padding-left: 1.25rem;
+  }
+  .article-body li + li {
+    margin-top: 0.35rem;
+  }
+  .article-body li::marker {
+    color: var(--tone-muted);
+  }
+  .article-body a {
+    text-decoration: underline;
+    text-decoration-color: var(--tone-accent);
+    text-underline-offset: 0.2em;
+  }
+  .article-body a:hover {
+    color: var(--tone-accent-ink);
+  }
+  .article-body strong {
+    font-weight: 650;
+  }
+  .article-body blockquote {
+    border-left: 2px solid var(--tone-accent);
+    padding-left: 1.25rem;
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+  }
+  .article-body table {
+    width: 100%;
+    font-size: 0.9rem;
+    border-collapse: collapse;
+  }
+  .article-body th,
+  .article-body td {
+    text-align: left;
+    padding: 0.5rem 0.75rem 0.5rem 0;
+    border-bottom: 1px solid var(--tone-line);
+  }
+  .article-body th {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--tone-muted);
+  }
+  .article-body img {
+    margin-top: 1.5rem;
+    border: 1px solid var(--tone-line);
+    height: auto;
+  }
+  .article-body pre {
+    margin-top: 1.5rem;
+    padding: 1rem 1.25rem;
+    font-size: 0.85rem;
+    overflow-x: auto;
+  }
+  .article-body :not(pre) > code {
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    background: var(--tone-raised);
+    padding: 0.1em 0.35em;
+  }
 }

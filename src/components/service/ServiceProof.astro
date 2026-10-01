@@ -1,6 +1,6 @@
 ---
-import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
+import CaseLogo from '../CaseLogo.astro';
 import SectionLabel from '../SectionLabel.astro';
 import { caseBrands } from '../../data/case-brands';
 import { localizedRoute } from '../../i18n/utils';
@@ -36,22 +36,11 @@ const items = proofCases
               class="case-row group flex flex-col rounded-xl border border-white/15 p-7"
             >
               <span class="flex h-8 items-center">
-                {brand?.kind === 'image' ? (
-                  <Image
-                    src={brand.mono}
-                    alt={brand.alt}
-                    height={28}
-                    densities={[1, 2]}
-                    class="case-logo w-auto"
-                    style="height: 28px"
-                  />
-                ) : (
-                  brand && <span class="case-logo font-display text-xl font-medium">{brand.text}</span>
-                )}
+                {brand && <CaseLogo brand={brand} class="case-logo" />}
               </span>
               {metric && (
                 <p class="mt-6">
-                  <span class="accent block font-display text-4xl font-medium tracking-tight">{metric.value}</span>
+                  <span class="accent block font-display text-4xl font-semibold tracking-tight">{metric.value}</span>
                   <span class="mt-1 block text-sm text-on-dark-muted">{metric.label}</span>
                 </p>
               )}

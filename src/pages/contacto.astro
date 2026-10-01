@@ -1,6 +1,9 @@
 ---
 import Base from '../layouts/Base.astro';
 import { site } from '../site';
+import { useTranslations } from '../i18n/utils';
+
+const t = useTranslations('es');
 ---
 
 <Base
@@ -20,7 +23,7 @@ import { site } from '../site';
       Hablemos de tu caso
     </h1>
     <p class="lede mt-6">
-      Reserva una llamada de 30 minutos. Me cuentas dónde estás y qué quieres conseguir, y te
+      Reserva una llamada de 30 minutos. Me cuentas en qué punto estás y qué quieres conseguir, y te
       digo con franqueza si puedo ayudarte y por dónde empezaría.
     </p>
 
@@ -28,7 +31,7 @@ import { site } from '../site';
       href={site.calUrl}
       class="btn mt-9"
     >
-      Reserva una llamada de 30 min
+      {t('cta.call30')}
     </a>
 
     <section class="mt-16 max-w-[62ch] border-t border-ink pt-6">

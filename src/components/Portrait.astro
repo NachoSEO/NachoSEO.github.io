@@ -20,6 +20,7 @@ const { alt, class: className } = Astro.props;
   <Image
     src={portrait}
     alt={alt}
+    width={900}
     widths={[320, 480, 640, 900]}
     sizes="(min-width: 768px) 26rem, min(20rem, 80vw)"
     format="webp"

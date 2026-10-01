@@ -1,0 +1,28 @@
+---
+import { Image } from 'astro:assets';
+import type { CaseBrand } from '../data/case-brands';
+
+interface Props {
+  brand: CaseBrand;
+  /** mono: silueta (sobre fondo oscuro se pinta en blanco con .case-logo); color: logo original */
+  variant?: 'mono' | 'color';
+  class?: string;
+}
+
+const { brand, variant = 'mono', class: className } = Astro.props;
+---
+
+{
+  brand.kind === 'image' ? (
+    <Image
+      src={variant === 'color' ? brand.color : brand.mono}
+      alt={brand.alt}
+      height={brand.height}
+      densities={[1, 2]}
+      class:list={['w-auto', className]}
+      style={`height: ${brand.height}px`}
+    />
+  ) : (
+    <span class:list={['font-display text-xl font-semibold', className]}>{brand.text}</span>
+  )
+}

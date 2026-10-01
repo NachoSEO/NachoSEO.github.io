@@ -54,6 +54,7 @@ const brands = [
                     style={`height: ${brand.height}px`}
                     loading="lazy"
                   />
+                  {!isCopy && (
                   <Image
                     src={color(brand.key)}
                     alt=""
@@ -64,6 +65,7 @@ const brands = [
                     style={`height: ${brand.height}px`}
                     loading="lazy"
                   />
+                  )}
                 </li>
               ))}
             </ul>

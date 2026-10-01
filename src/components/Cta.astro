@@ -1,5 +1,6 @@
 ---
 import { site } from '../site';
+import { useTranslations } from '../i18n/utils';
 import type { Lang } from '../i18n/ui';
 
 interface Props {
@@ -8,6 +9,7 @@ interface Props {
 }
 
 const { lang, title } = Astro.props;
+const t = useTranslations(lang);
 
 const copy =
   lang === 'es'
@@ -15,14 +17,12 @@ const copy =
         label: 'Hablemos',
         heading: title ?? '¿Hablamos de tu caso?',
         body: 'Una llamada de 30 minutos, sin compromiso. Me cuentas en qué punto estás y te digo con franqueza si puedo ayudarte y por dónde empezaría. Si quieres referencias de clientes, pídemelas.',
-        button: 'Reserva una llamada de 30 min',
         alt: 'O escríbeme a',
       }
     : {
         label: "Let's talk",
         heading: title ?? 'Want to talk about your case?',
         body: "A 30-minute call, no strings attached. Tell me where you are and I'll tell you honestly whether I can help and where I'd start. If you want client references, just ask.",
-        button: 'Book a 30-min call',
         alt: 'Or email me at',
       };
 ---
@@ -33,7 +33,7 @@ const copy =
     <h2 class="display-2 mt-3 max-w-[22ch]">{copy.heading}</h2>
     <p class="lede mt-4">{copy.body}</p>
     <div class="mt-8 flex flex-wrap items-center gap-x-6 gap-y-4">
-      <a href={site.calUrl} class="btn">{copy.button}</a>
+      <a href={site.calUrl} class="btn">{t('cta.call30')}</a>
       <p class="text-sm text-on-dark-muted">
         {copy.alt}
         <a href={`mailto:${site.email}`} class="text-on-dark underline decoration-accent-on-dark underline-offset-4 hover:text-accent-on-dark">

@@ -2,9 +2,11 @@
 import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
+import { writeFile } from 'node:fs/promises';
 import tailwindcss from '@tailwindcss/vite';
 
-/** Rutas antiguas del Hexo de 2023 → destinos nuevos. En Cloudflare Pages las sirve public/_redirects como 301; estos stubs meta-refresh quedan de respaldo y fuera del sitemap. */
+/** Rutas antiguas del Hexo de 2023 → destinos nuevos. Fuente única: genera el _redirects de Cloudflare Pages (301 reales)
+    y los stubs meta-refresh de respaldo, que quedan fuera del sitemap. */
 export const legacyRedirects = {
   '/about/': '/sobre-mi/',
   '/scraping-content-hijacking-the-endpoint-calls-in-the-front-end/':
@@ -17,6 +19,17 @@ export const legacyRedirects = {
 };
 
 const redirectTargetsBySource = new Set(Object.keys(legacyRedirects));
+
+/** Escribe dist/_redirects a partir de legacyRedirects para que Cloudflare Pages responda con 301 */
+const cloudflareRedirects = {
+  name: 'cloudflare-redirects',
+  hooks: {
+    'astro:build:done': async ({ dir }) => {
+      const lines = Object.entries(legacyRedirects).map(([from, to]) => `${from} ${to} 301`);
+      await writeFile(new URL('_redirects', dir), `${lines.join('\n')}\n`);
+    },
+  },
+};
 
 export default defineConfig({
   site: 'https://nachomascort.com',
@@ -38,6 +51,7 @@ export default defineConfig({
         return !redirectTargetsBySource.has(path);
       },
     }),
+    cloudflareRedirects,
   ],
   // assetsInlineLimit: 0 → los <script> de componentes salen como módulos
   // externos same-origin (la CSP no permite scripts inline)
@@ -45,7 +59,7 @@ export default defineConfig({
   // Tema de código con contraste AA (github-dark falla WCAG en comentarios)
   markdown: { shikiConfig: { theme: 'github-dark-default' } },
   redirects: legacyRedirects,
-  // CSS siempre en archivo externo para poder servir una CSP sin 'unsafe-inline'
+  // CSS siempre en archivo externo (la CSP de public/_headers solo permite estilos inline en atributos)
   build: { inlineStylesheets: 'never' },
   image: { service: { entrypoint: 'astro/assets/services/sharp' } },
 });

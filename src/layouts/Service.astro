@@ -42,7 +42,6 @@ const serviceNode = {
   url: new URL(path, Astro.site).href,
 };
 
-const serviceKey = entry.data.translationKey;
 const { page } = entry.data;
 
 ---
@@ -70,7 +69,7 @@ const { page } = entry.data;
     page.proofCases.length > 0 ? (
       <ServiceProof lang={lang} proofCases={page.proofCases} />
     ) : (
-      serviceKey === 'training' && <TeachingProof lang={lang} />
+      <TeachingProof lang={lang} />
     )
   }
   <ServiceFormats lang={lang} formats={page.formats} pricing={page.pricing} availability={page.availability} />

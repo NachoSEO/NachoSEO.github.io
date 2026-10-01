@@ -1,19 +1,28 @@
 document.documentElement.classList.add('js');
 
-const revealObserver = new IntersectionObserver(
-  (entries) => {
-    for (const entry of entries) {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('in');
-        revealObserver.unobserve(entry.target);
+// Aparición discreta de bloques al entrar en pantalla (solo en páginas que la usan)
+const revealTargets = document.querySelectorAll('.reveal');
+if (revealTargets.length > 0) {
+  const revealObserver = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in');
+          revealObserver.unobserve(entry.target);
+        }
       }
-    }
-  },
-  { threshold: 0.1, rootMargin: '0px 0px -32px' }
-);
+    },
+    { threshold: 0.1, rootMargin: '0px 0px -32px' }
+  );
+  for (const el of revealTargets) revealObserver.observe(el);
+}
 
-for (const el of document.querySelectorAll('.reveal')) {
-  revealObserver.observe(el);
+// Carrusel de logos: se pausa cuando no está en pantalla para no gastar batería
+const logoMarquee = document.querySelector('.logo-marquee');
+if (logoMarquee) {
+  new IntersectionObserver(([entry]) => {
+    logoMarquee.classList.toggle('is-offscreen', !entry.isIntersecting);
+  }).observe(logoMarquee);
 }
 
 // Índice del artículo: marca la sección que se está leyendo
@@ -21,7 +30,6 @@ const tocLinks = new Map(
   [...document.querySelectorAll('[data-toc-link]')].map((link) => [link.dataset.tocLink, link])
 );
 if (tocLinks.size > 0) {
-  const headings = [...tocLinks.keys()].map((id) => document.getElementById(id)).filter(Boolean);
   const setActive = (id) => {
     for (const [key, link] of tocLinks) link.classList.toggle('is-active', key === id);
   };
@@ -32,7 +40,10 @@ if (tocLinks.size > 0) {
     },
     { rootMargin: '0px 0px -70% 0px' }
   );
-  for (const heading of headings) tocObserver.observe(heading);
+  for (const id of tocLinks.keys()) {
+    const heading = document.getElementById(id);
+    if (heading) tocObserver.observe(heading);
+  }
 }
 
 // Menú móvil: abre/cierra el panel, se cierra con Escape o al elegir un enlace

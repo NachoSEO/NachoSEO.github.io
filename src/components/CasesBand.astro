@@ -1,6 +1,6 @@
 ---
-import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
+import CaseLogo from './CaseLogo.astro';
 import SectionLabel from './SectionLabel.astro';
 import { caseBrands } from '../data/case-brands';
 import { localizedRoute } from '../i18n/utils';
@@ -13,6 +13,7 @@ interface Props {
 }
 
 const { lang, page } = Astro.props;
+const SummaryTag = page ? 'h2' : 'span';
 const casesBase = localizedRoute('cases', lang);
 const cases = (await getCollection('caseStudies', (entry) => entry.data.lang === lang)).sort(
   (a, b) => a.data.order - b.data.order
@@ -60,33 +61,16 @@ const copy =
                 class="case-row group grid items-center gap-x-8 gap-y-3 py-7 sm:px-3 md:grid-cols-[10rem_15rem_1fr_auto]"
               >
                 <span class="flex h-9 items-center">
-                  {brand?.kind === 'image' && (
-                    <Image
-                      src={brand.mono}
-                      alt={brand.alt}
-                      height={brand.height}
-                      densities={[1, 2]}
-                      class="case-logo w-auto"
-                      style={`height: ${brand.height}px`}
-                      loading="lazy"
-                    />
-                  )}
-                  {brand?.kind === 'text' && (
-                    <span class="case-logo font-display text-xl font-medium">{brand.text}</span>
-                  )}
+                  {brand && <CaseLogo brand={brand} class="case-logo" />}
                 </span>
                 {metric && (
                   <span>
-                    <span class="accent block font-display text-4xl font-medium tracking-tight">{metric.value}</span>
+                    <span class="accent block font-display text-4xl font-semibold tracking-tight">{metric.value}</span>
                     <span class="mt-1 block text-sm text-on-dark-muted">{metric.label}</span>
                   </span>
                 )}
                 <span>
-                  {page ? (
-                    <h2 class="text-[1.05rem] font-semibold">{detail?.summary[lang] ?? entry.data.title}</h2>
-                  ) : (
-                    <span class="block text-[1.05rem] font-semibold">{detail?.summary[lang] ?? entry.data.title}</span>
-                  )}
+                  <SummaryTag class="block text-[1.05rem] font-semibold">{detail?.summary[lang] ?? entry.data.title}</SummaryTag>
                   {page && <span class="mt-1.5 block text-[0.95rem] text-on-dark-muted">{entry.data.description}</span>}
                 </span>
                 <span class="case-arrow hidden text-2xl text-on-dark-muted md:block" aria-hidden="true">→</span>

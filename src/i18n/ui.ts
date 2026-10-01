@@ -10,6 +10,7 @@ export const routes = {
   cases: { es: '/casos/', en: '/en/case-studies/' },
   blog: { es: '/blog/', en: '/en/blog/' },
   contact: { es: '/contacto/', en: '/en/contact/' },
+  rss: { es: '/rss.xml', en: '/en/rss.xml' },
 } as const;
 
 export type RouteKey = keyof typeof routes;
@@ -24,6 +25,7 @@ export const ui = {
     'nav.blog': 'Blog',
     'nav.contact': 'Contacto',
     'cta.book': 'Agenda una llamada',
+    'cta.call30': 'Reserva una llamada de 30 min',
     'a11y.skip': 'Saltar al contenido',
     'a11y.switchLang': 'Read in English',
     'a11y.menu': 'Abrir menú',
@@ -42,6 +44,7 @@ export const ui = {
     'nav.blog': 'Blog',
     'nav.contact': 'Contact',
     'cta.book': 'Book a call',
+    'cta.call30': 'Book a 30-min call',
     'a11y.skip': 'Skip to content',
     'a11y.switchLang': 'Leer en español',
     'a11y.menu': 'Open menu',

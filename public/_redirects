@@ -1,9 +1,0 @@
-# Cloudflare Pages: redirecciones 301 reales para las URLs del Hexo de 2023.
-# Mantener en sync con legacyRedirects en astro.config.mjs.
-/about/ /sobre-mi/ 301
-/scraping-content-hijacking-the-endpoint-calls-in-the-front-end/ /en/blog/scraping-google-autocomplete-endpoints/ 301
-/tags/ /blog/ 301
-/tags/Scraping/ /blog/ 301
-/archives/ /blog/ 301
-/archives/2023/ /blog/ 301
-/archives/2023/01/ /blog/ 301

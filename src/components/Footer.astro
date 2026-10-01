@@ -15,14 +15,14 @@ const links = [
   { href: site.social.linkedin, label: 'LinkedIn', rel: 'me' },
   { href: site.social.twitter, label: 'Twitter/X', rel: 'me' },
   { href: site.social.github, label: 'GitHub', rel: 'me' },
-  { href: lang === 'es' ? '/rss.xml' : '/en/rss.xml', label: 'RSS', rel: undefined },
+  { href: localizedRoute('rss', lang), label: 'RSS', rel: undefined },
 ];
 ---
 
 <footer class="on-dark mt-20 md:mt-28">
   <div class="mx-auto grid max-w-5xl gap-8 px-5 py-10 sm:grid-cols-3 sm:px-6">
     <div>
-      <p class="font-display text-lg font-medium">Nacho Mascort</p>
+      <p class="font-display text-lg font-semibold">Nacho Mascort</p>
       <p class="mt-1 text-sm text-on-dark-muted">{t('footer.role')}</p>
       <p class="text-sm text-on-dark-muted">{t('footer.location')}</p>
     </div>

@@ -36,7 +36,7 @@ const services = defineCollection({
           .array(z.object({ when: z.string(), title: z.string(), detail: z.string() }))
           .min(3)
           .max(4),
-        /** Casos enlazados como prueba; vacío en formación, que muestra docencia y charlas */
+        /** Casos enlazados como prueba; si está vacío, la página muestra docencia y charlas */
         proofCases: z.array(z.object({ caseKey: z.string(), summary: z.string() })).max(3).default([]),
         formats: z.array(z.object({ name: z.string(), detail: z.string() })).min(1).max(2),
         pricing: z.string(),
@@ -47,7 +47,7 @@ const services = defineCollection({
 
 const blog = defineCollection({
   loader: glob({ pattern: '**/*.mdx', base: './src/content/blog' }),
-  schema: ({ image }) =>
+  schema: () =>
     z.object({
       title: z.string(),
       description: z.string(),
@@ -59,7 +59,6 @@ const blog = defineCollection({
       tags: z.array(z.string()).default([]),
       /** 'seohacks': post recuperado del antiguo blog seohacks.es (2015–2017) */
       category: z.enum(['seohacks']).optional(),
-      cover: image().optional(),
     }),
 });
 

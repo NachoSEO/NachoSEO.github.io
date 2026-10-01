@@ -4,7 +4,7 @@ import SEO from '../components/SEO.astro';
 import Schema from '../components/Schema.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import { useTranslations } from '../i18n/utils';
+import { localizedRoute, useTranslations } from '../i18n/utils';
 import type { Lang } from '../i18n/ui';
 
 interface Props {
@@ -43,34 +43,10 @@ const t = useTranslations(lang);
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    {/* GitHub Pages no permite cabeceras de servidor: CSP vía meta (scripts sin unsafe-inline) */}
-    <meta
-      http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://cloudflareinsights.com; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests"
-    />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link
-      rel="preload"
-      href="/fonts/newsreader-latin-wght-normal.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin
-    />
-    <link
-      rel="preload"
-      href="/fonts/newsreader-latin-wght-italic.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin
-    />
-    <link
-      rel="preload"
-      href="/fonts/hanken-grotesk-latin-wght-normal.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin
-    />
+    <link rel="preload" href="/fonts/instrument-sans-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/geist-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
     <script src="/fx.js" is:inline defer></script>
     <noscript><style>.mobile-menu { display: block !important; } .menu-toggle { display: none !important; }</style></noscript>
     <SEO
@@ -87,7 +63,7 @@ const t = useTranslations(lang);
       rel="alternate"
       type="application/rss+xml"
       title="Nacho Mascort"
-      href={lang === 'es' ? '/rss.xml' : '/en/rss.xml'}
+      href={localizedRoute('rss', lang)}
     />
     <Schema lang={lang} breadcrumbs={breadcrumbs} faq={faq} extraNodes={extraSchemaNodes} />
   </head>

@@ -1,5 +1,5 @@
 ---
-import { localizedRoute } from '../../i18n/utils';
+import { localizedRoute, useTranslations } from '../../i18n/utils';
 import { site } from '../../site';
 import type { Lang } from '../../i18n/ui';
 
@@ -13,6 +13,7 @@ interface Props {
 
 const { lang, title, tagline, proof } = Astro.props;
 const es = lang === 'es';
+const t = useTranslations(lang);
 ---
 
 <section class="on-dark">
@@ -25,7 +26,7 @@ const es = lang === 'es';
     <h1 class="display-1 mt-4 max-w-[22ch]">{title}</h1>
     <p class="lede mt-6">{tagline}</p>
     <a href={site.calUrl} class="btn mt-9">
-      {es ? 'Reserva una llamada de 30 min' : 'Book a 30-min call'} →
+      {t('cta.call30')} →
     </a>
     <p class="mt-10 max-w-[62ch] border-l-2 border-accent-on-dark pl-4 text-[0.95rem] text-on-dark-muted">
       {proof}

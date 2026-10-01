@@ -11,7 +11,7 @@ const cases = (await getCollection('caseStudies', (entry) => entry.data.lang ===
 <Base
   lang="en"
   title="Case studies — Nacho Mascort"
-  description="Real cases with real numbers: Softonic from 0 to 20M sessions/mo, word.tips at 2M daily visits. This is what a working growth system looks like."
+  description="Real cases with real numbers: an AI ad factory (200 → 3,000+ creatives/week), Softonic from 0 to 20M sessions/mo, word.tips at 2M daily visits."
   path="/en/case-studies/"
   alternatePath="/casos/"
   breadcrumbs={[
@@ -25,7 +25,7 @@ const cases = (await getCollection('caseStudies', (entry) => entry.data.lang ===
       Numbers, not adjectives
     </h1>
     <p class="mt-4 max-w-2xl text-lg text-muted">
-      Two cases that explain how I work: systems that produce measurable results and keep working
+      Four cases that explain how I work: systems that produce measurable results and keep working
       over time.
     </p>
 
@@ -34,7 +34,8 @@ const cases = (await getCollection('caseStudies', (entry) => entry.data.lang ===
         cases.map((caseStudy) => (
           <a
             href={`/en/case-studies/${caseStudy.data.slug}/`}
-            class="group card-lift reveal rounded-2xl border border-line p-6 hover:border-accent"
+            class="group card-lift tilt reveal rounded-2xl border border-line p-6 hover:border-accent"
+            data-tilt-max="6"
           >
             <h2 class="font-display text-xl font-bold group-hover:text-accent">
               {caseStudy.data.title}

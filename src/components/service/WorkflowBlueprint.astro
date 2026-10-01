@@ -81,44 +81,58 @@ const heading =
       {approach.intro.map((paragraph) => <p class="mt-4 text-muted">{paragraph}</p>)}
     </div>
 
-    <div class="reveal relative mt-12" style="--reveal-delay: 150ms" aria-hidden="true">
-      <div class="packet-lane absolute inset-x-0 top-1/2 hidden lg:block">
-        <span class="packet"></span>
-      </div>
-      <div class="relative z-10 flex flex-col items-stretch lg:flex-row lg:items-center">
-        {
-          stages.map((stage, stageIndex) => (
-            <>
-              {stageIndex > 0 && (
-                <>
-                  <div class="flow-line hidden min-w-6 flex-1 lg:block" />
-                  <div class="flow-line-v mx-auto lg:hidden" />
-                </>
-              )}
-              <div class="flex flex-col gap-2">
-                {stage.map((node) => (
-                  <div
-                    class:list={[
-                      'flow-node bg-raised px-4 py-3',
-                      node.live && 'flow-node--live',
-                      node.accent && 'border-accent',
-                    ]}
-                  >
-                    <p
+    <div class="blueprint-3d reveal relative mt-12" style="--reveal-delay: 150ms" aria-hidden="true">
+      <div class="blueprint-3d-inner relative">
+        <div class="packet-lane absolute inset-x-0 top-1/2 hidden lg:block">
+          <span class="packet"></span>
+          <span class="packet packet--slow" style="--packet-d: 1.8s"></span>
+          <span class="packet packet--return"></span>
+        </div>
+        <div class="relative z-10 flex flex-col items-stretch lg:flex-row lg:items-center">
+          {
+            stages.map((stage, stageIndex) => (
+              <>
+                {stageIndex > 0 && (
+                  <>
+                    <div class="flow-line hidden min-w-6 flex-1 lg:block" />
+                    <div class="flow-line-v mx-auto lg:hidden" />
+                  </>
+                )}
+                <div
+                  class="blueprint-stage flex flex-col gap-2"
+                  style={`--depth: ${Math.abs(stageIndex - (stages.length - 1) / 2) - (stages.length - 1) / 2}`}
+                >
+                  {stage.map((node) => (
+                    <div
                       class:list={[
-                        'font-mono text-xs font-semibold',
-                        node.accent ? 'text-accent' : '',
+                        'flow-node bg-raised px-4 py-3',
+                        node.live && 'flow-node--live',
+                        node.accent && 'border-accent',
                       ]}
                     >
-                      {node.label}
-                    </p>
-                    {node.sub && <p class="mt-0.5 font-mono text-[10px] text-muted">{node.sub}</p>}
-                  </div>
-                ))}
-              </div>
-            </>
-          ))
-        }
+                      <p
+                        class:list={[
+                          'font-mono text-xs font-semibold',
+                          node.accent ? 'text-accent' : '',
+                        ]}
+                      >
+                        {node.label}
+                      </p>
+                      {node.sub && <p class="mt-0.5 font-mono text-[10px] text-muted">{node.sub}</p>}
+                      {node.live && (
+                        <p class="agent-state cycle-3 mt-1">
+                          <span>{es ? 'pensando…' : 'thinking…'}</span>
+                          <span>{es ? 'actuando' : 'acting'}</span>
+                          <span>{es ? 'hecho ✓' : 'done ✓'}</span>
+                        </p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </>
+            ))
+          }
+        </div>
       </div>
     </div>
 

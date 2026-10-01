@@ -1,8 +1,8 @@
 (() => {
   const root = document.documentElement;
   const stored = localStorage.getItem('theme');
-  const preferred =
-    stored ?? (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  // El oscuro es el modo de marca por defecto; el claro, elección explícita.
+  const preferred = stored ?? 'dark';
   root.dataset.theme = preferred;
   addEventListener('DOMContentLoaded', () => {
     document.getElementById('theme-toggle')?.addEventListener('click', () => {

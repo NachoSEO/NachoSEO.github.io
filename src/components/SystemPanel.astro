@@ -73,7 +73,8 @@ const copy =
     </div>
 
     <div class="reveal mt-12" style="--reveal-delay: 120ms">
-      <div class="flex flex-col items-stretch gap-0 lg:flex-row lg:items-center">
+      <div id="net-wrap" class="relative flex flex-col items-stretch gap-0 lg:flex-row lg:items-center">
+        <canvas id="net-canvas" class="net-canvas" aria-hidden="true"></canvas>
         {
           copy.nodes.map((node, index) => (
             <>
@@ -114,7 +115,7 @@ const copy =
       <div class="reveal" style="--reveal-delay: 200ms">
         <a
           href={copy.ctaHref}
-          class="inline-block rounded-full bg-accent px-8 py-3 font-medium text-paper hover:opacity-90"
+          class="inline-block btn-cta px-8 py-3 font-medium"
         >
           {copy.cta}
         </a>
@@ -122,3 +123,134 @@ const copy =
     </div>
   </div>
 </section>
+
+<script>
+  // Red de agentes: partículas fluyendo entre los flow-nodes reales.
+  // Decorativo puro; si algo falla, las flow-lines CSS quedan como estaban.
+  const wrap = document.getElementById('net-wrap');
+  const canvas = document.getElementById('net-canvas') as HTMLCanvasElement | null;
+  const desktop = matchMedia('(min-width: 64rem)');
+  const motionOK = matchMedia('(prefers-reduced-motion: no-preference)');
+
+  if (wrap && canvas && motionOK.matches && desktop.matches) {
+    const ctx = canvas.getContext('2d');
+    if (ctx) {
+      wrap.classList.add('net-on');
+
+      let centers: { x: number; y: number }[] = [];
+      let width = 0;
+      let height = 0;
+      let accent = '#7c96ff';
+
+      const readColors = () => {
+        accent = getComputedStyle(wrap).getPropertyValue('--tone-accent').trim() || accent;
+      };
+
+      const layout = () => {
+        const wrapRect = wrap.getBoundingClientRect();
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        width = wrapRect.width;
+        height = wrapRect.height + 64;
+        canvas.width = Math.round(width * dpr);
+        canvas.height = Math.round(height * dpr);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        centers = [...wrap.querySelectorAll('.flow-node')].map((node) => {
+          const rect = node.getBoundingClientRect();
+          return {
+            x: rect.left - wrapRect.left + rect.width / 2,
+            y: rect.top - wrapRect.top + rect.height / 2 + 32,
+          };
+        });
+      };
+
+      type Particle = { edge: number; t: number; speed: number; size: number; bob: number };
+      const particles: Particle[] = Array.from({ length: 14 }, (_, i) => ({
+        edge: i % 3,
+        t: (i * 0.23) % 1,
+        speed: 0.08 + (i % 5) * 0.022,
+        size: 1.6 + (i % 3) * 0.9,
+        bob: (i % 7) * 0.9,
+      }));
+
+      let last = 0;
+      let raf = 0;
+      let running = false;
+
+      const frame = (now: number) => {
+        if (!running) return;
+        const dt = Math.min((now - last) / 1000, 0.05);
+        last = now;
+        ctx.clearRect(0, 0, width, height);
+
+        for (let i = 0; i < centers.length - 1; i++) {
+          ctx.beginPath();
+          ctx.moveTo(centers[i].x, centers[i].y);
+          ctx.lineTo(centers[i + 1].x, centers[i + 1].y);
+          ctx.globalAlpha = 0.14;
+          ctx.strokeStyle = accent;
+          ctx.lineWidth = 1;
+          ctx.stroke();
+        }
+
+        const pulse = 4 + Math.sin(now / 450) * 2;
+        if (centers[1]) {
+          ctx.beginPath();
+          ctx.arc(centers[1].x, centers[1].y, 26 + pulse, 0, Math.PI * 2);
+          ctx.globalAlpha = 0.08;
+          ctx.fillStyle = accent;
+          ctx.fill();
+        }
+
+        for (const particle of particles) {
+          const a = centers[particle.edge];
+          const b = centers[particle.edge + 1];
+          if (!a || !b) continue;
+          particle.t += particle.speed * dt * 3;
+          if (particle.t > 1) {
+            particle.t = 0;
+            particle.edge = (particle.edge + 1) % (centers.length - 1);
+          }
+          const x = a.x + (b.x - a.x) * particle.t;
+          const wobble = Math.sin(particle.t * Math.PI * 2 + particle.bob) * 5;
+          const y = a.y + (b.y - a.y) * particle.t + wobble;
+          ctx.beginPath();
+          ctx.arc(x, y, particle.size, 0, Math.PI * 2);
+          ctx.globalAlpha = 0.35 + 0.55 * Math.sin(particle.t * Math.PI);
+          ctx.fillStyle = accent;
+          ctx.fill();
+        }
+        ctx.globalAlpha = 1;
+        raf = requestAnimationFrame(frame);
+      };
+
+      const start = () => {
+        if (running) return;
+        running = true;
+        last = performance.now();
+        raf = requestAnimationFrame(frame);
+      };
+      const stop = () => {
+        running = false;
+        cancelAnimationFrame(raf);
+      };
+
+      readColors();
+      layout();
+      new ResizeObserver(layout).observe(wrap);
+      new MutationObserver(readColors).observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['data-theme'],
+      });
+      let intersecting = false;
+      const sync = () => (intersecting && !document.hidden ? start() : stop());
+      new IntersectionObserver(
+        (entries) => {
+          intersecting = entries[0].isIntersecting;
+          sync();
+        },
+        { threshold: 0 }
+      ).observe(wrap);
+      document.addEventListener('visibilitychange', sync);
+    }
+  }
+</script>

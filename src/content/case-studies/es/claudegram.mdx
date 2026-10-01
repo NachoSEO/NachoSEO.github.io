@@ -1,0 +1,31 @@
+---
+title: 'Claudegram: de proyecto personal a open source con 147★ en GitHub'
+description: 'Un puente entre Telegram y Claude Code con capa de voz, construido antes de que existiera la solución oficial. 147 estrellas y 55 forks en GitHub.'
+lang: es
+translationKey: claudegram
+slug: claudegram
+order: 4
+metrics:
+  - value: '147★'
+    label: 'estrellas en GitHub'
+  - value: '55'
+    label: 'forks'
+  - value: 'MIT'
+    label: 'licencia open source'
+---
+
+## El contexto
+
+Quería seguir trabajando en mis proyectos lejos del portátil. Antes de que Anthropic lanzara su propio control remoto para Claude Code, me construí la interfaz yo mismo: Telegram como front-end móvil manejando un agente real de Claude Code en mi máquina.
+
+## El sistema
+
+- **Un agente de verdad, no un chatbot**: el bot da acceso completo a las herramientas del agente: bash, lectura y escritura de ficheros, edición de código y consultas web, desde cualquier sitio.
+- **Stack**: TypeScript, Grammy y el Claude Agent SDK. Publicado como open source con licencia MIT.
+- **Capa de voz**: envías una nota de voz, se transcribe con Whisper y se pasa al agente; la respuesta vuelve como nota de voz hablada en Telegram. Construir esa capa me enseñó de primera mano dónde la calidad y la latencia del TTS hacen o rompen una interfaz conversacional.
+
+## El resultado
+
+La primera señal de que funcionaba: lo uso a diario. La segunda fue externa: **147 estrellas y 55 forks en GitHub**, de gente que tenía el mismo problema y eligió mi solución en lugar de esperar a la oficial.
+
+El código está en [github.com/NachoSEO/claudegram](https://github.com/NachoSEO/claudegram).

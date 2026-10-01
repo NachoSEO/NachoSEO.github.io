@@ -2,7 +2,7 @@
 import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import Cta from '../../components/Cta.astro';
-import GrowthCurve from '../../components/GrowthCurve.astro';
+import IsoFactory from '../../components/IsoFactory.astro';
 import LogoMarquee from '../../components/LogoMarquee.astro';
 import SystemPanel from '../../components/SystemPanel.astro';
 import { site } from '../../site';
@@ -56,8 +56,8 @@ const process = [
 
     <div class="hero-seq relative mx-auto max-w-5xl px-6 pt-24">
       <p class="eyebrow">growth · ai · seo</p>
-      <h1 class="font-display mt-5 max-w-3xl text-5xl font-bold tracking-tight sm:text-7xl">
-        Scale your growth without scaling your headcount
+      <h1 class="font-display mt-5 max-w-3xl text-5xl font-light tracking-tight sm:text-7xl">
+        Scale your growth <b class="font-semibold">without scaling your headcount</b>
       </h1>
       <p class="mt-6 max-w-2xl text-lg text-muted">
         I'm Nacho Mascort. I've led organic growth for sites with up to
@@ -67,7 +67,7 @@ const process = [
       <div class="mt-8 flex flex-wrap items-center gap-4">
         <a
           href={site.calUrl}
-          class="rounded-full bg-accent px-8 py-3 font-medium text-paper hover:opacity-90"
+          class="btn-cta px-8 py-3 font-medium"
         >
           Book a call
         </a>
@@ -75,9 +75,7 @@ const process = [
       </div>
     </div>
 
-    <div class="relative mx-auto max-w-5xl px-6">
-      <GrowthCurve lang="en" />
-    </div>
+    <IsoFactory lang="en" />
   </section>
 
   <LogoMarquee lang="en" />
@@ -107,7 +105,8 @@ const process = [
         services.map((service, index) => (
           <a
             href={`/en/services/${service.data.slug}/`}
-            class="group card-lift reveal rounded-2xl border border-line p-6 hover:border-accent"
+            class="group card-lift tilt reveal rounded-2xl border border-line p-6 hover:border-accent"
+            data-tilt-max="6"
             style={`--reveal-delay: ${index * 90}ms`}
           >
             <h3 class="font-display text-xl font-bold group-hover:text-accent">

@@ -2,6 +2,7 @@
 import type { CollectionEntry } from 'astro:content';
 import { render } from 'astro:content';
 import Base from './Base.astro';
+import CaseShowcase from '../components/CaseShowcase.astro';
 import Cta from '../components/Cta.astro';
 import { localizedRoute } from '../i18n/utils';
 import type { Lang } from '../i18n/ui';
@@ -59,6 +60,8 @@ const articleNode = {
         ))
       }
     </dl>
+
+    <CaseShowcase translationKey={entry.data.translationKey} lang={lang} />
 
     <div class="article-body mt-8">
       <Content />

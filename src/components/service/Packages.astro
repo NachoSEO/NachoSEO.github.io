@@ -24,7 +24,7 @@ const es = lang === 'es';
       packages.map((pack, index) => (
         <div
           class:list={[
-            'card-lift reveal relative flex flex-col rounded-2xl border p-6',
+            'card-lift tilt reveal relative flex flex-col rounded-2xl border p-6',
             pack.featured ? 'border-accent bg-raised' : 'border-line',
           ]}
           style={`--reveal-delay: ${index * 110}ms`}
@@ -56,7 +56,7 @@ const es = lang === 'es';
             class:list={[
               'mt-5 rounded-full px-6 py-2.5 text-center text-sm font-medium',
               pack.featured
-                ? 'bg-accent text-paper hover:opacity-90'
+                ? 'btn-cta'
                 : 'border border-line hover:border-accent hover:text-accent',
             ]}
           >

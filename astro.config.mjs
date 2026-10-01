@@ -39,7 +39,9 @@ export default defineConfig({
       },
     }),
   ],
-  vite: { plugins: [tailwindcss()] },
+  // assetsInlineLimit: 0 → los <script> de componentes salen como módulos
+  // externos same-origin (la CSP no permite scripts inline)
+  vite: { plugins: [tailwindcss()], build: { assetsInlineLimit: 0 } },
   // Tema de código con contraste AA (github-dark falla WCAG en comentarios)
   markdown: { shikiConfig: { theme: 'github-dark-default' } },
   redirects: legacyRedirects,

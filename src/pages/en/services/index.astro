@@ -34,7 +34,8 @@ const services = (await getCollection('services', (entry) => entry.data.lang ===
         services.map((service) => (
           <a
             href={`/en/services/${service.data.slug}/`}
-            class="group card-lift reveal rounded-2xl border border-line p-6 hover:border-accent"
+            class="group card-lift tilt reveal rounded-2xl border border-line p-6 hover:border-accent"
+            data-tilt-max="6"
           >
             <h2 class="font-display text-xl font-bold group-hover:text-accent">
               {service.data.title}

@@ -8,33 +8,61 @@ const timeline = [
   {
     period: '2026 — now',
     role: 'Head of AI (Marketing Automation) · Reverse Tech',
-    detail: 'Agentic systems and automation executing real marketing work.',
+    detail:
+      'Agentic systems executing marketing in production 24/7. AI ad factory: from 200 to 3,000+ creatives per week, shipped to Meta and Google via API.',
   },
   {
     period: '2025 — now',
     role: 'Head of Organic Marketing · Reverse Tech',
-    detail: 'Leading SEO, email, social and affiliates: strategy, team and results.',
+    detail:
+      'Leading SEO, email, social media, affiliates and YouTube: strategy, multidisciplinary team and measurable growth in traffic and conversion.',
   },
   {
     period: '2024 — 2025',
     role: 'Head of SEO · Cliqpod',
-    detail: 'SEO leadership, including word.tips: peaks of 2M daily visits.',
+    detail:
+      'SEO leadership, including word.tips: peaks of 2M daily visits and ~60M/mo, 100% organic.',
   },
   {
     period: '2019 — 2024',
-    role: 'SEO Manager / Product Owner · Softonic',
+    role: 'SEO Specialist → Product Owner → SEO Manager · Softonic',
     detail:
-      'Portfolio of 6 sites with 1B+ annual users. +40% YoY. Content program from 0 to 20M sessions/mo; catalog from 100k to 1M+ pages.',
+      'Portfolio of 6 sites with 1B+ annual users and a team of 3 specialists. Content program with our own models, before ChatGPT: from 0 to 20M sessions/mo in two years; catalog from 100k to 1M+ pages. +40% YoY (2024 vs 2023).',
   },
   {
     period: '2017 — 2019',
     role: 'SEO Manager · Grupo Planeta',
-    detail: "Group-wide SEO strategy: casadellibro.com, lonelyplanet.es, planetadelibros.com and more.",
+    detail:
+      'Group-wide SEO strategy (casadellibro.com, lonelyplanet.es, planetadelibros.com and more): internal scripts, automated dashboards and a migration framework.',
   },
   {
-    period: '2015 — 2017',
-    role: 'Agencies · SUMA and Tesubi',
-    detail: 'SEO and project leadership for clients like Gas Natural Fenosa and Kids&Us.',
+    period: '2014 — 2017',
+    role: 'Agencies · SUMA, Tesubi and SEO Coaching',
+    detail: 'SEO, SEM and project leadership for clients like Gas Natural Fenosa and Kids&Us.',
+  },
+];
+
+const projects = [
+  {
+    name: 'Claudegram',
+    url: 'https://github.com/NachoSEO/claudegram',
+    detail:
+      'Open-source bot bridging Telegram to a real Claude Code agent, with a voice layer. 147★ and 55 forks on GitHub.',
+  },
+  {
+    name: 'Unlimited Sheets',
+    url: 'https://unlimitedsheets.com',
+    detail: 'Google Sheets add-on, built and shipped solo as a live product.',
+  },
+  {
+    name: 'seo-scraper',
+    url: 'https://github.com/NachoSEO/seo-scraper',
+    detail: 'Open-source Node.js scraper to extract SEO elements from any site at scale.',
+  },
+  {
+    name: 'google-autocomplete-extractor',
+    url: 'https://github.com/NachoSEO/google-autocomplete-extractor',
+    detail: "Extracts Google suggestions by intercepting the front-end's endpoints, no DOM parsing.",
   },
 ];
 ---
@@ -74,6 +102,11 @@ const timeline = [
         leading full growth teams, and today I build AI systems that execute that work at scale.
       </p>
       <p>
+        Those systems now run in production: an ad factory that went from
+        <strong>200 to over 3,000 creatives per week</strong> and agents operating entire marketing
+        channels 24/7, without growing headcount.
+      </p>
+      <p>
         The number I'm proudest of: at Softonic I built a content program that went from
         <strong>0 to 20 million monthly organic sessions in two years</strong>, inside a portfolio
         with over 1 billion annual users. Later I led SEO for word.tips, with peaks of 2 million
@@ -92,12 +125,28 @@ const timeline = [
       </p>
     </div>
 
+    <a
+      href="/cv/nacho-mascort-cv.pdf"
+      download="nacho-mascort-cv.pdf"
+      class="mt-8 inline-flex items-center gap-2 rounded-full border border-accent px-6 py-2.5 font-medium text-accent transition hover:bg-accent hover:text-paper"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M12 4v12m0 0l-4-4m4 4l4-4" />
+      </svg>
+      Download CV (PDF)
+    </a>
+
     <section class="mt-14">
       <h2 class="font-display text-2xl font-bold">Track record</h2>
-      <ol class="mt-6 divide-y divide-line">
+      <ol class="rail relative mt-6 pl-8">
+        <span class="rail-fill rail-progress" aria-hidden="true"></span>
         {
-          timeline.map((item) => (
-            <li class="grid gap-1 py-5 sm:grid-cols-[140px_1fr] sm:gap-6">
+          timeline.map((item, index) => (
+            <li
+              class="reveal relative grid gap-1 py-5 sm:grid-cols-[140px_1fr] sm:gap-6"
+              style={`--reveal-delay: ${index * 80}ms`}
+            >
+              <span class="rail-dot" aria-hidden="true" />
               <span class="font-mono text-xs text-muted">{item.period}</span>
               <div>
                 <h3 class="font-semibold">{item.role}</h3>
@@ -110,12 +159,35 @@ const timeline = [
     </section>
 
     <section class="mt-14">
+      <h2 class="font-display text-2xl font-bold">Projects</h2>
+      <ul class="mt-6 grid gap-4 sm:grid-cols-2">
+        {
+          projects.map((project, index) => (
+            <li>
+              <a
+                href={project.url}
+                rel="noopener"
+                class="card-lift tilt reveal block h-full rounded-2xl border border-line p-5 hover:border-accent"
+                data-tilt-max="5"
+                style={`--reveal-delay: ${index * 80}ms`}
+              >
+                <span class="font-display font-bold">{project.name}</span>
+                <p class="mt-1 text-sm text-muted">{project.detail}</p>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <section class="mt-14">
       <h2 class="font-display text-2xl font-bold">Teaching</h2>
       <p class="mt-4 text-muted">
         Professor at <strong class="text-ink">Universitat Pompeu Fabra's Master in Search Engines</strong>
         (2015–2024) and <strong class="text-ink">Webpositer Academy's SEO Master</strong> (2018–2024).
-        Speaker at SEOnTheBeach, Clinic SEO, Ensalada SEO and SEOPLUS. Mentioned on the Google Search
-        Central blog, El Confidencial and ABC, among others.
+        <strong class="text-ink">Google Product Expert</strong> in Search Console. Speaker at
+        SEOnTheBeach, Clinic SEO, Ensalada SEO and SEOPLUS. Mentioned on the Google Search Central
+        blog, El Confidencial and ABC, among others.
       </p>
     </section>
   </article>

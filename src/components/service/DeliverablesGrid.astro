@@ -61,7 +61,8 @@ const artifact = artifacts[serviceKey];
     {
       deliverables.map((deliverable, index) => (
         <div
-          class="card-lift reveal rounded-2xl border border-line p-6"
+          class="card-lift tilt reveal rounded-2xl border border-line p-6"
+          data-tilt-max="4"
           style={`--reveal-delay: ${index * 90}ms`}
         >
           <span class="check-pop text-accent" style={`--d: ${300 + index * 120}ms`} aria-hidden="true">

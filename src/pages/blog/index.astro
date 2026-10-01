@@ -8,7 +8,9 @@ import seohacksLogo from '../../assets/img/seohacks-logo.png';
 
 const esPosts = await getCollection('blog', (entry) => entry.data.lang === 'es');
 const posts = esPosts.filter((post) => post.data.category !== 'seohacks');
-const archive = esPosts.filter((post) => post.data.category === 'seohacks');
+const archive = esPosts
+  .filter((post) => post.data.category === 'seohacks')
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 ---
 
 <Base

@@ -4,7 +4,7 @@ import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 
-/** Rutas antiguas del Hexo de 2023 → destinos nuevos (stubs meta-refresh, excluidos del sitemap) */
+/** Rutas antiguas del Hexo de 2023 → destinos nuevos. En Cloudflare Pages las sirve public/_redirects como 301; estos stubs meta-refresh quedan de respaldo y fuera del sitemap. */
 export const legacyRedirects = {
   '/about/': '/sobre-mi/',
   '/scraping-content-hijacking-the-endpoint-calls-in-the-front-end/':

@@ -1,0 +1,35 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import PostList from '../../components/PostList.astro';
+
+const archive = await getCollection(
+  'blog',
+  (entry) => entry.data.lang === 'es' && entry.data.category === 'seohacks'
+);
+---
+
+<Base
+  lang="es"
+  title="SEO Hacks: archivo del blog (2015–2017) — Nacho Mascort"
+  description="Los artículos de SEO Hacks, el blog que escribí entre 2015 y 2017, recuperados del Internet Archive y conservados como archivo."
+  path="/blog/seo-hacks/"
+  breadcrumbs={[
+    { name: 'Inicio', path: '/' },
+    { name: 'Blog', path: '/blog/' },
+    { name: 'SEO Hacks', path: '/blog/seo-hacks/' },
+  ]}
+>
+  <div class="mx-auto max-w-5xl px-5 pb-8 pt-16 sm:px-6">
+    <p class="meta">
+      <a href="/blog/" class="hover:text-ink">Blog</a><span aria-hidden="true"> / </span>Archivo
+    </p>
+    <h1 class="display-1 mt-5">SEO Hacks</h1>
+    <p class="lede mt-6">
+      SEO Hacks fue mi blog entre 2015 y 2017. He recuperado sus artículos del Internet Archive y los conservo aquí
+      como archivo, así que en algunos faltan imágenes. Parte de lo que cuentan puede estar obsoleto o haber cambiado
+      con el tiempo, y mi opinión también: mira la fecha de publicación de cada uno.
+    </p>
+    <PostList posts={archive} lang="es" />
+  </div>
+</Base>

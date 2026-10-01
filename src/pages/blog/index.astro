@@ -2,14 +2,19 @@
 import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import PostList from '../../components/PostList.astro';
+import SectionLabel from '../../components/SectionLabel.astro';
+import { Image } from 'astro:assets';
+import seohacksLogo from '../../assets/img/seohacks-logo.png';
 
-const posts = await getCollection('blog', (entry) => entry.data.lang === 'es');
+const esPosts = await getCollection('blog', (entry) => entry.data.lang === 'es');
+const posts = esPosts.filter((post) => post.data.category !== 'seohacks');
+const archive = esPosts.filter((post) => post.data.category === 'seohacks');
 ---
 
 <Base
   lang="es"
   title="Blog sobre growth, IA y SEO — Nacho Mascort"
-  description="Artículos sobre growth, IA aplicada a marketing, SEO, GEO/AEO y automatización, escritos desde la ejecución real."
+  description="Artículos sobre growth, IA aplicada a marketing, SEO, GEO y automatización, contados desde proyectos reales. Incluye el archivo de mi antiguo blog, SEO Hacks."
   path="/blog/"
   alternatePath="/en/blog/"
   breadcrumbs={[
@@ -17,24 +22,58 @@ const posts = await getCollection('blog', (entry) => entry.data.lang === 'es');
     { name: 'Blog', path: '/blog/' },
   ]}
 >
-  <div class="mx-auto max-w-3xl px-6 pt-16 pb-8">
-    <p class="eyebrow">blog</p>
-    <h1 class="font-display mt-4 text-4xl font-bold tracking-tight">Blog</h1>
-    <p class="mt-4 text-lg text-muted">
-      Growth, IA aplicada, SEO y automatización. Escrito desde la trinchera, no desde la teoría.
-    </p>
+  <div class="mx-auto max-w-5xl px-5 pb-8 pt-16 sm:px-6">
+    <p class="meta">Blog</p>
+    <h1 class="display-1 mt-5">Blog</h1>
+    <p class="lede mt-6">Growth, IA aplicada, SEO y automatización, contados desde proyectos reales.</p>
+
+    {
+      archive.length > 0 && (
+        <a
+          href="/blog/seo-hacks/"
+          class="on-dark group mt-8 flex flex-wrap items-center gap-x-6 gap-y-3 rounded-xl px-6 py-5 transition-colors hover:bg-dark-2"
+        >
+          <Image src={seohacksLogo} alt="SEO Hacks" height={32} densities={[1, 2]} class="h-8 w-auto" />
+          <span class="flex-1 text-[0.95rem] text-on-dark-muted">
+            Archivo de mi antiguo blog · {archive.length} artículos (2015–2017)
+          </span>
+          <span class="text-[0.95rem] font-semibold transition-transform group-hover:translate-x-1">
+            Ver el archivo →
+          </span>
+        </a>
+      )
+    }
 
     {
       posts.length === 0 ? (
-        <p class="mt-10 rounded-2xl bg-raised px-6 py-5 text-muted">
-          Los primeros artículos en español están en camino. Mientras tanto, puedes leer los
-          <a href="/en/blog/" class="text-accent underline">
+        <p class="mt-10 rounded-xl border border-line bg-raised px-6 py-5 text-muted">
+          Los primeros artículos nuevos en español están en camino. Mientras tanto, puedes leer los
+          <a href="/en/blog/" class="text-ink underline decoration-accent underline-offset-4 hover:text-accent-ink">
             artículos en inglés
-          </a>
-          .
+          </a>{' '}
+          o el archivo de SEO Hacks.
         </p>
       ) : (
         <PostList posts={posts} lang="es" />
+      )
+    }
+
+    {
+      archive.length > 0 && (
+        <section class="mt-20">
+          <SectionLabel label="Archivo · 2015–2017" />
+          <div class="mt-3 flex flex-wrap items-end justify-between gap-4">
+            <h2 class="display-2">SEO Hacks</h2>
+            <a href="/blog/seo-hacks/" class="link-arrow text-[0.95rem]">
+              Ver los {archive.length} artículos
+            </a>
+          </div>
+          <p class="mt-4 max-w-[62ch] text-muted">
+            Los artículos de mi antiguo blog, recuperados del Internet Archive. Se conservan como archivo: mira la
+            fecha de cada uno antes de aplicar lo que cuenta.
+          </p>
+          <PostList posts={archive.slice(0, 5)} lang="es" />
+        </section>
       )
     }
   </div>

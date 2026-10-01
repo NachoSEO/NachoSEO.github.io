@@ -2,19 +2,16 @@
 import type { CollectionEntry } from 'astro:content';
 import { render } from 'astro:content';
 import Base from './Base.astro';
-import LogoMarquee from '../components/LogoMarquee.astro';
 import ServiceHero from '../components/service/ServiceHero.astro';
-import MetricsBar from '../components/service/MetricsBar.astro';
-import ProblemSection from '../components/service/ProblemSection.astro';
-import WorkflowBlueprint from '../components/service/WorkflowBlueprint.astro';
-import EngagementTimeline from '../components/service/EngagementTimeline.astro';
 import DeliverablesGrid from '../components/service/DeliverablesGrid.astro';
-import BeforeAfter from '../components/service/BeforeAfter.astro';
-import MaturityLadder from '../components/service/MaturityLadder.astro';
-import Packages from '../components/service/Packages.astro';
-import ComparisonTable from '../components/service/ComparisonTable.astro';
 import FaqAccordion from '../components/service/FaqAccordion.astro';
 import NextStepCta from '../components/service/NextStepCta.astro';
+import ServiceFit from '../components/service/ServiceFit.astro';
+import ServicePov from '../components/service/ServicePov.astro';
+import ServiceProcess from '../components/service/ServiceProcess.astro';
+import ServiceProof from '../components/service/ServiceProof.astro';
+import ServiceFormats from '../components/service/ServiceFormats.astro';
+import TeachingProof from '../components/service/TeachingProof.astro';
 import { localizedRoute } from '../i18n/utils';
 import type { Lang } from '../i18n/ui';
 
@@ -46,6 +43,8 @@ const serviceNode = {
 };
 
 const serviceKey = entry.data.translationKey;
+const { page } = entry.data;
+
 ---
 
 <Base
@@ -62,45 +61,28 @@ const serviceKey = entry.data.translationKey;
   faq={entry.data.faq}
   extraSchemaNodes={[serviceNode]}
 >
-  <ServiceHero
-    lang={lang}
-    serviceKey={serviceKey}
-    title={entry.data.title}
-    tagline={entry.data.tagline}
-  />
-
-  <MetricsBar lang={lang} metrics={entry.data.metrics} proof={entry.data.proof} />
-
-  <LogoMarquee lang={lang} />
-
-  <ProblemSection lang={lang} problem={entry.data.problem} />
-
-  <WorkflowBlueprint lang={lang} serviceKey={serviceKey} approach={entry.data.approach} />
-
-  <EngagementTimeline lang={lang} serviceKey={serviceKey} timeline={entry.data.timeline} />
-
-  <DeliverablesGrid lang={lang} serviceKey={serviceKey} deliverables={entry.data.deliverables} />
-
-  {serviceKey === 'ai-automation' && <MaturityLadder lang={lang} />}
+  <ServiceHero lang={lang} title={entry.data.title} tagline={entry.data.tagline} proof={page.heroProof} />
+  <ServiceFit lang={lang} fit={page.fit} />
+  <ServicePov lang={lang} pov={page.pov} />
+  <ServiceProcess lang={lang} process={page.process} />
+  <DeliverablesGrid lang={lang} deliverables={entry.data.deliverables} />
   {
-    serviceKey !== 'ai-automation' && entry.data.transformation && (
-      <BeforeAfter lang={lang} transformation={entry.data.transformation} />
+    page.proofCases.length > 0 ? (
+      <ServiceProof lang={lang} proofCases={page.proofCases} />
+    ) : (
+      serviceKey === 'training' && <TeachingProof lang={lang} />
     )
   }
-
-  <Packages lang={lang} packages={entry.data.packages} />
-
-  {entry.data.comparison && <ComparisonTable lang={lang} comparison={entry.data.comparison} />}
-
+  <ServiceFormats lang={lang} formats={page.formats} pricing={page.pricing} availability={page.availability} />
   {
     hasBody && (
-      <div class="article-body mx-auto max-w-3xl px-6 pt-24">
-        <Content />
+      <div class="mx-auto max-w-5xl px-5 pt-24 sm:px-6">
+        <div class="article-body">
+          <Content />
+        </div>
       </div>
     )
   }
-
   <FaqAccordion lang={lang} faq={entry.data.faq} />
-
   <NextStepCta lang={lang} />
 </Base>

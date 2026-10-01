@@ -9,35 +9,28 @@ const revealObserver = new IntersectionObserver(
       }
     }
   },
-  { threshold: 0.12, rootMargin: '0px 0px -48px' }
+  { threshold: 0.1, rootMargin: '0px 0px -32px' }
 );
 
 for (const el of document.querySelectorAll('.reveal')) {
   revealObserver.observe(el);
 }
 
-// Tilt 3D: solo punteros finos con hover y sin reduced-motion
-if (
-  matchMedia('(hover: hover) and (pointer: fine)').matches &&
-  matchMedia('(prefers-reduced-motion: no-preference)').matches
-) {
-  for (const el of document.querySelectorAll('.tilt')) {
-    const max = parseFloat(el.dataset.tiltMax || '6');
-    let raf = 0;
-    el.addEventListener('pointermove', (event) => {
-      if (raf) return;
-      raf = requestAnimationFrame(() => {
-        raf = 0;
-        const rect = el.getBoundingClientRect();
-        const ry = ((event.clientX - rect.left) / rect.width - 0.5) * 2 * max;
-        const rx = ((event.clientY - rect.top) / rect.height - 0.5) * -2 * max;
-        el.style.setProperty('--ry', `${ry.toFixed(2)}deg`);
-        el.style.setProperty('--rx', `${rx.toFixed(2)}deg`);
-      });
-    });
-    el.addEventListener('pointerleave', () => {
-      el.style.setProperty('--rx', '0deg');
-      el.style.setProperty('--ry', '0deg');
-    });
-  }
+// Índice del artículo: marca la sección que se está leyendo
+const tocLinks = new Map(
+  [...document.querySelectorAll('[data-toc-link]')].map((link) => [link.dataset.tocLink, link])
+);
+if (tocLinks.size > 0) {
+  const headings = [...tocLinks.keys()].map((id) => document.getElementById(id)).filter(Boolean);
+  const setActive = (id) => {
+    for (const [key, link] of tocLinks) link.classList.toggle('is-active', key === id);
+  };
+  const tocObserver = new IntersectionObserver(
+    (entries) => {
+      const visible = entries.filter((entry) => entry.isIntersecting);
+      if (visible.length > 0) setActive(visible[0].target.id);
+    },
+    { rootMargin: '0px 0px -70% 0px' }
+  );
+  for (const heading of headings) tocObserver.observe(heading);
 }

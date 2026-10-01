@@ -1,0 +1,12 @@
+---
+interface Props {
+  label: string;
+  /** Renderiza la etiqueta como h2 cuando la sección no tiene otro título */
+  asHeading?: boolean;
+}
+
+const { label, asHeading = false } = Astro.props;
+const Tag = asHeading ? 'h2' : 'p';
+---
+
+<Tag class="section-label">{label}</Tag>

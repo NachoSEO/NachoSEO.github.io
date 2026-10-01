@@ -1,7 +1,6 @@
 /** Datos de contacto y enlaces únicos del sitio */
 export const site = {
-  // TODO(nacho): sustituir por tu URL real de Cal.com
-  calUrl: 'https://cal.com/nachomascort',
+  calUrl: 'https://cal.com/nacho-mascort/30min?overlayCalendar=true',
   email: 'nacho.mascort@gmail.com',
   social: {
     linkedin: 'https://www.linkedin.com/in/nachomascort',

@@ -17,11 +17,11 @@ const posts = await getCollection('blog', (entry) => entry.data.lang === 'en');
     { name: 'Blog', path: '/en/blog/' },
   ]}
 >
-  <div class="mx-auto max-w-3xl px-6 pt-16 pb-8">
-    <p class="eyebrow">blog</p>
-    <h1 class="font-display mt-4 text-4xl font-bold tracking-tight">Blog</h1>
-    <p class="mt-4 text-lg text-muted">
-      Growth, applied AI, SEO and automation. Written from the trenches, not from theory.
+  <div class="mx-auto max-w-5xl px-5 sm:px-6 pt-16 pb-8">
+    <p class="meta">Blog</p>
+    <h1 class="display-1 mt-5">Blog</h1>
+    <p class="lede mt-6">
+      Growth, applied AI, SEO and automation, told from real projects.
     </p>
     <PostList posts={posts} lang="en" />
   </div>

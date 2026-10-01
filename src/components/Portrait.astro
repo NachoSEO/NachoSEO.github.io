@@ -1,0 +1,31 @@
+---
+import { Image } from 'astro:assets';
+import portrait from '../assets/img/nacho-hero.webp';
+
+interface Props {
+  alt: string;
+  class?: string;
+}
+
+const { alt, class: className } = Astro.props;
+---
+
+<!-- Recorte apoyado en el borde inferior de la banda oscura, con un círculo detrás -->
+<div class:list={['relative', className]}>
+  <div
+    class="portrait-backdrop absolute bottom-0 left-1/2 aspect-square w-[92%] -translate-x-1/2 translate-y-[18%] rounded-full"
+    aria-hidden="true"
+  >
+  </div>
+  <Image
+    src={portrait}
+    alt={alt}
+    widths={[320, 480, 640, 900]}
+    sizes="(min-width: 768px) 26rem, min(20rem, 80vw)"
+    format="webp"
+    quality={70}
+    loading="eager"
+    fetchpriority="high"
+    class="portrait-cutout relative mx-auto block h-auto w-full"
+  />
+</div>

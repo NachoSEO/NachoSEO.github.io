@@ -1,8 +1,10 @@
 ---
-import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import Cta from '../../components/Cta.astro';
-import avatar from '../../assets/img/nacho.jpeg';
+import { Image } from 'astro:assets';
+import aboutPhoto from '../../assets/img/nacho-about.jpg';
+import AboutCredentials from '../../components/AboutCredentials.astro';
+import SectionLabel from '../../components/SectionLabel.astro';
 
 const timeline = [
   {
@@ -15,34 +17,47 @@ const timeline = [
     period: '2025 — now',
     role: 'Head of Organic Marketing · Reverse Tech',
     detail:
-      'Leading SEO, email, social media, affiliates and YouTube: strategy, multidisciplinary team and measurable growth in traffic and conversion.',
+      'Hired to build and lead the whole organic area from scratch: SEO, YouTube, web, email, social media and affiliates, across the full customer lifecycle.',
+    results: [
+      'Organic went from $0 to over $2M in margin.',
+      'A new website went from 0 visits from Google to over 60,000 organic visits a month, bringing in over $200k a year in revenue.',
+      "YouTube: from 5,000 to 92,000 subscribers. The channel's best video ever had 20,000 views; we now have videos with 1.3M, 500K and 400K views in the US, in the fitness vertical.",
+      'Social media and customer support: from replying in days to replying in minutes, on every channel and to every comment.',
+      'Hired and managed a team of 8, plus freelancers and stakeholders from other areas.',
+    ],
   },
   {
     period: '2024 — 2025',
     role: 'Head of SEO · Cliqpod',
     detail:
-      'SEO leadership, including word.tips: peaks of 2M daily visits and ~60M/mo, 100% organic.',
+      'SEO leadership for word.tips and Router Network. I doubled organic traffic at word.tips, with peaks of 2M daily visits and ~60M/mo, 100% organic.',
   },
   {
     period: '2019 — 2024',
     role: 'SEO Specialist → Product Owner → SEO Manager · Softonic',
     detail:
-      'Portfolio of 6 sites with 1B+ annual users and a team of 3 specialists. Content program with our own models, before ChatGPT: from 0 to 20M sessions/mo in two years; catalog from 100k to 1M+ pages. +40% YoY (2024 vs 2023).',
+      'Portfolio of 6 sites (Softonic, download.com, CNET…) with 1B+ annual users and a team of 3 specialists. Content program with our own models, before ChatGPT: from 0 to 20M sessions/mo in two years; catalog from 100k to 1M+ pages. +40% YoY (2024 vs 2023).',
   },
   {
     period: '2017 — 2019',
     role: 'SEO Manager · Grupo Planeta',
     detail:
-      'Group-wide SEO strategy (casadellibro.com, lonelyplanet.es, planetadelibros.com and more): internal scripts, automated dashboards and a migration framework.',
+      'SEO for Casa del Libro, Lonely Planet, Planeta DeAgostini and EAE Business School, among other group brands: internal scripts, automated dashboards and a migration framework.',
   },
   {
     period: '2014 — 2017',
     role: 'Agencies · SUMA, Tesubi and SEO Coaching',
-    detail: 'SEO, SEM and project leadership for clients like Gas Natural Fenosa and Kids&Us.',
+    detail: 'SEO, SEM and project leadership for clients like Kids&Us, IESE, Familia Torres, Brompton and Naturgy (then Gas Natural Fenosa).',
   },
 ];
 
 const projects = [
+  {
+    name: 'Gradual',
+    url: 'https://gradual.pro',
+    detail:
+      'My AI agency. We automate business processes with agents and custom systems, in phases, with the code and data owned by the client.',
+  },
   {
     name: 'Claudegram',
     url: 'https://github.com/NachoSEO/claudegram',
@@ -64,13 +79,23 @@ const projects = [
     url: 'https://github.com/NachoSEO/google-autocomplete-extractor',
     detail: "Extracts Google suggestions by intercepting the front-end's endpoints, no DOM parsing.",
   },
+  {
+    name: 'Sitemap Generator',
+    url: 'https://sitemapgenerator.xyz/',
+    detail: 'Free XML sitemap generator.',
+  },
+  {
+    name: 'Programación práctica para SEO',
+    url: 'https://nachomascort.gumroad.com/l/programacion-seo',
+    detail: 'My course (in Spanish) on practical programming for SEO work.',
+  },
 ];
 ---
 
 <Base
   lang="en"
   title="About — Nacho Mascort"
-  description="Nacho Mascort's track record: from leading Softonic's SEO (1B+ annual users) to building AI systems as Head of AI. Professor at UPF and Webpositer for 8+ years."
+  description="Former Google Search engineers hired me for their SEO. I led SEO at Softonic, Grupo Planeta and word.tips. Now Head of AI at Reverse Tech."
   path="/en/about/"
   alternatePath="/sobre-mi/"
   breadcrumbs={[
@@ -78,79 +103,68 @@ const projects = [
     { name: 'About', path: '/en/about/' },
   ]}
 >
-  <article class="mx-auto max-w-3xl px-6 pt-16">
-    <p class="eyebrow">about</p>
-    <div class="mt-6 flex items-start gap-6">
+  <article class="mx-auto max-w-5xl px-5 pt-16 sm:px-6 sm:pt-20">
+    <p class="meta">About</p>
+    <div class="mt-5 grid gap-10 md:grid-cols-[1.4fr_1fr] md:gap-14">
       <div>
-        <h1 class="font-display text-4xl font-bold tracking-tight sm:text-5xl">
-          I build systems that grow on their own
-        </h1>
+        <h1 class="display-1">I grow websites on Google, and now with AI too</h1>
+        <div class="mt-8 max-w-[62ch] space-y-5 text-[1.05rem] leading-relaxed">
+      <p>
+        <strong>A team of former Google Search engineers hired me to do their SEO.</strong> They
+        know the algorithm better than anyone, and they still looked outside for someone who knows
+        how to grow their project. It's the line on my CV that carries the most weight.
+      </p>
+      <p>
+        I started in 2014 at agencies, with clients like Kids&amp;Us, IESE, Naturgy, Familia Torres
+        and Brompton. At Grupo Planeta I ran SEO for Casa del Libro, Lonely Planet, Planeta DeAgostini
+        and EAE Business School.
+      </p>
+      <p>
+        At Softonic I led SEO for a portfolio with over 1 billion users a year, including Softonic,
+        download.com and CNET. There I built a content program that went from
+        <strong>0 to 20 million monthly organic sessions in two years</strong>. Then, at Cliqpod, I
+        ran word.tips and Router Network: I doubled traffic at word.tips, with peaks of 2 million visits a day.
+      </p>
+      <p>
+        Today I'm Head of Organic Marketing and Head of AI (Marketing Automation) at Reverse Tech.
+        There I built the organic area from scratch, taking it from <strong>$0 to over $2M in
+        margin</strong>, plus an ad factory that went from <strong>200 to over 3,000 creatives a
+        week</strong>.
+      </p>
+      <p>
+        I work in systems, not isolated tactics: processes, automation and teams that keep
+        producing once I'm gone.
+      </p>
+        </div>
+        <a href="/cv/nacho-mascort-cv.pdf" download="nacho-mascort-cv.pdf" class="link-arrow mt-8 inline-block">
+          Download CV (PDF)
+        </a>
       </div>
       <Image
-        src={avatar}
-        alt="Nacho Mascort"
-        width={112}
-        height={112}
-        class="hidden rounded-2xl sm:block"
+        src={aboutPhoto}
+        alt="Portrait of Nacho Mascort"
+        widths={[400, 800]}
+        sizes="(min-width: 768px) 22rem, 90vw"
         loading="eager"
+        class="aspect-[4/5] w-full max-w-[22rem] rounded-2xl object-cover md:self-start"
       />
     </div>
 
-    <div class="mt-8 space-y-4 text-lg leading-relaxed">
-      <p>
-        I've spent over ten years growing digital businesses. I started in technical SEO, ended up
-        leading full growth teams, and today I build AI systems that execute that work at scale.
-      </p>
-      <p>
-        Those systems now run in production: an ad factory that went from
-        <strong>200 to over 3,000 creatives per week</strong> and agents operating entire marketing
-        channels 24/7, without growing headcount.
-      </p>
-      <p>
-        The number I'm proudest of: at Softonic I built a content program that went from
-        <strong>0 to 20 million monthly organic sessions in two years</strong>, inside a portfolio
-        with over 1 billion annual users. Later I led SEO for word.tips, with peaks of 2 million
-        visits a day.
-      </p>
-      <p>
-        My best calling card: <strong
-          >Google engineers have hired me to do SEO for their own websites</strong
-        >. When the people who build the search engine need help ranking in it, who they call says a
-        lot.
-      </p>
-      <p>
-        I don't believe in isolated tactics. I believe in systems: processes, automation and
-        well-led teams that keep producing after the consultant is gone. That's what I install in
-        the companies I work with.
-      </p>
-    </div>
-
-    <a
-      href="/cv/nacho-mascort-cv.pdf"
-      download="nacho-mascort-cv.pdf"
-      class="mt-8 inline-flex items-center gap-2 rounded-full border border-accent px-6 py-2.5 font-medium text-accent transition hover:bg-accent hover:text-paper"
-    >
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M12 4v12m0 0l-4-4m4 4l4-4" />
-      </svg>
-      Download CV (PDF)
-    </a>
-
-    <section class="mt-14">
-      <h2 class="font-display text-2xl font-bold">Track record</h2>
-      <ol class="rail relative mt-6 pl-8">
-        <span class="rail-fill rail-progress" aria-hidden="true"></span>
+    <section class="mt-24">
+      <SectionLabel label="Track record" asHeading />
+      <ol class="row-list mt-8">
         {
-          timeline.map((item, index) => (
-            <li
-              class="reveal relative grid gap-1 py-5 sm:grid-cols-[140px_1fr] sm:gap-6"
-              style={`--reveal-delay: ${index * 80}ms`}
-            >
-              <span class="rail-dot" aria-hidden="true" />
-              <span class="font-mono text-xs text-muted">{item.period}</span>
+          timeline.map((item) => (
+            <li class="grid gap-1 py-5 sm:grid-cols-[9rem_1fr] sm:gap-6">
+              <span class="meta pt-1">{item.period}</span>
               <div>
                 <h3 class="font-semibold">{item.role}</h3>
-                <p class="mt-1 text-sm text-muted">{item.detail}</p>
+                <p class="mt-1.5 max-w-[65ch] text-[0.95rem] text-muted">{item.detail}</p>
+                {'results' in item && item.results && (
+                  <ul class="mt-3 max-w-[65ch] list-disc space-y-1.5 pl-5 text-[0.95rem] marker:text-accent">
+                    {item.results.map((result) => <li>{result}</li>)}
+                  </ul>
+                )}
               </div>
             </li>
           ))
@@ -158,21 +172,15 @@ const projects = [
       </ol>
     </section>
 
-    <section class="mt-14">
-      <h2 class="font-display text-2xl font-bold">Projects</h2>
-      <ul class="mt-6 grid gap-4 sm:grid-cols-2">
+    <section class="mt-24">
+      <SectionLabel label="Projects" asHeading />
+      <ul class="row-list mt-8">
         {
-          projects.map((project, index) => (
+          projects.map((project) => (
             <li>
-              <a
-                href={project.url}
-                rel="noopener"
-                class="card-lift tilt reveal block h-full rounded-2xl border border-line p-5 hover:border-accent"
-                data-tilt-max="5"
-                style={`--reveal-delay: ${index * 80}ms`}
-              >
-                <span class="font-display font-bold">{project.name}</span>
-                <p class="mt-1 text-sm text-muted">{project.detail}</p>
+              <a href={project.url} rel="noopener" class="row-link group grid gap-1 py-5 sm:grid-cols-[14rem_1fr] sm:gap-6 sm:px-2">
+                <span class="row-title display-3 transition-colors">{project.name}</span>
+                <p class="text-[0.95rem] text-muted">{project.detail}</p>
               </a>
             </li>
           ))
@@ -180,16 +188,7 @@ const projects = [
       </ul>
     </section>
 
-    <section class="mt-14">
-      <h2 class="font-display text-2xl font-bold">Teaching</h2>
-      <p class="mt-4 text-muted">
-        Professor at <strong class="text-ink">Universitat Pompeu Fabra's Master in Search Engines</strong>
-        (2015–2024) and <strong class="text-ink">Webpositer Academy's SEO Master</strong> (2018–2024).
-        <strong class="text-ink">Google Product Expert</strong> in Search Console. Speaker at
-        SEOnTheBeach, Clinic SEO, Ensalada SEO and SEOPLUS. Mentioned on the Google Search Central
-        blog, El Confidencial and ABC, among others.
-      </p>
-    </section>
+    <AboutCredentials lang="en" />
   </article>
 
   <Cta lang="en" />

@@ -2,8 +2,9 @@
 import type { CollectionEntry } from 'astro:content';
 import { render } from 'astro:content';
 import Base from './Base.astro';
-import CaseShowcase from '../components/CaseShowcase.astro';
+import { Image } from 'astro:assets';
 import Cta from '../components/Cta.astro';
+import { caseBrands } from '../data/case-brands';
 import { localizedRoute } from '../i18n/utils';
 import type { Lang } from '../i18n/ui';
 
@@ -16,11 +17,12 @@ interface Props {
 const { entry, path, alternatePath } = Astro.props;
 const lang = entry.data.lang as Lang;
 const { Content } = await render(entry);
+const brand = caseBrands[entry.data.translationKey]?.brand;
 
 const labels =
   lang === 'es'
-    ? { cases: 'Casos', home: 'Inicio', eyebrow: 'caso de éxito' }
-    : { cases: 'Case studies', home: 'Home', eyebrow: 'case study' };
+    ? { cases: 'Casos', home: 'Inicio', eyebrow: 'Caso de éxito', back: 'Todos los casos' }
+    : { cases: 'Case studies', home: 'Home', eyebrow: 'Case study', back: 'All case studies' };
 
 const articleNode = {
   '@type': 'Article',
@@ -46,26 +48,49 @@ const articleNode = {
   ]}
   extraSchemaNodes={[articleNode]}
 >
-  <article class="mx-auto max-w-3xl px-6 pt-16">
-    <p class="eyebrow">{labels.eyebrow}</p>
-    <h1 class="font-display mt-4 text-4xl font-bold tracking-tight">{entry.data.title}</h1>
+  <article class="mx-auto max-w-5xl px-5 pt-16 sm:px-6 sm:pt-20">
+    <p class="meta">
+      <a href={localizedRoute('cases', lang)} class="hover:text-ink">{labels.cases}</a>
+      <span aria-hidden="true"> / </span>{labels.eyebrow}
+    </p>
+    {
+      brand && (
+        <div class="mt-8 flex h-10 items-center">
+          {brand.kind === 'image' ? (
+            <Image
+              src={brand.color}
+              alt={brand.alt}
+              height={36}
+              densities={[1, 2]}
+              class="w-auto"
+              style="height: 36px"
+              loading="eager"
+            />
+          ) : (
+            <span class="font-display text-2xl font-medium">{brand.text}</span>
+          )}
+        </div>
+      )
+    }
+    <h1 class="display-1 mt-5 max-w-[24ch]">{entry.data.title}</h1>
+    <p class="lede mt-6">{entry.data.description}</p>
 
-    <dl class="reveal mt-8 grid grid-cols-2 gap-4 border-y border-line py-6 sm:grid-cols-4">
+    <dl class="mt-12 grid grid-cols-2 border-t border-ink sm:grid-cols-4">
       {
         entry.data.metrics.map((metric) => (
-          <div>
-            <dd class="font-display text-2xl font-bold text-accent">{metric.value}</dd>
-            <dt class="mt-1 font-mono text-xs text-muted">{metric.label}</dt>
+          <div class="flex flex-col-reverse justify-end border-b border-line py-5 pr-4">
+            <dt class="mt-1 text-sm text-muted">{metric.label}</dt>
+            <dd class="font-display text-3xl font-medium tracking-tight">{metric.value}</dd>
           </div>
         ))
       }
     </dl>
 
-    <CaseShowcase translationKey={entry.data.translationKey} lang={lang} />
-
-    <div class="article-body mt-8">
+    <div class="article-body mt-12">
       <Content />
     </div>
+
+    <a href={localizedRoute('cases', lang)} class="link-arrow mt-12 inline-block text-[0.95rem]">{labels.back}</a>
   </article>
 
   <Cta lang={lang} />

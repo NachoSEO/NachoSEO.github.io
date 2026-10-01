@@ -14,38 +14,38 @@ import { site } from '../site';
     { name: 'Contacto', path: '/contacto/' },
   ]}
 >
-  <div class="mx-auto max-w-2xl px-6 pt-16">
-    <p class="eyebrow">contacto</p>
-    <h1 class="font-display mt-4 text-4xl font-bold tracking-tight sm:text-5xl">
-      Cuéntame tu caso
+  <div class="mx-auto max-w-5xl px-5 sm:px-6 pt-16">
+    <p class="meta">Contacto</p>
+    <h1 class="display-1 mt-5">
+      Hablemos de tu caso
     </h1>
-    <p class="mt-4 text-lg text-muted">
-      Lo más rápido: agenda directamente una llamada de 30 minutos. Me cuentas dónde estás, qué
-      quieres hacer crecer, y te digo con franqueza si puedo ayudarte y por dónde empezaría.
+    <p class="lede mt-6">
+      Reserva una llamada de 30 minutos. Me cuentas dónde estás y qué quieres conseguir, y te
+      digo con franqueza si puedo ayudarte y por dónde empezaría.
     </p>
 
     <a
       href={site.calUrl}
-      class="mt-8 inline-block btn-cta px-8 py-3 font-medium"
+      class="btn mt-9"
     >
-      Agenda una llamada
+      Reserva una llamada de 30 min
     </a>
 
-    <section class="mt-12 border-t border-line pt-8">
-      <h2 class="font-display text-xl font-bold">Qué esperar de la llamada</h2>
-      <ul class="mt-4 space-y-2 text-muted">
-        <li>· 30 minutos, sin guion de venta.</li>
-        <li>· Si no soy la persona adecuada, te lo digo y, si puedo, te refiero a quien sí.</li>
-        <li>· Saldrás con al menos una idea accionable, trabajemos juntos o no.</li>
+    <section class="mt-16 max-w-[62ch] border-t border-ink pt-6">
+      <h2 class="display-3">Qué esperar de la llamada</h2>
+      <ul class="row-list mt-5 max-w-[62ch]">
+        <li class="py-3">30 minutos, sin guion de venta.</li>
+        <li class="py-3">Si no soy la persona adecuada, te lo digo y, si puedo, te refiero a quien sí.</li>
+        <li class="py-3">Saldrás con al menos una idea accionable, trabajemos juntos o no.</li>
       </ul>
     </section>
 
-    <section class="mt-10 border-t border-line pt-8">
-      <h2 class="font-display text-xl font-bold">Otras vías</h2>
+    <section class="mt-14 max-w-[62ch] border-t border-ink pt-6">
+      <h2 class="display-3">Otras vías</h2>
       <p class="mt-4 text-muted">
-        Email: <a href={`mailto:${site.email}`} class="text-accent hover:underline">{site.email}</a
+        Email: <a href={`mailto:${site.email}`} class="underline decoration-accent underline-offset-4 hover:text-accent-ink">{site.email}</a
         ><br />
-        LinkedIn: <a href={site.social.linkedin} class="text-accent hover:underline"
+        LinkedIn: <a href={site.social.linkedin} class="underline decoration-accent underline-offset-4 hover:text-accent-ink"
           >linkedin.com/in/nachomascort</a
         >
       </p>

@@ -1,0 +1,31 @@
+---
+import SectionLabel from '../SectionLabel.astro';
+import type { Lang } from '../../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  process: { when: string; title: string; detail: string }[];
+}
+
+const { lang, process } = Astro.props;
+const es = lang === 'es';
+---
+
+<section class="mx-auto max-w-5xl px-5 pt-24 sm:px-6">
+  <SectionLabel label={es ? 'Cómo trabajamos' : 'How we work'} />
+  <h2 class="display-2 mt-3">{es ? 'De la primera llamada a los resultados' : 'From the first call to results'}</h2>
+  <ol class="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+    {
+      process.map((step, index) => (
+        <li class="card">
+          <p class="flex items-baseline justify-between gap-3">
+            <span class="font-display text-3xl font-medium text-accent-ink">{String(index + 1).padStart(2, '0')}</span>
+            <span class="meta text-right">{step.when}</span>
+          </p>
+          <h3 class="mt-4 font-semibold">{step.title}</h3>
+          <p class="mt-2 text-[0.95rem] text-muted">{step.detail}</p>
+        </li>
+      ))
+    }
+  </ol>
+</section>

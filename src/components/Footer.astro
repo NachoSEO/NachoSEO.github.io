@@ -1,5 +1,6 @@
 ---
 import { localizedRoute, useTranslations } from '../i18n/utils';
+import { site } from '../site';
 import type { Lang } from '../i18n/ui';
 
 interface Props {
@@ -9,35 +10,41 @@ interface Props {
 const { lang } = Astro.props;
 const t = useTranslations(lang);
 const year = new Date().getFullYear();
+
+const links = [
+  { href: site.social.linkedin, label: 'LinkedIn', rel: 'me' },
+  { href: site.social.twitter, label: 'Twitter/X', rel: 'me' },
+  { href: site.social.github, label: 'GitHub', rel: 'me' },
+  { href: lang === 'es' ? '/rss.xml' : '/en/rss.xml', label: 'RSS', rel: undefined },
+];
 ---
 
-<footer class="mt-24 border-t border-line">
-  <div
-    class="mx-auto flex max-w-5xl flex-col gap-6 px-6 py-10 sm:flex-row sm:items-end sm:justify-between"
-  >
+<footer class="on-dark mt-28">
+  <div class="mx-auto grid max-w-5xl gap-8 px-5 py-10 sm:grid-cols-3 sm:px-6">
     <div>
-      <p class="font-display font-bold">Nacho Mascort</p>
-      <p class="mt-1 text-sm text-muted">{t('footer.role')}</p>
-      <p class="text-sm text-muted">{t('footer.location')}</p>
+      <p class="font-display text-lg font-medium">Nacho Mascort</p>
+      <p class="mt-1 text-sm text-on-dark-muted">{t('footer.role')}</p>
+      <p class="text-sm text-on-dark-muted">{t('footer.location')}</p>
     </div>
 
-    <div class="flex flex-col gap-2 sm:items-end">
-      <div class="flex gap-4 font-mono text-xs">
-        <a href="https://www.linkedin.com/in/nachomascort" rel="me" class="text-muted hover:text-ink">
-          LinkedIn
-        </a>
-        <a href="https://twitter.com/NachoMascort" rel="me" class="text-muted hover:text-ink">
-          Twitter/X
-        </a>
-        <a href="https://github.com/NachoSEO" rel="me" class="text-muted hover:text-ink">
-          GitHub
-        </a>
-        <a href={lang === 'es' ? '/rss.xml' : '/en/rss.xml'} class="text-muted hover:text-ink">
-          RSS
-        </a>
-      </div>
-      <p class="font-mono text-xs text-muted">
-        © {year} · <a href={localizedRoute('contact', lang)} class="hover:text-ink">{t('nav.contact')}</a>
+    <ul class="space-y-1 text-sm">
+      {
+        links.map((link) => (
+          <li>
+            <a href={link.href} rel={link.rel} class="text-on-dark-muted hover:text-on-dark">
+              {link.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <div class="text-sm sm:text-right">
+      <a href={`mailto:${site.email}`} class="underline decoration-accent-on-dark underline-offset-4 hover:text-accent-on-dark">
+        {site.email}
+      </a>
+      <p class="meta mt-4">
+        © {year} · <a href={localizedRoute('contact', lang)} class="hover:text-on-dark">{t('nav.contact')}</a>
       </p>
     </div>
   </div>

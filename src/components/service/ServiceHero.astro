@@ -1,44 +1,34 @@
 ---
-import ServiceShowcase from '../ServiceShowcase.astro';
+import { localizedRoute } from '../../i18n/utils';
 import { site } from '../../site';
 import type { Lang } from '../../i18n/ui';
 
 interface Props {
   lang: Lang;
-  serviceKey: string;
   title: string;
   tagline: string;
+  /** Línea de prueba bajo el CTA */
+  proof: string;
 }
 
-const { lang, serviceKey, title, tagline } = Astro.props;
+const { lang, title, tagline, proof } = Astro.props;
 const es = lang === 'es';
 ---
 
-<section class="relative overflow-hidden">
-  <div class="grid-bg absolute inset-0" aria-hidden="true"></div>
-  <div class="glow-orb parallax-slow absolute -top-28 left-[5%] h-80 w-80" aria-hidden="true"></div>
-  <div class="glow-orb parallax-fast absolute top-32 right-[-8%] h-64 w-64" aria-hidden="true"></div>
-
-  <div class="relative mx-auto max-w-5xl px-6 pt-20">
-    <div class="hero-seq">
-      <p class="eyebrow">{es ? 'servicios' : 'services'}</p>
-      <h1 class="font-display mt-4 max-w-3xl text-4xl font-bold tracking-tight sm:text-6xl">
-        {title}
-      </h1>
-      <p class="mt-5 max-w-2xl text-xl text-muted">{tagline}</p>
-      <div class="mt-8 flex flex-wrap items-center gap-4">
-        <a
-          href={site.calUrl}
-          class="btn-cta px-8 py-3 font-medium"
-        >
-          {es ? 'Agenda una llamada' : 'Book a call'}
-        </a>
-        <a href="#sistema" class="font-medium text-accent hover:underline">
-          {es ? 'Ver cómo trabajo ↓' : 'See how I work ↓'}
-        </a>
-      </div>
-    </div>
-
-    <ServiceShowcase serviceKey={serviceKey} lang={lang} />
+<section class="on-dark">
+  <div class="mx-auto max-w-5xl px-5 pb-16 pt-12 sm:px-6 sm:pb-20 sm:pt-16">
+    <p class="section-label">
+      <a href={localizedRoute('services', lang)} class="hover:underline">
+        {es ? 'Servicios' : 'Services'}
+      </a>
+    </p>
+    <h1 class="display-1 mt-4 max-w-[22ch]">{title}</h1>
+    <p class="lede mt-6">{tagline}</p>
+    <a href={site.calUrl} class="btn mt-9">
+      {es ? 'Reserva una llamada de 30 min' : 'Book a 30-min call'} →
+    </a>
+    <p class="mt-10 max-w-[62ch] border-l-2 border-accent-on-dark pl-4 text-[0.95rem] text-on-dark-muted">
+      {proof}
+    </p>
   </div>
 </section>

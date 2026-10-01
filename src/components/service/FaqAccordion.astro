@@ -1,4 +1,5 @@
 ---
+import SectionLabel from '../SectionLabel.astro';
 import type { Lang } from '../../i18n/ui';
 
 interface Props {
@@ -10,27 +11,22 @@ const { lang, faq } = Astro.props;
 const es = lang === 'es';
 ---
 
-<section class="mx-auto max-w-3xl px-6 pt-24">
-  <div class="reveal">
-    <p class="eyebrow">faq</p>
-    <h2 class="font-display mt-4 text-3xl font-bold tracking-tight">
-      {es ? 'Preguntas frecuentes' : 'Frequently asked questions'}
-    </h2>
-  </div>
-
-  <div class="reveal mt-8 divide-y divide-line border-y border-line" style="--reveal-delay: 120ms">
-    {
-      faq.map((item) => (
-        <details name="faq" class="faq-item group py-4">
-          <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold [&::-webkit-details-marker]:hidden">
-            {item.question}
-            <span class="faq-marker shrink-0 font-mono text-accent" aria-hidden="true">
-              +
-            </span>
-          </summary>
-          <p class="pt-3 text-muted">{item.answer}</p>
-        </details>
-      ))
-    }
+<section class="mx-auto max-w-5xl px-5 pt-24 sm:px-6">
+  <SectionLabel label="FAQ" />
+  <div class="mt-6 grid gap-10 md:grid-cols-[1fr_2fr] md:gap-14">
+    <h2 class="display-2">{es ? 'Preguntas frecuentes' : 'Frequently asked questions'}</h2>
+    <div class="row-list">
+      {
+        faq.map((item) => (
+          <details name="faq" class="faq-item py-5">
+            <summary class="flex cursor-pointer list-none items-baseline justify-between gap-6 font-semibold">
+              {item.question}
+              <span class="faq-marker shrink-0 font-mono text-accent-ink" aria-hidden="true">+</span>
+            </summary>
+            <p class="max-w-[62ch] pt-3 text-muted">{item.answer}</p>
+          </details>
+        ))
+      }
+    </div>
   </div>
 </section>

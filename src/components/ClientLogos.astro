@@ -1,0 +1,69 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import type { Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const label = lang === 'es' ? 'He trabajado con y para' : "I've worked with and for";
+
+const monoFiles = import.meta.glob<{ default: ImageMetadata }>('../assets/logos/mono/*.png', { eager: true });
+const colorFiles = import.meta.glob<{ default: ImageMetadata }>('../assets/logos/color/*.png', { eager: true });
+const mono = (key: string) => monoFiles[`../assets/logos/mono/${key}.png`].default;
+const color = (key: string) => colorFiles[`../assets/logos/color/${key}.png`].default;
+
+// Agrupadas por la empresa desde la que trabajé con cada marca. La altura compensa logos muy anchos o muy finos.
+const brands = [
+  { key: 'softonic', name: 'Softonic', height: 30 },
+  { key: 'cnet', name: 'CNET', height: 26 },
+  { key: 'download-com', name: 'Download.com', height: 26 },
+  { key: 'grupo-planeta', name: 'Grupo Planeta', height: 28 },
+  { key: 'casa-del-libro', name: 'Casa del Libro', height: 28 },
+  { key: 'lonely-planet', name: 'Lonely Planet', height: 24 },
+  { key: 'planeta-deagostini', name: 'Planeta DeAgostini', height: 18 },
+  { key: 'eae', name: 'EAE Business School', height: 30 },
+  { key: 'word-tips', name: 'word.tips', height: 28 },
+  { key: 'router-network', name: 'Router Network', height: 22 },
+  { key: 'iese', name: 'IESE Business School', height: 36 },
+  { key: 'torres', name: 'Familia Torres', height: 44 },
+  { key: 'brompton', name: 'Brompton', height: 26 },
+  { key: 'kids-and-us', name: 'Kids&Us', height: 28 },
+  { key: 'naturgy', name: 'Naturgy', height: 28 },
+];
+---
+
+<section class="border-b border-line bg-raised" aria-label={label}>
+  <div class="mx-auto max-w-5xl px-5 py-10 sm:px-6">
+    <p class="meta text-center">{label}</p>
+    <ul class="mt-7 flex flex-wrap items-center justify-center gap-x-10 gap-y-7">
+      {
+        brands.map((brand) => (
+          <li class="client-logo">
+            <Image
+              src={mono(brand.key)}
+              alt={brand.name}
+              height={brand.height}
+              densities={[1, 2]}
+              class="client-logo-mono w-auto"
+              style={`height: ${brand.height}px`}
+              loading="lazy"
+            />
+            <Image
+              src={color(brand.key)}
+              alt=""
+              aria-hidden="true"
+              height={brand.height}
+              densities={[1, 2]}
+              class="client-logo-color w-auto"
+              style={`height: ${brand.height}px`}
+              loading="lazy"
+            />
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>

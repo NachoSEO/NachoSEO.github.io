@@ -17,17 +17,17 @@ const dateFormatter = new Intl.DateTimeFormat(lang === 'es' ? 'es-ES' : 'en-US',
 const sorted = [...posts].sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 ---
 
-<ul class="mt-10 divide-y divide-line">
+<ul class="row-list mt-12">
   {
     sorted.map((post) => (
       <li>
-        <a href={`${base}${post.data.slug}/`} class="group block py-6">
-          <p class="font-mono text-xs text-muted">
+        <a href={`${base}${post.data.slug}/`} class="row-link group block py-6 sm:px-2">
+          <p class="meta">
             <time datetime={post.data.pubDate.toISOString().slice(0, 10)}>
               {dateFormatter.format(post.data.pubDate)}
             </time>
           </p>
-          <h2 class="font-display mt-1 text-xl font-bold group-hover:text-accent">
+          <h2 class="display-3 mt-1 transition-colors group-hover:text-accent-ink">
             {post.data.title}
           </h2>
           <p class="mt-2 text-sm text-muted">{post.data.description}</p>

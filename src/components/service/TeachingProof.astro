@@ -1,0 +1,66 @@
+---
+import SectionLabel from '../SectionLabel.astro';
+import { talks, teaching } from '../../data/appearances';
+import { localizedRoute } from '../../i18n/utils';
+import type { Lang } from '../../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const es = lang === 'es';
+---
+
+<section class="on-dark mt-24">
+  <div class="mx-auto grid max-w-5xl gap-12 px-5 py-20 sm:px-6 md:grid-cols-2">
+    <div>
+      <SectionLabel label={es ? 'Docencia' : 'Teaching'} />
+      <h2 class="display-2 mt-3">{es ? 'Más de 8 años en másters' : 'Over 8 years teaching master’s programs'}</h2>
+      <ul class="mt-8 border-t border-white/15">
+        {
+          teaching.map((item) => (
+            <li class="border-b border-white/15">
+              <a href={item.url} rel="noopener" class="case-row group block px-2 py-4">
+                <span class="block font-semibold">
+                  {item.program[lang]} · {item.school}
+                </span>
+                <span class="mt-1 block text-sm text-on-dark-muted">
+                  {item.period && `${item.period} · `}
+                  {item.topics[lang]}
+                </span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+    <div>
+      <SectionLabel label={es ? 'Charlas' : 'Talks'} />
+      <h2 class="display-2 mt-3">{es ? 'Ponente en congresos SEO' : 'Speaker at SEO conferences'}</h2>
+      <ul class="mt-8 border-t border-white/15">
+        {
+          talks.map((talk) => (
+            <li class="border-b border-white/15">
+              <a href={talk.url} rel="noopener" class="case-row group block px-2 py-4">
+                <span class="meta block">
+                  {talk.event} {talk.year}
+                </span>
+                <span class="mt-1 block font-semibold">{talk.title[lang]}</span>
+                <span class="mt-1 block text-sm text-on-dark-muted">
+                  {es ? 'Ver slides' : 'See slides'} <span class="case-arrow inline-block" aria-hidden="true">→</span>
+                </span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <a
+        href={`${localizedRoute('about', lang)}#medios`}
+        class="mt-6 inline-block text-[0.95rem] font-semibold underline decoration-accent-on-dark underline-offset-4 hover:text-accent-on-dark"
+      >
+        {es ? 'Podcasts y medios' : 'Podcasts and press'} →
+      </a>
+    </div>
+  </div>
+</section>

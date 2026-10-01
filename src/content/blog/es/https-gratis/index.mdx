@@ -1,0 +1,82 @@
+---
+title: '¿Cómo montar un protocolo https gratis para WordPress?'
+description: '¿Estás intentado poner un https en tu web y no sabes cómo? En este post encontrarás una guía para poder hacerlo gratis y sin complicaciones. ¡Entra Ya!'
+lang: es
+translationKey: https-gratis
+slug: https-gratis
+pubDate: 2016-12-22
+updatedDate: 2017-01-12
+tags: ['seo-tecnico', 'wordpress', 'https']
+category: seohacks
+---
+
+¡Muy buenas gente!
+
+Después de hacer milenios sin escribir, hoy os traigo una píldora muy potente debido a que será «casi obligatorio» tener un protocolo https en todas las webs a partir de 2017.
+
+Y digo casi obligatorio por una sola razón, porque Google Chrome empezará a mostrar en la barra de URL si un sitio es seguro o no dependiendo de si emplea este cifrado o no.
+
+En el siguiente post te quiero mostrar una manera rápida, indolora y gratis para poder montarte un dominio con https.
+
+Ten en cuenta que sólo te contaré cómo hacerlo, has de ser consciente de realizar todas las acciones necesarias hacia tu web una vez hayas cambiado a este protocolo.
+
+Empecemos 🙂
+
+## HTTPS everywhere
+
+En esta imagen puedes ver cómo se verá el navegador de Google Chrome con una página sin https:
+
+Como puedes apreciar, no es muy agradable para un usuario ver eso en una página web en la que acaba de aterrizar.
+
+Para evitar este mensajito, precisamente lo que tienes que hacer es tener https activo. Vayamos a ver como hacerlo.
+
+Por cierto, si estás interesado en la noticia de Google hablando sobre este tema, puedes [leerla aquí](https://security.googleblog.com/2016/09/moving-towards-more-secure-web.html).
+
+> Toda la información que verás a continuación me la ha enseñado **Chris Hernández** de [Activa la web](http://www.activalaweb.com/), así que el crédito es todo suyo
+
+## Herramientas necesarias
+
+Para poder lograr lo que el título dice, primero vamos a necesitar tener a mano lo siguiente:
+
+- Acceso a nuestro registrador de dominio
+- Acceso a nuestro hosting
+- El plugin [CloudFlare Flexible SSL](https://es.wordpress.org/plugins/cloudflare-flexible-ssl/)
+- Una cuenta de Cloudflare (este te sonará del post del [ataque DDoS](/blog/ddos/))
+
+## ¿Qué tenemos que hacer?
+
+Parto de la base que ya has instalado y activado el plugin, has creado tu cuenta en Cloudflare (con la gratis será suficiente) y has realizado los pasos para tener Cloudflare activo y funcionando.
+
+### Page Rules en Cloudflare
+
+Lo único que tendremos que añadir en Cloudflare es lo siguiente en la pestaña Page Rules:
+
+Una vez tengamos hecho eso en nuestro dominio, la parte de Cloudflare ya estará.
+
+Ahora ten paciencia para que se propaguen las DNS y puedas ver los cambios.
+
+**PD: en seohacks no está aplicado por lo que la imagen es solo a modo de ejemplo.**
+
+### Mixed content y como solucionarlo con SQL
+
+Aún falta un pequeño paso para poder tener una navegación segura.
+
+Es muy posible que aunque hayas hecho estos pasos no tengas el candado en el navegador.
+
+Si haces clic en la «i» de la información te saldrá el siguiente mensaje:
+
+Tal y como dice el mensaje **el problema está en las imágenes**.
+
+Lo que pasa es que las imágenes están alojadas en en tu dominio con http:// por lo que la navegación no es 100% segura.
+
+Para ello solo nos queda hacer un replace en SQL de http://dominio.tld a https://dominio.tld
+
+Y de esta manera lograremos tener una navegación totalmente segura.
+
+**Ya podrás ver el candado en tu URL.**
+
+¡Y eso es todo! En menos de 500 palabras has podido configurar un protocolo https y totalmente gratis.
+
+Espero que te haya gustado el post, que lo emplees y que lo compartas si te parece bueno.
+
+Un saludo 🙂

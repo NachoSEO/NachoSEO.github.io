@@ -1,17 +1,13 @@
 ---
-import { getCollection } from 'astro:content';
 import Base from '../../../layouts/Base.astro';
+import CasesBand from '../../../components/CasesBand.astro';
 import Cta from '../../../components/Cta.astro';
-
-const cases = (await getCollection('caseStudies', (entry) => entry.data.lang === 'en')).sort(
-  (a, b) => a.data.order - b.data.order
-);
 ---
 
 <Base
   lang="en"
   title="Case studies — Nacho Mascort"
-  description="Real cases with real numbers: an AI ad factory (200 → 3,000+ creatives/week), Softonic from 0 to 20M sessions/mo, word.tips at 2M daily visits."
+  description="Case studies with real numbers: organic from $0 to $2M+ in margin, an AI ad factory, Softonic from 0 to 20M sessions and word.tips with traffic doubled."
   path="/en/case-studies/"
   alternatePath="/casos/"
   breadcrumbs={[
@@ -19,40 +15,13 @@ const cases = (await getCollection('caseStudies', (entry) => entry.data.lang ===
     { name: 'Case studies', path: '/en/case-studies/' },
   ]}
 >
-  <div class="mx-auto max-w-5xl px-6 pt-16">
-    <p class="eyebrow">case studies</p>
-    <h1 class="font-display mt-4 text-4xl font-bold tracking-tight sm:text-5xl">
-      Numbers, not adjectives
-    </h1>
-    <p class="mt-4 max-w-2xl text-lg text-muted">
-      Four cases that explain how I work: systems that produce measurable results and keep working
-      over time.
-    </p>
-
-    <div class="mt-12 grid gap-6 sm:grid-cols-2">
-      {
-        cases.map((caseStudy) => (
-          <a
-            href={`/en/case-studies/${caseStudy.data.slug}/`}
-            class="group card-lift tilt reveal rounded-2xl border border-line p-6 hover:border-accent"
-            data-tilt-max="6"
-          >
-            <h2 class="font-display text-xl font-bold group-hover:text-accent">
-              {caseStudy.data.title}
-            </h2>
-            <dl class="mt-4 flex flex-wrap gap-x-6 gap-y-2">
-              {caseStudy.data.metrics.slice(0, 2).map((metric) => (
-                <div>
-                  <dd class="font-display text-lg font-bold text-accent">{metric.value}</dd>
-                  <dt class="font-mono text-xs text-muted">{metric.label}</dt>
-                </div>
-              ))}
-            </dl>
-          </a>
-        ))
-      }
-    </div>
-  </div>
+  <CasesBand
+    lang="en"
+    page={{
+      title: 'Case studies with real numbers',
+      intro: "Four projects with the starting point, what I did and the measured result: Reverse Tech's organic area, an AI ad factory, Softonic and word.tips.",
+    }}
+  />
 
   <Cta lang="en" title="Want numbers like these on your site?" />
 </Base>

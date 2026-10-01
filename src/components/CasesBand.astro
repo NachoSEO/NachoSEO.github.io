@@ -1,0 +1,101 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import SectionLabel from './SectionLabel.astro';
+import { caseBrands } from '../data/case-brands';
+import { localizedRoute } from '../i18n/utils';
+import type { Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  /** En la página de casos la banda es la cabecera: H1 propio, entradilla y descripción de cada caso */
+  page?: { title: string; intro: string };
+}
+
+const { lang, page } = Astro.props;
+const casesBase = localizedRoute('cases', lang);
+const cases = (await getCollection('caseStudies', (entry) => entry.data.lang === lang)).sort(
+  (a, b) => a.data.order - b.data.order
+);
+
+
+const copy =
+  lang === 'es'
+    ? { label: 'Casos', title: 'Resultados con nombre y cifra', all: 'Ver todos los casos', read: 'Leer el caso' }
+    : { label: 'Case studies', title: 'Results with a name and a number', all: 'See all case studies', read: 'Read the case' };
+---
+
+<section class:list={['on-dark', !page && 'mt-24']}>
+  <div class:list={['mx-auto max-w-5xl px-5 sm:px-6', page ? 'pb-20 pt-12 sm:pt-16' : 'py-20']}>
+    <SectionLabel label={copy.label} />
+    {
+      page ? (
+        <>
+          <h1 class="display-1 mt-4">{page.title}</h1>
+          <p class="lede mt-6">{page.intro}</p>
+        </>
+      ) : (
+        <div class="mt-3 flex flex-wrap items-end justify-between gap-4">
+          <h2 class="display-2">{copy.title}</h2>
+          <a
+            href={casesBase}
+            class="text-[0.95rem] font-semibold underline decoration-accent-on-dark underline-offset-4 hover:text-accent-on-dark"
+          >
+            {copy.all} →
+          </a>
+        </div>
+      )
+    }
+
+    <ul class="mt-10 border-t border-white/15">
+      {
+        cases.map((entry) => {
+          const detail = caseBrands[entry.data.translationKey];
+          const [metric] = entry.data.metrics;
+          const brand = detail?.brand;
+          return (
+            <li class="border-b border-white/15">
+              <a
+                href={`${casesBase}${entry.data.slug}/`}
+                class="case-row group grid items-center gap-x-8 gap-y-3 py-7 sm:px-3 md:grid-cols-[10rem_15rem_1fr_auto]"
+              >
+                <span class="flex h-9 items-center">
+                  {brand?.kind === 'image' && (
+                    <Image
+                      src={brand.mono}
+                      alt={brand.alt}
+                      height={brand.height}
+                      densities={[1, 2]}
+                      class="case-logo w-auto"
+                      style={`height: ${brand.height}px`}
+                      loading="lazy"
+                    />
+                  )}
+                  {brand?.kind === 'text' && (
+                    <span class="case-logo font-display text-xl font-medium">{brand.text}</span>
+                  )}
+                </span>
+                {metric && (
+                  <span>
+                    <span class="accent block font-display text-4xl font-medium tracking-tight">{metric.value}</span>
+                    <span class="mt-1 block text-sm text-on-dark-muted">{metric.label}</span>
+                  </span>
+                )}
+                <span>
+                  {page ? (
+                    <h2 class="text-[1.05rem] font-semibold">{detail?.summary[lang] ?? entry.data.title}</h2>
+                  ) : (
+                    <span class="block text-[1.05rem] font-semibold">{detail?.summary[lang] ?? entry.data.title}</span>
+                  )}
+                  {page && <span class="mt-1.5 block text-[0.95rem] text-on-dark-muted">{entry.data.description}</span>}
+                </span>
+                <span class="case-arrow hidden text-2xl text-on-dark-muted md:block" aria-hidden="true">→</span>
+                <span class="sr-only">{copy.read}</span>
+              </a>
+            </li>
+          );
+        })
+      }
+    </ul>
+  </div>
+</section>

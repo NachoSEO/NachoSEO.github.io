@@ -1,9 +1,11 @@
 ---
 import type { CollectionEntry } from 'astro:content';
-import { render } from 'astro:content';
+import { getCollection, render } from 'astro:content';
+import { Image } from 'astro:assets';
 import Base from './Base.astro';
 import Cta from '../components/Cta.astro';
-import { localizedRoute } from '../i18n/utils';
+import avatar from '../assets/img/nacho-about.jpg';
+import { localizedRoute, otherLang as getOtherLang } from '../i18n/utils';
 import type { Lang } from '../i18n/ui';
 
 interface Props {
@@ -14,10 +16,59 @@ interface Props {
 
 const { entry, path, alternatePath } = Astro.props;
 const lang = entry.data.lang as Lang;
-const { Content } = await render(entry);
+const { Content, headings } = await render(entry);
 
-const labels =
-  lang === 'es' ? { blog: 'Blog', home: 'Inicio' } : { blog: 'Blog', home: 'Home' };
+const isSeoHacks = entry.data.category === 'seohacks';
+const otherLang = getOtherLang(lang);
+const blogBase = localizedRoute('blog', lang);
+
+// Índice: solo con suficientes secciones para que ayude a navegar
+const tocHeadings = headings.filter((heading) => heading.depth === 2 || heading.depth === 3);
+const showToc = tocHeadings.length >= 4;
+
+const readingMinutes = Math.max(1, Math.round((entry.body ?? '').split(/\s+/).length / 220));
+
+// Relacionados: misma categoría (el archivo de SEO Hacks se recomienda entre sí), más recientes primero
+const related = (
+  await getCollection(
+    'blog',
+    (post) =>
+      post.data.lang === lang &&
+      post.id !== entry.id &&
+      (post.data.category === 'seohacks') === isSeoHacks
+  )
+)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 3);
+
+const copy =
+  lang === 'es'
+    ? {
+        home: 'Inicio',
+        toc: 'En este artículo',
+        reading: `${readingMinutes} min de lectura`,
+        updated: 'Actualizado el',
+        authorRole: 'Consultor de SEO, GEO e IA',
+        authorBio:
+          'Dirigí el SEO de Softonic, word.tips y Grupo Planeta, y hoy monto sistemas de IA para marketing. Un equipo de ex ingenieros de Google Search me contrató para hacer su SEO.',
+        authorLink: 'Más sobre mí',
+        related: isSeoHacks ? 'Más del archivo de SEO Hacks' : 'Sigue leyendo',
+        alsoIn: 'También disponible en:',
+        otherLangName: 'English',
+      }
+    : {
+        home: 'Home',
+        toc: 'In this article',
+        reading: `${readingMinutes} min read`,
+        updated: 'Updated on',
+        authorRole: 'SEO, GEO & AI consultant',
+        authorBio:
+          'I led SEO at Softonic, word.tips and Grupo Planeta, and now build AI systems for marketing. A team of former Google Search engineers hired me to do their SEO.',
+        authorLink: 'More about me',
+        related: 'Keep reading',
+        alsoIn: 'Also available in:',
+        otherLangName: 'Español',
+      };
 
 const dateFormatter = new Intl.DateTimeFormat(lang === 'es' ? 'es-ES' : 'en-US', {
   year: 'numeric',
@@ -38,7 +89,12 @@ const articleNode = {
   keywords: entry.data.tags.join(', '),
 };
 
-const tagBase = lang === 'es' ? '/blog/etiquetas/' : '/en/blog/tags/';
+const breadcrumbs = [
+  { name: copy.home, path: localizedRoute('home', lang) },
+  { name: 'Blog', path: blogBase },
+  ...(isSeoHacks ? [{ name: 'SEO Hacks', path: '/blog/seo-hacks/' }] : []),
+  { name: entry.data.title, path },
+];
 ---
 
 <Base
@@ -48,38 +104,167 @@ const tagBase = lang === 'es' ? '/blog/etiquetas/' : '/en/blog/tags/';
   path={path}
   alternatePath={alternatePath}
   ogType="article"
-  breadcrumbs={[
-    { name: labels.home, path: localizedRoute('home', lang) },
-    { name: labels.blog, path: localizedRoute('blog', lang) },
-    { name: entry.data.title, path },
-  ]}
+  breadcrumbs={breadcrumbs}
   extraSchemaNodes={[articleNode]}
 >
-  <article class="mx-auto max-w-3xl px-6 pt-16">
-    <header>
-      <p class="eyebrow">blog</p>
-      <h1 class="font-display mt-4 text-4xl font-bold tracking-tight">{entry.data.title}</h1>
-      <p class="mt-4 font-mono text-xs text-muted">
-        <time datetime={entry.data.pubDate.toISOString().slice(0, 10)}>
-          {dateFormatter.format(entry.data.pubDate)}
-        </time>
+  <article class="mx-auto max-w-5xl px-5 pt-16 sm:px-6">
+    <header class="max-w-[46rem]">
+      <p class="meta">
+        <a href={blogBase} class="hover:text-ink">Blog</a>
         {
-          entry.data.tags.map((tag) => (
+          isSeoHacks && (
             <>
-              {' · '}
-              <a href={`${tagBase}${tag}/`} class="text-accent underline">
-                #{tag}
-              </a>
+              <span aria-hidden="true"> / </span>
+              <a href="/blog/seo-hacks/" class="hover:text-ink">SEO Hacks</a>
             </>
-          ))
+          )
         }
       </p>
+      <h1 class="display-1 mt-5 max-w-none">{entry.data.title}</h1>
+      <p class="mt-5 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted">
+        <span class="font-semibold text-ink">Nacho Mascort</span>
+        <span aria-hidden="true">·</span>
+        <time datetime={entry.data.pubDate.toISOString().slice(0, 10)}>{dateFormatter.format(entry.data.pubDate)}</time>
+        {
+          entry.data.updatedDate && (
+            <>
+              <span aria-hidden="true">·</span>
+              <span>
+                {copy.updated}{' '}
+                <time datetime={entry.data.updatedDate.toISOString().slice(0, 10)}>
+                  {dateFormatter.format(entry.data.updatedDate)}
+                </time>
+              </span>
+            </>
+          )
+        }
+        <span aria-hidden="true">·</span>
+        <span>{copy.reading}</span>
+      </p>
+      {
+        alternatePath && (
+          <p class="mt-3 text-sm text-muted">
+            {copy.alsoIn}{' '}
+            <a
+              href={alternatePath}
+              hreflang={otherLang}
+              lang={otherLang}
+              class="font-semibold text-ink underline decoration-accent underline-offset-4 hover:text-accent-ink"
+            >
+              {copy.otherLangName}
+            </a>
+          </p>
+        )
+      }
     </header>
 
-    <div class="article-body mt-8">
-      <Content />
+    <div class:list={['mt-10', showToc && 'lg:grid lg:grid-cols-[minmax(0,1fr)_15rem] lg:gap-14']}>
+      <div class="min-w-0">
+        {
+          isSeoHacks && (
+            <aside class="mb-10 max-w-[65ch] rounded-xl border border-line bg-raised p-5 text-[0.95rem]">
+              <p class="font-semibold">Archivo de SEO Hacks</p>
+              <p class="mt-2 text-muted">
+                Este artículo viene de{' '}
+                <a href="/blog/seo-hacks/" class="text-ink underline decoration-accent underline-offset-4 hover:text-accent-ink">
+                  SEO Hacks
+                </a>
+                , el blog que escribí entre 2015 y 2017. Lo he recuperado del Internet Archive y lo conservo aquí como
+                archivo, por eso faltan algunas imágenes. Ten en cuenta la fecha de publicación: parte de la
+                información puede estar obsoleta o haber cambiado con el tiempo, y mi opinión también.
+              </p>
+            </aside>
+          )
+        }
+
+        {
+          showToc && (
+            <details class="toc-mobile mb-10 max-w-[65ch] rounded-xl border border-line bg-raised px-5 py-4 lg:hidden">
+              <summary class="cursor-pointer text-sm font-semibold">{copy.toc}</summary>
+              <ol class="mt-3 space-y-2 text-[0.95rem]">
+                {tocHeadings.map((heading) => (
+                  <li class:list={[heading.depth === 3 && 'pl-4 text-sm']}>
+                    <a href={`#${heading.slug}`} class="text-muted hover:text-ink">
+                      {heading.text}
+                    </a>
+                  </li>
+                ))}
+              </ol>
+            </details>
+          )
+        }
+
+        <div class="article-body">
+          <Content />
+        </div>
+
+        <footer class="mt-16 max-w-[65ch]">
+          <div class="flex gap-5 rounded-xl border border-line bg-raised p-5">
+            <Image
+              src={avatar}
+              alt="Nacho Mascort"
+              width={64}
+              height={64}
+              densities={[1, 2]}
+              class="h-16 w-16 shrink-0 rounded-full object-cover object-top"
+            />
+            <div>
+              <p class="font-semibold">Nacho Mascort</p>
+              <p class="text-sm text-muted">{copy.authorRole}</p>
+              <p class="mt-2 text-[0.95rem]">{copy.authorBio}</p>
+              <a href={localizedRoute('about', lang)} class="link-arrow mt-3 inline-block text-sm">{copy.authorLink}</a>
+            </div>
+          </div>
+        </footer>
+      </div>
+
+      {
+        showToc && (
+          <nav aria-label={copy.toc} class="toc hidden lg:block">
+            <div class="sticky top-8 max-h-[calc(100vh-4rem)] overflow-y-auto pb-4">
+              <p class="meta">{copy.toc}</p>
+              <ol class="mt-4 space-y-2 border-l border-line text-sm">
+                {tocHeadings.map((heading) => (
+                  <li>
+                    <a
+                      href={`#${heading.slug}`}
+                      data-toc-link={heading.slug}
+                      class:list={[
+                        'toc-link -ml-px block border-l-2 border-transparent py-0.5 text-muted hover:text-ink',
+                        heading.depth === 3 ? 'pl-7' : 'pl-4',
+                      ]}
+                    >
+                      {heading.text}
+                    </a>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </nav>
+        )
+      }
     </div>
   </article>
+
+  {
+    related.length > 0 && (
+      <section class="mx-auto max-w-5xl px-5 pt-20 sm:px-6">
+        <h2 class="display-3">{copy.related}</h2>
+        <div class="mt-6 grid gap-5 md:grid-cols-3">
+          {related.map((post) => (
+            <a href={`${blogBase}${post.data.slug}/`} class="card flex flex-col">
+              <p class="meta">
+                <time datetime={post.data.pubDate.toISOString().slice(0, 10)}>
+                  {dateFormatter.format(post.data.pubDate)}
+                </time>
+              </p>
+              <h3 class="card-title mt-3 text-lg font-semibold leading-snug transition-colors">{post.data.title}</h3>
+            </a>
+          ))}
+        </div>
+      </section>
+    )
+  }
 
   <Cta lang={lang} />
 </Base>

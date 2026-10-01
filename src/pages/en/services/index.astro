@@ -19,29 +19,19 @@ const services = (await getCollection('services', (entry) => entry.data.lang ===
     { name: 'Services', path: '/en/services/' },
   ]}
 >
-  <div class="mx-auto max-w-5xl px-6 pt-16">
-    <p class="eyebrow">services</p>
-    <h1 class="font-display mt-4 text-4xl font-bold tracking-tight sm:text-5xl">
-      Systems, not smoke
-    </h1>
-    <p class="mt-4 max-w-2xl text-lg text-muted">
-      Four ways to work with me. They all share one principle: build growth machines that keep
-      running after I'm gone.
-    </p>
+  <div class="mx-auto max-w-5xl px-5 pt-16 sm:px-6 sm:pt-20">
+    <p class="meta">Services</p>
+    <h1 class="display-1 mt-5">Growth, AI and SEO services</h1>
+    <p class="lede mt-6">SEO and GEO consulting, fractional growth leadership, AI systems and training. In every case you work with me directly, and what we build keeps running after I finish.</p>
 
-    <div class="mt-12 grid gap-6 sm:grid-cols-2">
+    <div class="mt-12 grid gap-5 md:grid-cols-2">
       {
         services.map((service) => (
-          <a
-            href={`/en/services/${service.data.slug}/`}
-            class="group card-lift tilt reveal rounded-2xl border border-line p-6 hover:border-accent"
-            data-tilt-max="6"
-          >
-            <h2 class="font-display text-xl font-bold group-hover:text-accent">
-              {service.data.title}
-            </h2>
-            <p class="mt-2 text-sm text-muted">{service.data.tagline}</p>
-            <p class="mt-4 font-mono text-xs text-accent">→</p>
+          <a href={`/en/services/${service.data.slug}/`} class="card flex flex-col">
+            <h2 class="card-title display-3 transition-colors">{service.data.title}</h2>
+            <p class="mt-3 text-[0.95rem]">{service.data.tagline}</p>
+            <p class="mt-3 flex-1 text-sm text-muted">{service.data.proof}</p>
+            <p class="link-arrow mt-5 text-[0.95rem]">See service</p>
           </a>
         ))
       }

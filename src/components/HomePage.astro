@@ -1,0 +1,271 @@
+---
+import { getCollection } from 'astro:content';
+import ClientLogos from './ClientLogos.astro';
+import CasesBand from './CasesBand.astro';
+import Cta from './Cta.astro';
+import Portrait from './Portrait.astro';
+import SectionLabel from './SectionLabel.astro';
+import { localizedRoute } from '../i18n/utils';
+import { site } from '../site';
+import type { Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+
+const byOrder = <T extends { data: { order: number } }>(a: T, b: T) => a.data.order - b.data.order;
+const services = (await getCollection('services', (entry) => entry.data.lang === lang)).sort(byOrder);
+
+// Si aún no hay artículos en el idioma de la página, se muestran los del otro idioma.
+// El archivo de SEO Hacks (2015–2017) no cuenta como "lo último".
+const allPosts = (await getCollection('blog', (post) => post.data.category !== 'seohacks')).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+const localPosts = allPosts.filter((post) => post.data.lang === lang);
+const posts = (localPosts.length > 0 ? localPosts : allPosts).slice(0, 3);
+const blogBase = (postLang: Lang) => (postLang === 'es' ? '/blog/' : '/en/blog/');
+const dateFormatter = new Intl.DateTimeFormat(lang === 'es' ? 'es-ES' : 'en-US', {
+  year: 'numeric',
+  month: 'short',
+  day: 'numeric',
+});
+
+const servicesBase = localizedRoute('services', lang);
+
+const copy =
+  lang === 'es'
+    ? {
+        title: [
+          { text: 'Consultoría de ' },
+          { text: 'SEO, GEO e IA', accent: true },
+          { text: ' que genera ' },
+          { text: 'negocio', accent: true },
+        ],
+        intro:
+          'He llevado webs como Softonic o word.tips, con millones de URLs y millones de visitas al día. He montado equipos, he hecho crecer negocios y trabajo con IA desde antes de que existiera ChatGPT.',
+        primary: 'Reserva una llamada de 30 min',
+        secondary: 'Escríbeme',
+        photoAlt: 'Nacho Mascort, consultor de growth, IA y SEO',
+        pillarsLabel: 'Por qué yo',
+        pillarsTitle: 'Por qué trabajar conmigo y no con una agencia',
+        pillars: [
+          {
+            figure: 'Ex Google Search',
+            caption: 'ex ingenieros de Google me contrataron para su SEO',
+            title: 'Me fichó gente que hizo el buscador',
+            body: 'Un equipo de ex ingenieros de Google Search me contrató para llevar su SEO. Conocen el algoritmo por dentro y, aun así, me buscaron para que su proyecto creciera.',
+          },
+          {
+            figure: '1.000M+',
+            caption: 'usuarios al año en el portfolio de Softonic',
+            title: 'SEO para más de mil millones de usuarios',
+            body: 'Llevé el SEO de Softonic, download.com y CNET. Monté un programa de contenido que pasó de cero a 20 millones de sesiones al mes en dos años, y en 2024 seguía creciendo un 40 % al año.',
+          },
+          {
+            figure: '~20.000 €/mes',
+            caption: 'de ahorro con una fábrica de anuncios hecha con IA',
+            title: 'IA que funciona todos los días',
+            body: 'En Reverse Tech monté un sistema que pasó de producir 200 creatividades a la semana a más de 3.000, y que las publica solo en Meta y Google.',
+          },
+        ],
+        servicesLabel: 'Servicios',
+        servicesTitle: 'Cuatro formas de trabajar conmigo',
+        servicesIntro: 'Trabajas directamente conmigo, sin juniors ni subcontratas. Y si otra opción te conviene más, te lo digo en la primera llamada.',
+        serviceLink: 'Ver el servicio',
+        talksLabel: 'Docencia y charlas',
+        talksTitle: 'Más de ocho años enseñando lo que hago',
+        talks: [
+          { what: 'Profesor del Máster en Buscadores', where: 'Universitat Pompeu Fabra', period: '2015 — 2024', url: 'https://web.archive.org/web/20230130085546/https://www.bsm.upf.edu/es/master-universitario-online-en-buscadores' },
+          { what: 'Profesor del Máster SEO', where: 'Webpositer Academy', period: '2018 — 2024', url: 'https://www.webpositeracademy.com/master-seo/' },
+          { what: 'Google Product Expert', where: 'Comunidad de Search Console', period: 'Google' },
+          { what: 'Ponente', where: 'SEOnTheBeach, Clinic SEO, Ensalada SEO, SEOPLUS', period: 'Congresos', url: '/sobre-mi/#charlas' },
+        ],
+        pressLabel: 'Mencionado en',
+        about: 'Mi trayectoria completa',
+        blogLabel: 'Blog',
+        blogTitle: 'Lo último que he escrito',
+        blogAll: 'Ir al blog',
+        ctaTitle: '¿Qué quieres hacer crecer?',
+      }
+    : {
+        title: [
+          { text: 'SEO, GEO & AI', accent: true },
+          { text: ' consulting that drives ' },
+          { text: 'revenue', accent: true },
+        ],
+        intro:
+          "I've run sites like Softonic and word.tips, with millions of URLs and millions of visits a day. I've hired teams, scaled businesses and worked with AI since before ChatGPT existed.",
+        primary: 'Book a 30-min call',
+        secondary: 'Email me',
+        photoAlt: 'Nacho Mascort, growth, AI and SEO consultant',
+        pillarsLabel: 'Why me',
+        pillarsTitle: 'Three reasons to hire me instead of an agency',
+        pillars: [
+          {
+            figure: 'Ex-Google Search',
+            caption: 'a team of former engineers hired me for their SEO',
+            title: 'The people who built search pick me',
+            body: 'A team of former Google Search engineers hired me to do their SEO. They know the algorithm from the inside, and they still came to me to grow their project.',
+          },
+          {
+            figure: '1B+',
+            caption: "users a year across Softonic's portfolio",
+            title: 'SEO at the scale of billions',
+            body: 'I led SEO for Softonic, download.com and CNET. I built a content program that went from zero to 20 million sessions a month in two years, and in 2024 it was still growing 40% year over year.',
+          },
+          {
+            figure: '~€20k/mo',
+            caption: 'saved with an AI ad factory',
+            title: 'AI in production, not in a slide deck',
+            body: 'At Reverse Tech I built a system that went from 200 to over 3,000 creatives a week and publishes them to Meta and Google on its own.',
+          },
+        ],
+        servicesLabel: 'Services',
+        servicesTitle: 'Four ways to work with me',
+        servicesIntro: "You work with me directly, with no juniors or subcontractors. And if another option suits you better, I'll tell you on the first call.",
+        serviceLink: 'See the service',
+        talksLabel: 'Teaching and talks',
+        talksTitle: 'Eight years teaching what I do',
+        talks: [
+          { what: 'Lecturer, Master in Search Engines', where: 'Universitat Pompeu Fabra', period: '2015 — 2024', url: 'https://web.archive.org/web/20230130085546/https://www.bsm.upf.edu/es/master-universitario-online-en-buscadores' },
+          { what: 'Lecturer, SEO Master', where: 'Webpositer Academy', period: '2018 — 2024', url: 'https://www.webpositeracademy.com/master-seo/' },
+          { what: 'Google Product Expert', where: 'Search Console community', period: 'Google' },
+          { what: 'Speaker', where: 'SEOnTheBeach, Clinic SEO, Ensalada SEO, SEOPLUS', period: 'Conferences', url: '/en/about/#charlas' },
+        ],
+        pressLabel: 'Mentioned in',
+        about: 'My full background',
+        blogLabel: 'Blog',
+        blogTitle: "What I've written lately",
+        blogAll: 'Go to the blog',
+        ctaTitle: 'What do you want to grow?',
+      };
+
+const press = ['Google Search Central', 'El Confidencial', 'ABC'];
+---
+
+<section class="on-dark overflow-hidden">
+  <div class="mx-auto grid max-w-5xl items-end gap-8 px-5 pt-12 sm:px-6 md:grid-cols-[1.2fr_1fr] md:gap-10 md:pt-16">
+    <div class="pb-4 md:pb-20">
+      <h1 class="display-1 max-w-[16ch]">
+        {copy.title.map((part) => (part.accent ? <em class="accent font-medium">{part.text}</em> : part.text))}
+      </h1>
+      <p class="lede mt-7">{copy.intro}</p>
+      <div class="mt-9 flex flex-wrap items-center gap-3">
+        <a href={site.calUrl} class="btn">{copy.primary} →</a>
+        <a href={`mailto:${site.email}`} class="btn btn--ghost">{copy.secondary}</a>
+      </div>
+    </div>
+    <Portrait alt={copy.photoAlt} class="mx-auto w-full max-w-[20rem] md:max-w-[26rem]" />
+  </div>
+</section>
+
+<ClientLogos lang={lang} />
+
+<section class="mx-auto max-w-5xl px-5 pt-24 sm:px-6">
+  <SectionLabel label={copy.pillarsLabel} />
+  <h2 class="display-2 mt-3 max-w-[24ch]">{copy.pillarsTitle}</h2>
+  <div class="mt-10 grid gap-5 md:grid-cols-3">
+    {
+      copy.pillars.map((pillar) => (
+        <div class="card reveal">
+          <p class="font-display text-3xl font-medium tracking-tight text-accent-ink">{pillar.figure}</p>
+          <p class="mt-1 text-sm text-muted">{pillar.caption}</p>
+          <h3 class="mt-5 border-t border-line pt-5 text-lg font-semibold">{pillar.title}</h3>
+          <p class="mt-2 text-[0.95rem] text-muted">{pillar.body}</p>
+        </div>
+      ))
+    }
+  </div>
+</section>
+
+<section class="mx-auto max-w-5xl px-5 pt-24 sm:px-6">
+  <SectionLabel label={copy.servicesLabel} />
+  <h2 class="display-2 mt-3">{copy.servicesTitle}</h2>
+  <p class="mt-4 max-w-[60ch] text-muted">{copy.servicesIntro}</p>
+  <div class="mt-10 grid gap-5 md:grid-cols-2">
+    {
+      services.map((service) => (
+        <a href={`${servicesBase}${service.data.slug}/`} class="card reveal flex flex-col">
+          <h3 class="card-title display-3 transition-colors">{service.data.title}</h3>
+          <p class="mt-3 text-[0.95rem]">{service.data.tagline}</p>
+          <p class="mt-3 flex-1 text-sm text-muted">{service.data.proof}</p>
+          <p class="link-arrow mt-5 text-[0.95rem]">{copy.serviceLink}</p>
+        </a>
+      ))
+    }
+  </div>
+</section>
+
+<CasesBand lang={lang} />
+
+<section class="border-b border-line bg-raised">
+  <div class="mx-auto grid max-w-5xl gap-12 px-5 py-20 sm:px-6 md:grid-cols-[1fr_1.5fr]">
+    <div>
+      <SectionLabel label={copy.talksLabel} />
+      <h2 class="display-2 mt-3">{copy.talksTitle}</h2>
+      <p class="meta mt-10">{copy.pressLabel}</p>
+      <ul class="mt-3 space-y-1">
+        {press.map((name) => <li class="font-display text-xl font-medium">{name}</li>)}
+      </ul>
+      <a href={localizedRoute('about', lang)} class="link-arrow mt-8 inline-block text-[0.95rem]">{copy.about}</a>
+    </div>
+    <ul class="row-list self-start">
+      {
+        copy.talks.map((talk) => {
+          const content = (
+            <>
+              <div>
+                <p class="row-title font-semibold transition-colors">{talk.what}</p>
+                <p class="mt-0.5 text-[0.95rem] text-muted">{talk.where}</p>
+              </div>
+              <p class="meta sm:pt-1 sm:text-right">{talk.period}</p>
+            </>
+          );
+          const rowClass = 'grid gap-1 py-5 sm:grid-cols-[1fr_auto] sm:gap-6';
+          return (
+            <li>
+              {'url' in talk && talk.url ? (
+                <a href={talk.url} class:list={['row-link group sm:px-2', rowClass]}>
+                  {content}
+                </a>
+              ) : (
+                <div class:list={[rowClass, 'sm:px-2']}>{content}</div>
+              )}
+            </li>
+          );
+        })
+      }
+    </ul>
+  </div>
+</section>
+
+{
+  posts.length > 0 && (
+    <section class="mx-auto max-w-5xl px-5 pt-24 sm:px-6">
+      <SectionLabel label={copy.blogLabel} />
+      <div class="mt-3 flex flex-wrap items-end justify-between gap-4">
+        <h2 class="display-2">{copy.blogTitle}</h2>
+        <a href={localizedRoute('blog', lang)} class="link-arrow text-[0.95rem]">{copy.blogAll}</a>
+      </div>
+      <div class="mt-10 grid gap-5 md:grid-cols-3">
+        {posts.map((post) => (
+          <a
+            href={`${blogBase(post.data.lang)}${post.data.slug}/`}
+            hreflang={post.data.lang !== lang ? post.data.lang : undefined}
+            class="card reveal flex flex-col"
+          >
+            <p class="meta">
+              <time datetime={post.data.pubDate.toISOString().slice(0, 10)}>{dateFormatter.format(post.data.pubDate)}</time>
+              {post.data.lang !== lang && <span> · {post.data.lang.toUpperCase()}</span>}
+            </p>
+            <h3 class="card-title mt-3 flex-1 text-lg font-semibold leading-snug transition-colors">{post.data.title}</h3>
+          </a>
+        ))}
+      </div>
+    </section>
+  )
+}
+
+<Cta lang={lang} title={copy.ctaTitle} />

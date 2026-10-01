@@ -22,43 +22,26 @@ const services = defineCollection({
     order: z.number(),
     proof: z.string(),
     faq: faqSchema,
-    metrics: z
-      .array(z.object({ value: z.string(), label: z.string(), delta: z.string().optional() }))
-      .min(3)
-      .max(4),
-    problem: z.object({ intro: z.array(z.string()).min(1), pains: z.array(z.string()).min(3).max(5) }),
-    approach: z.object({
-      intro: z.array(z.string()).min(1),
-      steps: z.array(z.object({ title: z.string(), detail: z.string() })).min(3).max(5),
-    }),
-    timeline: z
-      .array(
-        z.object({ period: z.string(), title: z.string(), bullets: z.array(z.string()).min(2).max(4) })
-      )
-      .min(3)
-      .max(4),
     deliverables: z.array(z.object({ title: z.string(), detail: z.string() })).min(4).max(6),
-    transformation: z
-      .object({ before: z.array(z.string()), after: z.array(z.string()) })
-      .optional(),
-    packages: z
-      .array(
-        z.object({
-          name: z.string(),
-          forWho: z.string(),
-          includes: z.array(z.string()),
-          note: z.string().optional(),
-          featured: z.boolean().default(false),
-        })
-      )
-      .min(2)
-      .max(3),
-    comparison: z
+    /** Página de servicio: para quién es, punto de vista, proceso, prueba y formatos */
+    page: z
       .object({
-        options: z.array(z.object({ name: z.string(), me: z.boolean().default(false) })),
-        rows: z.array(z.object({ criterion: z.string(), cells: z.array(z.string()) })),
-      })
-      .optional(),
+        heroProof: z.string(),
+        fit: z.object({
+          yes: z.array(z.string()).min(3).max(5),
+          no: z.array(z.string()).min(2).max(4),
+        }),
+        pov: z.object({ title: z.string(), paragraphs: z.array(z.string()).min(2).max(4) }),
+        process: z
+          .array(z.object({ when: z.string(), title: z.string(), detail: z.string() }))
+          .min(3)
+          .max(4),
+        /** Casos enlazados como prueba; vacío en formación, que muestra docencia y charlas */
+        proofCases: z.array(z.object({ caseKey: z.string(), summary: z.string() })).max(3).default([]),
+        formats: z.array(z.object({ name: z.string(), detail: z.string() })).min(1).max(2),
+        pricing: z.string(),
+        availability: z.string().optional(),
+      }),
   }),
 });
 
@@ -74,6 +57,8 @@ const blog = defineCollection({
       pubDate: z.coerce.date(),
       updatedDate: z.coerce.date().optional(),
       tags: z.array(z.string()).default([]),
+      /** 'seohacks': post recuperado del antiguo blog seohacks.es (2015–2017) */
+      category: z.enum(['seohacks']).optional(),
       cover: image().optional(),
     }),
 });

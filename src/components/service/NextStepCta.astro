@@ -11,54 +11,41 @@ const es = lang === 'es';
 
 const steps = es
   ? [
-      { step: '1', text: 'Llamada de 30 minutos: me cuentas dónde estás y qué quieres conseguir.' },
-      { step: '2', text: 'En menos de 24h te digo si puedo ayudarte y por dónde empezaría.' },
-      { step: '3', text: 'Propuesta concreta con alcance e hitos — o te digo que no lo necesitas.' },
+      'Una llamada de 30 minutos: me cuentas en qué punto estás y qué quieres conseguir.',
+      'En menos de 24 horas te digo si puedo ayudarte y por dónde empezaría.',
+      'Te mando una propuesta con alcance y plazos, o te digo con franqueza que no te hace falta.',
     ]
   : [
-      { step: '1', text: "A 30-minute call: tell me where you are and what you want to achieve." },
-      { step: '2', text: "Within 24h I tell you whether I can help and where I'd start." },
-      { step: '3', text: "A concrete proposal with scope and milestones — or I tell you that you don't need it." },
+      'A 30-minute call: tell me where you are and what you want to achieve.',
+      "Within 24h I tell you whether I can help and where I'd start.",
+      "A concrete proposal with scope and milestones, or I tell you that you don't need it.",
     ];
 ---
 
-<section class="mx-auto max-w-5xl px-6 py-20">
-  <div class="reveal relative overflow-hidden rounded-2xl bg-raised px-8 py-12">
-    <div class="glow-orb parallax-slow absolute -top-24 right-[10%] h-64 w-64" aria-hidden="true">
-    </div>
-    <div class="relative">
-      <h2 class="font-display text-3xl font-bold tracking-tight">
-        {es ? '¿Hablamos de tu caso?' : 'Want to talk about your case?'}
-      </h2>
-      <p class="mt-2 max-w-xl text-muted">
-        {es ? 'Esto es exactamente lo que pasa cuando reservas:' : 'This is exactly what happens when you book:'}
+<section class="mx-auto max-w-5xl px-5 pt-24 sm:px-6">
+  <div class="border-t border-ink pt-10">
+    <h2 class="display-2">{es ? '¿Hablamos de tu caso?' : 'Want to talk about your case?'}</h2>
+    <p class="mt-4 text-muted">
+      {es ? 'Así funciona cuando reservas:' : 'This is exactly what happens when you book:'}
+    </p>
+
+    <ol class="mt-8 grid gap-x-8 gap-y-6 md:grid-cols-3">
+      {
+        steps.map((text, index) => (
+          <li class="border-t border-line pt-4">
+            <p class="meta text-accent-ink">{String(index + 1).padStart(2, '0')}</p>
+            <p class="mt-2 text-[0.95rem]">{text}</p>
+          </li>
+        ))
+      }
+    </ol>
+
+    <div class="mt-10 flex flex-wrap items-center gap-x-6 gap-y-3">
+      <a href={site.calUrl} class="btn">{es ? 'Reserva una llamada de 30 min' : 'Book a 30-min call'}</a>
+      <p class="text-sm text-muted">
+        {es ? 'O escríbeme a' : 'Or email me at'}
+        <a href={`mailto:${site.email}`} class="text-ink underline decoration-accent underline-offset-4 hover:text-accent-ink">{site.email}</a>
       </p>
-
-      <ol class="mt-6 grid gap-4 sm:grid-cols-3">
-        {
-          steps.map((item, index) => (
-            <li class="reveal flex items-start gap-3" style={`--reveal-delay: ${index * 130}ms`}>
-              <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-accent font-mono text-xs text-accent">
-                {item.step}
-              </span>
-              <p class="text-sm text-muted">{item.text}</p>
-            </li>
-          ))
-        }
-      </ol>
-
-      <div class="mt-8 flex flex-wrap items-center gap-5">
-        <a
-          href={site.calUrl}
-          class="btn-cta px-8 py-3 font-medium"
-        >
-          {es ? 'Agenda una llamada' : 'Book a call'}
-        </a>
-        <p class="font-mono text-xs text-muted">
-          {es ? 'O escríbeme a' : 'Or email me at'}
-          <a href={`mailto:${site.email}`} class="text-accent hover:underline">{site.email}</a>
-        </p>
-      </div>
     </div>
   </div>
 </section>

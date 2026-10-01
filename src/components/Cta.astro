@@ -12,32 +12,34 @@ const { lang, title } = Astro.props;
 const copy =
   lang === 'es'
     ? {
+        label: 'Hablemos',
         heading: title ?? '¿Hablamos de tu caso?',
-        body: 'Una llamada de 30 minutos, sin compromiso. Me cuentas dónde estás y te digo con franqueza si puedo ayudarte y por dónde empezaría.',
-        button: 'Agenda una llamada',
+        body: 'Una llamada de 30 minutos, sin compromiso. Me cuentas en qué punto estás y te digo con franqueza si puedo ayudarte y por dónde empezaría. Si quieres referencias de clientes, pídemelas.',
+        button: 'Reserva una llamada de 30 min',
         alt: 'O escríbeme a',
       }
     : {
+        label: "Let's talk",
         heading: title ?? 'Want to talk about your case?',
-        body: "A 30-minute call, no strings attached. Tell me where you are and I'll tell you honestly whether I can help and where I'd start.",
-        button: 'Book a call',
+        body: "A 30-minute call, no strings attached. Tell me where you are and I'll tell you honestly whether I can help and where I'd start. If you want client references, just ask.",
+        button: 'Book a 30-min call',
         alt: 'Or email me at',
       };
 ---
 
-<section class="mx-auto max-w-5xl px-6 py-16">
-  <div class="reveal relative overflow-hidden rounded-2xl bg-raised px-8 py-12 text-center">
-    <div class="glow-orb parallax-slow absolute -top-20 left-1/2 h-64 w-64 -translate-x-1/2" aria-hidden="true"></div>
-    <h2 class="font-display relative text-3xl font-bold tracking-tight">{copy.heading}</h2>
-    <p class="mx-auto mt-3 max-w-xl text-muted">{copy.body}</p>
-    <a
-      href={site.calUrl}
-      class="mt-6 inline-block btn-cta px-8 py-3 font-medium"
-    >
-      {copy.button}
-    </a>
-    <p class="mt-4 font-mono text-xs text-muted">
-      {copy.alt} <a href={`mailto:${site.email}`} class="text-accent hover:underline">{site.email}</a>
-    </p>
+<section class="mx-auto max-w-5xl px-5 pt-24 sm:px-6">
+  <div class="on-dark reveal rounded-2xl px-7 py-12 sm:px-12 sm:py-14">
+    <p class="section-label">{copy.label}</p>
+    <h2 class="display-2 mt-3 max-w-[22ch]">{copy.heading}</h2>
+    <p class="lede mt-4">{copy.body}</p>
+    <div class="mt-8 flex flex-wrap items-center gap-x-6 gap-y-4">
+      <a href={site.calUrl} class="btn">{copy.button}</a>
+      <p class="text-sm text-on-dark-muted">
+        {copy.alt}
+        <a href={`mailto:${site.email}`} class="text-on-dark underline decoration-accent-on-dark underline-offset-4 hover:text-accent-on-dark">
+          {site.email}
+        </a>
+      </p>
+    </div>
   </div>
 </section>

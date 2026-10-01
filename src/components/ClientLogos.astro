@@ -38,32 +38,38 @@ const brands = [
 <section class="border-b border-line bg-raised" aria-label={label}>
   <div class="mx-auto max-w-5xl px-5 py-10 sm:px-6">
     <p class="meta text-center">{label}</p>
-    <ul class="mt-7 flex flex-wrap items-center justify-center gap-x-10 gap-y-7">
-      {
-        brands.map((brand) => (
-          <li class="client-logo">
-            <Image
-              src={mono(brand.key)}
-              alt={brand.name}
-              height={brand.height}
-              densities={[1, 2]}
-              class="client-logo-mono w-auto"
-              style={`height: ${brand.height}px`}
-              loading="lazy"
-            />
-            <Image
-              src={color(brand.key)}
-              alt=""
-              aria-hidden="true"
-              height={brand.height}
-              densities={[1, 2]}
-              class="client-logo-color w-auto"
-              style={`height: ${brand.height}px`}
-              loading="lazy"
-            />
-          </li>
-        ))
-      }
-    </ul>
+    <div class="logo-marquee mt-7">
+      <div class="logo-track">
+        {
+          [false, true].map((isCopy) => (
+            <ul class="logo-list" aria-hidden={isCopy ? 'true' : undefined}>
+              {brands.map((brand) => (
+                <li class="client-logo">
+                  <Image
+                    src={mono(brand.key)}
+                    alt={isCopy ? '' : brand.name}
+                    height={brand.height}
+                    densities={[1, 2]}
+                    class="client-logo-mono w-auto max-w-none"
+                    style={`height: ${brand.height}px`}
+                    loading="lazy"
+                  />
+                  <Image
+                    src={color(brand.key)}
+                    alt=""
+                    aria-hidden="true"
+                    height={brand.height}
+                    densities={[1, 2]}
+                    class="client-logo-color w-auto max-w-none"
+                    style={`height: ${brand.height}px`}
+                    loading="lazy"
+                  />
+                </li>
+              ))}
+            </ul>
+          ))
+        }
+      </div>
+    </div>
   </div>
 </section>

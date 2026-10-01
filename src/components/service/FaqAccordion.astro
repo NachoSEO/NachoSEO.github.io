@@ -11,7 +11,7 @@ const { lang, faq } = Astro.props;
 const es = lang === 'es';
 ---
 
-<section class="mx-auto max-w-5xl px-5 pt-24 sm:px-6">
+<section class="mx-auto max-w-5xl px-5 pt-16 md:pt-24 sm:px-6">
   <SectionLabel label="FAQ" />
   <div class="mt-6 grid gap-10 md:grid-cols-[1fr_2fr] md:gap-14">
     <h2 class="display-2">{es ? 'Preguntas frecuentes' : 'Frequently asked questions'}</h2>

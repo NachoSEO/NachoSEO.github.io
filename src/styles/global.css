@@ -78,7 +78,12 @@
 
 html {
   scroll-behavior: smooth;
-  font-size: 112.5%; /* 18px de base */
+  font-size: 106.25%; /* 17px de base en móvil */
+}
+@media (min-width: 48rem) {
+  html {
+    font-size: 112.5%; /* 18px de base desde tablet */
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -117,7 +122,7 @@ body {
 
 .display-1 {
   font-family: var(--font-display);
-  font-size: clamp(2.4rem, 1.2rem + 3.2vw, 4rem);
+  font-size: clamp(2.1rem, 1.2rem + 3.2vw, 4rem);
   font-weight: 500;
   line-height: 1.05;
   letter-spacing: -0.02em;
@@ -126,7 +131,7 @@ body {
 }
 .display-2 {
   font-family: var(--font-display);
-  font-size: clamp(1.75rem, 1.2rem + 1.6vw, 2.5rem);
+  font-size: clamp(1.6rem, 1.2rem + 1.6vw, 2.5rem);
   font-weight: 500;
   line-height: 1.12;
   letter-spacing: -0.015em;
@@ -134,13 +139,13 @@ body {
 }
 .display-3 {
   font-family: var(--font-display);
-  font-size: 1.5rem;
+  font-size: clamp(1.3rem, 1.15rem + 0.5vw, 1.5rem);
   font-weight: 500;
   line-height: 1.2;
   letter-spacing: -0.01em;
 }
 .lede {
-  font-size: 1.15rem;
+  font-size: clamp(1.05rem, 0.98rem + 0.3vw, 1.15rem);
   line-height: 1.55;
   color: var(--tone-muted);
   max-width: 58ch;
@@ -152,6 +157,16 @@ body {
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--tone-muted);
+}
+
+/* En pantallas estrechas, los titulares parten palabras largas en lugar de desbordar */
+@media (max-width: 47.99rem) {
+  .display-1,
+  .display-2,
+  .display-3 {
+    hyphens: auto;
+    overflow-wrap: break-word;
+  }
 }
 
 /* Etiqueta de sección: antetítulo corto en frambuesa */
@@ -242,6 +257,48 @@ a.card:hover .card-title {
   color: var(--tone-accent-ink);
 }
 
+/* Menú móvil: oculto hasta que se pulsa el botón (sin JS lo muestra un <noscript> en Base.astro) */
+.mobile-menu:not(.is-open) {
+  display: none;
+}
+.menu-toggle:focus-visible {
+  outline-color: var(--tone-accent-on-dark);
+}
+.menu-icon,
+.menu-icon::before,
+.menu-icon::after {
+  display: block;
+  width: 20px;
+  height: 2px;
+  border-radius: 2px;
+  background: currentColor;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+.menu-icon {
+  position: relative;
+}
+.menu-icon::before,
+.menu-icon::after {
+  content: '';
+  position: absolute;
+  left: 0;
+}
+.menu-icon::before {
+  top: -6px;
+}
+.menu-icon::after {
+  top: 6px;
+}
+[aria-expanded='true'] .menu-icon {
+  background: transparent;
+}
+[aria-expanded='true'] .menu-icon::before {
+  transform: translateY(6px) rotate(45deg);
+}
+[aria-expanded='true'] .menu-icon::after {
+  transform: translateY(-6px) rotate(-45deg);
+}
+
 /* Logos de clientes: silueta en tinta; al pasar el ratón, el logo en su color original */
 .client-logo {
   position: relative;
@@ -293,6 +350,41 @@ span.case-logo {
 .case-row:hover .case-arrow {
   color: var(--tone-accent-on-dark);
   transform: translateX(4px);
+}
+
+/* Fila de logos: carrusel automático en móvil, cuadrícula en escritorio */
+.logo-list {
+  display: flex;
+  align-items: center;
+  gap: 2.5rem;
+  padding-right: 2.5rem;
+}
+@media (max-width: 47.99rem) and (prefers-reduced-motion: no-preference) {
+  .logo-marquee {
+    overflow: hidden;
+    mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent);
+  }
+  .logo-track {
+    display: flex;
+    width: max-content;
+    animation: logo-scroll 40s linear infinite;
+  }
+}
+@media (min-width: 48rem), (prefers-reduced-motion: reduce) {
+  .logo-list {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.75rem 2.5rem;
+    padding-right: 0;
+  }
+  .logo-list[aria-hidden='true'] {
+    display: none;
+  }
+}
+@keyframes logo-scroll {
+  to {
+    transform: translateX(-50%);
+  }
 }
 
 /* Banda oscura petróleo (hero, CTA, pie) */
@@ -372,7 +464,7 @@ span.case-logo {
 /* ============ Cuerpo de artículo (MDX) ============ */
 
 .article-body {
-  font-size: 1.05rem;
+  font-size: clamp(1rem, 0.95rem + 0.25vw, 1.05rem);
   line-height: 1.75;
   max-width: 65ch;
 }

@@ -14,16 +14,17 @@ const other = otherLang(lang);
 const switchUrl = alternatePath ?? localizedRoute('home', other);
 const currentPath = Astro.url.pathname;
 
+const navLabel = lang === 'es' ? 'Principal' : 'Main';
 const nav = [
   { href: localizedRoute('services', lang), label: t('nav.services') },
   { href: localizedRoute('cases', lang), label: t('nav.cases') },
   { href: localizedRoute('blog', lang), label: t('nav.blog') },
   { href: localizedRoute('about', lang), label: t('nav.about') },
-] as const;
+].map((item) => ({ ...item, isCurrent: currentPath.startsWith(item.href) }));
 ---
 
-<header class="on-dark">
-  <div class="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-x-8 gap-y-3 px-5 py-4 sm:px-6">
+<header class="on-dark relative">
+  <div class="mx-auto flex max-w-5xl items-center justify-between gap-x-8 px-5 py-4 sm:px-6">
     <a href={localizedRoute('home', lang)} class="group leading-tight">
       <span class="font-display block text-xl font-medium tracking-tight group-hover:text-accent-on-dark">
         Nacho Mascort
@@ -33,42 +34,67 @@ const nav = [
       </span>
     </a>
 
-    <div class="flex items-center gap-5 sm:order-last">
-      <a
-        href={switchUrl}
-        hreflang={other}
-        lang={other}
-        aria-label={t('a11y.switchLang')}
-        class="meta hover:text-on-dark"
-      >
+    <nav aria-label={navLabel} class="ml-auto hidden gap-6 text-[0.9rem] md:flex">
+      {
+        nav.map((item) => (
+          <a
+            href={item.href}
+            aria-current={item.isCurrent ? 'page' : undefined}
+            class:list={[
+              'whitespace-nowrap hover:text-on-dark',
+              item.isCurrent ? 'text-on-dark underline decoration-accent-on-dark underline-offset-[0.4em]' : 'text-on-dark-muted',
+            ]}
+          >
+            {item.label}
+          </a>
+        ))
+      }
+    </nav>
+
+    <div class="flex items-center gap-4 md:gap-5">
+      <a href={switchUrl} hreflang={other} lang={other} aria-label={t('a11y.switchLang')} class="meta hover:text-on-dark">
         {other}
       </a>
-      <a href={localizedRoute('contact', lang)} class="btn btn--small">
+      <a href={localizedRoute('contact', lang)} class="btn btn--small hidden md:inline-flex">
         {t('cta.book')}
       </a>
+      <button
+        type="button"
+        class="menu-toggle -mr-2 flex h-11 w-11 items-center justify-center rounded-full md:hidden"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+        data-menu-toggle
+      >
+        <span class="sr-only">{t('a11y.menu')}</span>
+        <span class="menu-icon" aria-hidden="true"></span>
+      </button>
     </div>
+  </div>
 
-    <nav
-      aria-label={lang === 'es' ? 'Principal' : 'Main'}
-      class="flex w-full gap-6 overflow-x-auto text-[0.9rem] sm:ml-auto sm:w-auto"
-    >
-      {
-        nav.map((item) => {
-          const isCurrent = currentPath.startsWith(item.href);
-          return (
-            <a
-              href={item.href}
-              aria-current={isCurrent ? 'page' : undefined}
-              class:list={[
-                'whitespace-nowrap hover:text-on-dark',
-                isCurrent ? 'text-on-dark underline decoration-accent-on-dark underline-offset-[0.4em]' : 'text-on-dark-muted',
-              ]}
-            >
-              {item.label}
-            </a>
-          );
-        })
-      }
+  <div id="mobile-menu" class="mobile-menu border-t border-white/15 md:hidden">
+    <nav aria-label={navLabel} class="mx-auto max-w-5xl px-5 pb-6 pt-2">
+      <ul>
+        {
+          nav.map((item) => (
+            <li class="border-b border-white/10">
+              <a
+                href={item.href}
+                aria-current={item.isCurrent ? 'page' : undefined}
+                class:list={[
+                  'font-display flex items-center justify-between py-4 text-2xl',
+                  item.isCurrent ? 'text-accent-on-dark' : 'text-on-dark',
+                ]}
+              >
+                {item.label}
+                <span aria-hidden="true" class="text-base text-on-dark-muted">→</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <a href={localizedRoute('contact', lang)} class="btn mt-6 w-full justify-center">
+        {t('cta.book')}
+      </a>
     </nav>
   </div>
 </header>

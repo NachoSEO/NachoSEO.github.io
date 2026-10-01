@@ -11,7 +11,7 @@ const { lang, process } = Astro.props;
 const es = lang === 'es';
 ---
 
-<section class="mx-auto max-w-5xl px-5 pt-24 sm:px-6">
+<section class="mx-auto max-w-5xl px-5 pt-16 md:pt-24 sm:px-6">
   <SectionLabel label={es ? 'Cómo trabajamos' : 'How we work'} />
   <h2 class="display-2 mt-3">{es ? 'De la primera llamada a los resultados' : 'From the first call to results'}</h2>
   <ol class="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-4">

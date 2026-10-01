@@ -25,8 +25,8 @@ const copy =
     : { label: 'Case studies', title: 'Results with a name and a number', all: 'See all case studies', read: 'Read the case' };
 ---
 
-<section class:list={['on-dark', !page && 'mt-24']}>
-  <div class:list={['mx-auto max-w-5xl px-5 sm:px-6', page ? 'pb-20 pt-12 sm:pt-16' : 'py-20']}>
+<section class:list={['on-dark', !page && 'mt-16 md:mt-24']}>
+  <div class:list={['mx-auto max-w-5xl px-5 sm:px-6', page ? 'pb-20 pt-12 sm:pt-16' : 'py-14 md:py-20']}>
     <SectionLabel label={copy.label} />
     {
       page ? (

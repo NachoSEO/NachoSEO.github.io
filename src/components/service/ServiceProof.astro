@@ -21,8 +21,8 @@ const items = proofCases
   .filter((item) => item.entry);
 ---
 
-<section class="on-dark mt-24">
-  <div class="mx-auto max-w-5xl px-5 py-20 sm:px-6">
+<section class="on-dark mt-16 md:mt-24">
+  <div class="mx-auto max-w-5xl px-5 py-14 md:py-20 sm:px-6">
     <SectionLabel label={es ? 'Resultados' : 'Results'} />
     <h2 class="display-2 mt-3">{es ? 'Lo he hecho antes' : "I've done it before"}</h2>
     <div class:list={['mt-10 grid gap-5', items.length > 1 && 'md:grid-cols-2']}>

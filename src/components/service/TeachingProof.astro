@@ -12,8 +12,8 @@ const { lang } = Astro.props;
 const es = lang === 'es';
 ---
 
-<section class="on-dark mt-24">
-  <div class="mx-auto grid max-w-5xl gap-12 px-5 py-20 sm:px-6 md:grid-cols-2">
+<section class="on-dark mt-16 md:mt-24">
+  <div class="mx-auto grid max-w-5xl gap-12 px-5 py-14 md:py-20 sm:px-6 md:grid-cols-2">
     <div>
       <SectionLabel label={es ? 'Docencia' : 'Teaching'} />
       <h2 class="display-2 mt-3">{es ? 'Más de 8 años en másters' : 'Over 8 years teaching master’s programs'}</h2>

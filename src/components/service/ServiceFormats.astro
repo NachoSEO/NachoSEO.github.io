@@ -13,7 +13,7 @@ const { lang, formats, pricing, availability } = Astro.props;
 const es = lang === 'es';
 ---
 
-<section class="mx-auto max-w-5xl px-5 pt-24 sm:px-6">
+<section class="mx-auto max-w-5xl px-5 pt-16 md:pt-24 sm:px-6">
   <SectionLabel label={es ? 'Formatos' : 'Formats'} />
   <h2 class="display-2 mt-3">{es ? 'Cómo podemos trabajar' : 'How we can work together'}</h2>
   <div class:list={['mt-10 grid gap-5', formats.length > 1 && 'md:grid-cols-2']}>

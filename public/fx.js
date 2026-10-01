@@ -34,3 +34,23 @@ if (tocLinks.size > 0) {
   );
   for (const heading of headings) tocObserver.observe(heading);
 }
+
+// Menú móvil: abre/cierra el panel, se cierra con Escape o al elegir un enlace
+const menuToggle = document.querySelector('[data-menu-toggle]');
+const mobileMenu = menuToggle && document.getElementById(menuToggle.getAttribute('aria-controls'));
+if (menuToggle && mobileMenu) {
+  const setMenu = (open) => {
+    menuToggle.setAttribute('aria-expanded', String(open));
+    mobileMenu.classList.toggle('is-open', open);
+  };
+  menuToggle.addEventListener('click', () => setMenu(menuToggle.getAttribute('aria-expanded') !== 'true'));
+  mobileMenu.addEventListener('click', (event) => {
+    if (event.target.closest('a')) setMenu(false);
+  });
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && menuToggle.getAttribute('aria-expanded') === 'true') {
+      setMenu(false);
+      menuToggle.focus();
+    }
+  });
+}

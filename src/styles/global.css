@@ -309,16 +309,17 @@ body {
     opacity: 0;
     transition: opacity 0.2s ease;
   }
+  /* El cambio a color solo donde hay ratón: en táctil, un toque activa :hover y ocultaría la silueta */
   @media (hover: hover) and (min-width: 48rem) {
     .client-logo-color {
       display: block;
     }
-  }
-  .client-logo:hover .client-logo-mono {
-    opacity: 0;
-  }
-  .client-logo:hover .client-logo-color {
-    opacity: 1;
+    .client-logo:hover .client-logo-mono {
+      opacity: 0;
+    }
+    .client-logo:hover .client-logo-color {
+      opacity: 1;
+    }
   }
 
   /* Retrato del hero: sombra que sigue la silueta y círculo con luz cenital para dar volumen */

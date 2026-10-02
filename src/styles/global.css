@@ -554,9 +554,11 @@ body {
     letter-spacing: 0.06em;
     color: var(--tone-muted);
   }
-  .article-body img {
+  .article-body img,
+  .article-body video {
     margin-top: 1.5rem;
     border: 1px solid var(--tone-line);
+    max-width: 100%;
     height: auto;
   }
   .article-body pre {

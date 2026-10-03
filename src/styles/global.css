@@ -322,6 +322,14 @@ body {
     }
   }
 
+  /* Logos de docencia y medios: a color, con un leve realce al pasar por encima */
+  .recognition-logo {
+    transition: transform 0.2s ease, opacity 0.2s ease;
+  }
+  .recognition-logo:hover {
+    transform: translateY(-2px);
+  }
+
   /* Retrato del hero: sombra que sigue la silueta y círculo con luz cenital para dar volumen */
   .portrait-backdrop {
     background: radial-gradient(circle at 50% 30%, #2b5a6a 0%, var(--tone-dark-2) 55%, #173a47 100%);

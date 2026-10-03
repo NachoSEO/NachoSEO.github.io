@@ -5,6 +5,7 @@ import CasesBand from './CasesBand.astro';
 import Cta from './Cta.astro';
 import Portrait from './Portrait.astro';
 import PostDate from './PostDate.astro';
+import RecognitionLogos from './RecognitionLogos.astro';
 import SectionLabel from './SectionLabel.astro';
 import { localizedRoute, useTranslations } from '../i18n/utils';
 import { site } from '../site';
@@ -71,7 +72,6 @@ const copy =
           { what: 'Google Product Expert', where: 'Comunidad de Search Console', period: 'Google' },
           { what: 'Ponente', where: 'SEOnTheBeach, Clinic SEO, Ensalada SEO, SEOPLUS', period: 'Congresos', url: '/sobre-mi/#charlas' },
         ],
-        pressLabel: 'Mencionado en',
         about: 'Mi trayectoria completa',
         blogLabel: 'Blog',
         blogTitle: 'Lo último que he escrito',
@@ -116,15 +116,12 @@ const copy =
           { what: 'Google Product Expert', where: 'Search Console community', period: 'Google' },
           { what: 'Speaker', where: 'SEOnTheBeach, Clinic SEO, Ensalada SEO, SEOPLUS', period: 'Conferences', url: '/en/about/#charlas' },
         ],
-        pressLabel: 'Mentioned in',
         about: 'My full background',
         blogLabel: 'Blog',
         blogTitle: "What I've written lately",
         blogAll: 'Go to the blog',
         ctaTitle: 'What do you want to grow?',
       };
-
-const press = ['Google Search Central', 'El Confidencial', 'ABC'];
 ---
 
 <section class="on-dark overflow-hidden">
@@ -194,10 +191,6 @@ const press = ['Google Search Central', 'El Confidencial', 'ABC'];
     <div>
       <SectionLabel label={copy.talksLabel} />
       <h2 class="display-2 mt-3">{copy.talksTitle}</h2>
-      <p class="meta mt-10">{copy.pressLabel}</p>
-      <ul class="mt-3 space-y-1">
-        {press.map((name) => <li class="font-display text-xl font-semibold">{name}</li>)}
-      </ul>
       <a href={localizedRoute('about', lang)} class="link-arrow mt-8 inline-block text-[0.95rem]">{copy.about}</a>
     </div>
     <ul class="row-list self-start">
@@ -229,6 +222,8 @@ const press = ['Google Search Central', 'El Confidencial', 'ABC'];
     </ul>
   </div>
 </section>
+
+<RecognitionLogos lang={lang} />
 
 {
   posts.length > 0 && (

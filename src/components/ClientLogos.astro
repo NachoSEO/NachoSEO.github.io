@@ -34,6 +34,8 @@ const brands = [
   { key: 'naturgy', name: 'Naturgy', height: 28 },
 ];
 
+// Los logos en gris cargan sin lazy: en iOS Safari, los que entran en pantalla por la animación
+// (sin scroll) no se pedían hasta tocar la página.
 // En móvil, dos carriles en sentidos opuestos para que se vean más logos a la vez
 const half = Math.ceil(brands.length / 2);
 const rows = [brands.slice(0, half), brands.slice(half)];
@@ -58,7 +60,7 @@ const rows = [brands.slice(0, half), brands.slice(half)];
                         densities={[1, 2]}
                         class="client-logo-mono w-auto max-w-none"
                         style={`height: ${brand.height}px`}
-                        loading="lazy"
+                        loading="eager"
                       />
                       {!isCopy && (
                         <Image

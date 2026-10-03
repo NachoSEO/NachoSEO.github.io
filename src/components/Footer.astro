@@ -55,7 +55,9 @@ const links = [
         {site.email}
       </a>
       <p class="meta mt-4">
-        © {year} · <a href={localizedRoute('contact', lang)} class="hover:text-on-dark">{t('nav.contact')}</a>
+        © {year} · <a href={localizedRoute('contact', lang)} class="hover:text-on-dark">{t('nav.contact')}</a> ·{' '}
+        <a href={localizedRoute('privacy', lang)} class="hover:text-on-dark">{lang === 'es' ? 'Privacidad' : 'Privacy'}</a> ·{' '}
+        <a href={localizedRoute('legal', lang)} class="hover:text-on-dark">{lang === 'es' ? 'Aviso legal' : 'Legal notice'}</a>
       </p>
     </div>
   </div>

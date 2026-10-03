@@ -1,0 +1,169 @@
+---
+/** Política de privacidad (RGPD). Una sola fuente para /privacidad/ y /en/privacy/ */
+import Base from '../layouts/Base.astro';
+import { site } from '../site';
+
+interface Props {
+  lang: 'es' | 'en';
+}
+
+const { lang } = Astro.props;
+const es = lang === 'es';
+const path = es ? '/privacidad/' : '/en/privacy/';
+const alternatePath = es ? '/en/privacy/' : '/privacidad/';
+const updated = es ? '3 de octubre de 2026' : '3 October 2026';
+const owner = 'Ignacio Mascort Colomer';
+const linkClass = 'underline decoration-accent underline-offset-4 hover:text-accent-ink';
+---
+
+<Base
+  lang={lang}
+  title={es ? 'Política de privacidad — Nacho Mascort' : 'Privacy policy — Nacho Mascort'}
+  description={es
+    ? 'Qué datos recojo en nachomascort.com, para qué los uso y cómo ejercer tus derechos.'
+    : 'What data I collect on nachomascort.com, what I use it for and how to exercise your rights.'}
+  path={path}
+  alternatePath={alternatePath}
+>
+  <article class="mx-auto max-w-5xl px-5 py-16 sm:px-6 md:py-24">
+    <p class="meta">{es ? 'Legal' : 'Legal'}</p>
+    <h1 class="display-1 mt-5">{es ? 'Política de privacidad' : 'Privacy policy'}</h1>
+    <p class="mt-4 text-sm text-muted">{es ? `Última actualización: ${updated}` : `Last updated: ${updated}`}</p>
+
+    <div class="article-body mt-10 max-w-[65ch]">
+      {
+        es ? (
+          <>
+            <h2>Quién es el responsable</h2>
+            <p>
+              {owner}, titular de nachomascort.com. Para cualquier cuestión sobre tus datos, escríbeme a{' '}
+              <a href={`mailto:${site.email}`} class={linkClass}>{site.email}</a>.
+            </p>
+
+            <h2>Qué datos recojo y para qué</h2>
+            <p>
+              <strong>Suscripción por email.</strong> Si te apuntas desde un formulario del blog, guardo tu email, el
+              idioma del formulario y la página desde la que te suscribiste. Los uso para enviarte el recurso que has
+              pedido (por ejemplo, una skill) y, después, emails ocasionales sobre SEO, GEO e IA.
+            </p>
+            <p>
+              <strong>Contacto.</strong> Si me escribes por email o reservas una llamada, uso tus datos solo para
+              responderte y gestionar esa conversación.
+            </p>
+            <p>
+              <strong>Navegación.</strong> La web no usa cookies de seguimiento ni de publicidad. El alojamiento
+              (Cloudflare) registra datos técnicos como la IP para servir la web y protegerla de ataques, y puedo usar
+              Cloudflare Web Analytics, que mide visitas de forma agregada sin cookies.
+            </p>
+
+            <h2>Base legal</h2>
+            <p>
+              Tu consentimiento para la suscripción, que confirmas con el doble opt-in del email de confirmación, y mi
+              interés legítimo para responder a tus mensajes y mantener la web segura.
+            </p>
+
+            <h2>Cuánto tiempo los guardo</h2>
+            <p>
+              Los datos de suscripción, hasta que te des de baja. Puedes hacerlo con un clic desde cualquier email o
+              escribiéndome. Los mensajes de contacto, el tiempo necesario para atenderte.
+            </p>
+
+            <h2>Con quién se comparten</h2>
+            <p>No vendo ni cedo tus datos. Los tratan, por cuenta mía, estos proveedores:</p>
+            <ul>
+              <li>
+                <strong>Kit</strong> (ConvertKit LLC, EE. UU.): gestión de la lista y envío de emails.
+              </li>
+              <li>
+                <strong>Cloudflare</strong> (Cloudflare, Inc., EE. UU.): alojamiento, seguridad y analítica sin
+                cookies.
+              </li>
+              <li>
+                <strong>Cal.com</strong>: solo si reservas una llamada desde su página.
+              </li>
+            </ul>
+            <p>
+              Algunos están en Estados Unidos. Esas transferencias se hacen con las garantías que prevé el RGPD, como
+              el Marco de Privacidad de Datos UE-EE. UU. o las cláusulas contractuales tipo de la Comisión Europea.
+            </p>
+
+            <h2>Tus derechos</h2>
+            <p>
+              Puedes acceder a tus datos, rectificarlos, suprimirlos, oponerte a su tratamiento, limitarlo, pedir su
+              portabilidad y retirar tu consentimiento en cualquier momento. Escríbeme a{' '}
+              <a href={`mailto:${site.email}`} class={linkClass}>{site.email}</a>. Si crees que no he atendido bien tu
+              solicitud, puedes reclamar ante la{' '}
+              <a href="https://www.aepd.es" class={linkClass}>
+                Agencia Española de Protección de Datos
+              </a>
+              .
+            </p>
+          </>
+        ) : (
+          <>
+            <h2>Who is responsible</h2>
+            <p>
+              {owner}, owner of nachomascort.com. For any question about your data, email me at{' '}
+              <a href={`mailto:${site.email}`} class={linkClass}>{site.email}</a>.
+            </p>
+
+            <h2>What data I collect and why</h2>
+            <p>
+              <strong>Email subscription.</strong> If you sign up through a form on the blog, I store your email, the
+              form language and the page you subscribed from. I use them to send you the resource you asked for (for
+              example, a skill) and, after that, occasional emails about SEO, GEO and AI.
+            </p>
+            <p>
+              <strong>Contact.</strong> If you email me or book a call, I only use your data to reply and handle that
+              conversation.
+            </p>
+            <p>
+              <strong>Browsing.</strong> This site uses no tracking or advertising cookies. The host (Cloudflare) logs
+              technical data such as your IP address to serve the site and protect it from attacks, and I may use
+              Cloudflare Web Analytics, which measures visits in aggregate without cookies.
+            </p>
+
+            <h2>Legal basis</h2>
+            <p>
+              Your consent for the subscription, which you confirm through the double opt-in confirmation email, and my
+              legitimate interest in replying to your messages and keeping the site secure.
+            </p>
+
+            <h2>How long I keep it</h2>
+            <p>
+              Subscription data, until you unsubscribe. You can do it in one click from any email or by writing to me.
+              Contact messages, for as long as needed to handle them.
+            </p>
+
+            <h2>Who it is shared with</h2>
+            <p>I don't sell or hand over your data. These providers process it on my behalf:</p>
+            <ul>
+              <li>
+                <strong>Kit</strong> (ConvertKit LLC, USA): list management and email delivery.
+              </li>
+              <li>
+                <strong>Cloudflare</strong> (Cloudflare, Inc., USA): hosting, security and cookieless analytics.
+              </li>
+              <li>
+                <strong>Cal.com</strong>: only if you book a call through its page.
+              </li>
+            </ul>
+            <p>
+              Some of them are in the United States. Those transfers rely on the safeguards set out in the GDPR, such
+              as the EU-US Data Privacy Framework or the European Commission's standard contractual clauses.
+            </p>
+
+            <h2>Your rights</h2>
+            <p>
+              You can access, correct or delete your data, object to or restrict its processing, ask for portability
+              and withdraw your consent at any time. Email me at{' '}
+              <a href={`mailto:${site.email}`} class={linkClass}>{site.email}</a>. If you think I haven't handled your
+              request properly, you can complain to the Spanish Data Protection Agency (
+              <a href="https://www.aepd.es" class={linkClass}>AEPD</a>) or your local authority.
+            </p>
+          </>
+        )
+      }
+    </div>
+  </article>
+</Base>

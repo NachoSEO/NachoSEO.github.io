@@ -13,6 +13,8 @@ export const routes = {
   tools: { es: '/herramientas/', en: '/en/tools/' },
   sitemapGenerator: { es: '/herramientas/generador-sitemap/', en: '/en/tools/sitemap-generator/' },
   rss: { es: '/rss.xml', en: '/en/rss.xml' },
+  privacy: { es: '/privacidad/', en: '/en/privacy/' },
+  legal: { es: '/aviso-legal/', en: '/en/legal-notice/' },
 } as const;
 
 export type RouteKey = keyof typeof routes;

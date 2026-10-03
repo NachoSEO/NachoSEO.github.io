@@ -18,12 +18,10 @@ if (revealTargets.length > 0) {
 }
 
 // Carrusel de logos: se pausa cuando no está en pantalla para no gastar batería
-const logoMarquee = document.querySelector('.logo-marquee');
-if (logoMarquee) {
-  new IntersectionObserver(([entry]) => {
-    logoMarquee.classList.toggle('is-offscreen', !entry.isIntersecting);
-  }).observe(logoMarquee);
-}
+const marqueeObserver = new IntersectionObserver((entries) => {
+  for (const entry of entries) entry.target.classList.toggle('is-offscreen', !entry.isIntersecting);
+});
+for (const logoMarquee of document.querySelectorAll('.logo-marquee')) marqueeObserver.observe(logoMarquee);
 
 // Índice del artículo: marca la sección que se está leyendo
 const tocLinks = new Map(

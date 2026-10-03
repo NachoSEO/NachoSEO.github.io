@@ -1,0 +1,10 @@
+# 301 de seohacks.es (blog antiguo) a nachomascort.com. Zona seohacks.es en la cuenta personal;
+# los registros @ y www van proxied y MX/TXT no se tocan.
+name = "seohacks-redirects"
+main = "worker.js"
+compatibility_date = "2026-10-01"
+workers_dev = false
+routes = [
+  { pattern = "seohacks.es/*", zone_name = "seohacks.es" },
+  { pattern = "www.seohacks.es/*", zone_name = "seohacks.es" },
+]

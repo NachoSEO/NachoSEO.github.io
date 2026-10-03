@@ -10,6 +10,7 @@ export const routes = {
   cases: { es: '/casos/', en: '/en/case-studies/' },
   blog: { es: '/blog/', en: '/en/blog/' },
   contact: { es: '/contacto/', en: '/en/contact/' },
+  tools: { es: '/herramientas/', en: '/en/tools/' },
   rss: { es: '/rss.xml', en: '/en/rss.xml' },
 } as const;
 
@@ -24,6 +25,7 @@ export const ui = {
     'nav.cases': 'Casos',
     'nav.blog': 'Blog',
     'nav.contact': 'Contacto',
+    'nav.tools': 'Herramientas',
     'cta.book': 'Agenda una llamada',
     'cta.call30': 'Reserva una llamada de 30 min',
     'a11y.skip': 'Saltar al contenido',
@@ -43,6 +45,7 @@ export const ui = {
     'nav.cases': 'Case studies',
     'nav.blog': 'Blog',
     'nav.contact': 'Contact',
+    'nav.tools': 'Tools',
     'cta.book': 'Book a call',
     'cta.call30': 'Book a 30-min call',
     'a11y.skip': 'Skip to content',

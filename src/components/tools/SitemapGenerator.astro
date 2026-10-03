@@ -1,0 +1,449 @@
+---
+import type { Lang } from '../../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const es = lang === 'es';
+
+const copy = es
+  ? {
+      tabsLabel: 'Origen de las URLs',
+      tabPaste: 'Pegar URLs',
+      tabFile: 'Subir archivo',
+      urlsLabel: 'Una URL por línea, con http:// o https://',
+      dropTitle: 'Arrastra aquí un .txt o .csv',
+      dropHint: 'o haz clic para elegirlo. El archivo no sale de tu navegador.',
+      advanced: 'Ajustes avanzados',
+      regexpLabel: 'Agrupar hosts con esta RegExp',
+      regexpHelp: 'Con .* cada host tiene su sitemap. Con example\\..* juntas www, m y blog de example.com en uno.',
+      baseNameLabel: 'Nombre del fichero',
+      lastmodLabel: 'Añadir <lastmod> con la fecha de hoy',
+      generate: 'Generar sitemap',
+      clear: 'Limpiar',
+      resultLabel: 'Resultado',
+      statUrls: 'URLs en el sitemap',
+      statDuplicates: 'Duplicadas eliminadas',
+      statInvalid: 'Líneas descartadas',
+      statFiles: 'Ficheros XML',
+      invalidSummary: 'Ver líneas descartadas',
+      filesTitle: 'Ficheros generados',
+      copyXml: 'Copiar XML',
+      preview: 'Vista previa',
+      noscript: 'El generador funciona con JavaScript. Actívalo para crear tu sitemap.',
+    }
+  : {
+      tabsLabel: 'URL source',
+      tabPaste: 'Paste URLs',
+      tabFile: 'Upload file',
+      urlsLabel: 'One URL per line, including http:// or https://',
+      dropTitle: 'Drop a .txt or .csv file here',
+      dropHint: 'or click to pick one. The file never leaves your browser.',
+      advanced: 'Advanced settings',
+      regexpLabel: 'Group hosts by this RegExp',
+      regexpHelp: 'With .* every host gets its own sitemap. With example\\..* the www, m and blog hosts of example.com share one.',
+      baseNameLabel: 'File name',
+      lastmodLabel: "Add <lastmod> with today's date",
+      generate: 'Generate sitemap',
+      clear: 'Clear',
+      resultLabel: 'Result',
+      statUrls: 'URLs in the sitemap',
+      statDuplicates: 'Duplicates removed',
+      statInvalid: 'Lines skipped',
+      statFiles: 'XML files',
+      invalidSummary: 'Show skipped lines',
+      filesTitle: 'Generated files',
+      copyXml: 'Copy XML',
+      preview: 'Preview',
+      noscript: 'The generator runs on JavaScript. Enable it to build your sitemap.',
+    };
+
+/** Textos que necesita el script del cliente */
+const messages = es
+  ? {
+      lines: '{n} líneas',
+      fileLoaded: '{name} · {n} líneas',
+      generating: 'Generando…',
+      errorEmpty: 'No hay ninguna URL válida. Revisa que cada línea empiece por http:// o https://.',
+      errorRegexp: 'La RegExp no es válida. Prueba con .* para volver al comportamiento por defecto.',
+      errorFile: 'No he podido leer el archivo. Usa un .txt o .csv en texto plano.',
+      downloadXml: 'Descargar {name}',
+      downloadZip: 'Descargar ZIP ({n} ficheros)',
+      copied: 'Copiado',
+      urlCount: '{n} URLs',
+      urlCountOne: '1 URL',
+      indexFile: 'índice',
+      truncated: '… (vista previa recortada)',
+      moreInvalid: '… y {n} más',
+    }
+  : {
+      lines: '{n} lines',
+      fileLoaded: '{name} · {n} lines',
+      generating: 'Generating…',
+      errorEmpty: 'No valid URLs found. Make sure every line starts with http:// or https://.',
+      errorRegexp: 'That RegExp is not valid. Use .* to go back to the default behaviour.',
+      errorFile: "I couldn't read that file. Use a plain-text .txt or .csv.",
+      downloadXml: 'Download {name}',
+      downloadZip: 'Download ZIP ({n} files)',
+      copied: 'Copied',
+      urlCount: '{n} URLs',
+      urlCountOne: '1 URL',
+      indexFile: 'index',
+      truncated: '… (preview truncated)',
+      moreInvalid: '… and {n} more',
+    };
+
+const inputClass =
+  'w-full rounded-lg border border-line bg-paper px-4 py-3 text-[0.95rem] text-ink transition-colors focus:border-ink';
+---
+
+<div class="card sm:p-8" data-sitemap-tool data-lang={lang} data-messages={JSON.stringify(messages)}>
+  <div role="tablist" aria-label={copy.tabsLabel} class="inline-flex rounded-full border border-line bg-paper p-1">
+    <button type="button" role="tab" id="sitemap-tab-paste" aria-selected="true" aria-controls="sitemap-panel-paste" class="tool-tab" data-tab="paste">
+      {copy.tabPaste}
+    </button>
+    <button type="button" role="tab" id="sitemap-tab-file" aria-selected="false" aria-controls="sitemap-panel-file" tabindex="-1" class="tool-tab" data-tab="file">
+      {copy.tabFile}
+    </button>
+  </div>
+
+  <div id="sitemap-panel-paste" role="tabpanel" aria-labelledby="sitemap-tab-paste" class="mt-6">
+    <div class="flex items-baseline justify-between gap-4">
+      <label for="sitemap-urls" class="text-sm font-semibold">{copy.urlsLabel}</label>
+      <span class="meta shrink-0" data-line-count></span>
+    </div>
+    <textarea
+      id="sitemap-urls"
+      rows="10"
+      spellcheck="false"
+      autocomplete="off"
+      class:list={[inputClass, 'mt-2 font-mono text-[0.85rem] leading-relaxed']}
+      placeholder={'https://example.com/\nhttps://example.com/blog/\nhttps://example.com/contact/'}
+      data-urls></textarea>
+  </div>
+
+  <div id="sitemap-panel-file" role="tabpanel" aria-labelledby="sitemap-tab-file" class="mt-6" hidden>
+    <label class="dropzone" data-dropzone>
+      <input type="file" accept=".txt,.csv,.tsv,text/plain,text/csv" class="sr-only" data-file-input />
+      <span class="display-3 block">{copy.dropTitle}</span>
+      <span class="mt-2 block text-sm text-muted">{copy.dropHint}</span>
+      <span class="meta mt-4 block" data-file-name></span>
+    </label>
+  </div>
+
+  <details class="tool-advanced mt-6 border-t border-line pt-5">
+    <summary class="flex cursor-pointer list-none items-center gap-2 text-sm font-semibold">
+      <span class="faq-marker font-mono text-accent-ink" aria-hidden="true">+</span>
+      {copy.advanced}
+    </summary>
+    <div class="mt-5 grid gap-5 md:grid-cols-2">
+      <div>
+        <label for="sitemap-regexp" class="text-sm font-semibold">{copy.regexpLabel}</label>
+        <input id="sitemap-regexp" type="text" value=".*" spellcheck="false" autocomplete="off" class:list={[inputClass, 'mt-2 font-mono']} data-regexp aria-describedby="sitemap-regexp-help" />
+        <p id="sitemap-regexp-help" class="mt-2 text-sm text-muted">{copy.regexpHelp}</p>
+      </div>
+      <div>
+        <label for="sitemap-basename" class="text-sm font-semibold">{copy.baseNameLabel}</label>
+        <div class="mt-2 flex items-center gap-2">
+          <input id="sitemap-basename" type="text" value="sitemap" spellcheck="false" autocomplete="off" class:list={[inputClass, 'font-mono']} data-basename />
+          <span class="font-mono text-sm text-muted">.xml</span>
+        </div>
+        <label class="mt-5 flex cursor-pointer items-center gap-3 text-sm">
+          <input type="checkbox" class="h-4 w-4 accent-[var(--tone-accent)]" data-lastmod />
+          {copy.lastmodLabel}
+        </label>
+      </div>
+    </div>
+  </details>
+
+  <div class="mt-6 flex flex-wrap items-center gap-3">
+    <button type="button" class="btn" data-generate>{copy.generate}</button>
+    <button type="button" class="btn btn--ghost" data-clear>{copy.clear}</button>
+  </div>
+  <p role="alert" class="mt-4 text-sm font-semibold text-accent-ink" data-error hidden></p>
+
+  <noscript><p class="mt-4 text-sm font-semibold text-accent-ink">{copy.noscript}</p></noscript>
+</div>
+
+<section class="card mt-5 sm:p-8" aria-labelledby="sitemap-result-title" data-result hidden>
+  <h2 id="sitemap-result-title" class="section-label">{copy.resultLabel}</h2>
+
+  <dl class="mt-5 grid grid-cols-2 gap-x-6 gap-y-5 md:grid-cols-4">
+    <div>
+      <dt class="meta">{copy.statUrls}</dt>
+      <dd class="display-2 mt-1" data-stat="urls"></dd>
+    </div>
+    <div>
+      <dt class="meta">{copy.statFiles}</dt>
+      <dd class="display-2 mt-1" data-stat="files"></dd>
+    </div>
+    <div>
+      <dt class="meta">{copy.statDuplicates}</dt>
+      <dd class="display-2 mt-1 text-muted" data-stat="duplicates"></dd>
+    </div>
+    <div>
+      <dt class="meta">{copy.statInvalid}</dt>
+      <dd class="display-2 mt-1 text-muted" data-stat="invalid"></dd>
+    </div>
+  </dl>
+
+  <details class="tool-advanced mt-5" data-invalid-wrap hidden>
+    <summary class="flex cursor-pointer list-none items-center gap-2 text-sm font-semibold">
+      <span class="faq-marker font-mono text-accent-ink" aria-hidden="true">+</span>
+      {copy.invalidSummary}
+    </summary>
+    <ul class="mt-3 max-h-48 overflow-auto rounded-lg border border-line bg-paper px-4 py-3 font-mono text-[0.8rem] text-muted" data-invalid-list></ul>
+  </details>
+
+  <h3 class="mt-8 text-sm font-semibold">{copy.filesTitle}</h3>
+  <ul class="row-list mt-3 text-[0.9rem]" data-file-list></ul>
+
+  <div class="mt-6 flex flex-wrap items-center gap-3">
+    <button type="button" class="btn" data-download></button>
+    <button type="button" class="btn btn--ghost" data-copy>{copy.copyXml}</button>
+  </div>
+
+  <h3 class="mt-8 text-sm font-semibold">{copy.preview}: <span class="font-mono font-normal text-muted" data-preview-name></span></h3>
+  <pre class="mt-3 max-h-80 overflow-auto rounded-lg bg-dark px-5 py-4 font-mono text-[0.78rem] leading-relaxed text-on-dark" tabindex="0"><code data-preview></code></pre>
+</section>
+
+<script>
+  import { extractCsvUrls, generateSitemapGroups, parseUrls, safeFileName, type SitemapGroup } from '../../lib/sitemap';
+  import { createZip } from '../../lib/zip';
+
+  const PREVIEW_CHARS = 4000;
+  const MAX_INVALID_SHOWN = 200;
+
+  const tool = document.querySelector<HTMLElement>('[data-sitemap-tool]');
+  const result = document.querySelector<HTMLElement>('[data-result]');
+
+  if (tool && result) {
+    const messages: Record<string, string> = JSON.parse(tool.dataset.messages ?? '{}');
+    const numberFormat = new Intl.NumberFormat(tool.dataset.lang === 'es' ? 'es-ES' : 'en-US');
+    const format = (key: string, values: Record<string, string | number> = {}) =>
+      messages[key].replace(/\{(\w+)\}/g, (_, name) =>
+        typeof values[name] === 'number' ? numberFormat.format(values[name] as number) : String(values[name])
+      );
+
+    const select = <T extends Element>(selector: string, root: ParentNode = tool) => root.querySelector<T>(selector)!;
+    const tabs = [...tool.querySelectorAll<HTMLButtonElement>('[data-tab]')];
+    const urlsInput = select<HTMLTextAreaElement>('[data-urls]');
+    const lineCount = select<HTMLElement>('[data-line-count]');
+    const dropzone = select<HTMLElement>('[data-dropzone]');
+    const fileInput = select<HTMLInputElement>('[data-file-input]');
+    const fileName = select<HTMLElement>('[data-file-name]');
+    const regexpInput = select<HTMLInputElement>('[data-regexp]');
+    const baseNameInput = select<HTMLInputElement>('[data-basename]');
+    const lastmodInput = select<HTMLInputElement>('[data-lastmod]');
+    const generateButton = select<HTMLButtonElement>('[data-generate]');
+    const clearButton = select<HTMLButtonElement>('[data-clear]');
+    const errorBox = select<HTMLElement>('[data-error]');
+    const downloadButton = select<HTMLButtonElement>('[data-download]', result);
+    const copyButton = select<HTMLButtonElement>('[data-copy]', result);
+
+    let activeSource: 'paste' | 'file' = 'paste';
+    let fileText = '';
+    let groups: SitemapGroup[] = [];
+    const generateLabel = generateButton.textContent ?? '';
+    const copyLabel = copyButton.textContent ?? '';
+
+    const countLines = (text: string) => text.split('\n').filter((line) => line.trim()).length;
+
+    function showError(message: string) {
+      errorBox.textContent = message;
+      errorBox.hidden = !message;
+    }
+
+    function activateTab(tab: HTMLButtonElement) {
+      for (const candidate of tabs) {
+        const selected = candidate === tab;
+        candidate.setAttribute('aria-selected', String(selected));
+        candidate.tabIndex = selected ? 0 : -1;
+        document.getElementById(candidate.getAttribute('aria-controls')!)!.hidden = !selected;
+      }
+      activeSource = tab.dataset.tab as 'paste' | 'file';
+      showError('');
+    }
+
+    tabs.forEach((tab, index) => {
+      tab.addEventListener('click', () => activateTab(tab));
+      tab.addEventListener('keydown', (event) => {
+        if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft') return;
+        const next = tabs[(index + (event.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length];
+        activateTab(next);
+        next.focus();
+      });
+    });
+
+    let lineCountFrame = 0;
+    function updateLineCount() {
+      cancelAnimationFrame(lineCountFrame);
+      lineCountFrame = requestAnimationFrame(() => {
+        const lines = countLines(urlsInput.value);
+        lineCount.textContent = lines ? format('lines', { n: lines }) : '';
+      });
+    }
+    urlsInput.addEventListener('input', updateLineCount);
+
+    async function loadFile(file: File) {
+      try {
+        const text = await file.text();
+        fileText = /\.(csv|tsv)$/i.test(file.name) ? extractCsvUrls(text) : text;
+        fileName.textContent = format('fileLoaded', { name: file.name, n: countLines(fileText) });
+        showError('');
+      } catch {
+        fileText = '';
+        fileName.textContent = '';
+        showError(messages.errorFile);
+      }
+    }
+
+    fileInput.addEventListener('change', () => {
+      if (fileInput.files?.[0]) loadFile(fileInput.files[0]);
+    });
+    dropzone.addEventListener('dragover', (event) => {
+      event.preventDefault();
+      dropzone.classList.add('is-dragover');
+    });
+    dropzone.addEventListener('dragleave', () => dropzone.classList.remove('is-dragover'));
+    dropzone.addEventListener('drop', (event) => {
+      event.preventDefault();
+      dropzone.classList.remove('is-dragover');
+      const file = event.dataTransfer?.files[0];
+      if (file) loadFile(file);
+    });
+
+    const allFiles = () => groups.flatMap((group) => group.files);
+
+    function renderResult(urlCount: number, duplicates: number, invalid: string[]) {
+      const files = allFiles();
+      select<HTMLElement>('[data-stat="urls"]', result).textContent = numberFormat.format(urlCount);
+      select<HTMLElement>('[data-stat="files"]', result).textContent = numberFormat.format(files.length);
+      select<HTMLElement>('[data-stat="duplicates"]', result).textContent = numberFormat.format(duplicates);
+      select<HTMLElement>('[data-stat="invalid"]', result).textContent = numberFormat.format(invalid.length);
+
+      const invalidWrap = select<HTMLDetailsElement>('[data-invalid-wrap]', result);
+      const invalidList = select<HTMLElement>('[data-invalid-list]', result);
+      invalidWrap.hidden = invalid.length === 0;
+      invalidWrap.open = false;
+      const shownInvalid = invalid.slice(0, MAX_INVALID_SHOWN);
+      if (invalid.length > MAX_INVALID_SHOWN) shownInvalid.push(format('moreInvalid', { n: invalid.length - MAX_INVALID_SHOWN }));
+      invalidList.replaceChildren(
+        ...shownInvalid.map((line) => Object.assign(document.createElement('li'), { textContent: line, className: 'break-all' }))
+      );
+
+      const fileList = select<HTMLElement>('[data-file-list]', result);
+      fileList.replaceChildren(
+        ...groups.flatMap((group) =>
+          group.files.map((file) => {
+            const item = document.createElement('li');
+            item.className = 'flex flex-wrap items-baseline justify-between gap-x-4 py-2.5';
+            const name = document.createElement('span');
+            name.className = 'font-mono break-all';
+            name.textContent = groups.length > 1 ? `${safeFileName(group.key, 'site')}/${file.name}` : file.name;
+            const detail = document.createElement('span');
+            detail.className = 'meta';
+            detail.textContent =
+              file.urlCount === 0 ? messages.indexFile : file.urlCount === 1 ? messages.urlCountOne : format('urlCount', { n: file.urlCount });
+            item.append(name, detail);
+            return item;
+          })
+        )
+      );
+
+      downloadButton.textContent =
+        files.length === 1 ? format('downloadXml', { name: files[0].name }) : format('downloadZip', { n: files.length });
+      copyButton.hidden = files.length !== 1;
+      copyButton.textContent = copyLabel;
+
+      const previewFile = files[0];
+      select<HTMLElement>('[data-preview-name]', result).textContent = previewFile.name;
+      select<HTMLElement>('[data-preview]', result).textContent =
+        previewFile.content.length > PREVIEW_CHARS
+          ? `${previewFile.content.slice(0, PREVIEW_CHARS)}\n${messages.truncated}`
+          : previewFile.content;
+
+      result.hidden = false;
+    }
+
+    async function generate() {
+      showError('');
+      const text = activeSource === 'paste' ? urlsInput.value : fileText;
+      generateButton.disabled = true;
+      generateButton.textContent = messages.generating;
+      // Cede un frame para que se pinte el estado "Generando…" antes del trabajo pesado
+      await new Promise((resolve) => setTimeout(resolve, 30));
+
+      try {
+        const { valid, invalid, duplicates } = parseUrls(text);
+        if (valid.length === 0) {
+          showError(messages.errorEmpty);
+          result.hidden = true;
+          return;
+        }
+        groups = generateSitemapGroups(valid, regexpInput.value.trim(), {
+          baseName: safeFileName(baseNameInput.value, 'sitemap'),
+          lastmod: lastmodInput.checked ? new Date().toISOString().slice(0, 10) : undefined,
+        });
+        renderResult(valid.length, duplicates, invalid);
+        result.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } catch (error) {
+        result.hidden = true;
+        showError(error instanceof Error && error.message === 'invalid-regexp' ? messages.errorRegexp : String(error));
+      } finally {
+        generateButton.disabled = false;
+        generateButton.textContent = generateLabel;
+      }
+    }
+
+    function saveBlob(blob: Blob, name: string) {
+      const url = URL.createObjectURL(blob);
+      const link = Object.assign(document.createElement('a'), { href: url, download: name });
+      document.body.append(link);
+      link.click();
+      link.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }
+
+    async function download() {
+      const files = allFiles();
+      if (files.length === 1) {
+        saveBlob(new Blob([files[0].content], { type: 'application/xml' }), files[0].name);
+        return;
+      }
+      downloadButton.disabled = true;
+      try {
+        const entries = groups.flatMap((group) =>
+          group.files.map((file) => ({
+            path: groups.length > 1 ? `${safeFileName(group.key, 'site')}/${file.name}` : file.name,
+            content: file.content,
+          }))
+        );
+        const zipName = groups.length > 1 ? 'sitemaps.zip' : `sitemaps-${safeFileName(groups[0].key, 'site')}.zip`;
+        saveBlob(await createZip(entries), zipName);
+      } finally {
+        downloadButton.disabled = false;
+      }
+    }
+
+    generateButton.addEventListener('click', generate);
+    downloadButton.addEventListener('click', download);
+    copyButton.addEventListener('click', async () => {
+      await navigator.clipboard.writeText(allFiles()[0].content);
+      copyButton.textContent = messages.copied;
+      setTimeout(() => (copyButton.textContent = copyLabel), 2000);
+    });
+    clearButton.addEventListener('click', () => {
+      urlsInput.value = '';
+      fileInput.value = '';
+      fileText = '';
+      fileName.textContent = '';
+      groups = [];
+      result.hidden = true;
+      showError('');
+      updateLineCount();
+    });
+  }
+</script>

@@ -465,6 +465,50 @@ body {
     rotate: 45deg;
   }
 
+  /* ============ Herramientas ============ */
+
+  .tool-tab {
+    border-radius: 999px;
+    padding: 0.45rem 1.1rem;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--tone-muted);
+    transition: background-color 0.15s ease, color 0.15s ease;
+  }
+  .tool-tab:hover {
+    color: var(--tone-ink);
+  }
+  .tool-tab[aria-selected='true'] {
+    background: var(--tone-ink);
+    color: var(--tone-paper);
+  }
+  .tool-advanced summary::-webkit-details-marker {
+    display: none;
+  }
+  .tool-advanced[open] > summary .faq-marker {
+    rotate: 45deg;
+  }
+  /* Zona de arrastre: borde discontinuo que se enciende en frambuesa al soltar encima */
+  .dropzone {
+    display: block;
+    cursor: pointer;
+    border: 2px dashed var(--tone-line);
+    border-radius: 0.875rem;
+    background: var(--tone-paper);
+    padding: 2.5rem 1.5rem;
+    text-align: center;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+  }
+  .dropzone:hover,
+  .dropzone.is-dragover {
+    border-color: var(--tone-accent);
+    background: var(--tone-raised);
+  }
+  .dropzone:has(:focus-visible) {
+    outline: 2px solid var(--tone-accent);
+    outline-offset: 3px;
+  }
+
   /* ============ Cuerpo de artículo (MDX) ============ */
 
   .article-body {

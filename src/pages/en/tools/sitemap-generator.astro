@@ -1,0 +1,205 @@
+---
+import Base from '../../../layouts/Base.astro';
+import Cta from '../../../components/Cta.astro';
+import FaqAccordion from '../../../components/service/FaqAccordion.astro';
+import SitemapGenerator from '../../../components/tools/SitemapGenerator.astro';
+
+const path = '/en/tools/sitemap-generator/';
+
+const faq = [
+  {
+    question: 'Is it free? Is there a URL limit?',
+    answer:
+      "It's free and needs no sign-up. I don't cap the number of URLs: the only limit is your computer's memory. A million URLs takes a few seconds.",
+  },
+  {
+    question: 'Are my URLs sent to a server?',
+    answer:
+      "No. The generator runs entirely in your browser with JavaScript. Neither the list you paste nor the file you upload leaves your device, so you can use it on client sites or projects that aren't public yet.",
+  },
+  {
+    question: 'How should the URLs be formatted?',
+    answer:
+      'Absolute and with the protocol: https://example.com/path instead of /path. For the homepage, keep the trailing slash (https://example.com/). Lines that fail this check show up as skipped in the result so you can review them.',
+  },
+  {
+    question: 'Can I upload a Screaming Frog or Search Console CSV?',
+    answer:
+      'Yes. If the file ends in .csv, the generator finds the column that holds URLs and drops the rest (status codes, titles and so on). With a .txt file it reads one URL per line.',
+  },
+  {
+    question: 'What happens with more than 50,000 URLs?',
+    answer:
+      'Google accepts up to 50,000 URLs or 50 MB per sitemap. Go past either and the generator splits your URLs into several files (sitemap-1.xml, sitemap-2.xml…) plus a sitemap-index.xml that links them. One million URLs gives you 20 sitemaps and an index.',
+  },
+  {
+    question: 'What if I mix URLs from several domains?',
+    answer:
+      'The generator groups URLs by host and builds a sitemap (or an index with its sitemaps) for each one. You download everything as a ZIP with one folder per domain, ready to upload each folder to its site.',
+  },
+  {
+    question: 'How do I put several subdomains in the same sitemap?',
+    answer:
+      'Open the advanced settings and change the grouping RegExp. The default .* keeps every host apart. Type example\\..* and the URLs from www.example.com, m.example.com and blog.example.com end up in one group.',
+  },
+  {
+    question: 'Should I tick the lastmod option?',
+    answer:
+      "Only if every URL changed today or you just published them. Google uses lastmod when the date is reliable; stamp today's date on pages that haven't changed in months and it learns to ignore that field on your site.",
+  },
+  {
+    question: 'How do I submit the sitemap to Google?',
+    answer:
+      'Upload the file to your domain root, add the line Sitemap: https://yourdomain.com/sitemap.xml to your robots.txt and submit it in Search Console under Sitemaps. Do the same in Bing Webmaster Tools.',
+  },
+];
+
+const webApplication = {
+  '@type': 'WebApplication',
+  name: 'XML Sitemap Generator',
+  url: `https://nachomascort.com${path}`,
+  applicationCategory: 'DeveloperApplication',
+  operatingSystem: 'Any',
+  browserRequirements: 'Requires JavaScript',
+  inLanguage: 'en',
+  isAccessibleForFree: true,
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+  author: { '@id': 'https://nachomascort.com/#person' },
+};
+---
+
+<Base
+  lang="en"
+  title="Free XML Sitemap Generator Online — Nacho Mascort"
+  description="Build a sitemap.xml for free from a list of URLs or a CSV. Splits into sitemap indexes past 50,000 URLs, groups by domain and never sends your data to a server."
+  path={path}
+  alternatePath="/herramientas/generador-sitemap/"
+  breadcrumbs={[
+    { name: 'Home', path: '/en/' },
+    { name: 'Tools', path: '/en/tools/' },
+    { name: 'XML Sitemap Generator', path },
+  ]}
+  faq={faq}
+  extraSchemaNodes={[webApplication]}
+>
+  <div class="mx-auto max-w-5xl px-5 pt-16 sm:px-6 sm:pt-20">
+    <p class="meta"><a href="/en/tools/" class="hover:text-ink">Tools</a> · Technical SEO</p>
+    <h1 class="display-1 mt-5">XML Sitemap Generator</h1>
+    <p class="lede mt-6">
+      Paste your URLs or upload a file and download a sitemap.xml ready for Search Console. Free, no sign-up, and it
+      handles millions of URLs. Everything runs in your browser.
+    </p>
+    <ul class="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-sm text-muted">
+      <li><span class="text-accent-ink" aria-hidden="true">✓</span> Automatic indexes past 50,000 URLs</li>
+      <li><span class="text-accent-ink" aria-hidden="true">✓</span> One sitemap per domain</li>
+      <li><span class="text-accent-ink" aria-hidden="true">✓</span> Your URLs stay on your device</li>
+    </ul>
+
+    <div class="mt-10">
+      <SitemapGenerator lang="en" />
+    </div>
+  </div>
+
+  <article class="mx-auto max-w-5xl px-5 pt-16 sm:px-6 md:pt-24">
+    <p class="section-label">Guide</p>
+    <h2 class="display-2 mt-3 max-w-[24ch]">What you need to know to make your sitemap work</h2>
+
+    <div class="article-body mt-4">
+      <h2>What an XML sitemap is and when you need one</h2>
+      <p>
+        An XML sitemap is a file listing the URLs on your site that you want Google, Bing and the rest to crawl. It
+        doesn't replace internal linking, but it helps search engines find new pages sooner and spot the ones that
+        changed.
+      </p>
+      <p>You need one most in these cases:</p>
+      <ul>
+        <li>Your site has thousands of pages or grows every day (ecommerce, publishers, directories, programmatic SEO).</li>
+        <li>You have pages with few internal links or that you just published.</li>
+        <li>You're migrating and want Google to crawl the new URLs quickly.</li>
+        <li>Your CMS doesn't generate a sitemap, or generates one full of URLs you don't want indexed.</li>
+      </ul>
+      <p>
+        If your site has 20 well-linked pages, Google will find them anyway. The sitemap still earns its keep in Search
+        Console, where it shows how many of those URLs Google has indexed.
+      </p>
+
+      <h2>Build your sitemap in three steps</h2>
+      <ol>
+        <li>
+          <strong>Collect your URLs.</strong> Export the indexable pages from your crawler (Screaming Frog, Sitebulb), your
+          CMS or a database query.
+        </li>
+        <li>
+          <strong>Paste them or upload the file.</strong> I accept .txt files with one URL per line and .csv files; from a
+          CSV I pull the column that holds URLs.
+        </li>
+        <li>
+          <strong>Generate and download.</strong> With a single sitemap you get the .xml straight away. If you end up with
+          several files, I hand them over in a ZIP with the folder structure.
+        </li>
+      </ol>
+      <p>
+        The generator removes duplicates, encodes special characters (an unescaped <code>&amp;</code> in a URL breaks a
+        sitemap) and lists the lines it skipped so you can check them.
+      </p>
+
+      <h2>More than 50,000 URLs: sitemap indexes</h2>
+      <p>
+        The protocol caps each sitemap at 50,000 URLs and 50 MB uncompressed. When you pass either limit, the generator
+        splits the list into <code>sitemap-1.xml</code>, <code>sitemap-2.xml</code> and so on, and creates a
+        <code>sitemap-index.xml</code> pointing to all of them.
+      </p>
+      <p>
+        The index links each sitemap at your domain root (<code>https://yourdomain.com/sitemap-1.xml</code>), so upload
+        every file there. Then submit only the index to Search Console and Google will pick up the rest.
+      </p>
+
+      <h2>Several domains and subdomains</h2>
+      <p>
+        A sitemap can only hold URLs from its own host. Paste URLs from <code>example.com</code> and
+        <code>example.es</code> and you get a ZIP with a folder per domain, each with its own sitemap or index.
+      </p>
+      <p>
+        To merge subdomains, change the RegExp in the advanced settings. With <code>example\..*</code>,
+        <code>www.example.com</code> and <code>blog.example.com</code> share a group. Keep in mind that Google only
+        accepts URLs from other hosts in a sitemap if you've verified all of them in Search Console or reference the
+        sitemap from each host's robots.txt.
+      </p>
+
+      <h2>How to publish your sitemap and submit it to Google</h2>
+      <ol>
+        <li>Upload the file to your site root: <code>https://yourdomain.com/sitemap.xml</code>.</li>
+        <li>Add this line to your robots.txt: <code>Sitemap: https://yourdomain.com/sitemap.xml</code>.</li>
+        <li>In Search Console, go to Indexing › Sitemaps, paste the URL and click Submit.</li>
+        <li>Submit it again in Bing Webmaster Tools, which also feeds Copilot and DuckDuckGo.</li>
+      </ol>
+      <p>
+        Within a few days, the Sitemaps report tells you how many URLs Google discovered and how many it indexed. If the
+        gap is wide, you've found your next audit.
+      </p>
+
+      <h2>Which URLs to include (and which to leave out)</h2>
+      <p>Only include URLs you want to see in Google:</p>
+      <ul>
+        <li>They return a 200 status code, with no redirects.</li>
+        <li>They're canonical: no tracking parameters or duplicate versions.</li>
+        <li>They carry no <code>noindex</code> and robots.txt doesn't block them.</li>
+      </ul>
+      <p>
+        Each broken or redirected URL in your sitemap tells Google the file isn't reliable, and it starts paying less
+        attention to it. Run your crawler before you build the sitemap and filter for indexable pages.
+      </p>
+
+      <h2>lastmod, priority and changefreq</h2>
+      <p>
+        Google ignores <code>priority</code> and <code>changefreq</code>, so the generator leaves them out. It does use
+        <code>lastmod</code> when the date reflects a real content change. Tick the option only if every URL in your list
+        changed today; otherwise, let your CMS set dates page by page.
+      </p>
+    </div>
+  </article>
+
+  <FaqAccordion lang="en" faq={faq} />
+
+  <Cta lang="en" title="Is your site struggling with indexing?" />
+</Base>

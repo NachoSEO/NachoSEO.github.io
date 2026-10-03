@@ -21,6 +21,10 @@ Site languages: Spanish (default, at /) and English (at /en/).
 - [Scraping content by hijacking front-end endpoint calls](https://nachomascort.com/en/blog/scraping-google-autocomplete-endpoints/)
 - Feeds: https://nachomascort.com/rss.xml (ES), https://nachomascort.com/en/rss.xml (EN)
 
+## Tools
+
+- [Generador de sitemap XML](https://nachomascort.com/herramientas/generador-sitemap/): free in-browser XML sitemap generator from a URL list or CSV; splits into sitemap indexes past 50,000 URLs and groups by domain. EN: https://nachomascort.com/en/tools/sitemap-generator/
+
 ## Contact
 
 - Book a call: https://nachomascort.com/contacto/ (EN: https://nachomascort.com/en/contact/)

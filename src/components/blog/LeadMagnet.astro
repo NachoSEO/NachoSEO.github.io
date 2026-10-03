@@ -1,0 +1,243 @@
+---
+/**
+ * Captación de email para la skill de auditoría de quality. POST nativo a la
+ * Pages Function /api/subscribe (functions/api/subscribe.ts), que da de alta en Kit.
+ */
+interface Props {
+  lang: 'es' | 'en';
+  source: string;
+  /** Frase previa que solo tiene sentido si el formulario se muestra */
+  intro?: string;
+}
+
+// Oculto hasta configurar Kit (KIT_API_KEY y KIT_FORM_ID en Cloudflare Pages)
+const ENABLED = false;
+
+const { lang, source, intro } = Astro.props;
+
+const copy =
+  lang === 'es'
+    ? {
+        eyebrow: 'Skill gratis para Claude y Codex',
+        title: 'Audita la quality de tu web con Claude o Codex',
+        body: 'Los 4 pilares de Google, el test de contenido commodity y las señales del leak, en un informe por página.',
+        label: 'Tu email',
+        placeholder: 'tu@email.com',
+        button: 'Quiero la skill',
+        fineprint: 'Confirmas por email y te llega. Te puedes dar de baja con un clic.',
+        privacy: 'Política de privacidad',
+        privacyUrl: '/privacidad/',
+        checks: ['Effort, originality, skill, accuracy', 'Test de commodity', 'Señales del leak'],
+      }
+    : {
+        eyebrow: 'Free skill for Claude and Codex',
+        title: 'Audit your site’s quality with Claude or Codex',
+        body: 'Google’s 4 pillars, the commodity content test and the leak signals, in one report per page.',
+        label: 'Your email',
+        placeholder: 'you@email.com',
+        button: 'Get the skill',
+        fineprint: 'Confirm by email and it’s yours. Unsubscribe in one click.',
+        privacy: 'Privacy policy',
+        privacyUrl: '/en/privacy/',
+        checks: ['Effort, originality, skill, accuracy', 'Commodity test', 'Leak signals'],
+      };
+
+const inputId = `lead-email-${lang}-${Math.random().toString(36).slice(2, 7)}`;
+---
+
+{
+  ENABLED && intro && <p>{intro}</p>
+}
+{
+  ENABLED && (
+<aside class="lead" aria-labelledby={`${inputId}-title`}>
+  <div class="lead-file" aria-hidden="true">
+    <p class="lead-file-name">google-quality-audit/<strong>SKILL.md</strong></p>
+    <ul>
+      {copy.checks.map((check) => <li>{check}</li>)}
+    </ul>
+  </div>
+
+  <div class="lead-main">
+    <p class="lead-eyebrow">{copy.eyebrow}</p>
+    <p class="lead-title" id={`${inputId}-title`}>{copy.title}</p>
+    <p class="lead-body">{copy.body}</p>
+    <form action="/api/subscribe" method="post" class="lead-form">
+      <input type="hidden" name="lang" value={lang} />
+      <input type="hidden" name="source" value={source} />
+      <div class="lead-honeypot" aria-hidden="true">
+        <label for={`${inputId}-website`}>Website</label>
+        <input type="text" id={`${inputId}-website`} name="website" tabindex="-1" autocomplete="off" />
+      </div>
+      <label for={inputId} class="sr-only">{copy.label}</label>
+      <input type="email" id={inputId} name="email" required autocomplete="email" placeholder={copy.placeholder} />
+      <button type="submit">{copy.button}</button>
+    </form>
+    <p class="lead-fineprint">
+      {copy.fineprint} <a href={copy.privacyUrl}>{copy.privacy}</a>.
+    </p>
+  </div>
+</aside>
+  )
+}
+
+<style>
+  .lead {
+    margin-block: 2.75rem;
+    padding: 1.5rem;
+    border-radius: 1.5rem;
+    background: var(--tone-dark);
+    color: var(--tone-on-dark);
+    box-shadow:
+      0 1px 2px rgb(20 51 63 / 0.12),
+      0 18px 40px -12px rgb(20 51 63 / 0.45);
+    display: grid;
+    gap: 1.5rem;
+    align-items: center;
+  }
+  @media (min-width: 40rem) {
+    .lead {
+      grid-template-columns: 13rem minmax(0, 1fr);
+      padding: 1.75rem;
+    }
+  }
+
+  .lead-file {
+    padding: 1rem;
+    border-radius: 1rem;
+    background: var(--tone-dark-2);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    transform: rotate(-2deg);
+    box-shadow: 0 10px 24px -10px rgb(0 0 0 / 0.5);
+  }
+  .lead-file-name {
+    margin: 0 0 0.75rem;
+    color: var(--tone-on-dark-muted);
+    word-break: break-all;
+  }
+  .lead-file-name strong {
+    color: var(--tone-on-dark);
+    font-weight: 600;
+  }
+  .lead-file ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.45rem;
+  }
+  .lead-file li {
+    margin: 0;
+    display: flex;
+    gap: 0.5rem;
+    color: var(--tone-on-dark);
+  }
+  .lead-file li::before {
+    content: '✓';
+    color: var(--tone-accent-on-dark);
+  }
+
+  .lead-main {
+    display: grid;
+    gap: 0.6rem;
+    min-width: 0;
+  }
+  .lead-eyebrow {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--tone-accent-on-dark);
+  }
+  .lead-title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 500;
+    line-height: 1.15;
+    text-wrap: balance;
+  }
+  .lead-body {
+    margin: 0;
+    font-size: 0.95rem;
+    color: var(--tone-on-dark-muted);
+  }
+
+  .lead-form {
+    margin: 0.4rem 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    padding: 0.35rem;
+    border-radius: 999px;
+    background: var(--tone-raised);
+  }
+  .lead-form input[type='email'] {
+    flex: 1 1 10rem;
+    min-width: 0;
+    padding: 0.55rem 0.9rem;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    color: var(--tone-ink);
+    font: inherit;
+    font-size: 0.95rem;
+  }
+  .lead-form input[type='email']:focus {
+    outline: none;
+  }
+  .lead-form:focus-within {
+    box-shadow: 0 0 0 2px var(--tone-accent-on-dark);
+  }
+  .lead-form button {
+    flex: 0 0 auto;
+    padding: 0.6rem 1.2rem;
+    border: 0;
+    border-radius: 999px;
+    background: var(--tone-accent);
+    color: var(--tone-on-dark);
+    font: inherit;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+  .lead-form button:hover {
+    background: var(--tone-accent-ink);
+  }
+  .lead-form button:focus-visible {
+    outline: 2px solid var(--tone-accent-on-dark);
+    outline-offset: 2px;
+  }
+  @media (max-width: 26rem) {
+    .lead-form {
+      border-radius: 1rem;
+    }
+    .lead-form button {
+      flex-basis: 100%;
+      border-radius: 0.75rem;
+    }
+  }
+
+  .lead-fineprint {
+    margin: 0;
+    font-size: 0.78rem;
+    color: var(--tone-on-dark-muted);
+  }
+
+  .lead-fineprint a {
+    color: var(--tone-on-dark);
+    text-decoration: underline;
+    text-decoration-color: var(--tone-accent-on-dark);
+    text-underline-offset: 0.2em;
+  }
+  .lead-honeypot {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+</style>

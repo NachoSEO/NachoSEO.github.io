@@ -1,0 +1,59 @@
+---
+/** Páginas de destino del formulario de la skill (functions/api/subscribe.ts) */
+import Base from '../../layouts/Base.astro';
+import { localizedRoute } from '../../i18n/utils';
+
+interface Props {
+  lang: 'es' | 'en';
+  variant: 'ok' | 'error';
+  path: string;
+}
+
+const { lang, variant, path } = Astro.props;
+const linkClass = 'underline decoration-accent underline-offset-4 hover:text-accent-ink';
+
+const copy = {
+  es: {
+    ok: {
+      eyebrow: 'Casi está',
+      title: 'Revisa tu email',
+      body: 'Te acabo de mandar un email para confirmar la suscripción. Cuando hagas clic en el enlace, te llega la skill. Si no lo ves en unos minutos, mira en spam o en promociones.',
+    },
+    error: {
+      eyebrow: 'Algo ha fallado',
+      title: 'No he podido apuntarte',
+      body: 'Revisa que el email esté bien escrito y vuelve a intentarlo desde el post. Si sigue fallando, escríbeme desde la página de contacto.',
+    },
+    back: 'Volver al blog',
+    contact: 'Contacto',
+  },
+  en: {
+    ok: {
+      eyebrow: 'Almost there',
+      title: 'Check your inbox',
+      body: "I've just sent you an email to confirm your subscription. Click the link and the skill is on its way. If you don't see it in a few minutes, check spam or promotions.",
+    },
+    error: {
+      eyebrow: 'Something went wrong',
+      title: "I couldn't sign you up",
+      body: 'Check that your email is spelled right and try again from the post. If it keeps failing, write to me from the contact page.',
+    },
+    back: 'Back to the blog',
+    contact: 'Contact',
+  },
+}[lang];
+
+const text = copy[variant];
+---
+
+<Base lang={lang} title={`${text.title} — Nacho Mascort`} description={text.body} path={path} noindex>
+  <div class="mx-auto max-w-5xl px-5 py-16 sm:px-6 md:py-24">
+    <p class="meta">{text.eyebrow}</p>
+    <h1 class="display-1 mt-5">{text.title}</h1>
+    <p class="mt-5 max-w-[60ch] text-muted">{text.body}</p>
+    <p class="mt-8 flex flex-wrap gap-6">
+      <a href={localizedRoute('blog', lang)} class={linkClass}>{copy.back}</a>
+      {variant === 'error' && <a href={localizedRoute('contact', lang)} class={linkClass}>{copy.contact}</a>}
+    </p>
+  </div>
+</Base>

@@ -6,6 +6,7 @@
  * Variables de entorno (Cloudflare Pages → Settings → Variables):
  *   KIT_API_KEY                     API key v4 de Kit
  *   KIT_FORM_ID_ES, KIT_FORM_ID_EN  Un formulario por idioma: cada uno manda su incentive email
+ *   TURNSTILE_SECRET_KEY            Clave secreta de Turnstile (anti-bots)
  *
  * Tags: idioma-es / idioma-en para segmentar envíos, y lm-<lead magnet> para saber de dónde
  * viene cada suscriptor. Se crean solos en Kit la primera vez (POST /tags es idempotente).
@@ -14,6 +15,7 @@ interface Env {
   KIT_API_KEY: string;
   KIT_FORM_ID_ES: string;
   KIT_FORM_ID_EN: string;
+  TURNSTILE_SECRET_KEY: string;
 }
 
 const KIT_API = 'https://api.kit.com/v4';
@@ -22,6 +24,14 @@ const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const LEAD_MAGNETS = new Set(['google-quality-audit']);
 
 const redirectTo = (request: Request, path: string) => Response.redirect(new URL(path, request.url).href, 303);
+
+const verifyTurnstile = async (secret: string, token: string, ip: string | null) => {
+  const body = new URLSearchParams({ secret, response: token });
+  if (ip) body.set('remoteip', ip);
+  const response = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', { method: 'POST', body });
+  const result = (await response.json().catch(() => ({}))) as { success?: boolean };
+  return result.success === true;
+};
 
 export const onRequestPost = async ({ request, env }: { request: Request; env: Env }) => {
   // Solo altas desde la propia web: otra página no puede apuntar a alguien sin que lo sepa
@@ -45,7 +55,13 @@ export const onRequestPost = async ({ request, env }: { request: Request; env: E
   if (!EMAIL_PATTERN.test(emailAddress) || emailAddress.length > 254) return redirectTo(request, `${errorPath}?code=email`);
 
   const referrer = String(form.get('source') ?? request.headers.get('referer') ?? '').slice(0, 500);
-  if (!env.KIT_API_KEY || !env.KIT_FORM_ID_ES || !env.KIT_FORM_ID_EN) return redirectTo(request, `${errorPath}?code=missing-env`);
+  if (!env.KIT_API_KEY || !env.KIT_FORM_ID_ES || !env.KIT_FORM_ID_EN || !env.TURNSTILE_SECRET_KEY) {
+    return redirectTo(request, `${errorPath}?code=missing-env`);
+  }
+  const token = String(form.get('cf-turnstile-response') ?? '');
+  const human = token && (await verifyTurnstile(env.TURNSTILE_SECRET_KEY, token, request.headers.get('CF-Connecting-IP')));
+  if (!human) return redirectTo(request, `${errorPath}?code=captcha`);
+
   const headers = { 'Content-Type': 'application/json', 'X-Kit-Api-Key': env.KIT_API_KEY.trim() };
   const formId = lang === 'en' ? env.KIT_FORM_ID_EN : env.KIT_FORM_ID_ES;
   const magnet = String(form.get('magnet') ?? '');

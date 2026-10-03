@@ -1,0 +1,34 @@
+---
+/**
+ * Widget anti-bots de Cloudflare Turnstile. Añade el campo cf-turnstile-response al formulario
+ * que lo contiene; las Pages Functions lo verifican con TURNSTILE_SECRET_KEY.
+ * El script se carga una sola vez aunque haya varios formularios en la página.
+ */
+interface Props {
+  lang: 'es' | 'en';
+  theme?: 'light' | 'dark';
+}
+
+const { lang, theme = 'light' } = Astro.props;
+// Clave pública del widget "nachomascort.com forms" (no es secreta)
+const SITE_KEY = '0x4AAAAAAFNFf1h16Ha20rP9';
+---
+
+<div class="cf-turnstile" data-sitekey={SITE_KEY} data-language={lang} data-theme={theme} data-size="flexible"></div>
+
+<script>
+  if (!document.querySelector('script[data-turnstile]')) {
+    const script = document.createElement('script');
+    script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
+    script.async = true;
+    script.defer = true;
+    script.dataset.turnstile = '';
+    document.head.append(script);
+  }
+</script>
+
+<style>
+  .cf-turnstile {
+    min-height: 65px;
+  }
+</style>

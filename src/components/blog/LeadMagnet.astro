@@ -1,4 +1,5 @@
 ---
+import Turnstile from '../Turnstile.astro';
 /**
  * Captación de email para la skill de auditoría de quality. POST nativo a la
  * Pages Function /api/subscribe (functions/api/subscribe.ts), que da de alta en Kit.
@@ -70,9 +71,12 @@ const inputId = `lead-email-${lang}-${Math.random().toString(36).slice(2, 7)}`;
         <label for={`${inputId}-website`}>Website</label>
         <input type="text" id={`${inputId}-website`} name="website" tabindex="-1" autocomplete="off" />
       </div>
-      <label for={inputId} class="sr-only">{copy.label}</label>
-      <input type="email" id={inputId} name="email" required autocomplete="email" placeholder={copy.placeholder} />
-      <button type="submit">{copy.button}</button>
+      <div class="lead-pill">
+        <label for={inputId} class="sr-only">{copy.label}</label>
+        <input type="email" id={inputId} name="email" required autocomplete="email" placeholder={copy.placeholder} />
+        <button type="submit">{copy.button}</button>
+      </div>
+      <Turnstile lang={lang} theme="dark" />
     </form>
     <p class="lead-fineprint">
       {copy.fineprint} <a href={copy.privacyUrl}>{copy.privacy}</a>.
@@ -168,6 +172,10 @@ const inputId = `lead-email-${lang}-${Math.random().toString(36).slice(2, 7)}`;
 
   .lead-form {
     margin: 0.4rem 0 0;
+    display: grid;
+    gap: 0.6rem;
+  }
+  .lead-pill {
     display: flex;
     flex-wrap: wrap;
     gap: 0.35rem;
@@ -175,7 +183,7 @@ const inputId = `lead-email-${lang}-${Math.random().toString(36).slice(2, 7)}`;
     border-radius: 999px;
     background: var(--tone-raised);
   }
-  .lead-form input[type='email'] {
+  .lead-pill input[type='email'] {
     flex: 1 1 10rem;
     min-width: 0;
     padding: 0.55rem 0.9rem;
@@ -186,13 +194,13 @@ const inputId = `lead-email-${lang}-${Math.random().toString(36).slice(2, 7)}`;
     font: inherit;
     font-size: 0.95rem;
   }
-  .lead-form input[type='email']:focus {
+  .lead-pill input[type='email']:focus {
     outline: none;
   }
-  .lead-form:focus-within {
+  .lead-pill:focus-within {
     box-shadow: 0 0 0 2px var(--tone-accent-on-dark);
   }
-  .lead-form button {
+  .lead-pill button {
     flex: 0 0 auto;
     padding: 0.6rem 1.2rem;
     border: 0;
@@ -205,18 +213,18 @@ const inputId = `lead-email-${lang}-${Math.random().toString(36).slice(2, 7)}`;
     cursor: pointer;
     transition: background 0.2s ease;
   }
-  .lead-form button:hover {
+  .lead-pill button:hover {
     background: var(--tone-accent-ink);
   }
-  .lead-form button:focus-visible {
+  .lead-pill button:focus-visible {
     outline: 2px solid var(--tone-accent-on-dark);
     outline-offset: 2px;
   }
   @media (max-width: 26rem) {
-    .lead-form {
+    .lead-pill {
       border-radius: 1rem;
     }
-    .lead-form button {
+    .lead-pill button {
       flex-basis: 100%;
       border-radius: 0.75rem;
     }

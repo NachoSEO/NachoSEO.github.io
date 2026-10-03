@@ -1,7 +1,12 @@
 ---
+/**
+ * Bloque de contacto al final de las páginas: formulario (POST nativo a functions/api/contact.ts,
+ * con Turnstile) y, como alternativa, llamada de 30 minutos o email.
+ */
 import { site } from '../site';
-import { useTranslations } from '../i18n/utils';
+import { localizedRoute, useTranslations } from '../i18n/utils';
 import type { Lang } from '../i18n/ui';
+import Turnstile from './Turnstile.astro';
 
 interface Props {
   lang: Lang;
@@ -15,16 +20,37 @@ const copy =
   lang === 'es'
     ? {
         label: 'Hablemos',
-        heading: title ?? '¿Hablamos de tu caso?',
-        body: 'Una llamada de 30 minutos, sin compromiso. Me cuentas en qué punto estás y te digo con franqueza si puedo ayudarte y por dónde empezaría. Si quieres referencias de clientes, pídemelas.',
+        heading: title ?? 'Cuéntame tu proyecto',
+        body: 'Escríbeme qué quieres conseguir y en qué punto estás. Te respondo personalmente y con franqueza si puedo ayudarte.',
+        name: 'Nombre',
+        email: 'Email',
+        website: 'Web (opcional)',
+        message: '¿En qué te puedo ayudar?',
+        messagePlaceholder: 'Qué quieres conseguir, qué has probado, plazos…',
+        submit: 'Enviar mensaje',
+        privacy: 'Uso tus datos solo para responderte.',
+        privacyLink: 'Política de privacidad',
+        or: '¿Prefieres hablar?',
         alt: 'O escríbeme a',
       }
     : {
         label: "Let's talk",
-        heading: title ?? 'Want to talk about your case?',
-        body: "A 30-minute call, no strings attached. Tell me where you are and I'll tell you honestly whether I can help and where I'd start. If you want client references, just ask.",
+        heading: title ?? 'Tell me about your project',
+        body: "Tell me what you want to achieve and where you are now. I'll reply personally and tell you honestly whether I can help.",
+        name: 'Name',
+        email: 'Email',
+        website: 'Website (optional)',
+        message: 'How can I help?',
+        messagePlaceholder: 'What you want to achieve, what you have tried, timelines…',
+        submit: 'Send message',
+        privacy: 'I only use your data to reply to you.',
+        privacyLink: 'Privacy policy',
+        or: 'Prefer to talk?',
         alt: 'Or email me at',
       };
+
+const page = Astro.url.pathname;
+const idPrefix = `contact-${lang}`;
 ---
 
 <section class="mx-auto max-w-5xl px-5 pt-16 md:pt-24 sm:px-6">
@@ -32,14 +58,123 @@ const copy =
     <p class="section-label">{copy.label}</p>
     <h2 class="display-2 mt-3 max-w-[22ch]">{copy.heading}</h2>
     <p class="lede mt-4">{copy.body}</p>
-    <div class="mt-8 flex flex-wrap items-center gap-x-6 gap-y-4">
-      <a href={site.calUrl} class="btn">{t('cta.call30')}</a>
-      <p class="text-sm text-on-dark-muted">
-        {copy.alt}
-        <a href={`mailto:${site.email}`} class="text-on-dark underline decoration-accent-on-dark underline-offset-4 hover:text-accent-on-dark">
-          {site.email}
-        </a>
-      </p>
-    </div>
+
+    <form action="/api/contact" method="post" class="contact-form mt-8">
+      <input type="hidden" name="lang" value={lang} />
+      <input type="hidden" name="page" value={page} />
+      <div class="contact-honeypot" aria-hidden="true">
+        <label for={`${idPrefix}-company`}>Company</label>
+        <input type="text" id={`${idPrefix}-company`} name="company" tabindex="-1" autocomplete="off" />
+      </div>
+
+      <div class="contact-row">
+        <div class="contact-field">
+          <label for={`${idPrefix}-name`}>{copy.name}</label>
+          <input type="text" id={`${idPrefix}-name`} name="name" required maxlength="100" autocomplete="name" />
+        </div>
+        <div class="contact-field">
+          <label for={`${idPrefix}-email`}>{copy.email}</label>
+          <input type="email" id={`${idPrefix}-email`} name="email" required maxlength="254" autocomplete="email" />
+        </div>
+      </div>
+      <div class="contact-field">
+        <label for={`${idPrefix}-website`}>{copy.website}</label>
+        <input type="text" id={`${idPrefix}-website`} name="website" maxlength="200" autocomplete="url" inputmode="url" />
+      </div>
+      <div class="contact-field">
+        <label for={`${idPrefix}-message`}>{copy.message}</label>
+        <textarea
+          id={`${idPrefix}-message`}
+          name="message"
+          required
+          minlength="10"
+          maxlength="5000"
+          rows="5"
+          placeholder={copy.messagePlaceholder}></textarea>
+      </div>
+
+      <Turnstile lang={lang} theme="dark" />
+
+      <div class="contact-actions">
+        <button type="submit" class="btn">{copy.submit}</button>
+        <p class="text-sm text-on-dark-muted">
+          {copy.privacy}
+          <a href={localizedRoute('privacy', lang)} class="contact-link">{copy.privacyLink}</a>.
+        </p>
+      </div>
+    </form>
+
+    <p class="mt-8 border-t border-white/15 pt-6 text-sm text-on-dark-muted">
+      {copy.or} <a href={site.calUrl} class="contact-link">{t('cta.call30')}</a> · {copy.alt}
+      <a href={`mailto:${site.email}`} class="contact-link">{site.email}</a>
+    </p>
   </div>
 </section>
+
+<style>
+  .contact-form {
+    display: grid;
+    gap: 1rem;
+    max-width: 44rem;
+  }
+  .contact-row {
+    display: grid;
+    gap: 1rem;
+  }
+  @media (min-width: 40rem) {
+    .contact-row {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .contact-field {
+    display: grid;
+    gap: 0.35rem;
+    min-width: 0;
+  }
+  .contact-field label {
+    font-size: 0.85rem;
+    color: var(--tone-on-dark-muted);
+  }
+  .contact-field input,
+  .contact-field textarea {
+    width: 100%;
+    padding: 0.7rem 0.85rem;
+    border: 1px solid var(--tone-dark-2);
+    border-radius: 0.6rem;
+    background: var(--tone-raised);
+    color: var(--tone-ink);
+    font: inherit;
+    font-size: 0.95rem;
+  }
+  .contact-field textarea {
+    resize: vertical;
+    min-height: 8rem;
+  }
+  .contact-field input:focus-visible,
+  .contact-field textarea:focus-visible {
+    outline: 2px solid var(--tone-accent-on-dark);
+    outline-offset: 1px;
+  }
+  .contact-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1.25rem;
+  }
+  .contact-link {
+    color: var(--tone-on-dark);
+    text-decoration: underline;
+    text-decoration-color: var(--tone-accent-on-dark);
+    text-underline-offset: 0.2em;
+  }
+  .contact-link:hover {
+    color: var(--tone-accent-on-dark);
+  }
+  .contact-honeypot {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+</style>

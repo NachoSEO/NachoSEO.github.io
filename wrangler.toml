@@ -1,0 +1,10 @@
+# Configuración de Cloudflare Pages (proyecto nachomascort). Los secretos (KIT_*, TURNSTILE_SECRET_KEY)
+# no van aquí: se guardan con `npx wrangler pages secret put <NOMBRE> --project-name nachomascort`.
+name = "nachomascort"
+pages_build_output_dir = "./dist"
+compatibility_date = "2026-10-01"
+
+# Worker que envía los mensajes del formulario de contacto (workers/contact-mailer)
+[[services]]
+binding = "CONTACT_MAILER"
+service = "contact-mailer"

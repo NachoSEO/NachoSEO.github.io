@@ -1,0 +1,11 @@
+# Envía a Nacho los mensajes del formulario de contacto de nachomascort.com.
+# Sin rutas ni workers.dev: solo se llama desde la Pages Function functions/api/contact.ts
+# mediante service binding (CONTACT_MAILER). Usa Email Routing de nachomascort.com.
+name = "contact-mailer"
+main = "worker.js"
+compatibility_date = "2026-10-01"
+workers_dev = false
+
+[[send_email]]
+name = "MAILER"
+destination_address = "nacho.mascort@gmail.com"

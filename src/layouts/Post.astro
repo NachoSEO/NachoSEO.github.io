@@ -5,7 +5,7 @@ import { Image } from 'astro:assets';
 import Base from './Base.astro';
 import Cta from '../components/Cta.astro';
 import PostDate from '../components/PostDate.astro';
-import avatar from '../assets/img/nacho-about.jpg';
+import avatar from '../assets/img/nacho-avatar.jpg';
 import { localizedRoute, otherLang as getOtherLang } from '../i18n/utils';
 import type { Lang } from '../i18n/ui';
 
@@ -200,7 +200,7 @@ const breadcrumbs = [
               width={64}
               height={64}
               densities={[1, 2]}
-              class="h-16 w-16 shrink-0 rounded-full object-cover object-top"
+              class="h-16 w-16 shrink-0 rounded-full"
             />
             <div>
               <p class="font-semibold">Nacho Mascort</p>

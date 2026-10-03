@@ -10,8 +10,8 @@ interface Props {
   intro?: string;
 }
 
-// Oculto hasta configurar Kit (KIT_API_KEY y KIT_FORM_ID en Cloudflare Pages)
-const ENABLED = false;
+// Interruptor del formulario (Kit: KIT_API_KEY, KIT_FORM_ID_ES, KIT_FORM_ID_EN en Cloudflare Pages)
+const ENABLED = true;
 
 const { lang, source, intro } = Astro.props;
 

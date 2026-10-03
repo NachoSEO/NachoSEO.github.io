@@ -26,17 +26,19 @@ const POSTS = new Set([
 const PAGES = {
   '': '/',
   'nacho-mascort': '/sobre-mi/',
-  'evolucion-blog/creando-blog-seo-wordpress': '/blog/creando-blog-seo-wordpress/',
+  author: '/sobre-mi/',
+  feed: '/rss.xml',
 };
 
 const ARCHIVE = '/blog/seo-hacks/';
 
 function destination(pathname) {
-  // /slug, /slug/, /slug/amp/ y /slug/feed/ apuntan al mismo post
-  const path = pathname.replace(/^\/+|\/+$/g, '').replace(/\/(amp|feed)$/, '');
-  if (path in PAGES) return PAGES[path];
-  if (POSTS.has(path)) return `/blog/${path}/`;
-  return ARCHIVE;
+  // Cualquier variante de un post (/slug, /blog/slug, /evolucion-blog/slug, /slug/amp/, /slug/feed/) va a su post
+  const segments = decodeURIComponent(pathname).split('/').filter(Boolean);
+  const post = segments.find((segment) => POSTS.has(segment));
+  if (post) return `/blog/${post}/`;
+  const first = segments[0] ?? '';
+  return PAGES[first] ?? ARCHIVE;
 }
 
 export default {

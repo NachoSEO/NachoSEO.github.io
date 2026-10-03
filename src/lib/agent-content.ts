@@ -38,6 +38,7 @@ const byDateDesc = (a: CollectionEntry<'blog'>, b: CollectionEntry<'blog'>) =>
 function cleanMdx(body = ''): string {
   return body
     .replace(/^import .*$/gm, '')
+    .replace(/^<[A-Z][\w]*[^>]*\/>$/gm, '')
     .replace(/!\[([^\]]*)\]\(\.\/[^)]+\)/g, (_match, alt: string) => (alt ? `[Imagen: ${alt}]` : ''))
     .replace(/\]\(\//g, `](${SITE_URL}/`)
     .replace(/\n{3,}/g, '\n\n')
@@ -299,6 +300,16 @@ async function buildAgentDocs(): Promise<AgentDoc[]> {
             ? '> Artículo recuperado de SEO Hacks (2015–2017) y conservado como archivo. Faltan algunas imágenes y parte de la información puede estar obsoleta; ten en cuenta la fecha de publicación.'
             : '',
           cleanMdx(post.body),
+          post.data.citations.length > 0
+            ? [
+                `## ${es ? 'Referencias' : 'References'}`,
+                '',
+                ...post.data.citations.map(
+                  (source, index) =>
+                    `${index + 1}. ${source.author ? `${source.author}. ` : ''}[${source.title}](${source.url})${source.publisher ? `. ${source.publisher}` : ''}${source.date ? ` (${source.date})` : ''}`
+                ),
+              ].join('\n')
+            : '',
         ]
           .filter(Boolean)
           .join('\n\n'),

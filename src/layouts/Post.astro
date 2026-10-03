@@ -56,6 +56,8 @@ const copy =
         related: isSeoHacks ? 'Más del archivo de SEO Hacks' : 'Sigue leyendo',
         alsoIn: 'También disponible en:',
         otherLangName: 'English',
+        references: 'Referencias',
+        preferredSource: 'Añádeme como fuente preferida en Google',
       }
     : {
         home: 'Home',
@@ -69,8 +71,12 @@ const copy =
         related: 'Keep reading',
         alsoIn: 'Also available in:',
         otherLangName: 'Español',
+        references: 'References',
+        preferredSource: 'Add me as a preferred source on Google',
       };
 
+
+const { citations } = entry.data;
 
 const articleNode = {
   '@type': 'BlogPosting',
@@ -83,6 +89,16 @@ const articleNode = {
   publisher: { '@id': `${Astro.site!.origin}/#person` },
   mainEntityOfPage: new URL(path, Astro.site).href,
   keywords: entry.data.tags.join(', '),
+  ...(citations.length > 0 && {
+    citation: citations.map((source) => ({
+      '@type': 'CreativeWork',
+      name: source.title,
+      url: source.url,
+      ...(source.author && { author: source.author }),
+      ...(source.publisher && { publisher: source.publisher }),
+      ...(source.date && { datePublished: source.date }),
+    })),
+  }),
 };
 
 const breadcrumbs = [
@@ -150,6 +166,22 @@ const breadcrumbs = [
           </p>
         )
       }
+      {
+        !isSeoHacks && (
+          <p class="mt-4">
+            <a
+              href={`https://www.google.com/preferences/source?q=${Astro.site!.hostname}`}
+              rel="noopener"
+              class="preferred-source"
+            >
+              <svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16">
+                <path fill="currentColor" d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4l-5.9 3.1 1.2-6.5L2.5 9.4l6.6-.9z" />
+              </svg>
+              {copy.preferredSource}
+            </a>
+          </p>
+        )
+      }
     </header>
 
     <div class:list={['mt-10', showToc && 'lg:grid lg:grid-cols-[minmax(0,1fr)_15rem] lg:gap-14']}>
@@ -190,6 +222,25 @@ const breadcrumbs = [
 
         <div class="article-body">
           <Content />
+          {
+            citations.length > 0 && (
+              <section aria-labelledby="referencias" class="references">
+                <h2 id="referencias">{copy.references}</h2>
+                <ol>
+                  {citations.map((source) => (
+                    <li>
+                      {source.author && <span>{source.author}. </span>}
+                      <cite>
+                        <a href={source.url}>{source.title}</a>
+                      </cite>
+                      {source.publisher && <span>. {source.publisher}</span>}
+                      {source.date && <span> ({source.date})</span>}
+                    </li>
+                  ))}
+                </ol>
+              </section>
+            )
+          }
         </div>
 
         <footer class="mt-16 max-w-[65ch]">

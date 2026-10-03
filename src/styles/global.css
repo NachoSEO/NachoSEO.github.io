@@ -633,6 +633,33 @@ body {
     font-size: 0.85rem;
     overflow-x: auto;
   }
+  .preferred-source {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.4rem 0.85rem;
+    border: 1px solid var(--tone-line);
+    border-radius: 999px;
+    background: var(--tone-raised);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--tone-ink);
+  }
+  .preferred-source svg {
+    color: var(--tone-accent);
+  }
+  .preferred-source:hover {
+    border-color: var(--tone-accent);
+    color: var(--tone-accent-ink);
+  }
+  .article-body .references ol {
+    font-size: 0.9rem;
+    color: var(--tone-muted);
+  }
+  .article-body .references cite {
+    font-style: normal;
+    color: var(--tone-ink);
+  }
   .article-body :not(pre) > code {
     font-family: var(--font-mono);
     font-size: 0.85em;

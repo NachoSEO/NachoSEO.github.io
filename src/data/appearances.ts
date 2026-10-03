@@ -2,7 +2,8 @@
 
 type Localized = { es: string; en: string };
 
-export const teaching: { period: string; school: string; program: Localized; topics: Localized; url: string }[] = [
+/** current: sigo dando clase ahí; el periodo se muestra abierto hasta hoy */
+export const teaching: { period: string; current?: boolean; school: string; program: Localized; topics: Localized; url: string }[] = [
   {
     period: '2015 — 2024',
     school: 'Universitat Pompeu Fabra',
@@ -11,7 +12,8 @@ export const teaching: { period: string; school: string; program: Localized; top
     url: 'https://web.archive.org/web/20230130085546/https://www.bsm.upf.edu/es/master-universitario-online-en-buscadores',
   },
   {
-    period: '2018 — 2024',
+    period: '2018',
+    current: true,
     school: 'Webpositer Academy',
     program: { es: 'Máster SEO', en: 'SEO Master' },
     topics: { es: 'Search Console', en: 'Search Console' },
@@ -19,6 +21,7 @@ export const teaching: { period: string; school: string; program: Localized; top
   },
   {
     period: '',
+    current: true,
     school: 'BigSEO Academy',
     program: { es: 'Máster SEO', en: 'SEO Master' },
     topics: { es: 'Migraciones web y análisis de logs', en: 'Web migrations and log analysis' },
@@ -42,6 +45,12 @@ export const teaching: { period: string; school: string; program: Localized; top
     url: 'https://disparatusvisitas.com/',
   },
 ];
+
+export const teachingPeriod = (item: (typeof teaching)[number], lang: 'es' | 'en') => {
+  if (!item.current) return item.period;
+  const now = lang === 'es' ? 'actualidad' : 'present';
+  return item.period ? `${item.period} — ${now}` : now.charAt(0).toUpperCase() + now.slice(1);
+};
 
 export const talks: { year: string; event: string; title: Localized; url: string }[] = [
   {

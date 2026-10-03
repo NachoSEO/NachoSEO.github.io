@@ -1,6 +1,6 @@
 ---
 import SectionLabel from '../SectionLabel.astro';
-import { talks, teaching } from '../../data/appearances';
+import { talks, teaching, teachingPeriod } from '../../data/appearances';
 import { localizedRoute } from '../../i18n/utils';
 import type { Lang } from '../../i18n/ui';
 
@@ -26,7 +26,7 @@ const es = lang === 'es';
                   {item.program[lang]} · {item.school}
                 </span>
                 <span class="mt-1 block text-sm text-on-dark-muted">
-                  {item.period && `${item.period} · `}
+                  {teachingPeriod(item, lang) && `${teachingPeriod(item, lang)} · `}
                   {item.topics[lang]}
                 </span>
               </a>

@@ -45,6 +45,27 @@ export const teaching: { period: string; school: string; program: Localized; top
 
 export const talks: { year: string; event: string; title: Localized; url: string }[] = [
   {
+    year: '2022',
+    event: 'DoYouSEO',
+    title: {
+      es: 'Todo lo que quisiste saber sobre Google Sheets y no te atreviste a preguntar',
+      en: 'Everything you wanted to know about Google Sheets but were afraid to ask',
+    },
+    url: 'https://speakerdeck.com/nachomascort/todo-lo-que-quisiste-saber-sobre-google-sheets-y-no-te-atreviste-a-preguntar',
+  },
+  {
+    year: '2021',
+    event: 'La Vanguardia',
+    title: { es: 'Formación interna: introducción al análisis de logs', en: 'In-house training: an introduction to log analysis' },
+    url: 'https://speakerdeck.com/nachomascort/introduccion-al-analisis-de-logs',
+  },
+  {
+    year: '2021',
+    event: 'La Vanguardia',
+    title: { es: 'Formación interna: JavaScript + SEO', en: 'In-house training: JavaScript + SEO' },
+    url: 'https://speakerdeck.com/nachomascort/javascript-plus-seo',
+  },
+  {
     year: '2019',
     event: 'Clinic SEO',
     title: {
@@ -76,6 +97,12 @@ export const talks: { year: string; event: string; title: Localized; url: string
       en: 'Advanced scraping, or how to turn the internet into your database',
     },
     url: 'https://es.slideshare.net/NachoMascortSEOSpeci/scraping-avanzado-o-cmo-hacer-de-internet-tu-base-de-datos-seoplus2018',
+  },
+  {
+    year: '2018',
+    event: 'Neoland',
+    title: { es: 'SEO 101: introducción al SEO', en: 'SEO 101: an introduction to SEO' },
+    url: 'https://speakerdeck.com/nachomascort/seo-101-introduccion-al-seo',
   },
 ];
 

@@ -10,14 +10,18 @@ interface Props {
   lang: Lang;
   /** En la página de casos la banda es la cabecera: H1 propio, entradilla y descripción de cada caso */
   page?: { title: string; intro: string };
+  /** Casos que no se muestran (p. ej. en la home, para no repetir empresa) */
+  exclude?: string[];
+  /** Resúmenes que sustituyen a los de case-brands en esta banda */
+  summaries?: Record<string, string>;
 }
 
-const { lang, page } = Astro.props;
+const { lang, page, exclude = [], summaries = {} } = Astro.props;
 const SummaryTag = page ? 'h2' : 'span';
 const casesBase = localizedRoute('cases', lang);
-const cases = (await getCollection('caseStudies', (entry) => entry.data.lang === lang)).sort(
-  (a, b) => a.data.order - b.data.order
-);
+const cases = (await getCollection('caseStudies', (entry) => entry.data.lang === lang))
+  .filter((entry) => !exclude.includes(entry.data.translationKey))
+  .sort((a, b) => a.data.order - b.data.order);
 
 
 const copy =
@@ -70,7 +74,7 @@ const copy =
                   </span>
                 )}
                 <span>
-                  <SummaryTag class="block text-[1.05rem] font-semibold">{detail?.summary[lang] ?? entry.data.title}</SummaryTag>
+                  <SummaryTag class="block text-[1.05rem] font-semibold">{summaries[entry.data.translationKey] ?? detail?.summary[lang] ?? entry.data.title}</SummaryTag>
                   {page && <span class="mt-1.5 block text-[0.95rem] text-on-dark-muted">{entry.data.description}</span>}
                 </span>
                 <span class="case-arrow hidden text-2xl text-on-dark-muted md:block" aria-hidden="true">→</span>

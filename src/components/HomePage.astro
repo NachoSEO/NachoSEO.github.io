@@ -47,22 +47,16 @@ const copy =
         pillarsTitle: 'Por qué trabajar conmigo y no con una agencia',
         pillars: [
           {
-            figure: 'Ex Google Search',
-            caption: 'ex ingenieros de Google me contrataron para su SEO',
-            title: 'Me fichó gente que hizo el buscador',
-            body: 'Un equipo de ex ingenieros de Google Search me contrató para llevar su SEO. Conocen el algoritmo por dentro y, aun así, me buscaron para que su proyecto creciera.',
+            title: 'Me contrataron ex ingenieros de Google Search',
+            body: 'Un equipo que conoce el algoritmo por dentro me eligió para llevar el SEO de su proyecto. Saben que entender Google y convertirlo en negocio son cosas distintas.',
           },
           {
-            figure: '1.000M+',
-            caption: 'usuarios al año en el portfolio de Softonic',
-            title: 'SEO para más de mil millones de usuarios',
-            body: 'Llevé el SEO de Softonic, download.com y CNET. Monté un programa de contenido que pasó de cero a 20 millones de sesiones al mes en dos años, y en 2024 seguía creciendo un 40 % al año.',
+            title: 'He llevado algunas de las webs más visitadas del mundo',
+            body: 'Softonic, download.com y CNET, con más de 1.000 millones de usuarios al año, y word.tips, donde dupliqué el tráfico hasta los 2 millones de visitas al día.',
           },
           {
-            figure: '~20.000 €/mes',
-            caption: 'de ahorro con una fábrica de anuncios hecha con IA',
-            title: 'IA que funciona todos los días',
-            body: 'En Reverse Tech monté un sistema que pasó de producir 200 creatividades a la semana a más de 3.000, y que las publica solo en Meta y Google.',
+            title: 'Construyo soluciones propias que ahorran costes',
+            body: 'En vez de pagar herramientas carísimas, monto sistemas a medida. La fábrica de anuncios con IA de Reverse Tech ahorra unos 20.000 € al mes en plataformas externas, casi 240.000 € al año.',
           },
         ],
         servicesLabel: 'Servicios',
@@ -98,22 +92,16 @@ const copy =
         pillarsTitle: 'Three reasons to hire me instead of an agency',
         pillars: [
           {
-            figure: 'Ex-Google Search',
-            caption: 'a team of former engineers hired me for their SEO',
-            title: 'The people who built search pick me',
-            body: 'A team of former Google Search engineers hired me to do their SEO. They know the algorithm from the inside, and they still came to me to grow their project.',
+            title: 'Former Google Search engineers hired me',
+            body: 'A team that knows the algorithm from the inside chose me to run SEO for their project. They know that understanding Google and turning it into revenue are different things.',
           },
           {
-            figure: '1B+',
-            caption: "users a year across Softonic's portfolio",
-            title: 'SEO at the scale of billions',
-            body: 'I led SEO for Softonic, download.com and CNET. I built a content program that went from zero to 20 million sessions a month in two years, and in 2024 it was still growing 40% year over year.',
+            title: "I've run some of the most visited sites in the world",
+            body: 'Softonic, download.com and CNET, with over 1 billion users a year, and word.tips, where I doubled traffic to 2 million visits a day.',
           },
           {
-            figure: '~€20k/mo',
-            caption: 'saved with an AI ad factory',
-            title: 'AI in production, not in a slide deck',
-            body: 'At Reverse Tech I built a system that went from 200 to over 3,000 creatives a week and publishes them to Meta and Google on its own.',
+            title: 'I build in-house solutions that cut costs',
+            body: 'Instead of paying for expensive tools, I build custom systems. The AI ad factory at Reverse Tech saves around €20,000 a month on external platforms, almost €240,000 a year.',
           },
         ],
         servicesLabel: 'Services',
@@ -164,10 +152,8 @@ const press = ['Google Search Central', 'El Confidencial', 'ABC'];
     {
       copy.pillars.map((pillar) => (
         <div class="card reveal">
-          <p class="font-display text-3xl font-semibold tracking-tight text-accent-ink">{pillar.figure}</p>
-          <p class="mt-1 text-sm text-muted">{pillar.caption}</p>
-          <h3 class="mt-5 border-t border-line pt-5 text-lg font-semibold">{pillar.title}</h3>
-          <p class="mt-2 text-[0.95rem] text-muted">{pillar.body}</p>
+          <h3 class="display-3">{pillar.title}</h3>
+          <p class="mt-3 text-[0.95rem] text-muted">{pillar.body}</p>
         </div>
       ))
     }
@@ -192,7 +178,16 @@ const press = ['Google Search Central', 'El Confidencial', 'ABC'];
   </div>
 </section>
 
-<CasesBand lang={lang} />
+<CasesBand
+  lang={lang}
+  exclude={['ad-factory']}
+  summaries={{
+    'organic-growth':
+      lang === 'es'
+        ? 'Área orgánica montada desde cero y una fábrica de anuncios con IA'
+        : 'Organic area built from scratch, plus an AI ad factory',
+  }}
+/>
 
 <section class="border-b border-line bg-raised">
   <div class="mx-auto grid max-w-5xl gap-12 px-5 py-14 md:py-20 sm:px-6 md:grid-cols-[1fr_1.5fr]">

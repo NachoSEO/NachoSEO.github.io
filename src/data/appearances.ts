@@ -100,6 +100,13 @@ export const media: { type: MediaType; outlet: string; title: string; url: strin
     url: 'https://developers.google.com/search/blog/2023/03/2022-recap-search-central-community',
   },
   {
+    type: 'mention',
+    outlet: 'Prerender.io',
+    title: 'How Softonic Generates 40M+ Monthly Visits',
+    lang: 'en',
+    url: 'https://prerender.io/resources/case-studies/how-prerender-helps-softonic-score-a-92-in-da-and-pagespeed/',
+  },
+  {
     type: 'press',
     outlet: 'El Confidencial',
     title: 'Por qué EEUU (y Google o Amazon) está detrás del ‘gran apagón’ de internet en Irán',
@@ -127,7 +134,7 @@ export const media: { type: MediaType; outlet: string; title: string; url: strin
     type: 'video',
     outlet: 'Flat 101',
     title: 'Episodio 13: ¿Se dirige el SEO hacia la automatización?',
-    url: 'https://www.flat101.es/video/episodio-13-se-dirige-el-seo-hacia-la-automatizacion/',
+    url: 'https://web.archive.org/web/20240621032236/https://www.flat101.es/video/episodio-13-se-dirige-el-seo-hacia-la-automatizacion/',
   },
   {
     type: 'press',
@@ -201,6 +208,12 @@ export const media: { type: MediaType; outlet: string; title: string; url: strin
     outlet: 'Webpositer Academy',
     title: 'Google Search Console con Nacho Mascort #DoyouSEO',
     url: 'https://www.youtube.com/watch?v=0h8oznjqqQc',
+  },
+  {
+    type: 'press',
+    outlet: 'digitalDot',
+    title: 'Resumen de la jornada SEOPLUS 2018 en Alicante',
+    url: 'https://www.digitaldot.es/resumen-seoplus-2018/',
   },
   {
     type: 'press',

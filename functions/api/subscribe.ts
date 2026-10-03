@@ -24,7 +24,16 @@ const LEAD_MAGNETS = new Set(['google-quality-audit']);
 const redirectTo = (request: Request, path: string) => Response.redirect(new URL(path, request.url).href, 303);
 
 export const onRequestPost = async ({ request, env }: { request: Request; env: Env }) => {
-  const form = await request.formData();
+  // Solo altas desde la propia web: otra página no puede apuntar a alguien sin que lo sepa
+  const origin = request.headers.get('Origin');
+  if (origin && origin !== 'null' && new URL(origin).host !== new URL(request.url).host) return redirectTo(request, '/gracias/error/');
+
+  let form: FormData;
+  try {
+    form = await request.formData();
+  } catch {
+    return redirectTo(request, '/gracias/error/');
+  }
   const lang = form.get('lang') === 'en' ? 'en' : 'es';
   const thanksPath = lang === 'en' ? '/en/thanks/' : '/gracias/';
   const errorPath = `${thanksPath}error/`;
@@ -35,7 +44,7 @@ export const onRequestPost = async ({ request, env }: { request: Request; env: E
   const emailAddress = String(form.get('email') ?? '').trim().toLowerCase();
   if (!EMAIL_PATTERN.test(emailAddress) || emailAddress.length > 254) return redirectTo(request, errorPath);
 
-  const referrer = String(form.get('source') ?? request.headers.get('referer') ?? '');
+  const referrer = String(form.get('source') ?? request.headers.get('referer') ?? '').slice(0, 500);
   const headers = { 'Content-Type': 'application/json', 'X-Kit-Api-Key': env.KIT_API_KEY };
   const formId = lang === 'en' ? env.KIT_FORM_ID_EN : env.KIT_FORM_ID_ES;
   const magnet = String(form.get('magnet') ?? '');

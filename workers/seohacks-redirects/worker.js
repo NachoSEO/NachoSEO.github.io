@@ -34,11 +34,17 @@ const ARCHIVE = '/blog/seo-hacks/';
 
 function destination(pathname) {
   // Cualquier variante de un post (/slug, /blog/slug, /evolucion-blog/slug, /slug/amp/, /slug/feed/) va a su post
-  const segments = decodeURIComponent(pathname).split('/').filter(Boolean);
+  // Un % mal formado no puede tumbar el Worker: se usa la ruta tal cual
+  let decoded = pathname;
+  try {
+    decoded = decodeURIComponent(pathname);
+  } catch {}
+  const segments = decoded.split('/').filter(Boolean);
   const post = segments.find((segment) => POSTS.has(segment));
   if (post) return `/blog/${post}/`;
   const first = segments[0] ?? '';
-  return PAGES[first] ?? ARCHIVE;
+  // hasOwn: /constructor o /__proto__ no deben leer propiedades de Object.prototype
+  return Object.hasOwn(PAGES, first) ? PAGES[first] : ARCHIVE;
 }
 
 export default {

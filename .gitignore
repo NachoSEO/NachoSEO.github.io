@@ -4,3 +4,7 @@ dist/
 .DS_Store
 npm-debug.log*
 .playwright-mcp/
+
+# Borradores privados: no publicar en el repo
+cv/
+design-explorations/

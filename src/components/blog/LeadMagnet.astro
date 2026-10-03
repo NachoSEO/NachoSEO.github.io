@@ -65,6 +65,7 @@ const inputId = `lead-email-${lang}-${Math.random().toString(36).slice(2, 7)}`;
     <form action="/api/subscribe" method="post" class="lead-form">
       <input type="hidden" name="lang" value={lang} />
       <input type="hidden" name="source" value={source} />
+      <input type="hidden" name="magnet" value="google-quality-audit" />
       <div class="lead-honeypot" aria-hidden="true">
         <label for={`${inputId}-website`}>Website</label>
         <input type="text" id={`${inputId}-website`} name="website" tabindex="-1" autocomplete="off" />

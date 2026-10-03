@@ -1,0 +1,377 @@
+---
+import type { Lang } from '../../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const es = lang === 'es';
+
+const copy = es
+  ? {
+      urlLabel: 'URL que quieres comprobar',
+      placeholder: 'https://tudominio.com/',
+      check: 'Comprobar bots',
+      checking: 'Comprobando…',
+      noscript: 'El comprobador funciona con JavaScript. Actívalo para analizar tu web.',
+    }
+  : {
+      urlLabel: 'URL to check',
+      placeholder: 'https://yourdomain.com/',
+      check: 'Check bots',
+      checking: 'Checking…',
+      noscript: 'The checker runs on JavaScript. Enable it to analyse your site.',
+    };
+
+// Textos que usa el script del navegador (las frases con números las monta el propio script)
+const messages = es
+  ? {
+      checking: copy.checking,
+      check: copy.check,
+      invalidUrl: 'Esa URL no es válida. Pon una web pública, como https://tudominio.com/.',
+      failed: 'No he podido completar la comprobación. Prueba otra vez en un momento.',
+      result: 'Resultado',
+      checked: 'URL analizada',
+      browser: 'Navegador normal',
+      robotsTxt: 'robots.txt',
+      sitemaps: 'Sitemaps',
+      noSitemap: 'No declara sitemap en el robots.txt y no hay /sitemap.xml',
+      sitemapBad: 'No se puede leer como sitemap',
+      notDeclared: 'no declarado en robots.txt',
+      robotsMissing: 'No existe: los bots pueden rastrear todo',
+      robotsUnreachable: 'No responde: Google deja de rastrear la web mientras falle',
+      columns: ['Bot', 'robots.txt', 'Respuesta', 'Resultado'],
+      kinds: { search: 'Buscador', 'ai-search': 'Buscador IA', 'ai-assistant': 'Asistente IA', 'ai-training': 'Entrenamiento IA' },
+      verdicts: { ok: 'Puede entrar', warning: 'Revisar', blocked: 'Bloqueado' },
+      allowed: 'Permitido',
+      disallowed: 'Prohibido',
+      noRules: 'sin reglas',
+      onlyToken: 'Solo token de robots.txt',
+      error: { timeout: 'Sin respuesta (8 s)', network: 'Error de conexión', 'too-many-redirects': 'Demasiadas redirecciones', 'blocked-url': 'Redirige a una dirección no pública' },
+      notes: {
+        robotsBlocked: 'robots.txt le impide rastrear esta URL.',
+        robotsUnreachable: 'Con el robots.txt caído, Google no rastrea.',
+        httpBlocked: 'Recibe un error que el navegador no recibe: bloqueo por user-agent o verificación por IP.',
+        httpBoth: 'También falla con un navegador normal.',
+        noindex: 'La página lleva noindex para este bot.',
+        thin: 'Recibe mucho menos contenido que un navegador.',
+      },
+      legendTitle: 'Cómo leerlo',
+      legend: [
+        'Comprueba el robots.txt con las mismas reglas que Google: gana la regla más larga y, si empatan, la que permite.',
+        'Pide la página con el user-agent de cada bot y compara la respuesta con la de un navegador normal.',
+        'Las peticiones salen de los servidores de Cloudflare, no de los de Google u OpenAI. Si la web verifica los bots por IP, un bloqueo aquí puede no afectar al bot real. Confírmalo en los logs del servidor o en Search Console.',
+      ],
+    }
+  : {
+      checking: copy.checking,
+      check: copy.check,
+      invalidUrl: "That URL isn't valid. Use a public site, like https://yourdomain.com/.",
+      failed: "I couldn't finish the check. Try again in a moment.",
+      result: 'Result',
+      checked: 'Checked URL',
+      browser: 'Regular browser',
+      robotsTxt: 'robots.txt',
+      sitemaps: 'Sitemaps',
+      noSitemap: 'No sitemap in robots.txt and no /sitemap.xml',
+      sitemapBad: "Can't be read as a sitemap",
+      notDeclared: 'not declared in robots.txt',
+      robotsMissing: "Doesn't exist: bots can crawl everything",
+      robotsUnreachable: "Not responding: Google stops crawling while it's down",
+      columns: ['Bot', 'robots.txt', 'Response', 'Result'],
+      kinds: { search: 'Search engine', 'ai-search': 'AI search', 'ai-assistant': 'AI assistant', 'ai-training': 'AI training' },
+      verdicts: { ok: 'Can access', warning: 'Check', blocked: 'Blocked' },
+      allowed: 'Allowed',
+      disallowed: 'Disallowed',
+      noRules: 'no rules',
+      onlyToken: 'robots.txt token only',
+      error: { timeout: 'No response (8 s)', network: 'Connection error', 'too-many-redirects': 'Too many redirects', 'blocked-url': 'Redirects to a non-public address' },
+      notes: {
+        robotsBlocked: 'robots.txt stops it from crawling this URL.',
+        robotsUnreachable: "With robots.txt down, Google doesn't crawl.",
+        httpBlocked: "Gets an error the browser doesn't: blocked by user-agent or IP verification.",
+        httpBoth: 'A regular browser fails too.',
+        noindex: 'The page carries noindex for this bot.',
+        thin: 'Gets far less content than a browser.',
+      },
+      legendTitle: 'How to read it',
+      legend: [
+        'robots.txt is checked with the same rules Google uses: the longest rule wins and, on a tie, the one that allows.',
+        "The page is requested with each bot's user-agent and the response is compared with a regular browser's.",
+        "Requests come from Cloudflare's servers, not from Google's or OpenAI's. If the site verifies bots by IP, a block here may not affect the real bot. Confirm it in your server logs or Search Console.",
+      ],
+    };
+
+---
+
+<div class="card sm:p-8" data-bot-checker data-lang={lang} data-messages={JSON.stringify(messages)}>
+  <form class="flex flex-col gap-3 sm:flex-row sm:items-end" data-form novalidate>
+    <div class="flex-1">
+      <label for="bot-check-url" class="text-sm font-semibold">{copy.urlLabel}</label>
+      <input
+        id="bot-check-url"
+        name="url"
+        type="url"
+        inputmode="url"
+        autocomplete="url"
+        required
+        placeholder={copy.placeholder}
+        class="mt-2 w-full rounded-lg border border-line bg-paper px-4 py-3 text-[0.95rem] text-ink transition-colors focus:border-ink"
+        data-url
+      />
+    </div>
+    <button type="submit" class="btn shrink-0" data-submit>{copy.check}</button>
+  </form>
+  <p role="alert" class="mt-4 text-sm font-semibold text-accent-ink" data-error hidden></p>
+  <noscript><p class="mt-4 text-sm font-semibold text-accent-ink">{copy.noscript}</p></noscript>
+</div>
+
+<section class="card mt-5 sm:p-8" aria-live="polite" data-result hidden></section>
+
+<script>
+  type Verdict = 'ok' | 'warning' | 'blocked';
+  interface BotRow {
+    name: string;
+    company: string;
+    kind: string;
+    verdict: Verdict;
+    robots: { allowed: boolean; rule: string | null; matchedAgent: string | null; unreachable: boolean };
+    http: null | {
+      status: number | null;
+      error: string | null;
+      redirects: string[];
+      bytes: number;
+      challenge: string | null;
+      noindex: boolean;
+      thinResponse: boolean;
+    };
+  }
+  interface CheckResponse {
+    error?: string;
+    checkedUrl: string;
+    browser: { status: number | null; error: string | null; challenge: string | null; redirects: string[] };
+    robotsTxt: { url: string; status: number | null; unreachable: boolean; groups: number };
+    sitemaps: { url: string; declared: boolean; status: number | null; type: string | null; valid: boolean; urls: number }[];
+    bots: BotRow[];
+  }
+
+  const element = <K extends keyof HTMLElementTagNameMap>(tag: K, className = '', text = '') => {
+    const node = document.createElement(tag);
+    if (className) node.className = className;
+    if (text) node.textContent = text;
+    return node;
+  };
+
+  document.querySelectorAll<HTMLElement>('[data-bot-checker]').forEach((root) => {
+    const lang = root.dataset.lang;
+    const messages = JSON.parse(root.dataset.messages ?? '{}');
+    const form = root.querySelector<HTMLFormElement>('[data-form]')!;
+    const urlInput = root.querySelector<HTMLInputElement>('[data-url]')!;
+    const submit = root.querySelector<HTMLButtonElement>('[data-submit]')!;
+    const errorBox = root.querySelector<HTMLElement>('[data-error]')!;
+    const resultBox = root.parentElement!.querySelector<HTMLElement>('[data-result]')!;
+
+    const es = lang === 'es';
+    const sitemapOk = (urls: number, type: string | null) =>
+      es
+        ? `${type === 'index' ? 'Índice' : 'Sitemap'} válido · ${urls} ${type === 'index' ? 'sitemaps' : 'URLs'}`
+        : `Valid ${type === 'index' ? 'index' : 'sitemap'} · ${urls} ${type === 'index' ? 'sitemaps' : 'URLs'}`;
+    const robotsFound = (groups: number) =>
+      es ? `Encontrado · ${groups} ${groups === 1 ? 'grupo' : 'grupos'} de reglas` : `Found · ${groups} rule ${groups === 1 ? 'group' : 'groups'}`;
+    const summaryText = (ok: number, warning: number, blocked: number) =>
+      es ? `${ok} con acceso · ${warning} con avisos · ${blocked} bloqueados` : `${ok} allowed · ${warning} with warnings · ${blocked} blocked`;
+    const challengeNote = (name: string) => (es ? `Le sale un reto o bloqueo de ${name}.` : `Gets a ${name} challenge or block page.`);
+
+    const httpLabel = (http: { status: number | null; error: string | null }) =>
+      http.status !== null ? `HTTP ${http.status}` : (messages.error[http.error ?? 'network'] ?? http.error);
+
+    const fact = (label: string, value: string, tone: Verdict) => {
+      const wrapper = element('div');
+      wrapper.append(element('dt', 'meta', label));
+      const valueNode = element('dd', `mt-1 text-[0.95rem] font-semibold bot-tone-${tone}`, value);
+      wrapper.append(valueNode);
+      return wrapper;
+    };
+
+    const render = (data: CheckResponse) => {
+      resultBox.replaceChildren();
+      resultBox.append(element('h2', 'section-label', messages.result));
+
+      const counts = { ok: 0, warning: 0, blocked: 0 };
+      data.bots.forEach((bot) => counts[bot.verdict]++);
+      resultBox.append(element('p', 'display-3 mt-3', summaryText(counts.ok, counts.warning, counts.blocked)));
+      resultBox.append(element('p', 'mt-1 break-all text-sm text-muted', `${messages.checked}: ${data.checkedUrl}`));
+
+      // Datos generales: navegador, robots.txt y sitemaps
+      const facts = element('dl', 'mt-6 grid gap-5 md:grid-cols-3');
+      const browserOk = data.browser.status !== null && data.browser.status < 300 && !data.browser.challenge;
+      facts.append(
+        fact(
+          messages.browser,
+          `${httpLabel(data.browser)}${data.browser.challenge ? ` · ${data.browser.challenge}` : ''}`,
+          browserOk ? 'ok' : 'blocked',
+        ),
+      );
+      const robotsStatus = data.robotsTxt.status;
+      facts.append(
+        robotsStatus !== null && robotsStatus >= 200 && robotsStatus < 300
+          ? fact(messages.robotsTxt, robotsFound(data.robotsTxt.groups), 'ok')
+          : data.robotsTxt.unreachable
+            ? fact(messages.robotsTxt, messages.robotsUnreachable, 'blocked')
+            : fact(messages.robotsTxt, messages.robotsMissing, 'warning'),
+      );
+      const sitemapFact = element('div');
+      sitemapFact.append(element('dt', 'meta', messages.sitemaps));
+      const validSitemaps = data.sitemaps.filter((sitemap) => sitemap.valid);
+      if (validSitemaps.length === 0 && data.sitemaps.every((sitemap) => !sitemap.declared)) {
+        sitemapFact.append(element('dd', 'mt-1 text-[0.95rem] font-semibold bot-tone-warning', messages.noSitemap));
+      } else {
+        data.sitemaps.forEach((sitemap) => {
+          const item = element('dd', 'mt-1 text-sm');
+          item.append(element('span', `font-semibold bot-tone-${sitemap.valid ? 'ok' : 'blocked'}`, sitemap.valid ? sitemapOk(sitemap.urls, sitemap.type) : `${messages.sitemapBad} (${httpLabel({ status: sitemap.status, error: null })})`));
+          item.append(element('span', 'block break-all text-muted', `${sitemap.url}${sitemap.declared ? '' : ` · ${messages.notDeclared}`}`));
+          sitemapFact.append(item);
+        });
+      }
+      facts.append(sitemapFact);
+      resultBox.append(facts);
+
+      // Tabla por bot
+      const tableWrap = element('div', 'mt-8 overflow-x-auto');
+      const table = element('table', 'bot-table w-full text-left text-sm');
+      const head = element('thead');
+      const headRow = element('tr');
+      messages.columns.forEach((column: string) => headRow.append(element('th', 'meta py-2 pr-4 font-normal', column)));
+      head.append(headRow);
+      table.append(head);
+      const body = element('tbody');
+      data.bots.forEach((bot) => {
+        const row = element('tr', 'border-t border-line align-top');
+
+        const botCell = element('td', 'py-3 pr-4');
+        botCell.append(element('span', 'block font-semibold', bot.name));
+        botCell.append(element('span', 'block text-muted', `${bot.company} · ${messages.kinds[bot.kind] ?? bot.kind}`));
+        row.append(botCell);
+
+        const robotsCell = element('td', 'py-3 pr-4');
+        robotsCell.append(element('span', `block font-semibold bot-tone-${bot.robots.allowed ? 'ok' : 'blocked'}`, bot.robots.allowed ? messages.allowed : messages.disallowed));
+        if (bot.robots.rule || bot.robots.matchedAgent) {
+          robotsCell.append(element('code', 'block text-xs text-muted', `${bot.robots.matchedAgent ? `UA ${bot.robots.matchedAgent} · ` : ''}${bot.robots.rule ?? messages.noRules}`));
+        }
+        row.append(robotsCell);
+
+        const httpCell = element('td', 'py-3 pr-4');
+        if (bot.http) {
+          const ok = bot.http.status !== null && bot.http.status < 300 && !bot.http.challenge;
+          httpCell.append(element('span', `block font-semibold bot-tone-${ok ? 'ok' : 'blocked'}`, httpLabel(bot.http)));
+          if (bot.http.challenge) httpCell.append(element('span', 'block text-xs text-muted', bot.http.challenge));
+          if (bot.http.redirects.length > 0) httpCell.append(element('span', 'block break-all text-xs text-muted', bot.http.redirects.join(' · ')));
+        } else {
+          httpCell.append(element('span', 'block text-muted', messages.onlyToken));
+        }
+        row.append(httpCell);
+
+        const verdictCell = element('td', 'py-3');
+        verdictCell.append(element('span', `bot-badge bot-badge-${bot.verdict}`, messages.verdicts[bot.verdict]));
+        const notes: string[] = [];
+        if (bot.robots.unreachable) notes.push(messages.notes.robotsUnreachable);
+        else if (!bot.robots.allowed) notes.push(messages.notes.robotsBlocked);
+        if (bot.http) {
+          const httpOk = bot.http.status !== null && bot.http.status < 300 && !bot.http.challenge;
+          if (bot.http.challenge) notes.push(challengeNote(bot.http.challenge));
+          else if (!httpOk) notes.push(browserOk ? messages.notes.httpBlocked : messages.notes.httpBoth);
+          if (bot.http.noindex) notes.push(messages.notes.noindex);
+          if (bot.http.thinResponse) notes.push(messages.notes.thin);
+        }
+        notes.forEach((note) => verdictCell.append(element('span', 'mt-1 block text-xs text-muted', note)));
+        row.append(verdictCell);
+
+        body.append(row);
+      });
+      table.append(body);
+      tableWrap.append(table);
+      resultBox.append(tableWrap);
+
+      const legend = element('details', 'mt-8 border-t border-line pt-5 text-sm');
+      legend.append(element('summary', 'cursor-pointer font-semibold', messages.legendTitle));
+      const legendList = element('ul', 'mt-3 list-disc space-y-2 pl-5 text-muted');
+      messages.legend.forEach((line: string) => legendList.append(element('li', '', line)));
+      legend.append(legendList);
+      resultBox.append(legend);
+
+      resultBox.hidden = false;
+    };
+
+    const showError = (text: string) => {
+      errorBox.textContent = text;
+      errorBox.hidden = false;
+    };
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      errorBox.hidden = true;
+      const raw = urlInput.value.trim();
+      if (!raw) return showError(messages.invalidUrl);
+      submit.disabled = true;
+      submit.textContent = messages.checking;
+      try {
+        const response = await fetch(`/api/bot-check?url=${encodeURIComponent(raw)}`);
+        const data: CheckResponse = await response.json();
+        if (!response.ok || data.error) {
+          showError(data.error === 'invalid-url' ? messages.invalidUrl : messages.failed);
+          return;
+        }
+        render(data);
+        const params = new URLSearchParams({ url: raw });
+        history.replaceState(null, '', `?${params}`);
+      } catch {
+        showError(messages.failed);
+      } finally {
+        submit.disabled = false;
+        submit.textContent = messages.check;
+      }
+    });
+
+    // Enlace compartible: ?url=… rellena el campo, pero no lanza la comprobación sin un clic
+    // (si no, un enlace publicado en un foro convertiría cada visita en peticiones a la web de otro)
+    const initialUrl = new URLSearchParams(location.search).get('url');
+    if (initialUrl) urlInput.value = initialUrl;
+  });
+</script>
+
+<style>
+  .bot-table th,
+  .bot-table td {
+    white-space: normal;
+  }
+  :global(.bot-tone-ok) {
+    color: #17784a;
+  }
+  :global(.bot-tone-warning) {
+    color: #9a5b00;
+  }
+  :global(.bot-tone-blocked) {
+    color: var(--tone-accent-ink);
+  }
+  :global(.bot-badge) {
+    display: inline-block;
+    padding: 0.15rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  :global(.bot-badge-ok) {
+    background: #e3f4ea;
+    color: #17784a;
+  }
+  :global(.bot-badge-warning) {
+    background: #fdf0d8;
+    color: #9a5b00;
+  }
+  :global(.bot-badge-blocked) {
+    background: #fbe3ea;
+    color: var(--tone-accent-ink);
+  }
+</style>

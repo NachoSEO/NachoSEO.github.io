@@ -1,0 +1,161 @@
+---
+import Base from '../../../layouts/Base.astro';
+import Cta from '../../../components/Cta.astro';
+import FaqAccordion from '../../../components/service/FaqAccordion.astro';
+import BotChecker from '../../../components/tools/BotChecker.astro';
+
+const path = '/en/tools/bot-access-checker/';
+
+const faq = [
+  {
+    question: 'Which bots does it check?',
+    answer:
+      "Googlebot, Bingbot and Applebot as search engines. For AI: OAI-SearchBot, ChatGPT-User and GPTBot (OpenAI), Claude-SearchBot, Claude-User and ClaudeBot (Anthropic), PerplexityBot and Perplexity-User, DuckAssistBot, Meta-ExternalAgent, Amazonbot and CCBot. Google-Extended and Applebot-Extended don't visit sites, so for those it only reads the robots.txt.",
+  },
+  {
+    question: "If it shows as blocked, does the real bot get blocked too?",
+    answer:
+      "Not always. The requests leave from Cloudflare with each bot's user-agent, not from Google's or OpenAI's IPs. Many sites block anyone claiming to be Googlebot who isn't, and let the real Googlebot through. If you see a block, confirm it in your server logs or with URL Inspection in Search Console.",
+  },
+  {
+    question: 'And if it shows as allowed?',
+    answer:
+      "Then neither the robots.txt nor the site blocks that user-agent. What the tool can't see is a block that only applies to the bot's real IPs, which is rare but possible in some firewalls.",
+  },
+  {
+    question: "What's the difference between GPTBot, OAI-SearchBot and ChatGPT-User?",
+    answer:
+      "GPTBot collects content to train models. OAI-SearchBot indexes sites so they can appear as a source in ChatGPT search. ChatGPT-User is the visit ChatGPT makes when a user asks it to open your page. You can block the first and leave the other two open to keep showing up in its answers. Anthropic and Perplexity follow the same pattern.",
+  },
+  {
+    question: 'Do you store the URLs I check?',
+    answer:
+      "No. The URL goes through a Cloudflare function that makes the requests and sends you the result. It isn't saved in a database or logged anywhere.",
+  },
+  {
+    question: "I use Cloudflare and some bots show as blocked. What should I change?",
+    answer:
+      'Check three places in the dashboard: Security › Settings, with Bot Fight Mode and the AI bot policies; AI Crawl Control, where you block crawler by crawler; and Security rules, in case you have a custom rule that cuts by user-agent or country.',
+  },
+];
+
+const webApplication = {
+  '@type': 'WebApplication',
+  name: 'Bot access checker',
+  url: `https://nachomascort.com${path}`,
+  applicationCategory: 'DeveloperApplication',
+  operatingSystem: 'Any',
+  browserRequirements: 'Requires JavaScript',
+  inLanguage: 'en',
+  isAccessibleForFree: true,
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+  author: { '@id': 'https://nachomascort.com/#person' },
+};
+---
+
+<Base
+  lang="en"
+  title="Bot access checker: can Googlebot and AI bots reach your site? — Nacho Mascort"
+  description="Check for free whether Googlebot, Bingbot, GPTBot, ClaudeBot, PerplexityBot and other search and AI bots can crawl your site: robots.txt, HTTP response, firewall blocks, noindex and sitemap."
+  path={path}
+  alternatePath="/herramientas/comprobador-bots/"
+  breadcrumbs={[
+    { name: 'Home', path: '/en/' },
+    { name: 'Tools', path: '/en/tools/' },
+    { name: 'Bot access checker', path },
+  ]}
+  faq={faq}
+  extraSchemaNodes={[webApplication]}
+>
+  <div class="mx-auto max-w-5xl px-5 pt-16 sm:px-6 sm:pt-20">
+    <p class="meta"><a href="/en/tools/" class="hover:text-ink">Tools</a> · Technical SEO · GEO</p>
+    <h1 class="display-1 mt-5">Bot access checker</h1>
+    <p class="lede mt-6">
+      Enter a URL and see whether Googlebot, Bingbot and the ChatGPT, Claude, Perplexity and other bots can get in. It checks
+      the robots.txt, requests the page as each bot and warns you if the firewall, a noindex or the sitemap is shutting them
+      out.
+    </p>
+    <ul class="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-sm text-muted">
+      <li><span class="text-accent-ink" aria-hidden="true">✓</span> 15 search and AI bots</li>
+      <li><span class="text-accent-ink" aria-hidden="true">✓</span> robots.txt parsed with Google's rules</li>
+      <li><span class="text-accent-ink" aria-hidden="true">✓</span> Detects Cloudflare, Akamai, DataDome challenges…</li>
+    </ul>
+
+    <div class="mt-10">
+      <BotChecker lang="en" />
+    </div>
+  </div>
+
+  <article class="mx-auto max-w-5xl px-5 pt-16 sm:px-6 md:pt-24">
+    <p class="section-label">Guide</p>
+    <h2 class="display-2 mt-3 max-w-[24ch]">Why a bot can't get into your site</h2>
+
+    <div class="article-body mt-4">
+      <p>
+        If a bot can't read your page, it doesn't index it or cite it. With Google you notice it in Search Console. With
+        ChatGPT or Perplexity, you just stop appearing as a source and nobody tells you.
+      </p>
+      <p>Almost always it's one of these four things.</p>
+
+      <h3>1. The robots.txt</h3>
+      <p>
+        It's the first thing any serious bot reads. A <code>Disallow: /</code> in the <code>User-agent: *</code> group locks
+        out every bot that doesn't have its own group. It happens a lot after a migration, when the staging robots.txt gets
+        pushed to production.
+      </p>
+      <p>
+        One detail few people know: <strong>if the robots.txt returns a 5xx error, Google stops crawling the site</strong>
+        until it responds again. If it returns a 404, on the other hand, Google understands it can crawl everything.
+      </p>
+
+      <h3>2. The firewall or CDN</h3>
+      <p>
+        Cloudflare, Akamai, DataDome and the like block bots by user-agent, by IP or by behavior. Cloudflare, for example,
+        ships an anti-bot mode and an option to block AI crawlers that some sites have turned on without knowing it.
+      </p>
+      <p>
+        The tool compares what a normal browser receives with what each bot receives. If the browser sees the page and the
+        bot gets a 403 or a challenge, something is treating them differently.
+      </p>
+
+      <h3>3. The noindex</h3>
+      <p>
+        The bot gets in, but you tell it not to index. It can come in a <code>&lt;meta name="robots"&gt;</code> tag or in the
+        <code>X-Robots-Tag</code> header, and it can target a specific bot (<code>googlebot: noindex</code>).
+      </p>
+
+      <h3>4. Different content for bots</h3>
+      <p>
+        Some sites serve bots an empty page, an unrendered version or a cookie notice that covers everything. If a bot gets
+        far less content than the browser, the tool flags it so you can take a look.
+      </p>
+
+      <h2>AI search engines: which bots to let in</h2>
+      <p>OpenAI, Anthropic and Perplexity split their bots by function:</p>
+      <ul>
+        <li><strong>Search</strong> (OAI-SearchBot, Claude-SearchBot, PerplexityBot): index your site so it can be cited in their answers.</li>
+        <li><strong>User</strong> (ChatGPT-User, Claude-User, Perplexity-User): visit when someone asks them to open your page.</li>
+        <li><strong>Training</strong> (GPTBot, ClaudeBot, CCBot…): collect content to train models.</li>
+      </ul>
+      <p>
+        If you want to appear in ChatGPT, Claude or Perplexity, <strong>let in at least the search and user bots</strong>.
+        Blocking the training bots is a business decision and doesn't affect whether you get cited.
+      </p>
+      <p>
+        Google is different: Google-Extended controls whether your content is used to train Gemini, but AI Overviews and AI
+        Mode use the same Googlebot as the search engine. If you block Googlebot, you disappear from everything.
+      </p>
+
+      <h2>Limits of the tool</h2>
+      <p>
+        The requests leave from Cloudflare with each bot's user-agent. Sites that verify bots by IP may block you here and
+        let the real bot through, and some even serve it a different robots.txt. So an HTTP block tells you where to look,
+        but confirm it in your logs or with URL Inspection in Search Console.
+      </p>
+    </div>
+  </article>
+
+  <FaqAccordion lang="en" faq={faq} />
+
+  <Cta lang="en" title="Is your site missing from Google and ChatGPT?" />
+</Base>

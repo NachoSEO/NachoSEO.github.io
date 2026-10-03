@@ -11,49 +11,172 @@ interface Props {
 }
 
 const { lang, variant, path } = Astro.props;
-const linkClass = 'underline decoration-accent underline-offset-4 hover:text-accent-ink';
+const es = lang === 'es';
 
-const copy = {
-  es: {
-    ok: {
-      eyebrow: 'Mensaje enviado',
-      title: 'Gracias, te respondo pronto',
-      body: 'Me ha llegado tu mensaje y te contestaré personalmente al email que me has dejado.',
-    },
-    error: {
-      eyebrow: 'Algo ha fallado',
-      title: 'No he podido enviar tu mensaje',
-      body: 'Vuelve atrás e inténtalo de nuevo. Si sigue fallando, escríbeme directamente a',
-    },
-    back: 'Volver al inicio',
-  },
-  en: {
-    ok: {
-      eyebrow: 'Message sent',
-      title: "Thanks, I'll get back to you soon",
-      body: "Your message reached me and I'll reply personally to the email you left.",
-    },
-    error: {
-      eyebrow: 'Something went wrong',
-      title: "I couldn't send your message",
-      body: 'Go back and try again. If it keeps failing, email me directly at',
-    },
-    back: 'Back to home',
-  },
-}[lang];
+const copy = es
+  ? {
+      ok: {
+        eyebrow: 'Mensaje enviado',
+        title: 'Gracias, ya lo tengo',
+        lede: 'Leo cada mensaje yo mismo y te responderé al email que me has dejado.',
+      },
+      error: {
+        eyebrow: 'Algo ha fallado',
+        title: 'No he podido enviar tu mensaje',
+        lede: 'Vuelve atrás e inténtalo de nuevo. Si sigue fallando, escríbeme directamente por email.',
+      },
+      stepsTitle: 'Qué pasa ahora',
+      steps: ['Leo tu mensaje y veo si puedo ayudarte.', 'Te respondo por email con franqueza, encaje o no.'],
+      faster: '¿Prefieres ir más rápido?',
+      call: 'Reserva una llamada de 30 minutos',
+      meanwhile: 'Mientras tanto',
+      links: [
+        { label: 'Ver casos', key: 'cases' },
+        { label: 'Leer el blog', key: 'blog' },
+        { label: 'Herramientas gratis', key: 'tools' },
+      ],
+      home: 'Volver al inicio',
+      write: 'Escríbeme a',
+    }
+  : {
+      ok: {
+        eyebrow: 'Message sent',
+        title: 'Thanks, I’ve got it',
+        lede: 'I read every message myself and will reply to the email you left.',
+      },
+      error: {
+        eyebrow: 'Something went wrong',
+        title: "I couldn't send your message",
+        lede: 'Go back and try again. If it keeps failing, email me directly.',
+      },
+      stepsTitle: 'What happens now',
+      steps: ['I read your message and see whether I can help.', "I reply by email and tell you honestly whether it's a fit."],
+      faster: 'Want to move faster?',
+      call: 'Book a 30-minute call',
+      meanwhile: 'Meanwhile',
+      links: [
+        { label: 'See case studies', key: 'cases' },
+        { label: 'Read the blog', key: 'blog' },
+        { label: 'Free tools', key: 'tools' },
+      ],
+      home: 'Back to home',
+      write: 'Email me at',
+    };
 
 const text = copy[variant];
+const linkClass = 'underline decoration-accent underline-offset-4 hover:text-accent-ink';
 ---
 
-<Base lang={lang} title={`${text.title} — Nacho Mascort`} description={text.title} path={path} noindex>
+<Base lang={lang} title={`${text.title} — Nacho Mascort`} description={text.lede} path={path} noindex>
   <div class="mx-auto max-w-5xl px-5 py-16 sm:px-6 md:py-24">
     <p class="meta">{text.eyebrow}</p>
     <h1 class="display-1 mt-5">{text.title}</h1>
-    <p class="mt-5 max-w-[60ch] text-muted">
-      {text.body}
-      {variant === 'error' && <a href={`mailto:${site.email}`} class={linkClass}>{site.email}</a>}
-      {variant === 'error' && '.'}
-    </p>
-    <p class="mt-8"><a href={localizedRoute('home', lang)} class={linkClass}>{copy.back}</a></p>
+    <p class="lede mt-5 max-w-[58ch]">{text.lede}</p>
+
+    {
+      variant === 'ok' ? (
+        <>
+          <section class="result-card mt-10">
+            <h2 class="result-title">{copy.stepsTitle}</h2>
+            <ol class="result-steps">
+              {copy.steps.map((step) => (
+                <li>{step}</li>
+              ))}
+            </ol>
+            <p class="result-tip">
+              {copy.faster}{' '}
+              <a href={site.calUrl} class={linkClass}>
+                {copy.call}
+              </a>
+              .
+            </p>
+          </section>
+
+          <section class="mt-12">
+            <p class="meta">{copy.meanwhile}</p>
+            <ul class="result-links mt-4">
+              {copy.links.map((link) => (
+                <li>
+                  <a href={localizedRoute(link.key as 'cases' | 'blog' | 'tools', lang)} class="link-arrow">
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </section>
+        </>
+      ) : (
+        <p class="mt-8 flex flex-wrap gap-x-6 gap-y-2">
+          <a href={localizedRoute('home', lang)} class={linkClass}>
+            {copy.home}
+          </a>
+          <span class="text-muted">
+            {copy.write}{' '}
+            <a href={`mailto:${site.email}`} class={linkClass}>
+              {site.email}
+            </a>
+          </span>
+        </p>
+      )
+    }
   </div>
 </Base>
+
+<style>
+  .result-card {
+    max-width: 44rem;
+    padding: 1.5rem 1.6rem;
+    border: 1px solid var(--tone-line);
+    border-radius: 1rem;
+    background: var(--tone-raised);
+  }
+  .result-title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+  .result-steps {
+    margin: 1rem 0 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: step;
+    display: grid;
+    gap: 0.9rem;
+  }
+  .result-steps li {
+    counter-increment: step;
+    display: grid;
+    grid-template-columns: 1.8rem minmax(0, 1fr);
+    gap: 0.75rem;
+    align-items: start;
+  }
+  .result-steps li::before {
+    content: counter(step);
+    display: grid;
+    place-items: center;
+    width: 1.8rem;
+    height: 1.8rem;
+    border-radius: 999px;
+    background: var(--tone-dark);
+    color: var(--tone-on-dark);
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+  }
+  .result-tip {
+    margin: 1.25rem 0 0;
+    padding: 0.8rem 1rem;
+    border-left: 3px solid var(--tone-accent);
+    background: var(--tone-paper);
+    font-size: 0.92rem;
+    color: var(--tone-muted);
+  }
+  .result-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 2rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+</style>

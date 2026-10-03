@@ -20,7 +20,7 @@ const links = [
 ---
 
 <footer class="on-dark mt-20 md:mt-28">
-  <div class="mx-auto grid max-w-5xl gap-8 px-5 py-10 sm:grid-cols-3 sm:px-6">
+  <div class="mx-auto grid max-w-5xl gap-8 px-5 py-10 sm:grid-cols-2 lg:grid-cols-4 sm:px-6">
     <div>
       <p class="font-display text-lg font-semibold">Nacho Mascort</p>
       <p class="mt-1 text-sm text-on-dark-muted">{t('footer.role')}</p>
@@ -39,13 +39,23 @@ const links = [
       }
     </ul>
 
+    <div class="text-sm">
+      <a href={localizedRoute('tools', lang)} class="meta hover:text-on-dark">{t('nav.tools')}</a>
+      <ul class="mt-2 space-y-1">
+        <li>
+          <a href={localizedRoute('sitemapGenerator', lang)} class="text-on-dark-muted hover:text-on-dark">
+            {t('tools.sitemapGenerator')}
+          </a>
+        </li>
+      </ul>
+    </div>
+
     <div class="text-sm sm:text-right">
       <a href={`mailto:${site.email}`} class="underline decoration-accent-on-dark underline-offset-4 hover:text-accent-on-dark">
         {site.email}
       </a>
       <p class="meta mt-4">
         © {year} · <a href={localizedRoute('contact', lang)} class="hover:text-on-dark">{t('nav.contact')}</a>
-        · <a href={localizedRoute('tools', lang)} class="hover:text-on-dark">{t('nav.tools')}</a>
       </p>
     </div>
   </div>

@@ -633,24 +633,25 @@ body {
     font-size: 0.85rem;
     overflow-x: auto;
   }
+  /* Badge "fuente preferida" con las proporciones y colores del oficial de Google */
   .preferred-source {
     display: inline-flex;
+    flex-shrink: 0;
     align-items: center;
-    gap: 0.45rem;
-    padding: 0.4rem 0.85rem;
-    border: 1px solid var(--tone-line);
-    border-radius: 999px;
-    background: var(--tone-raised);
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: var(--tone-ink);
-  }
-  .preferred-source svg {
-    color: var(--tone-accent);
+    gap: 0.8rem;
+    padding: 0.55rem 1.1rem 0.55rem 0.85rem;
+    border: 1px solid #747775;
+    border-radius: 0.6rem;
+    background: #fff;
+    color: #1f1f1f;
+    font-family: Roboto, Arial, sans-serif;
+    font-size: 0.95rem;
+    font-weight: 500;
+    line-height: 1.2;
+    transition: box-shadow 0.2s ease;
   }
   .preferred-source:hover {
-    border-color: var(--tone-accent);
-    color: var(--tone-accent-ink);
+    box-shadow: 0 1px 3px rgb(60 64 67 / 0.3), 0 4px 8px 3px rgb(60 64 67 / 0.15);
   }
   .article-body .references ol {
     font-size: 0.9rem;

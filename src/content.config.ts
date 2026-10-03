@@ -47,7 +47,7 @@ const services = defineCollection({
 
 const blog = defineCollection({
   loader: glob({ pattern: '**/*.mdx', base: './src/content/blog' }),
-  schema: () =>
+  schema: ({ image }) =>
     z.object({
       title: z.string(),
       description: z.string(),
@@ -59,6 +59,8 @@ const blog = defineCollection({
       tags: z.array(z.string()).default([]),
       /** 'seohacks': post recuperado del antiguo blog seohacks.es (2015–2017) */
       category: z.enum(['seohacks']).optional(),
+      /** Portada 1200x630 (scripts/blog-covers.mjs): solo para compartir (og:image) y como image del JSON-LD */
+      cover: image().optional(),
       /** Fuentes del post: se pintan en "Referencias" y van como `citation` en el JSON-LD */
       citations: z
         .array(

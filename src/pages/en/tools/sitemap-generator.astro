@@ -10,49 +10,74 @@ const faq = [
   {
     question: 'Is it free? Is there a URL limit?',
     answer:
-      "It's free and needs no sign-up. I don't cap the number of URLs: the only limit is your computer's memory. A million URLs takes a few seconds.",
+      "Yes, it's free and you don't need to sign up. I don't cap the number of URLs either: your computer's memory sets the limit. A million URLs takes a few seconds.",
   },
   {
-    question: 'Are my URLs sent to a server?',
+    question: 'Do my URLs go through a server?',
     answer:
-      "No. The generator runs entirely in your browser with JavaScript. Neither the list you paste nor the file you upload leaves your device, so you can use it on client sites or projects that aren't public yet.",
+      "No. Everything runs in your browser, so neither the list you paste nor the file you upload leaves your computer. You can use it on client sites or projects that aren't live yet.",
   },
   {
-    question: 'How should the URLs be formatted?',
+    question: 'How should I format the URLs?',
     answer:
-      'Absolute and with the protocol: https://example.com/path instead of /path. For the homepage, keep the trailing slash (https://example.com/). Lines that fail this check show up as skipped in the result so you can review them.',
+      "Absolute and with the protocol: https://example.com/path, not /path. For the homepage, keep the trailing slash (https://example.com/). Anything that doesn't pass shows up as skipped so you can review it line by line.",
   },
   {
-    question: 'Can I upload a Screaming Frog or Search Console CSV?',
+    question: 'Can I upload a Screaming Frog CSV?',
     answer:
-      'Yes. If the file ends in .csv, the generator finds the column that holds URLs and drops the rest (status codes, titles and so on). With a .txt file it reads one URL per line.',
+      'Yes. If the file is a .csv, the generator looks for the URL column and ignores the rest (status codes, titles and so on). With a .txt it reads one URL per line.',
   },
   {
-    question: 'What happens with more than 50,000 URLs?',
+    question: 'What happens if I have more than 50,000 URLs?',
     answer:
-      'Google accepts up to 50,000 URLs or 50 MB per sitemap. Go past either and the generator splits your URLs into several files (sitemap-1.xml, sitemap-2.xml…) plus a sitemap-index.xml that links them. One million URLs gives you 20 sitemaps and an index.',
+      'Each sitemap holds up to 50,000 URLs or 50 MB. Go over and the generator splits them into sitemap-1.xml, sitemap-2.xml… plus a sitemap-index.xml linking them all. One million URLs gives you 20 sitemaps and an index.',
   },
   {
-    question: 'What if I mix URLs from several domains?',
+    question: 'What if my URLs come from several domains?',
     answer:
-      'The generator groups URLs by host and builds a sitemap (or an index with its sitemaps) for each one. You download everything as a ZIP with one folder per domain, ready to upload each folder to its site.',
+      'The generator groups by domain out of the box. You download a ZIP with one folder per domain, each with its own sitemap or index, ready to upload to its site.',
   },
   {
     question: 'How do I put several subdomains in the same sitemap?',
     answer:
-      'Open the advanced settings and change the grouping RegExp. The default .* keeps every host apart. Type example\\..* and the URLs from www.example.com, m.example.com and blog.example.com end up in one group.',
+      'In the advanced settings, change the RegExp from .* to example\\..* (with your own domain, obviously). That way www, m and blog on example.com end up in the same sitemap.',
   },
   {
     question: 'Should I tick the lastmod option?',
     answer:
-      "Only if every URL changed today or you just published them. Google uses lastmod when the date is reliable; stamp today's date on pages that haven't changed in months and it learns to ignore that field on your site.",
+      "Only if every URL changed today. Stamp today's date on pages that haven't changed in months and Google ends up ignoring lastmod on your site.",
   },
   {
     question: 'How do I submit the sitemap to Google?',
     answer:
-      'Upload the file to your domain root, add the line Sitemap: https://yourdomain.com/sitemap.xml to your robots.txt and submit it in Search Console under Sitemaps. Do the same in Bing Webmaster Tools.',
+      'Upload it to your domain root, add the line Sitemap: https://yourdomain.com/sitemap.xml to your robots.txt and submit it in Search Console under Sitemaps. Then repeat in Bing Webmaster Tools.',
   },
 ];
+
+const xmlSample = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://example.com/</loc>
+  </url>
+  <url>
+    <loc>https://example.com/blog/</loc>
+  </url>
+</urlset>`;
+
+const bulkSample = `sitemap-index.xml
+sitemap-1.xml
+sitemap-2.xml
+...
+sitemap-20.xml`;
+
+const domainsSample = `example.com/
+  sitemap-index.xml
+  sitemap-1.xml
+  sitemap-2.xml
+example.es/
+  sitemap.xml`;
+
+const preClass = 'rounded-lg bg-dark font-mono text-on-dark';
 
 const webApplication = {
   '@type': 'WebApplication',
@@ -86,8 +111,8 @@ const webApplication = {
     <p class="meta"><a href="/en/tools/" class="hover:text-ink">Tools</a> · Technical SEO</p>
     <h1 class="display-1 mt-5">XML Sitemap Generator</h1>
     <p class="lede mt-6">
-      Paste your URLs or upload a file and download a sitemap.xml ready for Search Console. Free, no sign-up, and it
-      handles millions of URLs. Everything runs in your browser.
+      Paste your URLs or upload a file and get a sitemap.xml ready for Search Console in one click. It's free, there's no
+      sign-up and it handles millions of URLs. Everything happens in your browser, so your URLs never leave your computer.
     </p>
     <ul class="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-sm text-muted">
       <li><span class="text-accent-ink" aria-hidden="true">✓</span> Automatic indexes past 50,000 URLs</li>
@@ -102,100 +127,132 @@ const webApplication = {
 
   <article class="mx-auto max-w-5xl px-5 pt-16 sm:px-6 md:pt-24">
     <p class="section-label">Guide</p>
-    <h2 class="display-2 mt-3 max-w-[24ch]">What you need to know to make your sitemap work</h2>
+    <h2 class="display-2 mt-3 max-w-[24ch]">A quick guide to sitemaps</h2>
 
     <div class="article-body mt-4">
-      <h2>What an XML sitemap is and when you need one</h2>
+      <h2>What is an XML sitemap?</h2>
+      <p>Let's start from the beginning.</p>
       <p>
-        An XML sitemap is a file listing the URLs on your site that you want Google, Bing and the rest to crawl. It
-        doesn't replace internal linking, but it helps search engines find new pages sooner and spot the ones that
-        changed.
+        An XML sitemap is a file listing the URLs on your site that you want Googlebot and friends to crawl. This is what
+        one looks like raw:
       </p>
-      <p>You need one most in these cases:</p>
-      <ul>
-        <li>Your site has thousands of pages or grows every day (ecommerce, publishers, directories, programmatic SEO).</li>
-        <li>You have pages with few internal links or that you just published.</li>
-        <li>You're migrating and want Google to crawl the new URLs quickly.</li>
-        <li>Your CMS doesn't generate a sitemap, or generates one full of URLs you don't want indexed.</li>
-      </ul>
+      <pre class={preClass}><code>{xmlSample}</code></pre>
       <p>
-        If your site has 20 well-linked pages, Google will find them anyway. The sitemap still earns its keep in Search
-        Console, where it shows how many of those URLs Google has indexed.
+        <strong>A sitemap doesn't replace internal linking.</strong> It gives Google a shortcut to discover new pages and
+        spot the ones that changed since its last visit.
       </p>
 
-      <h2>Build your sitemap in three steps</h2>
+      <h3>Do I need one?</h3>
+      <p>It depends on the size of your site.</p>
+      <p>
+        If you have 20 well-linked pages, Google will find them anyway. I'd still have one, because Search Console uses it
+        to tell you how many of those URLs are indexed.
+      </p>
+      <p>Where it does make a difference:</p>
+      <ul>
+        <li>Sites with thousands of pages or that grow every day: ecommerce, publishers, directories, programmatic SEO…</li>
+        <li>Freshly published pages or pages with few internal links.</li>
+        <li>Migrations, when you want Google to find the new URLs as soon as possible.</li>
+        <li>CMSs that don't generate a sitemap, or fill it with URLs you don't want indexed.</li>
+      </ul>
+
+      <h2>How does the generator work?</h2>
+      <p>
+        This tool used to live at sitemapgenerator.xyz. I moved it to my site and rebuilt it so everything happens in your
+        browser, which means your URLs don't go through any server.
+      </p>
+      <p>Three steps:</p>
       <ol>
         <li>
-          <strong>Collect your URLs.</strong> Export the indexable pages from your crawler (Screaming Frog, Sitebulb), your
-          CMS or a database query.
+          <strong>Get your URLs.</strong> The quickest way is to run Screaming Frog, filter by indexable and export. A CMS
+          export or a database query works too.
         </li>
         <li>
-          <strong>Paste them or upload the file.</strong> I accept .txt files with one URL per line and .csv files; from a
-          CSV I pull the column that holds URLs.
+          <strong>Paste them or upload the file.</strong> If there aren't many (up to about 10,000), paste them in the box.
+          If there are more, upload a .txt with one URL per line or the crawler's .csv as is: the generator finds the URL
+          column and ignores the rest.
         </li>
         <li>
-          <strong>Generate and download.</strong> With a single sitemap you get the .xml straight away. If you end up with
-          several files, I hand them over in a ZIP with the folder structure.
+          <strong>Hit generate and download.</strong> One sitemap means you get the .xml. Several, and you get them in a
+          ZIP.
         </li>
       </ol>
       <p>
-        The generator removes duplicates, encodes special characters (an unescaped <code>&amp;</code> in a URL breaks a
-        sitemap) and lists the lines it skipped so you can check them.
+        Along the way it removes duplicates, escapes special characters and shows you the lines it skipped. The escaping
+        part matters: <strong>a single unescaped <code>&amp;</code> breaks the whole sitemap</strong> and Search Console
+        flags it as an error.
       </p>
 
-      <h2>More than 50,000 URLs: sitemap indexes</h2>
+      <h2>What if I have more than 50,000 URLs?</h2>
       <p>
-        The protocol caps each sitemap at 50,000 URLs and 50 MB uncompressed. When you pass either limit, the generator
-        splits the list into <code>sitemap-1.xml</code>, <code>sitemap-2.xml</code> and so on, and creates a
-        <code>sitemap-index.xml</code> pointing to all of them.
+        Each sitemap takes up to 50,000 URLs and 50 MB uncompressed. Go over either limit and the generator splits the list
+        and creates an index pointing to every chunk.
       </p>
+      <p>Say you have a million URLs. You'll get this:</p>
+      <pre class={preClass}><code>{bulkSample}</code></pre>
       <p>
-        The index links each sitemap at your domain root (<code>https://yourdomain.com/sitemap-1.xml</code>), so upload
-        every file there. Then submit only the index to Search Console and Google will pick up the rest.
-      </p>
-
-      <h2>Several domains and subdomains</h2>
-      <p>
-        A sitemap can only hold URLs from its own host. Paste URLs from <code>example.com</code> and
-        <code>example.es</code> and you get a ZIP with a folder per domain, each with its own sitemap or index.
-      </p>
-      <p>
-        To merge subdomains, change the RegExp in the advanced settings. With <code>example\..*</code>,
-        <code>www.example.com</code> and <code>blog.example.com</code> share a group. Keep in mind that Google only
-        accepts URLs from other hosts in a sitemap if you've verified all of them in Search Console or reference the
-        sitemap from each host's robots.txt.
+        The index points to each sitemap at your domain root (<code>https://yourdomain.com/sitemap-1.xml</code>), so upload
+        every file there. Then submit only the index to Search Console and Google takes care of the rest.
       </p>
 
-      <h2>How to publish your sitemap and submit it to Google</h2>
+      <h2>What if I work with several domains?</h2>
+      <p>
+        A sitemap can only hold URLs from its own host, so the generator groups them by domain without you touching
+        anything.
+      </p>
+      <p>Mix URLs from example.com and example.es and the ZIP looks like this:</p>
+      <pre class={preClass}><code>{domainsSample}</code></pre>
+
+      <h3>What if I want to merge subdomains?</h3>
+      <p>
+        You can. Open the advanced settings and change the grouping RegExp, which defaults to <code>.*</code> (one group per
+        host).
+      </p>
+      <p>
+        If you have www.example.com, m.example.com and blog.example.com and want them in the same sitemap, swap
+        <code>.*</code> for <code>example\..*</code>.
+      </p>
+      <p>
+        Heads up: <strong>Google only accepts URLs from other hosts in a sitemap if you've verified all of them in Search
+        Console</strong> or reference the sitemap from each host's robots.txt.
+      </p>
+
+      <h2>How do I submit it to Google?</h2>
+      <p>Once you've downloaded it, four steps left:</p>
       <ol>
-        <li>Upload the file to your site root: <code>https://yourdomain.com/sitemap.xml</code>.</li>
-        <li>Add this line to your robots.txt: <code>Sitemap: https://yourdomain.com/sitemap.xml</code>.</li>
-        <li>In Search Console, go to Indexing › Sitemaps, paste the URL and click Submit.</li>
-        <li>Submit it again in Bing Webmaster Tools, which also feeds Copilot and DuckDuckGo.</li>
+        <li>Upload the file to your root: <code>https://yourdomain.com/sitemap.xml</code>.</li>
+        <li>Add this line to your robots.txt: <code>Sitemap: https://yourdomain.com/sitemap.xml</code></li>
+        <li>In Search Console, go to Indexing › Sitemaps, paste the URL and hit Submit.</li>
+        <li>Do the same in Bing Webmaster Tools, which also feeds Copilot and DuckDuckGo.</li>
       </ol>
       <p>
-        Within a few days, the Sitemaps report tells you how many URLs Google discovered and how many it indexed. If the
-        gap is wide, you've found your next audit.
+        A few days later the Sitemaps report tells you how many URLs Google discovered and how many it indexed.
+        <strong>If the gap is wide, you know where your next audit starts.</strong>
       </p>
 
-      <h2>Which URLs to include (and which to leave out)</h2>
-      <p>Only include URLs you want to see in Google:</p>
+      <h2>Which URLs go in the sitemap?</h2>
+      <p>Only the ones you want to see in Google. That means URLs that:</p>
       <ul>
-        <li>They return a 200 status code, with no redirects.</li>
-        <li>They're canonical: no tracking parameters or duplicate versions.</li>
-        <li>They carry no <code>noindex</code> and robots.txt doesn't block them.</li>
+        <li>Return a 200, no redirects.</li>
+        <li>Are canonical, without tracking parameters or duplicate versions.</li>
+        <li>Have no <code>noindex</code> and aren't blocked by robots.txt.</li>
       </ul>
       <p>
-        Each broken or redirected URL in your sitemap tells Google the file isn't reliable, and it starts paying less
-        attention to it. Run your crawler before you build the sitemap and filter for indexable pages.
+        Every broken or redirected URL you add tells Google your sitemap isn't reliable, and over time it pays less
+        attention to it. That's why I'd run the crawler first and keep only the indexable pages.
       </p>
 
-      <h2>lastmod, priority and changefreq</h2>
+      <h2>What about lastmod, priority and changefreq?</h2>
+      <p>Google ignores <code>priority</code> and <code>changefreq</code>, so the generator doesn't even add them.</p>
       <p>
-        Google ignores <code>priority</code> and <code>changefreq</code>, so the generator leaves them out. It does use
-        <code>lastmod</code> when the date reflects a real content change. Tick the option only if every URL in your list
-        changed today; otherwise, let your CMS set dates page by page.
+        <code>lastmod</code> is a different story. Google does use it, but only when the date reflects a real content
+        change. Stamp today's date on pages that haven't changed in months and it learns to ignore it on your site.
       </p>
+      <p>
+        My advice: tick the option only if every URL in your list changed today. Otherwise, let your CMS set the dates page
+        by page.
+      </p>
+      <p>And that's it. If you found it useful, share it with whoever is fighting with sitemaps right now 🙂</p>
     </div>
   </article>
 

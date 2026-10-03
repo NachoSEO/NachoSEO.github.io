@@ -29,39 +29,53 @@ const site = Astro.site!.origin;
 
 const personId = `${site}/#person`;
 const websiteId = `${site}/#website`;
+const gradualId = 'https://gradual.pro/#organization';
 
 const person = {
   '@type': 'Person',
   '@id': personId,
   name: 'Nacho Mascort',
   url: `${site}/`,
-  image: `${site}/img/nacho.jpeg`,
-  jobTitle: 'Head of AI & Organic Marketing',
-  worksFor: { '@type': 'Organization', name: 'Reverse Tech' },
+  image: `${site}/img/nacho.jpg`,
+  jobTitle:
+    lang === 'es'
+      ? ['Consultor de SEO, GEO e IA', 'Head of AI y Head of Organic Marketing en Reverse Tech']
+      : ['SEO, GEO & AI consultant', 'Head of AI and Head of Organic Marketing at Reverse Tech'],
+  worksFor: [{ '@type': 'Organization', name: 'Reverse Tech' }, { '@id': gradualId }],
   description:
     lang === 'es'
-      ? 'Líder de Growth, IA y SEO. Ha dirigido el crecimiento orgánico de webs con más de 2M de visitas diarias (Softonic, word.tips) y construye sistemas de automatización con agentes de IA.'
-      : 'Growth, AI and SEO leader. Has led organic growth for sites with 2M+ daily visits (Softonic, word.tips) and builds AI-agent automation systems.',
+      ? 'Consultor de SEO, GEO e IA en Barcelona. Un equipo de ex ingenieros de Google Search le contrató para su SEO. Ha dirigido el SEO de Softonic (más de 1.000 millones de usuarios al año), Grupo Planeta y word.tips, y montó desde cero el área orgánica de Reverse Tech hasta más de 2 M$ de margen.'
+      : 'SEO, GEO and AI consultant based in Barcelona. A team of former Google Search engineers hired him for their SEO. He led SEO at Softonic (1B+ users a year), Grupo Planeta and word.tips, and built Reverse Tech\'s organic area from scratch to over $2M in margin.',
   knowsAbout: [
-    'Growth marketing',
-    'AI agents',
-    'Marketing automation',
     'SEO',
     'Generative Engine Optimization (GEO)',
     'Answer Engine Optimization (AEO)',
+    'Growth marketing',
+    'AI agents',
+    'Marketing automation',
+    'CRM',
+    'Affiliate marketing',
+    'YouTube growth',
     'Team management',
   ],
-  alumniOf: [
-    {
-      '@type': 'CollegeOrUniversity',
-      name: 'Universitat Pompeu Fabra',
-    },
-  ],
+  address: { '@type': 'PostalAddress', addressLocality: 'Barcelona', addressCountry: 'ES' },
   sameAs: [
+    'https://www.linkedin.com/in/nachomascort',
     'https://twitter.com/NachoMascort',
     'https://github.com/NachoSEO',
-    'https://www.linkedin.com/in/nachomascort',
+    'https://speakerdeck.com/nachomascort',
+    'https://www.slideshare.net/NachoMascortSEOSpeci',
+    'https://nachomascort.gumroad.com',
   ],
+};
+
+/** Gradual, la agencia de IA de Nacho */
+const gradual = {
+  '@type': 'Organization',
+  '@id': gradualId,
+  name: 'Gradual',
+  url: 'https://gradual.pro',
+  founder: { '@id': personId },
 };
 
 const website = {
@@ -73,7 +87,7 @@ const website = {
   publisher: { '@id': personId },
 };
 
-const graph: Record<string, unknown>[] = [website, person];
+const graph: Record<string, unknown>[] = [website, person, gradual];
 
 if (breadcrumbs?.length) {
   graph.push({

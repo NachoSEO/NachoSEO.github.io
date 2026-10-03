@@ -5,6 +5,7 @@ import Schema from '../components/Schema.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { localizedRoute, useTranslations } from '../i18n/utils';
+import { getAgentDocs, mdPathFor } from '../lib/agent-content';
 import type { Lang } from '../i18n/ui';
 
 interface Props {
@@ -36,6 +37,8 @@ const {
 } = Astro.props;
 
 const t = useTranslations(lang);
+// Solo se enlaza la versión Markdown de las páginas que la tienen
+const hasMarkdown = !noindex && (await getAgentDocs()).some((doc) => doc.path === path);
 ---
 
 <!doctype html>
@@ -61,6 +64,7 @@ const t = useTranslations(lang);
       ogType={ogType}
       noindex={noindex}
     />
+    {hasMarkdown && <link rel="alternate" type="text/markdown" href={mdPathFor(path)} />}
     <link
       rel="alternate"
       type="application/rss+xml"

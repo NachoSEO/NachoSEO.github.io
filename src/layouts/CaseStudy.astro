@@ -30,6 +30,9 @@ const articleNode = {
   description: entry.data.description,
   inLanguage: lang === 'es' ? 'es-ES' : 'en',
   author: { '@id': `${Astro.site!.origin}/#person` },
+  publisher: { '@id': `${Astro.site!.origin}/#person` },
+  image: new URL('/og-fallback.png', Astro.site).href,
+  isPartOf: { '@id': `${Astro.site!.origin}/#website` },
   mainEntityOfPage: new URL(path, Astro.site).href,
 };
 ---

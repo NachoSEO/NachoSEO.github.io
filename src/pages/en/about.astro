@@ -1,200 +1,22 @@
 ---
 import Base from '../../layouts/Base.astro';
-import Cta from '../../components/Cta.astro';
-import { Image } from 'astro:assets';
-import aboutPhoto from '../../assets/img/nacho-about.jpg';
-import AboutCredentials from '../../components/AboutCredentials.astro';
-import SectionLabel from '../../components/SectionLabel.astro';
-
-const timeline = [
-  {
-    period: '2026 — now',
-    role: 'Head of AI (Marketing Automation) · Reverse Tech',
-    detail:
-      'Agentic systems executing marketing in production 24/7. AI ad factory: from 200 to 3,000+ creatives per week, shipped to Meta and Google via API.',
-  },
-  {
-    period: '2025 — now',
-    role: 'Head of Organic Marketing · Reverse Tech',
-    detail:
-      'Hired to build and lead the whole organic area from scratch: SEO, YouTube, web, email, social media and affiliates, across the full customer lifecycle.',
-    results: [
-      'Organic went from $0 to over $2M in margin.',
-      'A new website went from 0 visits from Google to over 60,000 organic visits a month, bringing in over $200k a year in revenue.',
-      "YouTube: from 5,000 to 92,000 subscribers. The channel's best video ever had 20,000 views; we now have videos with 1.3M, 500K and 400K views in the US, in the fitness vertical.",
-      'Social media and customer support: from replying in days to replying in minutes, on every channel and to every comment.',
-      'Hired and managed a team of 8, plus freelancers and stakeholders from other areas.',
-    ],
-  },
-  {
-    period: '2024 — 2025',
-    role: 'Head of SEO · Cliqpod',
-    detail:
-      'SEO leadership for word.tips and Router Network. I doubled organic traffic at word.tips, with peaks of 2M daily visits and ~60M/mo, 100% organic.',
-  },
-  {
-    period: '2019 — 2024',
-    role: 'SEO Specialist → Product Owner → SEO Manager · Softonic',
-    detail:
-      'Portfolio of 6 sites (Softonic, download.com, CNET…) with 1B+ annual users and a team of 3 specialists. Content program with our own models, before ChatGPT: from 0 to 20M sessions/mo in two years; catalog from 100k to 1M+ pages. +40% YoY (2024 vs 2023).',
-  },
-  {
-    period: '2017 — 2019',
-    role: 'SEO Manager · Grupo Planeta',
-    detail:
-      'SEO for Casa del Libro, Lonely Planet, Planeta DeAgostini and EAE Business School, among other group brands: internal scripts, automated dashboards and a migration framework.',
-  },
-  {
-    period: '2014 — 2017',
-    role: 'Agencies · SUMA, Tesubi and SEO Coaching',
-    detail: 'SEO, SEM and project leadership for clients like Kids&Us, IESE, Familia Torres, Brompton and Naturgy (then Gas Natural Fenosa).',
-  },
-];
-
-const projects = [
-  {
-    name: 'Gradual',
-    url: 'https://gradual.pro',
-    detail:
-      'My AI agency. We automate business processes with agents and custom systems, in phases, with the code and data owned by the client.',
-  },
-  {
-    name: 'Claudegram',
-    url: 'https://github.com/NachoSEO/claudegram',
-    detail:
-      'Open-source bot bridging Telegram to a real Claude Code agent, with a voice layer. 147★ and 55 forks on GitHub.',
-  },
-  {
-    name: 'Unlimited Sheets',
-    url: 'https://unlimitedsheets.com',
-    detail: 'Google Sheets add-on, built and shipped solo as a live product.',
-  },
-  {
-    name: 'seo-scraper',
-    url: 'https://github.com/NachoSEO/seo-scraper',
-    detail: 'Open-source Node.js scraper to extract SEO elements from any site at scale.',
-  },
-  {
-    name: 'google-autocomplete-extractor',
-    url: 'https://github.com/NachoSEO/google-autocomplete-extractor',
-    detail: "Extracts Google suggestions by intercepting the front-end's endpoints, no DOM parsing.",
-  },
-  {
-    name: 'Sitemap Generator',
-    url: 'https://sitemapgenerator.xyz/',
-    detail: 'Free XML sitemap generator.',
-  },
-  {
-    name: 'Programación práctica para SEO',
-    url: 'https://nachomascort.gumroad.com/l/programacion-seo',
-    detail: 'My course (in Spanish) on practical programming for SEO work.',
-  },
-];
+import AboutPage from '../../components/AboutPage.astro';
+import { aboutPage } from '../../data/profile';
 ---
 
 <Base
   lang="en"
   title="About — Nacho Mascort"
-  description="I grow online businesses. Former Google Search engineers hired me, and I built SEO, GEO, CRM and affiliate teams from scratch."
+  description={aboutPage.en.description}
   path="/en/about/"
   alternatePath="/sobre-mi/"
   breadcrumbs={[
     { name: 'Home', path: '/en/' },
     { name: 'About', path: '/en/about/' },
   ]}
+  extraSchemaNodes={[
+    { '@type': 'ProfilePage', url: new URL('/en/about/', Astro.site).href, mainEntity: { '@id': `${Astro.site!.origin}/#person` } },
+  ]}
 >
-  <article class="mx-auto max-w-5xl px-5 pt-16 sm:px-6 sm:pt-20">
-    <p class="meta">About</p>
-    <div class="mt-5 grid gap-10 md:grid-cols-[1.4fr_1fr] md:gap-14">
-      <div>
-        <h1 class="display-1">I grow online businesses</h1>
-        <div class="mt-8 max-w-[62ch] space-y-5 text-[1.05rem] leading-relaxed">
-      <p>
-        <strong>When a team of former Google Search engineers needed to grow their project, they called
-        me.</strong> They know the algorithm from the inside, and they still knew that understanding Google
-        and turning it into revenue are different things.
-      </p>
-      <p>
-        I started in 2014 at agencies, with clients like Kids&amp;Us, IESE, Naturgy, Familia Torres
-        and Brompton. At Grupo Planeta I ran SEO for Casa del Libro, Lonely Planet, Planeta DeAgostini
-        and EAE Business School.
-      </p>
-      <p>
-        At Softonic I led SEO for a portfolio with over 1 billion users a year, including Softonic,
-        download.com and CNET. There I built a content program that went from
-        <strong>0 to 20 million monthly organic sessions in two years</strong>. Then, at Cliqpod, I ran
-        word.tips and Router Network: I doubled traffic at word.tips, with peaks of 2 million visits a
-        day.
-      </p>
-      <p>
-        Today I lead organic marketing and AI at Reverse Tech. I built the SEO, GEO, YouTube, CRM,
-        affiliate and social teams from scratch and took organic from <strong>$0 to over $2M in
-        margin</strong>. I also built an AI ad factory that went from 200 to over 3,000 creatives a
-        week.
-      </p>
-      <p>
-        And business is now also won outside Google. More and more customers ask ChatGPT, Perplexity
-        or AI Overviews first, and those answers cite whoever has authority. That's why I work on GEO
-        alongside SEO: so your brand is the one they recommend.
-      </p>
-      <p>
-        What I build are systems: processes, automation and teams that keep producing once I'm gone.
-      </p>
-        </div>
-        <a href="/cv/nacho-mascort-cv.pdf" download="nacho-mascort-cv.pdf" class="link-arrow mt-8 inline-block">
-          Download CV (PDF)
-        </a>
-      </div>
-      <Image
-        src={aboutPhoto}
-        alt="Portrait of Nacho Mascort"
-        widths={[400, 800]}
-        sizes="(min-width: 768px) 22rem, 90vw"
-        loading="eager"
-        class="aspect-[4/5] w-full max-w-[22rem] rounded-2xl object-cover md:self-start"
-      />
-    </div>
-
-    <section class="mt-16 md:mt-24">
-      <SectionLabel label="Track record" asHeading />
-      <ol class="row-list mt-8">
-        {
-          timeline.map((item) => (
-            <li class="grid gap-1 py-5 sm:grid-cols-[9rem_1fr] sm:gap-6">
-              <span class="meta pt-1">{item.period}</span>
-              <div>
-                <h3 class="font-semibold">{item.role}</h3>
-                <p class="mt-1.5 max-w-[65ch] text-[0.95rem] text-muted">{item.detail}</p>
-                {'results' in item && item.results && (
-                  <ul class="mt-3 max-w-[65ch] list-disc space-y-1.5 pl-5 text-[0.95rem] marker:text-accent">
-                    {item.results.map((result) => <li>{result}</li>)}
-                  </ul>
-                )}
-              </div>
-            </li>
-          ))
-        }
-      </ol>
-    </section>
-
-    <section class="mt-16 md:mt-24">
-      <SectionLabel label="Projects" asHeading />
-      <ul class="row-list mt-8">
-        {
-          projects.map((project) => (
-            <li>
-              <a href={project.url} rel="noopener" class="row-link group grid gap-1 py-5 sm:grid-cols-[14rem_1fr] sm:gap-6 sm:px-2">
-                <span class="row-title display-3 transition-colors">{project.name}</span>
-                <p class="text-[0.95rem] text-muted">{project.detail}</p>
-              </a>
-            </li>
-          ))
-        }
-      </ul>
-    </section>
-
-    <AboutCredentials lang="en" />
-  </article>
-
-  <Cta lang="en" />
+  <AboutPage lang="en" />
 </Base>

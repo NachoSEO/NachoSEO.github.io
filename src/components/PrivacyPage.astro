@@ -11,7 +11,7 @@ const { lang } = Astro.props;
 const es = lang === 'es';
 const path = es ? '/privacidad/' : '/en/privacy/';
 const alternatePath = es ? '/en/privacy/' : '/privacidad/';
-const updated = es ? '3 de octubre de 2026' : '3 October 2026';
+const updated = es ? '4 de octubre de 2026' : '4 October 2026';
 const owner = 'Ignacio Mascort Colomer';
 const linkClass = 'underline decoration-accent underline-offset-4 hover:text-accent-ink';
 ---
@@ -55,11 +55,19 @@ const linkClass = 'underline decoration-accent underline-offset-4 hover:text-acc
               (Cloudflare) registra datos técnicos como la IP para servir la web y protegerla de ataques, y puedo usar
               Cloudflare Web Analytics, que mide visitas de forma agregada sin cookies.
             </p>
+            <p>
+              <strong>Analítica.</strong> Mido las visitas con Umami, una herramienta de código abierto que alojo yo
+              mismo. No usa cookies ni guarda tu IP: solo la usa para deducir el país y la ciudad y genera un
+              identificador anónimo que cambia cada mes. Registra qué páginas visitas, desde dónde llegas, tu
+              navegador, sistema y dispositivo, y algunos clics (por ejemplo, en el botón de suscribirte o de
+              reservar una llamada). Lo uso solo para saber qué contenido funciona y mejorar la web.
+            </p>
 
             <h2>Base legal</h2>
             <p>
               Tu consentimiento para la suscripción, que confirmas con el doble opt-in del email de confirmación, y mi
-              interés legítimo para responder a tus mensajes y mantener la web segura.
+              interés legítimo para responder a tus mensajes, mantener la web segura y medir de forma anónima cómo
+              se usa.
             </p>
 
             <h2>Cuánto tiempo los guardo</h2>
@@ -80,6 +88,10 @@ const linkClass = 'underline decoration-accent underline-offset-4 hover:text-acc
               </li>
               <li>
                 <strong>Cal.com</strong>: solo si reservas una llamada desde su página.
+              </li>
+              <li>
+                <strong>Vercel</strong> (Vercel Inc., EE. UU.) y <strong>Neon</strong> (EE. UU., servidores en
+                Frankfurt): alojamiento y base de datos de la analítica.
               </li>
             </ul>
             <p>
@@ -122,11 +134,19 @@ const linkClass = 'underline decoration-accent underline-offset-4 hover:text-acc
               technical data such as your IP address to serve the site and protect it from attacks, and I may use
               Cloudflare Web Analytics, which measures visits in aggregate without cookies.
             </p>
+            <p>
+              <strong>Analytics.</strong> I measure visits with Umami, an open-source tool I host myself. It uses no
+              cookies and doesn't store your IP address: it only uses it to work out your country and city, and
+              creates an anonymous identifier that changes every month. It records which pages you visit, where you
+              came from, your browser, system and device, and some clicks (for example, on the subscribe or book a
+              call buttons). I only use it to learn what content works and improve the site.
+            </p>
 
             <h2>Legal basis</h2>
             <p>
               Your consent for the subscription, which you confirm through the double opt-in confirmation email, and my
-              legitimate interest in replying to your messages and keeping the site secure.
+              legitimate interest in replying to your messages, keeping the site secure and measuring anonymously
+              how it is used.
             </p>
 
             <h2>How long I keep it</h2>
@@ -146,6 +166,10 @@ const linkClass = 'underline decoration-accent underline-offset-4 hover:text-acc
               </li>
               <li>
                 <strong>Cal.com</strong>: only if you book a call through its page.
+              </li>
+              <li>
+                <strong>Vercel</strong> (Vercel Inc., USA) and <strong>Neon</strong> (USA, servers in Frankfurt):
+                hosting and database for the analytics.
               </li>
             </ul>
             <p>

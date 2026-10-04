@@ -19,7 +19,7 @@ const nav = [
   { href: localizedRoute('services', lang), label: t('nav.services') },
   { href: localizedRoute('cases', lang), label: t('nav.cases') },
   { href: localizedRoute('blog', lang), label: t('nav.blog') },
-  { href: 'https://nachomascort.gumroad.com/l/programacion-seo', label: t('nav.course') },
+  { href: 'https://nachomascort.gumroad.com/l/programacion-seo', label: t('nav.course'), event: 'course-click' },
   { href: localizedRoute('about', lang), label: t('nav.about') },
 ].map((item) => ({ ...item, isCurrent: currentPath.startsWith(item.href) }));
 ---
@@ -40,6 +40,8 @@ const nav = [
         nav.map((item) => (
           <a
             href={item.href}
+            data-umami-event={item.event}
+            data-umami-event-placement={item.event ? 'header' : undefined}
             aria-current={item.isCurrent ? 'page' : undefined}
             class:list={[
               'whitespace-nowrap hover:text-on-dark',
@@ -80,6 +82,8 @@ const nav = [
             <li class="border-b border-white/10">
               <a
                 href={item.href}
+                data-umami-event={item.event}
+                data-umami-event-placement={item.event ? 'mobile-menu' : undefined}
                 aria-current={item.isCurrent ? 'page' : undefined}
                 class:list={[
                   'font-display flex items-center justify-between py-4 text-2xl',

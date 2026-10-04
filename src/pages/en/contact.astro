@@ -29,6 +29,8 @@ const t = useTranslations('en');
 
     <a
       href={site.calUrl}
+      data-umami-event="call-booking-click"
+      data-umami-event-placement="contact-page"
       class="btn mt-9"
     >
       {t('cta.call30')}
@@ -46,7 +48,7 @@ const t = useTranslations('en');
     <section class="mt-14 max-w-[62ch] border-t border-ink pt-6">
       <h2 class="display-3">Other ways</h2>
       <p class="mt-4 text-muted">
-        Email: <a href={`mailto:${site.email}`} class="underline decoration-accent underline-offset-4 hover:text-accent-ink">{site.email}</a
+        Email: <a href={`mailto:${site.email}`} data-umami-event="email-click" data-umami-event-placement="contact-page" class="underline decoration-accent underline-offset-4 hover:text-accent-ink">{site.email}</a
         ><br />
         LinkedIn: <a href={site.social.linkedin} class="underline decoration-accent underline-offset-4 hover:text-accent-ink"
           >linkedin.com/in/nachomascort</a

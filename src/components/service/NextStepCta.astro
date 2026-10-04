@@ -43,10 +43,10 @@ const steps = es
     </ol>
 
     <div class="mt-10 flex flex-wrap items-center gap-x-6 gap-y-3">
-      <a href={site.calUrl} class="btn">{t('cta.call30')}</a>
+      <a href={site.calUrl} data-umami-event="call-booking-click" data-umami-event-placement="service" class="btn">{t('cta.call30')}</a>
       <p class="text-sm text-muted">
         {es ? 'O escríbeme a' : 'Or email me at'}
-        <a href={`mailto:${site.email}`} class="text-ink underline decoration-accent underline-offset-4 hover:text-accent-ink">{site.email}</a>
+        <a href={`mailto:${site.email}`} data-umami-event="email-click" data-umami-event-placement="service" class="text-ink underline decoration-accent underline-offset-4 hover:text-accent-ink">{site.email}</a>
       </p>
     </div>
   </div>

@@ -51,7 +51,7 @@ const copy =
 
 <section class="mx-auto max-w-5xl px-5 pt-16 md:pt-24 sm:px-6">
   <div class="card reveal grid items-center gap-8 !p-0 overflow-hidden md:grid-cols-[1fr_1.25fr]">
-    <a href={courseUrl} class="on-dark flex h-full min-h-[15rem] flex-col justify-between gap-8 p-7 sm:p-8" tabindex="-1" aria-hidden="true">
+    <a href={courseUrl} data-umami-event="course-click" data-umami-event-placement="course-band" class="on-dark flex h-full min-h-[15rem] flex-col justify-between gap-8 p-7 sm:p-8" tabindex="-1" aria-hidden="true">
       <span class="meta">Gumroad · 75 €</span>
       <span class="font-display text-3xl font-semibold leading-[1.05] tracking-tight sm:text-4xl">
         Programación<br />práctica <span class="accent">para SEO</span>
@@ -82,7 +82,7 @@ const copy =
       </dl>
       <p class="mt-4 text-sm font-semibold">{copy.endorsed}</p>
       <div class="mt-6 flex flex-wrap items-center gap-x-5 gap-y-3">
-        <a href={courseUrl} class="btn">{copy.cta} →</a>
+        <a href={courseUrl} data-umami-event="course-click" data-umami-event-placement="course-band" class="btn">{copy.cta} →</a>
         <p class="text-sm text-muted">{copy.price}</p>
       </div>
     </div>

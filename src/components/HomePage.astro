@@ -135,8 +135,8 @@ const copy =
       </h1>
       <p class="lede mt-7">{copy.intro}</p>
       <div class="mt-9 flex flex-wrap items-center gap-3">
-        <a href={site.calUrl} class="btn">{t('cta.call30')} →</a>
-        <a href={`mailto:${site.email}`} class="btn btn--ghost">{copy.secondary}</a>
+        <a href={site.calUrl} data-umami-event="call-booking-click" data-umami-event-placement="home" class="btn">{t('cta.call30')} →</a>
+        <a href={`mailto:${site.email}`} data-umami-event="email-click" data-umami-event-placement="home" class="btn btn--ghost">{copy.secondary}</a>
       </div>
     </div>
     <Portrait alt={copy.photoAlt} class="mx-auto w-full max-w-[20rem] md:max-w-[26rem]" />

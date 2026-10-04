@@ -30,23 +30,6 @@ const archive = esPosts
     <p class="lede mt-6">Growth, IA aplicada, SEO y automatización, contados desde proyectos reales.</p>
 
     {
-      archive.length > 0 && (
-        <a
-          href="/blog/seo-hacks/"
-          class="on-dark group mt-8 flex flex-wrap items-center gap-x-6 gap-y-3 rounded-xl px-6 py-5 transition-colors hover:bg-dark-2"
-        >
-          <Image src={seohacksLogo} alt="SEO Hacks" height={32} densities={[1, 2]} class="h-8 w-auto" />
-          <span class="flex-1 text-[0.95rem] text-on-dark-muted">
-            Archivo de mi antiguo blog · {archive.length} artículos (2015–2017)
-          </span>
-          <span class="text-[0.95rem] font-semibold transition-transform group-hover:translate-x-1">
-            Ver el archivo →
-          </span>
-        </a>
-      )
-    }
-
-    {
       posts.length === 0 ? (
         <p class="mt-10 rounded-xl border border-line bg-raised px-6 py-5 text-muted">
           Los primeros artículos nuevos en español están en camino. Mientras tanto, puedes leer los
@@ -57,6 +40,23 @@ const archive = esPosts
         </p>
       ) : (
         <PostList posts={posts} lang="es" />
+      )
+    }
+
+    {
+      archive.length > 0 && (
+        <a
+          href="/blog/seo-hacks/"
+          class="on-dark group mt-12 flex flex-wrap items-center gap-x-6 gap-y-3 rounded-xl px-6 py-5 transition-colors hover:bg-dark-2"
+        >
+          <Image src={seohacksLogo} alt="SEO Hacks" height={32} densities={[1, 2]} class="h-8 w-auto" />
+          <span class="flex-1 text-[0.95rem] text-on-dark-muted">
+            Archivo de mi antiguo blog · {archive.length} artículos (2015–2017)
+          </span>
+          <span class="text-[0.95rem] font-semibold transition-transform group-hover:translate-x-1">
+            Ver el archivo →
+          </span>
+        </a>
       )
     }
 

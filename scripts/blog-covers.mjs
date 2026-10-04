@@ -98,11 +98,11 @@ const scrapingCover = ({ title, subtitle }) => {
 const covers = [
   {
     file: 'src/content/blog/es/quality-google-core-updates/cover.png',
-    svg: qualityCover({ title: 'QUALITY', subtitle: ['Por qué las webs grandes se', 'mueven tanto en los core updates'] }),
+    svg: qualityCover({ title: 'QUALITY', subtitle: ['Qué es, cómo la mide Google', 'y cuánto tarda en recuperarse'] }),
   },
   {
     file: 'src/content/blog/en/google-quality-core-updates/cover.png',
-    svg: qualityCover({ title: 'QUALITY', subtitle: ['Why big sites swing so much', 'in Google core updates'] }),
+    svg: qualityCover({ title: 'QUALITY', subtitle: ['What it is, how Google measures it', 'and how long recovery takes'] }),
   },
   {
     file: 'src/content/blog/es/scraping-endpoints-google-autocomplete/cover.png',

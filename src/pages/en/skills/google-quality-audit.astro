@@ -1,0 +1,17 @@
+---
+import Base from '../../../layouts/Base.astro';
+import Cta from '../../../components/Cta.astro';
+import QualityAuditSkill from '../../../components/skills/QualityAuditSkill.astro';
+---
+
+<Base
+  lang="en"
+  title="Google Quality Audit: a free skill to audit your site’s quality — Nacho Mascort"
+  description="Free skill for Claude and Codex that audits your pages against Google's quality criteria: four pillars, commodity content and leak signals. With a real example report."
+  path="/en/skills/google-quality-audit/"
+  alternatePath="/skills/google-quality-audit/"
+  breadcrumbs={[{ name: 'Home', path: '/en/' }, { name: 'Skills', path: '/en/skills/' }, { name: 'Google Quality Audit', path: '/en/skills/google-quality-audit/' }]}
+>
+  <QualityAuditSkill lang="en" />
+  <Cta lang="en" />
+</Base>

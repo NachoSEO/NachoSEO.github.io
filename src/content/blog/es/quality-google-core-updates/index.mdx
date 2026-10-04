@@ -1,6 +1,6 @@
 ---
-title: 'Quality en Google: qué es y por qué las webs grandes se mueven tanto en los core updates'
-description: 'Lo que Google contó sobre quality en el Search Central Live Deep Dive de Barcelona: effort, originality, contenido commodity, content breadth y cuánto tarda en recuperarse una web.'
+title: 'Quality en Google: qué es, cómo la mide y cuánto tarda en recuperarse una web de un core update'
+description: 'Lo que Google contó sobre quality en el Search Central Live Deep Dive de Barcelona: los cuatro pilares, el contenido commodity, qué pasa en AI Overviews y cuánto tarda en recuperarse una web.'
 lang: es
 translationKey: google-quality
 slug: quality-google-core-updates
@@ -125,11 +125,28 @@ citations:
 
 import LeadMagnet from '../../../../components/blog/LeadMagnet.astro';
 
-Esta semana estuve en el Search Central Live Deep Dive Europe 2026 que Google montó en Barcelona. Tres días de charlas con gente de Search, y una de ellas fue sobre quality, de la mano de Duy Nguyen, Search Quality Analyst y una de las personas que lleva los equipos de anti-spam.
+<aside class="tldr" aria-label="Resumen">
 
-Quality es el tema que más me preocupa en webs grandes. Casi nunca veo una web grande que quiera hacer las cosas mal. Lo que veo es una web que se estira. Hay un objetivo de tráfico, abres otra categoría, otra plantilla, otro cluster de contenido, y cada paso parece razonable. Un día te has pasado de la raya, llega un core update y te pega.
+<details>
+<summary><span class="tldr-label">TL;DR</span> <span class="tldr-cue">Ver resumen</span></summary>
 
-Los core updates afectan a webs de cualquier tamaño. Pero las grandes suelen moverse más a menudo, porque tienen más formas de estirarse: más plantillas, más idiomas, más secciones abiertas para captar tráfico. Lo verás en los ejemplos de este post.
+- Para Google, quality es effort, originality, talent o skill y accuracy. Se juzga igual si el contenido lo escribe una persona o una IA.
+- El contenido commodity es el que podría haber escrito cualquiera: si cambias tu marca por la de un competidor y la página sigue valiendo igual, es commodity.
+- Quality va pegada a cada URL antes de que alguien busque, y los core updates miran el site entero. Las páginas flojas arrastran a las buenas.
+- Recuperarse de un core update lleva de 3 a 6 meses de media. Con una web de baja calidad, Google puede tardar meses en indexarte o no hacerlo nunca.
+- Qué hacer: agrupa tus URLs por page type, pásalos por los cuatro pilares y mejora, consolida o elimina lo commodity.
+
+</details>
+
+[Llévame directamente a la skill que evalúa la quality de un site →](#skill)
+
+</aside>
+
+A principios de octubre estuve en el Search Central Live Deep Dive Europe 2026 que Google montó en Barcelona. Tres días de charlas con gente de Search, y una de ellas fue sobre quality, de la mano de Duy Nguyen, Search Quality Analyst y una de las personas que lleva los equipos de anti-spam.
+
+Quality es el tema que más me preocupa en webs grandes. Casi nunca veo una web grande que quiera hacer las cosas mal. Lo que veo es una web que se estira. Hay un objetivo de tráfico, abres otra categoría, otro page type, otro cluster de contenido, y cada paso parece razonable. Un día te has pasado de la raya, llega un core update y te pega.
+
+Los core updates afectan a webs de cualquier tamaño. Pero las grandes suelen moverse más a menudo, porque tienen más formas de estirarse: más page types, más idiomas, más secciones abiertas para captar tráfico. Lo verás en los ejemplos de este post.
 
 Y el momento no puede ser mejor: el 1 de octubre, un día antes de que acabara el evento, Google actualizó su documentación de [contenido útil, fiable y centrado en las personas](https://developers.google.com/search/docs/fundamentals/creating-helpful-content) con los mismos conceptos de la charla. Lo que se contó en Barcelona ya está por escrito ([Marie Haynes lo resume bien](https://www.mariehaynes.com/main-content/)).
 
@@ -168,7 +185,7 @@ El esfuerzo puede ser directo, como una persona traduciendo un poema, o indirect
 
 Aquí viene lo interesante. En el [leak de la Content Warehouse API](https://ipullrank.com/google-algo-leak) de mayo de 2024 aparece un atributo llamado [`contentEffort`](https://google-api-content-warehouse.hexdocs.pm/0.4.0/GoogleApi.ContentWarehouse.V1.Model.QualityNsrPQData.html), descrito como "LLM-based effort estimation for article pages". Que ese campo sea la versión algorítmica del pilar de effort es una deducción mía, pero cuesta no verlo.
 
-En una web grande, effort se traduce en preguntas incómodas. ¿Cuántas de tus páginas ha tocado una persona? ¿Cuántas salen de un feed, una plantilla y un modelo de lenguaje sin que nadie las revise?
+En una web grande, effort se traduce en preguntas incómodas. ¿Cuántas de tus páginas ha tocado una persona? ¿Cuántas salen de un feed y un modelo de lenguaje sin que nadie las revise?
 
 ### Originality
 
@@ -198,7 +215,7 @@ Duy lo dejó claro en la charla: la calidad se juzga igual venga el contenido de
 
 El problema es otro. La IA hace que producir contenido mediocre a escala sea gratis, y eso es exactamente lo que penalizan los cuatro pilares. La documentación nueva añade también la **autoría engañosa**: perfiles de autor inventados, fotos generadas con IA o credenciales falsas son ahora una señal explícita de baja calidad.
 
-<LeadMagnet lang="es" source="quality-google-core-updates" />
+<LeadMagnet lang="es" source="quality-google-core-updates" id="skill" />
 
 ## ¿Qué es el contenido commodity?
 
@@ -214,7 +231,7 @@ Este slide fue de lo mejor del evento. Contenido commodity es el que podría hab
 
 El término ya es lenguaje oficial. Google lo usa en su [guía de optimización para IA](https://developers.google.com/search/docs/fundamentals/ai-optimization-guide) con el mismo ejemplo de los consejos para comprar casa, y dice que crear contenido único y útil influirá más en tu presencia en la búsqueda generativa a largo plazo que cualquier otra recomendación de la guía.
 
-En una web grande, el commodity casi nunca es un post suelto. Es una plantilla. Son las 3.000 páginas de "qué es X" generadas para cubrir long tail, las fichas de producto con la descripción del fabricante, las landings por ciudad que solo cambian el nombre. Cada una por separado parece inofensiva. Juntas le dicen a Google que tu web es intercambiable.
+En una web grande, el commodity casi nunca es un post suelto. Es un page type entero. Son las 3.000 páginas de "qué es X" generadas para cubrir long tail, las fichas de producto con la descripción del fabricante, las landings por ciudad que solo cambian el nombre. Cada una por separado parece inofensiva. Juntas le dicen a Google que tu web es intercambiable.
 
 ## Content breadth: el índice no para de crecer
 
@@ -286,6 +303,18 @@ A partir de aquí entramos en deducciones. Mike King [supone](https://ipullrank.
 
 Mi lectura: quality entra en el ranking principal a través de Q\* y además hay capas de ajuste por encima que usan señales de spam y calidad. Que parte del efecto de un core update se note en esas capas es una hipótesis razonable, pero nadie lo ha documentado.
 
+## ¿Y en AI Overviews y AI Mode?
+
+Google lo explica en su [guía de optimización para funciones de IA](https://developers.google.com/search/docs/fundamentals/ai-optimization-guide), y se resume en tres ideas:
+
+- **No hay un truco aparte.** La guía lo dice así: "You don't need to create new machine readable files, AI text files, markup, or Markdown to appear in Google Search". El llms.txt, Google lo ignora. Para salir, tu página tiene que estar indexada y poder mostrarse con snippet.
+- **Las respuestas salen del mismo índice.** AI Overviews y AI Mode usan retrieval-augmented generation: recuperan páginas relevantes y enlazan las que respaldan la respuesta. Además hacen query fan-out, es decir, el modelo lanza varias búsquedas relacionadas a la vez para conseguir más resultados.
+- **Lo que no sea commodity gana.** Según la guía, crear contenido "unique, compelling, and useful" probablemente influirá en tu presencia en la búsqueda generativa, y pone como ejemplo de commodity los mismos consejos para comprar casa que salían en la charla.
+
+Mi lectura, y aquí ya es inferencia mía: si las respuestas se construyen recuperando páginas del índice, quality entra por el mismo sitio que en los resultados de siempre, como atributo pegado a cada URL. Con el fan-out compites en más queries a la vez, así que un page type commodity pierde en todas. Si diez páginas dicen lo mismo, el modelo puede citar cualquiera. Si el dato solo lo tienes tú, la cita es tuya. Google no ha documentado cómo elige qué fuente citar.
+
+Para medirlo tienes el informe de rendimiento en funciones de IA generativa de Search Console.
+
 ## Todo el recorrido de un vistazo
 
 Para situar todo esto, este es el recorrido de indexing que enseñaron en Barcelona. Index selection es donde quality decide qué se guarda:
@@ -355,13 +384,13 @@ Quality aparece en las tres. Con una web de mala calidad, Google puede tardar me
 
 Vuelvo al principio. Esto le puede pasar a una web pequeña, pero en una grande hay muchas más palancas para estirarse. Casi nadie decide hacer contenido malo. Lo que pasa es una suma de decisiones razonables:
 
-- **Escalar plantillas.** Una plantilla que funciona en 100 páginas se lanza en 10.000. Las últimas 9.000 tienen menos datos, menos demanda y más texto de relleno.
+- **Escalar page types.** Un page type que funciona en 100 páginas se lanza en 10.000. Las últimas 9.000 tienen menos datos, menos demanda y más texto de relleno.
 - **Abrir temas lejos de tu foco.** Un medio de tecnología empieza a publicar recetas porque hay volumen. `siteFocusScore` y `siteRadius` miden justo eso.
 - **Producir con IA sin revisar.** Es la vía más rápida a "little to no effort, little to no originality, little to no added value", que es como las guidelines describen el contenido Lowest.
 - **Inventar autores.** Ahora es una señal explícita en la documentación.
 - **Cubrir keywords en vez de responder.** Las 3.000 páginas de "qué es X" que dicen lo mismo que el resto del top 10.
 
-Lo viví en primera persona en Softonic. Consolidamos los idiomas, que estaban en subdominios, dentro del dominio principal. Al principio funcionó muy bien y el tráfico subió. Luego llegó un core update y nos dio fuerte: una caída de un 20 y pico por ciento en un site que hace millones de visitas al día.
+Lo viví en primera persona en [Softonic](/casos/softonic-0-a-20-millones/). Consolidamos los idiomas, que estaban en subdominios, dentro del dominio principal. Al principio funcionó muy bien y el tráfico subió. Luego llegó un core update y nos dio fuerte: una caída de un 20 y pico por ciento en un site que hace millones de visitas al día.
 
 Al analizar las posibles causas, la conclusión fue que las traducciones, que no tenían la calidad del contenido original, estaban bajando la calidad global del site. Al meterlas bajo el mismo dominio, arrastraban a todo lo demás.
 
@@ -371,12 +400,25 @@ Fue todo un éxito, y fue una decisión de calidad: cambiar qué contenido conta
 
 Si gestionas una web grande, esto es lo que yo revisaría antes del próximo core update:
 
-1. **Agrupa las URLs por plantilla** y mira el tráfico, el porcentaje indexado y el crecimiento de cada grupo. Las plantillas con mucho "Rastreada: actualmente sin indexar" son tu primera alarma.
-2. **Pasa cada plantilla por los cuatro pilares.** ¿Hay esfuerzo humano? ¿Aporta algo que no esté en el top 10? ¿Lo ha hecho alguien que sabe? ¿Es correcto?
+1. **Agrupa las URLs por page type** y mira el tráfico, el porcentaje indexado y el crecimiento de cada grupo. Los page types con mucho "Rastreada: actualmente sin indexar" son tu primera alarma.
+2. **Pasa cada page type por los cuatro pilares.** ¿Hay esfuerzo humano? ¿Aporta algo que no esté en el top 10? ¿Lo ha hecho alguien que sabe? ¿Es correcto?
 3. **Busca el commodity.** Si puedes cambiar tu marca por la de un competidor y la página sigue valiendo igual, es commodity.
 4. **Mejora, consolida o elimina.** Lo que no puedas convertir en non-commodity, júntalo con otras páginas o bórralo.
 5. **Mide en meses.** Lo que hagas hoy se verá, con suerte, en 3 a 6 meses.
 
-<LeadMagnet lang="es" source="quality-google-core-updates" intro="Si quieres hacer este repaso con ayuda, la skill que te mando por email hace justo esto con cada plantilla:" />
+El 4 de octubre de 2026 pasé la skill por mi propia web, una página de cada page type, y el informe completo está [en la página de la skill](/skills/google-quality-audit/). El page type que peor sale es el archivo de posts antiguos de SEO Hacks.
+
+<LeadMagnet lang="es" source="quality-google-core-updates" intro="Si quieres hacer este repaso con ayuda, la skill que te mando por email hace justo esto con cada page type:" />
 
 En el año 2000 bastaba con ser una naranja. Entre las 20.000 de 2025, tienes que ser la que alguien quiere comerse.
+
+<aside class="post-module" aria-label="Consultoría">
+
+<p class="post-module-label">¿Gestionas una web grande?</p>
+
+Si tienes miles de URLs y un core update te ha movido el tráfico, o te preocupa el siguiente, reviso tus page types contigo y te digo cuáles mejorar, consolidar o quitar. Trabajas directamente conmigo.
+
+[Ver la consultoría SEO y GEO →](/servicios/consultoria-seo-geo/) · [Reservar una llamada de 30 minutos](https://cal.com/nacho-mascort/30min)
+
+</aside>
+

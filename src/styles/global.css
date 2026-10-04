@@ -633,6 +633,72 @@ body {
     font-size: 0.85rem;
     overflow-x: auto;
   }
+  /* Módulo de resumen al inicio del post */
+  .article-body .tldr,
+  .article-body .post-module {
+    margin-block: 0 2.5rem;
+    padding: 1.5rem 1.5rem 1.6rem;
+    background: var(--tone-raised);
+    border: 1px solid var(--tone-line);
+    border-top: 3px solid var(--tone-accent);
+    border-radius: 0.875rem;
+  }
+  .article-body .post-module {
+    margin-block: 2.75rem 0;
+  }
+  .article-body .tldr .tldr-label {
+    font-family: var(--font-sans);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--tone-accent-ink);
+  }
+
+  .article-body .post-module .post-module-label {
+    margin-top: 0;
+    font-family: var(--font-sans);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--tone-accent-ink);
+  }
+  .article-body .tldr summary {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    cursor: pointer;
+    list-style: none;
+  }
+  .article-body .tldr summary::-webkit-details-marker {
+    display: none;
+  }
+  .article-body .tldr summary::after {
+    content: "+";
+    margin-left: auto;
+    font-size: 1.25rem;
+    line-height: 1;
+    color: var(--tone-accent-ink);
+  }
+  .article-body .tldr details[open] summary::after {
+    content: "−";
+  }
+  .article-body .tldr .tldr-cue {
+    font-size: 0.9rem;
+    color: var(--tone-muted);
+  }
+  .article-body .tldr details[open] .tldr-cue {
+    display: none;
+  }
+  .article-body .tldr ul {
+    margin-top: 0.75rem;
+  }
+  .article-body .tldr > p:last-child {
+    margin-top: 1.25rem;
+    font-weight: 600;
+  }
+
   /* Badge "fuente preferida" con las proporciones y colores del oficial de Google */
   .preferred-source {
     display: inline-flex;

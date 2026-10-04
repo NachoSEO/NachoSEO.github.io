@@ -1,0 +1,43 @@
+---
+import Base from '../../../layouts/Base.astro';
+import Cta from '../../../components/Cta.astro';
+
+const skills = [
+  {
+    href: '/en/skills/google-quality-audit/',
+    title: 'Google Quality Audit',
+    tagline: "Audits your pages against Google's quality criteria: the four pillars, the commodity test and the leak signals.",
+    detail: 'Includes a real example report on my own site.',
+  },
+];
+---
+
+<Base
+  lang="en"
+  title="Skills for Claude and Codex — Nacho Mascort"
+  description="Free Claude and Codex skills I use in my SEO and GEO work. Install them and use them on your site."
+  path="/en/skills/"
+  alternatePath="/skills/"
+  breadcrumbs={[{ name: 'Home', path: '/en/' }, { name: 'Skills', path: '/en/skills/' }]}
+>
+  <div class="mx-auto max-w-5xl px-5 pt-16 sm:px-6 sm:pt-20">
+    <p class="meta">Skills</p>
+    <h1 class="display-1 mt-5">Skills for Claude and Codex</h1>
+    <p class="lede mt-6">Skills I use in my day-to-day SEO and GEO work, packaged so you can install them in Claude or Codex and use them on your site. They are free.</p>
+
+    <div class="mt-12 grid gap-5 md:grid-cols-2">
+      {
+        skills.map((skill) => (
+          <a href={skill.href} class="card flex flex-col">
+            <h2 class="card-title display-3 transition-colors">{skill.title}</h2>
+            <p class="mt-3 text-[0.95rem]">{skill.tagline}</p>
+            <p class="mt-3 flex-1 text-sm text-muted">{skill.detail}</p>
+            <p class="link-arrow mt-5 text-[0.95rem]">See the skill</p>
+          </a>
+        ))
+      }
+    </div>
+  </div>
+
+  <Cta lang="en" />
+</Base>

@@ -9,12 +9,14 @@ interface Props {
   source: string;
   /** Frase previa que solo tiene sentido si el formulario se muestra */
   intro?: string;
+  /** Ancla para enlazar al bloque desde el propio post (p. ej. desde el TL;DR) */
+  id?: string;
 }
 
 // Interruptor del formulario (Kit: KIT_API_KEY, KIT_FORM_ID_ES, KIT_FORM_ID_EN en Cloudflare Pages)
 const ENABLED = true;
 
-const { lang, source, intro } = Astro.props;
+const { lang, source, intro, id } = Astro.props;
 
 const copy =
   lang === 'es'
@@ -55,7 +57,7 @@ const inputId = `lead-email-${lang}-${Math.random().toString(36).slice(2, 7)}`;
 }
 {
   ENABLED && (
-<aside class="lead" aria-labelledby={`${inputId}-title`}>
+<aside class="lead" id={id} aria-labelledby={`${inputId}-title`}>
   <div class="lead-file" aria-hidden="true">
     <p class="lead-file-name">google-quality-audit/<strong>SKILL.md</strong></p>
     <ul>
@@ -104,6 +106,7 @@ const inputId = `lead-email-${lang}-${Math.random().toString(36).slice(2, 7)}`;
 
 <style>
   .lead {
+    scroll-margin-top: 1.5rem;
     margin-block: 2.75rem;
     padding: 1.5rem;
     border-radius: 1.5rem;

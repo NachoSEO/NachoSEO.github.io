@@ -1,0 +1,139 @@
+---
+import LeadMagnet from '../blog/LeadMagnet.astro';
+import SectionLabel from '../SectionLabel.astro';
+import { Content as ReportEs } from '../../data/skills/quality-audit-report.es.md';
+import { Content as ReportEn } from '../../data/skills/quality-audit-report.en.md';
+import { localizedRoute } from '../../i18n/utils';
+import type { Lang } from '../../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const Report = lang === 'es' ? ReportEs : ReportEn;
+const postUrl = lang === 'es' ? '/blog/quality-google-core-updates/' : '/en/blog/google-quality-core-updates/';
+
+const copy =
+  lang === 'es'
+    ? {
+        label: 'Skill para Claude y Codex',
+        intro:
+          'Audita tus páginas con los criterios de quality de Google: los cuatro pilares de las Quality Rater Guidelines, el test de contenido commodity y las señales de quality del leak. Le pasas una URL, un page type o una sección entera y te devuelve un informe con lo que suspende y cómo arreglarlo.',
+        basis: 'La teoría detrás está en el post',
+        basisLink: 'Quality en Google: qué es, cómo la mide y cuánto tarda en recuperarse una web de un core update',
+        stepsTitle: 'Qué hace',
+        steps: [
+          { title: 'Puntúa los cuatro pilares', body: 'Effort, originality, talent o skill y accuracy, de 0 a 4 cada uno y siempre con la evidencia sacada de la página.' },
+          { title: 'Pasa el test de commodity', body: 'Si cambias tu marca por la de un competidor y la página sigue valiendo igual, es commodity. Te propone un ángulo que solo tú puedes cubrir.' },
+          { title: 'Busca red flags', body: 'Scaled content, relleno, autoría engañosa o IA sin revisar, según las spam policies y las guidelines.' },
+          { title: 'Sube a page type y site', body: 'Qué page types mejorar, consolidar, sacar del dominio o eliminar, y si alguno arrastra al resto.' },
+          { title: 'Lo cruza con el leak', body: 'Cada señal de Google va marcada como documentada, inferencia o hipótesis. Nada de inventar pesos.' },
+        ],
+        usageTitle: 'Cómo se usa',
+        usage: [
+          'Audita la quality de esta URL: https://…',
+          'Esta es mi plantilla de fichas de ciudad (te pego el texto). ¿Es contenido commodity?',
+          'Caímos un 20 % en el último core update. Estas son nuestras secciones y cuántas páginas tiene cada una. ¿Por dónde empiezo?',
+        ],
+        exampleLabel: 'Ejemplo real',
+        auditDate: 'Auditoría del 4 de octubre de 2026',
+        followUp:
+          'Voy a aplicar sus recomendaciones y volveré a pasarle la skill, para que veas el antes y el después y cómo ayuda a mejorar una web.',
+        exampleTitle: 'Se la he pasado a mi propia web',
+        exampleIntro:
+          'Una página de cada page type de nachomascort.com. Este es el informe tal cual lo devolvió, con lo bueno y lo malo.',
+        outro: '¿Quieres el mismo informe de tu web?',
+      }
+    : {
+        label: 'Skill for Claude and Codex',
+        intro:
+          "Audits your pages against Google's quality criteria: the four pillars from the Quality Rater Guidelines, the commodity content test and the quality signals from the leak. Give it a URL, a page type or a whole section and it returns a report with what fails and how to fix it.",
+        basis: 'The theory behind it is in the post',
+        basisLink: 'Quality at Google: what it is, how it is measured and how long it takes to recover from a core update',
+        stepsTitle: 'What it does',
+        steps: [
+          { title: 'Scores the four pillars', body: 'Effort, originality, talent or skill and accuracy, 0 to 4 each, always backed by evidence from the page.' },
+          { title: 'Runs the commodity test', body: "If you swap your brand for a competitor's and the page is still just as useful, it's commodity. It suggests an angle only you can cover." },
+          { title: 'Looks for red flags', body: 'Scaled content, filler, deceptive authorship or unreviewed AI, based on the spam policies and the guidelines.' },
+          { title: 'Zooms out to page type and site', body: 'Which page types to improve, consolidate, move out or remove, and whether one is dragging the rest down.' },
+          { title: 'Maps it to the leak', body: 'Every Google signal is labelled as documented, inference or hypothesis. No made-up weights.' },
+        ],
+        usageTitle: 'How to use it',
+        usage: [
+          'Audit the quality of this URL: https://…',
+          "This is my city page template (pasting the text). Is it commodity content?",
+          'We dropped 20% in the last core update. These are our sections and how many pages each has. Where do I start?',
+        ],
+        exampleLabel: 'Real example',
+        auditDate: 'Audit run on 4 October 2026',
+        followUp:
+          "I'm going to apply its recommendations and run the skill again, so you can see the before and after and how it helps improve a site.",
+        exampleTitle: 'I ran it on my own site',
+        exampleIntro:
+          "One page of each page type on nachomascort.com. This is the report exactly as it came back, good and bad. The audited pages are in Spanish.",
+        outro: 'Want the same report for your site?',
+      };
+---
+
+<div class="mx-auto max-w-5xl px-5 pt-16 sm:px-6 sm:pt-20">
+  <p class="meta"><a href={localizedRoute('skills', lang)} class="hover:text-ink">Skills</a></p>
+  <p class="section-label mt-5">{copy.label}</p>
+  <h1 class="display-1 mt-3">Google Quality Audit</h1>
+  <p class="lede mt-6">{copy.intro}</p>
+  <p class="mt-4 text-[0.95rem] text-muted">
+    {copy.basis} <a href={postUrl} class="link-arrow">{copy.basisLink}</a>
+  </p>
+
+  <section class="mt-14">
+    <SectionLabel label={copy.stepsTitle} asHeading />
+    <ol class="mt-6 grid gap-5 md:grid-cols-2">
+      {
+        copy.steps.map((step, index) => (
+          <li class="card">
+            <p class="meta">0{index + 1}</p>
+            <h3 class="display-3 mt-2">{step.title}</h3>
+            <p class="mt-2 text-[0.95rem] text-muted">{step.body}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  <section class="mt-14 max-w-[46rem]">
+    <SectionLabel label={copy.usageTitle} asHeading />
+    <ul class="mt-5 space-y-3">
+      {copy.usage.map((prompt) => <li class="rounded-xl border border-line bg-raised px-4 py-3 font-mono text-sm">{prompt}</li>)}
+    </ul>
+  </section>
+
+  <div class="max-w-[46rem]">
+    <LeadMagnet lang={lang} source="skills-google-quality-audit" id="skill" />
+  </div>
+
+  <section class="mt-6">
+    <SectionLabel label={copy.exampleLabel} />
+    <h2 class="display-2 mt-3">{copy.exampleTitle}</h2>
+    <p class="meta mt-4"><time datetime="2026-10-04">{copy.auditDate}</time></p>
+    <p class="lede mt-4">{copy.exampleIntro}</p>
+    <p class="mt-3 max-w-[58ch] text-[0.95rem] text-muted">{copy.followUp}</p>
+    <div class="article-body skill-report mt-8 max-w-[52rem]">
+      <Report />
+    </div>
+  </section>
+
+  <div class="max-w-[46rem]">
+    <LeadMagnet lang={lang} source="skills-google-quality-audit" intro={copy.outro} />
+  </div>
+</div>
+
+<style>
+  .skill-report :global(table) {
+    display: block;
+    overflow-x: auto;
+  }
+  .skill-report :global(td) {
+    vertical-align: top;
+    min-width: 7rem;
+  }
+</style>

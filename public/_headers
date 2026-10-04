@@ -16,3 +16,7 @@
 # Versiones en Markdown para LLMs y agentes
 /*.md
   Content-Type: text/markdown; charset=utf-8
+
+# Descargas enlazadas desde los emails: fuera del índice
+/descargas/*
+  X-Robots-Tag: noindex

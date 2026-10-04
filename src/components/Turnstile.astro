@@ -17,6 +17,11 @@ const SITE_KEY = '0x4AAAAAAFNFf1h16Ha20rP9';
 <div class="cf-turnstile" data-sitekey={SITE_KEY} data-language={lang} data-theme={theme} data-size="flexible"></div>
 
 <script>
+  // El modo flexible mide mínimo 300px y desborda los formularios en móviles estrechos: ahí usamos el compacto
+  document.querySelectorAll<HTMLElement>('.cf-turnstile').forEach((widget) => {
+    if ((widget.parentElement?.clientWidth ?? 0) < 300) widget.dataset.size = 'compact';
+  });
+
   if (!document.querySelector('script[data-turnstile]')) {
     const script = document.createElement('script');
     script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
@@ -30,5 +35,9 @@ const SITE_KEY = '0x4AAAAAAFNFf1h16Ha20rP9';
 <style>
   .cf-turnstile {
     min-height: 65px;
+    max-width: 100%;
+  }
+  .cf-turnstile[data-size='compact'] {
+    min-height: 140px;
   }
 </style>

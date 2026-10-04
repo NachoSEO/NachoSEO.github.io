@@ -20,6 +20,8 @@ const lang = entry.data.lang as Lang;
 const { Content, headings } = await render(entry);
 
 const isSeoHacks = entry.data.category === 'seohacks';
+// Oculto hasta que nachomascort.com aparezca en google.com/preferences/source
+const SHOW_PREFERRED_SOURCE = false;
 const otherLang = getOtherLang(lang);
 const blogBase = localizedRoute('blog', lang);
 
@@ -177,7 +179,7 @@ const breadcrumbs = [
           }
         </div>
         {
-          !isSeoHacks && (
+          SHOW_PREFERRED_SOURCE && !isSeoHacks && (
             /* Réplica en vector del badge oficial de Google (Search Central), como en seerinteractive.com */
             <a
               href={`https://www.google.com/preferences/source?q=${Astro.site!.hostname}`}

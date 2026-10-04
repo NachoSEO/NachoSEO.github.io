@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 import ClientLogos from './ClientLogos.astro';
 import CasesBand from './CasesBand.astro';
+import CourseBand from './CourseBand.astro';
 import Cta from './Cta.astro';
 import Portrait from './Portrait.astro';
 import PostDate from './PostDate.astro';
@@ -226,6 +227,8 @@ const copy =
 </section>
 
 <RecognitionLogos lang={lang} />
+
+<CourseBand lang={lang} />
 
 {
   posts.length > 0 && (

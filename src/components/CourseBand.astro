@@ -1,0 +1,90 @@
+---
+import SectionLabel from './SectionLabel.astro';
+import type { Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+
+const courseUrl = 'https://nachomascort.gumroad.com/l/programacion-seo';
+
+const languages = ['JavaScript', 'Python', 'SQL', 'Git', 'Scraping', 'Apps Script'];
+
+const copy =
+  lang === 'es'
+    ? {
+        label: 'Mi curso en Gumroad',
+        title: 'Con la IA, saber programar te quita el techo',
+        body: [
+          'Claude o ChatGPT te escriben un script en segundos. Sin saber programar, llegas hasta donde funcione a la primera. Si entiendes el código, lo corriges, lo conectas y lo pones a trabajar cada día.',
+        ],
+        stats: [
+          { value: '450+', label: 'alumnos' },
+          { value: '80+', label: 'vídeos' },
+          { value: '12 h', label: 'de vídeo' },
+          { value: '14', label: 'ejercicios resueltos' },
+        ],
+        cta: 'Ver el curso',
+        price: '75 € + IVA · pago único · 7 días de garantía',
+        endorsed: 'Lo recomiendan Aleyda Solis y Esteve Castells',
+      }
+    : {
+        label: 'My course on Gumroad',
+        title: 'With AI, knowing how to code removes the ceiling',
+        body: [
+          "Claude or ChatGPT will write you a script in seconds. If you can't code, you get as far as whatever works on the first try. If you understand the code, you fix it, connect it and put it to work every day. The course is in Spanish.",
+        ],
+        stats: [
+          { value: '450+', label: 'students' },
+          { value: '80+', label: 'videos' },
+          { value: '12 h', label: 'of video' },
+          { value: '14', label: 'solved exercises' },
+        ],
+        cta: 'See the course',
+        price: '€75 + VAT · one-off payment · 7-day guarantee',
+        endorsed: 'Recommended by Aleyda Solis and Esteve Castells',
+      };
+
+---
+
+<section class="mx-auto max-w-5xl px-5 pt-16 md:pt-24 sm:px-6">
+  <div class="card reveal grid items-center gap-8 !p-0 overflow-hidden md:grid-cols-[1fr_1.25fr]">
+    <a href={courseUrl} class="on-dark flex h-full min-h-[15rem] flex-col justify-between gap-8 p-7 sm:p-8" tabindex="-1" aria-hidden="true">
+      <span class="meta">Gumroad · 75 €</span>
+      <span class="font-display text-3xl font-semibold leading-[1.05] tracking-tight sm:text-4xl">
+        Programación<br />práctica <span class="accent">para SEO</span>
+      </span>
+      <span class="flex flex-wrap gap-2">
+        {
+          languages.map((language) => (
+            <span class="rounded-full border border-white/25 px-3 py-1 font-mono text-xs text-on-dark-muted">{language}</span>
+          ))
+        }
+      </span>
+    </a>
+    <div class="px-6 pb-8 md:py-10 md:pl-0 md:pr-10">
+      <SectionLabel label={copy.label} />
+      <h2 class="display-3 mt-3">{copy.title}</h2>
+      {copy.body.map((paragraph) => <p class="mt-4 text-[0.95rem] text-muted">{paragraph}</p>)}
+      <dl class="mt-6 flex flex-wrap gap-x-7 gap-y-3">
+        {
+          copy.stats.map((stat) => (
+            <div>
+              <dt class="sr-only">{stat.label}</dt>
+              <dd class="text-sm text-muted">
+                <span class="accent font-display text-xl font-semibold tracking-tight">{stat.value}</span> {stat.label}
+              </dd>
+            </div>
+          ))
+        }
+      </dl>
+      <p class="mt-4 text-sm font-semibold">{copy.endorsed}</p>
+      <div class="mt-6 flex flex-wrap items-center gap-x-5 gap-y-3">
+        <a href={courseUrl} class="btn">{copy.cta} →</a>
+        <p class="text-sm text-muted">{copy.price}</p>
+      </div>
+    </div>
+  </div>
+</section>

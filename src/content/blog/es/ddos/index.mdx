@@ -5,15 +5,16 @@ lang: es
 translationKey: ddos
 slug: ddos
 pubDate: 2016-05-23
+updatedDate: 2026-10-05
 tags: ['seo-tecnico', 'seguridad']
 category: seohacks
 ---
 
-Buenas!
+¡Buenas!
 
-Hoy quiero contar mi experiencia con algo que espero que no te pase nunca pero que depende del nicho en el que estés acabarás sufriendo alguna que otra vez.
+Hoy quiero contar mi experiencia con algo que espero que no te pase nunca pero que, dependiendo del nicho en el que estés acabarás sufriendo alguna que otra vez.
 
-Se trata de los ataques DDoS, hace unas semanas sufrí un ataque bastante potente en una de mis web y hoy te cuento toda la experiencia.
+Se trata de los ataques DDoS, hace unas semanas sufrí un ataque bastante potente en una de mis webs y hoy te cuento toda la experiencia.
 
 Lo bueno es que aprendí muchísimo y como encontré bastante poca información al respecto he decidido exponer todo lo que aprendí en este post.
 
@@ -33,7 +34,7 @@ Cuando estás sufriendo un ataque de este tipo, lo que ocurre es que una persona
 
 Te lo cuento con un ejemplo que leí en su momento y me hizo mucha gracia.
 
-Imagina que tu servidor es un hombre que vende helados. Cada vez que un persona pide un helado ( su máquina hace una petición al servidor) el heladero le da un helado ya que es lo que le ha pedido (el servidor muestra la web) y si hay pocas personas pues el heladero es capaz de dar helados de forma más o menos rápida.
+Imagina que tu servidor es un hombre que vende helados. Cada vez que una persona pide un helado (su máquina hace una petición al servidor) el heladero le da un helado ya que es lo que le ha pedido (el servidor muestra la web) y si hay pocas personas pues el heladero es capaz de dar helados de forma más o menos rápida.
 
 El del camión de helados de al lado ve que a nuestro heladero le va genial y se muere de rabia por lo que decide mandar a miles de personas a pedirle un helado. Para más inri, todas le piden el helado a la vez.
 
@@ -45,7 +46,7 @@ Pues algo similar ocurre con un ataque DDoS, tu web empieza a recibir miles y mi
 
 Hay diferentes tipos de ataques DDoS y si te interesa el tema investiga por los foros que existen ya que es donde mejor documentación hay al respecto.
 
-## DDos vs DoS
+## DDoS vs DoS
 
 Si has investigado sobre el tema, es posible que hayas oído que hay una tipología de ataque llamado DoS.
 
@@ -61,9 +62,9 @@ Lo logra gracias a las llamadas Botnets, si te interesa [lee más aquí](https:/
 
 ## ¿Cómo pararlo?
 
-No se si alguna vez has sufrido uno o si lo estás sufriendo ahora pero sea la opción que sea, guárdate bien esta guía ya que el tiempo de respuesta puede ser un factor crucial para que no haya secuelas.
+No sé si alguna vez has sufrido uno o si lo estás sufriendo ahora pero sea la opción que sea, guárdate bien esta guía ya que el tiempo de respuesta puede ser un factor crucial para que no haya secuelas.
 
-Lo que te voy a contar a continuación es todo lo que se tuvo que hacer para **parar el ataque DDoS.**.
+Lo que te voy a contar a continuación es todo lo que se tuvo que hacer para **parar el ataque DDoS**.
 
 El alcance era el siguiente:
 
@@ -79,7 +80,7 @@ Para ello necesitarás hacerlo a través de la consola SSH.
 
 Descárgate [este programa](https://www.bitvise.com/ssh-client-download) para acceder.
 
-Una vez descargada e instalada (no tiene misterio, todo por defecto y finalizar) necesitarás la siguiente información para poder acceder al servidor.
+Una vez descargada e instalada (no tiene misterio, todo por defecto y finalizar) necesitarás los datos de acceso SSH que te da tu proveedor de hosting: la IP o el host del servidor, el puerto, el usuario y la contraseña o clave.
 
 Una vez puestos los datos y de haber introducido el puerto si no viene por defecto le damos al login y se nos mostrará un mensaje de acceso con éxito junto con la apertura de la consola.
 
@@ -93,15 +94,13 @@ Este comando mostrará todas las IPs conectadas a tu servidor en el puerto 80 (�
 
 Si quieres saber qué significa cada comando lee [este post](http://www.mkyong.com/linux/list-all-ip-addresses-connected-to-your-server/).
 
-Cuando ponemos este comando nos aparece lo siguiente:
+En una situación normal, en una de mis webs este comando devuelve una lista de IPs con entre 4 y 9 peticiones cada una.
 
-Ahora estas viendo toda una serie de IPs conectadas actualmente a una de mis webs.
+Durante el ataque DDoS no tenía 4-9 peticiones por IP, tenía más de 10.000.
 
-Durante el ataque DDoS no tenía 4-9 peticiones por IP, tenía más de 10.000:
+Con esa diferencia se ve muy fácilmente qué IP son las que están haciendo peticiones a mansalva en el servidor.
 
-Esto es una pequeña muestra pero se ve muy fácilmente que IP son las que están haciendo peticiones a mansalva en el servidor.
-
-No sólo se ve que IPs están realizando el ataque sino que podemos observar que hay ciertos rangos de IP realizando miles de peticiones.
+No sólo se ve qué IPs están realizando el ataque sino que podemos observar que hay ciertos rangos de IP realizando miles de peticiones.
 
 [Otro de los posts](http://cursohacker.es/que-hay-detras-de-una-ip) que me ayudaron muchísimo para comprender todo el tema de IPs.
 
@@ -121,13 +120,11 @@ Es una de las herramientas perfectas para lidiar con ese tipo de ataques.
 
 En un apartado del Firewall debería haber un cuadro para bloquear las IP que has listado anteriormente.
 
-Te voy a explicar que debes añadir en cada una de las celdas del cuadro.
+Te voy a explicar qué debes añadir en cada una de las celdas del cuadro.
 
-Las dos primeras celdas dejalas por defecto en “Interfaz Pública” e “IP”, en dirección de origen has de poner una de las IP listadas como maliciosa, en el puerto de destino has de poner 80 ya que el puerto 80 es donde se hacen las peticiones a la web, deja el protocolo como TCP y en comando modifica el valor “ACCEPT” por “DROP”.
+Las dos primeras celdas déjalas por defecto en “Interfaz Pública” e “IP”, en dirección de origen has de poner una de las IP listadas como maliciosa, en el puerto de destino has de poner 80 ya que el puerto 80 es donde se hacen las peticiones a la web, deja el protocolo como TCP y en comando modifica el valor “ACCEPT” por “DROP”.
 
-Debería quedar algo así:
-
-De esta manera le estaremos indicando al Firewall que bloquee todas las conexiones de la IP 183.3.202.200 del puerto 80.
+Por ejemplo, si pones como origen la IP 183.3.202.200, le estarás indicando al Firewall que bloquee todas las conexiones de esa IP al puerto 80.
 
 Ya has observado que el problema no es una IP, sino varios rangos de IPs.
 
@@ -135,47 +132,45 @@ Y me preguntarás, ¿cómo se bloquea un rango?
 
 Te lo cuento.
 
-Yo en su momento aplique la lógica y fue un error colosal.
+Yo en su momento apliqué la lógica y fue un error colosal.
 
 Me dije:
 
 > Vale, si cada octeto de una IP va de 0 a 255 pues lo único que tengo que hacer es poner la IP de esta manera: 183.3.202.0/255 y ya está
 
-En estos casos deja la lógica al lado e infórmate muy bien porque lo que acaba de bloquear no eran 256 IPs.
+En estos casos deja la lógica al lado e infórmate muy bien porque lo que acababa de bloquear no eran 256 IPs.
 
 La manera correcta de bloquear un rango es empleando el /24. En este caso tendría que haber puesto: 183.3.202.0/24.
 
 Si quieres bloquear ciertos rangos de IPs te dejo con este [otro recurso](https://es.wikipedia.org/wiki/Ayuda:C%C3%B3mo_bloquear_un_rango) que te vendrá genial.
 
-### Cloudfare
+### Cloudflare
 
-Una de las soluciones más famosas para evitar ataques DDoS es la plataforma online Cloudfare.
+Una de las soluciones más famosas para evitar ataques DDoS es la plataforma online Cloudflare.
 
-Cloudfare es un servicio de seguridad para evitar ataques DDoS con diferentes funcionalidades según el plan en el que estés. Con la versión gratuita ya puedes parar ataques pequeñitos y mitigar otros más grandes.
+Cloudflare es un servicio de seguridad para evitar ataques DDoS con diferentes funcionalidades según el plan en el que estés. Con la versión gratuita ya puedes parar ataques pequeñitos y mitigar otros más grandes.
 
-Registrarse en Cloudfare es tan fácil como clicar en el botón de “Sign Up” y seguir las instrucciones que nos van mostrando ellos.
+Registrarse en Cloudflare es tan fácil como clicar en el botón de “Sign Up” y seguir las instrucciones que nos van mostrando ellos.
 
 Habrá un momento en el que te pedirán que modifiques tus NameServers por los suyos. Esto lo hacen por la manera que tienen de tratar con los ataques DDoS.
 
-Cloudfare funciona como un filtro que bloquea a los atacantes del resto de usuarios o crawlers que quieren acceder a tu web a través de su CDN.
+Cloudflare funciona como un filtro que bloquea a los atacantes del resto de usuarios o crawlers que quieren acceder a tu web a través de su CDN.
 
-Si quieres conocer el funcionamiento exacto de Cloudfare te recomiendo que leas [cómo funciona](https://www.cloudflare.com/overview/).
+Si quieres conocer el funcionamiento exacto de Cloudflare te recomiendo que leas [cómo funciona](https://www.cloudflare.com/overview/).
 
 ### DDoS Deflate
 
-Este es otro excelente complemento para mitigar ataques DDoS. Se trata de un Script que tiene la función de ir monitorizando las peticiones que se hacen a la web y cuando una IP supera un número determinado de peticiones que tú decides la bloqueas un tiempo determinado que también debes elegir.
+Este es otro excelente complemento para mitigar ataques DDoS. Se trata de un Script que tiene la función de ir monitorizando las peticiones que se hacen a la web y cuando una IP supera un número determinado de peticiones que tú decides la bloquea durante un tiempo determinado que también debes elegir.
 
 En nuestro caso bloqueamos la IP durante 72 horas si hacía más de ciertas peticiones. Si dominas en temas de servidor te dejo aquí otro enlace más sobre [cómo puedes instalar este script](http://blog.elhacker.net/2013/12/ddos-deflate-script-bash-para-mitigar-ataques-ddos-dos.html) en tu servidor.
 
 ## Repercusiones para el SEO
 
-Dependiendo de la escala del ataque puede afectar al SEO o no. En mi caso el ataque se prologó lo suficiente como para afectar mis rankings.
+Dependiendo de la escala del ataque puede afectar al SEO o no. En mi caso el ataque se prolongó lo suficiente como para afectar mis rankings.
 
 El ataque se dividió en dos oleadas. El primer ataque surgió durante un fin de semana y para el domingo ya estaba mitigado, pensaba que ya lo tenía bajo control pero el siguiente fin de semana hubo un segundo ataque menor que el anterior.
 
-Mira la caída que mostró Analytics:
-
-Viendo el gráfico puede parecer que casi no se notó pero en una web con una media de 13.000 visitas al día una caída como la que ves supones una pérdida del 80% del tráfico durante un ataque.
+En el gráfico de Analytics puede parecer que casi no se notó, pero en una web con una media de 13.000 visitas al día la caída supuso una pérdida del 80% del tráfico durante el ataque.
 
 El problema no es sólo que esos ataques provoquen que estés sin monetizar esos días sino que ahora he pasado de 13.000 visitas diarias de media a 9.000.
 
@@ -185,21 +180,21 @@ Lo que se traduce en perder 4.000 visitas al día, es decir 120.000 al mes si si
 
 ## Utilizar un ataque DDoS a tu favor
 
-Aquí viene mi último tip y creo que es de lo mejorcito que puedes encontrar no solo para mitigar un ataque DDoS sino que para aprovecharte de él.
+Aquí viene mi último tip y creo que es de lo mejorcito que puedes encontrar no solo para mitigar un ataque DDoS sino también para aprovecharte de él.
 
-Quiero enseñarte a usar htacces para hacer rebotar un ataque a la persona que te está atacando.
+Quiero enseñarte a usar htaccess para hacer rebotar un ataque a la persona que te está atacando.
 
 ### ¿Qué es htaccess?
 
-El nombre de .htaccess viene del inglés *Hypertext Access* y es un tipo de archivo que permite realizar directivas personalizadas a tu web. Uno de los casos más comunes en SEO de un archivo .htacces es para hacer redirecciones 301.
+El nombre de .htaccess viene del inglés *Hypertext Access* y es un tipo de archivo que permite realizar directivas personalizadas a tu web. Uno de los casos más comunes en SEO de un archivo .htaccess es para hacer redirecciones 301.
 
-Este tipo de archivos funcionan con las llamadas expresiones regulares (RegEx) y si no dominas bien el lenguaje mejor que no toques mucho el htaccess o podrías tener un problema bien gordo con tu web. Si quieres saber más sobre htaccess consulta [este artículo](https://ayudawp.com/todo-sobre-htaccess/) si por el contrario quieres saber más sobre las expresiones regulares insto a que practiques con [estos ejercicios](http://regexone.com/).
+Este tipo de archivos funcionan con las llamadas expresiones regulares (RegEx) y si no dominas bien el lenguaje mejor que no toques mucho el htaccess o podrías tener un problema bien gordo con tu web. Si quieres saber más sobre htaccess consulta [este artículo](https://ayudawp.com/todo-sobre-htaccess/) si por el contrario quieres saber más sobre las expresiones regulares te animo a que practiques con [estos ejercicios](http://regexone.com/).
 
 ### Devolviendo el ataque
 
-A continuación déjame enseñarte tres directivas de .htaccess para que puedas olvidarte de cualquier ataque DDoS.
+A continuación déjame enseñarte tres directivas de .htaccess que circulaban entonces para este tipo de ataques.
 
-> Las siguientes directivas de .htacces no son mías, las encontré [aquí](http://ajax101.com/block-ddos-attack-with-htaccess/).
+> Las siguientes directivas de .htaccess no son mías, las encontré [aquí](http://ajax101.com/block-ddos-attack-with-htaccess/).
 
 Como verás, todas las líneas son idénticas y solo se modifica la última en función de lo que pretendas que haga htaccess.
 
@@ -236,10 +231,15 @@ RewriteCond %{QUERY_STRING} ^(.*)\?([0-9]+\.[0-9])(.*)$ [NC]
 RewriteRule ^(.*)$ http://urldelsitio.com/ [L]
 ```
 
+> **Nota (octubre 2026):** hoy no recomendaría estas reglas. Solo actúan sobre peticiones con un patrón concreto de parámetros numéricos, el servidor sigue teniendo que procesar cada petición y la mayoría de bots de una botnet no siguen redirecciones, así que el ataque no «rebota». Mandar ese tráfico a otra web es, además, trasladar el problema a un tercero. Para frenar un ataque, lo eficaz es filtrarlo antes de que llegue al servidor (CDN o proveedor con protección DDoS) y bloquear en el firewall.
+
 ## Próximos pasos
 
-Ahora queda esperar y tener paciencia. Mientras Google vea que toda la web se ha recuperado debería ir recuperando las posiciones que tenía anteriormente. Será un proceso progresivo e igualmente habrá que tirarle algún enlace para ayudar pero ya os contaré.
+Ahora queda esperar y tener paciencia. Mientras Google vea que toda la web se ha recuperado debería ir recuperando las posiciones que tenía anteriormente. Será un proceso progresivo e igualmente habrá que tirarle algún enlace para ayudar.
 
-Espero que te haya gustado el post de hoy y que el día que tengas cualquier ataque a tu web puedas protegerte sin problemas.
+## Qué sigue vigente en 2026
 
-No te olvides de comentar si conoces otras maneras de proteger tu web de este tipo de ataques y compartelo!
+- Identificar las IPs que más peticiones hacen y bloquear rangos con la notación CIDR correcta (/24, /16…) sigue siendo la base. En servidores Linux actuales `netstat` se ha sustituido por `ss` (por ejemplo, `ss -tn`), aunque la idea es la misma.
+- Cloudflare sigue siendo la opción más habitual y su plan gratuito incluye mitigación de ataques DDoS sin límite de volumen, algo que en 2016 no estaba tan claro.
+- Las reglas de .htaccess para «devolver» el ataque no las usaría (lo explico en la nota de arriba).
+- Para el SEO, lo que cuenta es cómo responde el servidor. Si Googlebot recibe muchos errores 5xx o timeouts, reduce el rastreo, y si persisten durante días puede acabar quitando URLs del índice. Durante un ataque o un mantenimiento conviene devolver un 503 (o 429) en vez de caerse sin respuesta, y no mantenerlo más de lo necesario. Google no penaliza una web por sufrir un ataque; el daño viene de los días en los que no responde, y la recuperación de posiciones es gradual.

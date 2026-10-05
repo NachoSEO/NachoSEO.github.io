@@ -5,7 +5,7 @@ lang: es
 translationKey: que-es-thin-content
 slug: que-es-thin-content
 pubDate: 2015-11-16
-updatedDate: 2016-02-08
+updatedDate: 2026-10-05
 tags: ['contenido', 'calidad']
 category: seohacks
 ---
@@ -18,15 +18,15 @@ Si buscas en el manual de webmasters de Google encontrarás una explicación muy
 
 ## Thin Content
 
-Crear un post con 100 palabras o menos, es decir con poco contenido **NO PENALIZA!**
+Crear un post con 100 palabras o menos, es decir con poco contenido **¡NO PENALIZA!**
 
 Dicho esto, debemos tener claro que tener un post con poco texto no penaliza pero tiene efectos secundarios que pueden perjudicar o dificultar nuestra odisea en los rankings.
 
 Tener una página, un post o un producto con poco texto difícilmente será relevante por alguna *Keyword* con solo 2 líneas de texto y estas páginas con poco contenido hacen que parte de nuestra autoridad se diluya en secciones que quedarán enterradas en las SERPs.
 
-Tener un par de páginas así no marca ninguna diferencia, el problema esta cuándo es algo muy reiterado. Si trabajas en una agencia te sonará el siguiente handicap, el cliente quiere poner noticias de una longitud inferior a 100 palabras en su blog.
+Tener un par de páginas así no marca ninguna diferencia, el problema está cuando es algo muy reiterado. Si trabajas en una agencia te sonará el siguiente handicap, el cliente quiere poner noticias de una longitud inferior a 100 palabras en su blog.
 
-### ¿ Qué debemos hacer cuándo tenemos varias páginas con poco contenido?
+### ¿Qué debemos hacer cuando tenemos varias páginas con poco contenido?
 
 **Borrarlas.** En el paraíso de los SEOs el cliente accedería a esta petición sin ningún tipo de problema, pero estamos en la tierra así que el cliente seguramente no aceptará.
 
@@ -34,7 +34,9 @@ Tener un par de páginas así no marca ninguna diferencia, el problema esta cuá
 
 De esta manera, tienes una sola página con cientos o miles de palabras hablando sobre varios temas de un mismo nicho, con un poco de suerte hasta puedas obtener algo de tráfico orgánico.
 
-A veces las cosas no son tan fáciles y esta solución no es aceptada, siempre puedes poner todas estas noticias en una categoría y capar el acceso a esa categoría al bot de Google a través del Robots.txt (no todo el mundo está de acuerdo con esta”solución”, te recomiendo [este post](http://www.analistaseo.es/posicionamiento-buscadores/frecuencia-rastreo/) que habla precisamente de esto).
+A veces las cosas no son tan fáciles y esta solución no es aceptada. En ese caso, agrupa estas noticias en una categoría y marca esas páginas con `noindex` (meta robots o cabecera `X-Robots-Tag`), o mejor aún, amplía las que tengan potencial y elimina las que no aporten nada.
+
+> **Nota (octubre 2026):** en la versión original recomendaba bloquear esa categoría a Googlebot con el robots.txt. Es un error: el robots.txt impide el rastreo, pero no saca las URLs del índice (pueden seguir apareciendo sin descripción) y además evita que Google vea una etiqueta `noindex`. Para que unas páginas pobres dejen de contar, lo correcto es `noindex`, consolidarlas en una sola página o mejorarlas o eliminarlas.
 
 Después de meter el rollo sobre lo que no es el *Thin Content* debería empezar a contar **lo que Google sí considera *Thin Content***.
 
@@ -57,7 +59,7 @@ El contenido auto generado suele ser texto formado por grupos de palabras que no
 
 Ya que menciono el tema de los Tiers, si eres un gran fan de las pirámides de enlaces o del *Tier Linkbuilding* [esto te interesa](http://www.seobythesea.com/2015/11/recalculating-pagerank/) .
 
-### Feeds de afilición
+### Feeds de afiliación
 
 Una afirmación muy compartida en internet con la que coincido con ciertos matices:
 
@@ -67,40 +69,36 @@ La afiliación es una de las tantas maneras para monetizar una web y si se hace 
 
 Sé de SEOs que han dejado sus agencias para hacer crecer su web de afiliación por la de ingresos que le generaba (más de 10k mensual).
 
-Volviendo al tema del *Thin Content*, es muy habitual ver a a gente del mundillo que, al observar a colegas o competidores ganar dinero con una web de afiliación, se unen para sacarse unos ingresos extra.
+Volviendo al tema del *Thin Content*, es muy habitual ver a gente del mundillo que, al observar a colegas o competidores ganar dinero con una web de afiliación, se unen para sacarse unos ingresos extra.
 
 El problema viene cuando por falta de tiempo, por apresurarse o por vagancia crean webs usando sólo el feed que proporciona la plataforma a la que se está afiliado.
 
-Si no sabes lo que es un feed da afiliación te lo cuento, es un archivo en formato CSV que incluye en varias columnas los datos de todos los productos de su plataforma (feed de datos).
+Si no sabes lo que es un feed de afiliación te lo cuento, es un archivo en formato CSV que incluye en varias columnas los datos de todos los productos de su plataforma (feed de datos).
 
-Un feed de datos es muy útil para automatizar tareas pero siempre debe haber algún elemento que le de un valor añadido a la web porque sino serás otro más y olvídate de rankear.
+Un feed de datos es muy útil para automatizar tareas pero siempre debe haber algún elemento que le dé un valor añadido a la web porque, si no, serás otro más y olvídate de rankear.
 
 ### Contenido duplicado / robado
 
-Este es uno de los clásicos. Sé que quieres tener mucho contenido y no tener que escribir por él o escribir lo mínimo, créeme cuando digo que se puede. (Ya estoy preparando un nuevo post sobre **cómo conseguir contenido único, de calidad y totalmente gratis!**)
+Este es uno de los clásicos. Sé que quieres tener mucho contenido y no tener que escribir por él o escribir lo mínimo.
 
-Esta parte es bien fácil de entender, si copias un contenido tal cuál o lo plagias: **Pandazo**.
+Aquí conviene separar dos casos. Si copias un contenido tal cual de otra web o lo plagias: **Pandazo**.
 
-¿No hace falta más explicación, no? Localizar contenido duplicado es de lo más fácil que hay:
+La duplicación técnica dentro de tu propia web (la misma página accesible con parámetros, versiones con y sin `www`, filtros, paginaciones) es otra cosa: no es una penalización, Google elige una URL y agrupa las demás. Lo que sí hace es repartir señales y gastar rastreo, y se resuelve con `rel="canonical"`, redirecciones 301 y un buen control de parámetros.
+
+Localizar contenido copiado es de lo más fácil que hay:
 
 1. Entra en Google
 2. Escribe diversas frases de tu texto entre comillas -\> «un posible texto copiado»
-3. Alucina!
+3. ¡Alucina!
 
-Si necesitas contenido y no tienes tiempo hay plataformas para contratar a freelances que escribirán encantados por ti.
-
-También te digo lo siguiente, en españa los precios de redacción de un post están bastante elevados por lo que te recomiendo que visites plataformas extranjeras como [Workana](https://www.workana.com/es/home).
+Si necesitas contenido y no tienes tiempo, puedes contratar a redactores freelance, pero elige por conocimiento del tema y no por precio: un texto barato y genérico acaba siendo otra forma de contenido pobre.
 
 ### Doorway pages
 
-Un término del que se ha empezado a hablar recientemente debido a la actualización del algoritmo (en verano) que se encarga de penalizar las webs que siguen esta práctica.
+Un término del que se ha empezado a hablar recientemente debido a la actualización del algoritmo que Google anunció en marzo de 2015 para penalizar las webs que siguen esta práctica.
 
 Pero, ¿qué significa doorway page? Este término viene a definir a todas aquellas webs que tienen diversas páginas en las que cada una apunta a una long tail estrechamente relacionada entre sí. Es decir, en vez de tener una sola página en la que aparezcan estas long tail juntas, usa varias páginas para poder sobreoptimizar esas *Keywords*.
 
 En una sola página, sólo tienes una URL, un title y un h1. Esto quiere decir que has de seleccionar con sumo cuidado que keywords vas a emplear en estas «zonas». Lo que busca una Doorway Page es poner la long tail en todos estos elementos ya que, seguramente, la competencia no habrá puesto una *Keyword long tail* en todos estos apartados.
 
-Si quieres evitar que Google Panda se divierta un rato con tu web recuerda cuidar estos elementos. Probar y experimentar siempre está bien, pero recuerda hacerlo en una web que no sea tu Money Site.
-
-Espero que te haya servido de ayuda y si tienes cualquier tipo de duda o comentario puedes dejarla aquí abajo para que la comentemos 🙂
-
-**Si no quieres perderte ningún artículo suscríbete al blog y no te olvides de compartir!**
+Si quieres evitar que Google se divierta un rato con tu web recuerda cuidar estos elementos. Probar y experimentar siempre está bien, pero recuerda hacerlo en una web que no sea tu Money Site.

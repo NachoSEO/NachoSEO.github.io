@@ -132,7 +132,7 @@ import LeadMagnet from '../../../../components/blog/LeadMagnet.astro';
 
 - Para Google, quality es effort, originality, talent o skill y accuracy. Se juzga igual si el contenido lo escribe una persona o una IA.
 - El contenido commodity es el que podría haber escrito cualquiera: si cambias tu marca por la de un competidor y la página sigue valiendo igual, es commodity.
-- Quality va pegada a cada URL antes de que alguien busque, y los core updates miran el site entero. Las páginas flojas arrastran a las buenas.
+- Quality va pegada a cada URL antes de que alguien busque. Los core updates se aplican página a página, pero esa quality también hereda señales del site entero, y por eso las páginas flojas arrastran a las buenas.
 - Recuperarse de un core update lleva de 3 a 6 meses de media. Con una web de baja calidad, Google puede tardar meses en indexarte o no hacerlo nunca.
 - Qué hacer: agrupa tus URLs por page type, pásalos por los cuatro pilares y mejora, consolida o elimina lo commodity.
 
@@ -307,7 +307,7 @@ Mi lectura: quality entra en el ranking principal a través de Q\* y además hay
 
 Google lo explica en su [guía de optimización para funciones de IA](https://developers.google.com/search/docs/fundamentals/ai-optimization-guide), y se resume en tres ideas:
 
-- **No hay un truco aparte.** La guía lo dice así: "You don't need to create new machine readable files, AI text files, markup, or Markdown to appear in Google Search". El llms.txt, Google lo ignora. Para salir, tu página tiene que estar indexada y poder mostrarse con snippet.
+- **No hay un truco aparte.** La guía lo dice así: "You don't need to create new machine readable files, AI text files, markup, or Markdown to appear in Google Search". Google dice que no hace falta un llms.txt y no consta que lo use. Para salir, tu página tiene que estar indexada y poder mostrarse con snippet.
 - **Las respuestas salen del mismo índice.** AI Overviews y AI Mode usan retrieval-augmented generation: recuperan páginas relevantes y enlazan las que respaldan la respuesta. Además hacen query fan-out, es decir, el modelo lanza varias búsquedas relacionadas a la vez para conseguir más resultados.
 - **Lo que no sea commodity gana.** Según la guía, crear contenido "unique, compelling, and useful" probablemente influirá en tu presencia en la búsqueda generativa, y pone como ejemplo de commodity los mismos consejos para comprar casa que salían en la charla.
 
@@ -327,7 +327,7 @@ Y este el de serving, donde entran retrieval, ranking y los twiddlers:
 
 ## ¿Google evalúa la página o el site?
 
-El site. En la sala, Gary Illyes dejó claro que los core updates miran el site. Encaja con lo que llevamos viendo años en webs grandes y con lo que dice el leak, que está lleno de señales a nivel de site:
+Las dos cosas. En la sala, Gary Illyes explicó que los core updates trabajan a nivel de página y no de dominio, y que por eso en una misma web unas páginas suben y otras bajan ([recap del día 3 de We Are ROAST](https://weareroast.com/news/google-search-central-live-deep-dive-barcelona-day-3-recap/)). Pero la quality de cada página no se calcula aislada del site. Lo llevamos viendo años en webs grandes y el leak está lleno de señales a nivel de site:
 
 - `siteAuthority`, "applied in Qstar".
 - `chardEncoded`, un "site quality predictor based on content".

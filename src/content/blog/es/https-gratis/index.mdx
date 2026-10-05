@@ -1,11 +1,11 @@
 ---
 title: '¿Cómo montar un protocolo https gratis para WordPress?'
-description: '¿Estás intentado poner un https en tu web y no sabes cómo? En este post encontrarás una guía para poder hacerlo gratis y sin complicaciones. ¡Entra Ya!'
+description: '¿Estás intentando poner un https en tu web y no sabes cómo? En este post encontrarás una guía para poder hacerlo gratis y sin complicaciones. ¡Entra Ya!'
 lang: es
 translationKey: https-gratis
 slug: https-gratis
 pubDate: 2016-12-22
-updatedDate: 2017-01-12
+updatedDate: 2026-10-05
 tags: ['seo-tecnico', 'wordpress', 'https']
 category: seohacks
 ---
@@ -22,13 +22,15 @@ Ten en cuenta que sólo te contaré cómo hacerlo, has de ser consciente de real
 
 Empecemos 🙂
 
+> **Nota (octubre 2026):** el método de este post (SSL Flexible de Cloudflare con un plugin) ya no lo recomendaría. Con el modo Flexible, la conexión entre Cloudflare y tu servidor sigue yendo sin cifrar. Hoy casi todos los hostings instalan gratis un certificado de Let's Encrypt con un clic; lo correcto es activarlo y poner Cloudflare en modo Full (strict). Para forzar el https ya no hacen falta Page Rules: basta con la opción Always Use HTTPS o una redirección 301 en el servidor.
+
 ## HTTPS everywhere
 
-En esta imagen puedes ver cómo se verá el navegador de Google Chrome con una página sin https:
+Chrome marca en la barra de direcciones las páginas sin https como no seguras.
 
-Como puedes apreciar, no es muy agradable para un usuario ver eso en una página web en la que acaba de aterrizar.
+No es muy agradable para un usuario ver eso en una página web en la que acaba de aterrizar.
 
-Para evitar este mensajito, precisamente lo que tienes que hacer es tener https activo. Vayamos a ver como hacerlo.
+Para evitar este mensajito, precisamente lo que tienes que hacer es tener https activo. Vayamos a ver cómo hacerlo.
 
 Por cierto, si estás interesado en la noticia de Google hablando sobre este tema, puedes [leerla aquí](https://security.googleblog.com/2016/09/moving-towards-more-secure-web.html).
 
@@ -45,38 +47,36 @@ Para poder lograr lo que el título dice, primero vamos a necesitar tener a mano
 
 ## ¿Qué tenemos que hacer?
 
-Parto de la base que ya has instalado y activado el plugin, has creado tu cuenta en Cloudflare (con la gratis será suficiente) y has realizado los pasos para tener Cloudflare activo y funcionando.
+Parto de la base de que ya has instalado y activado el plugin, has creado tu cuenta en Cloudflare (con la gratis será suficiente) y has realizado los pasos para tener Cloudflare activo y funcionando.
 
 ### Page Rules en Cloudflare
 
-Lo único que tendremos que añadir en Cloudflare es lo siguiente en la pestaña Page Rules:
+Lo único que tendremos que añadir en Cloudflare es una regla en la pestaña Page Rules que fuerce el https en todo el dominio (Always Use HTTPS).
 
 Una vez tengamos hecho eso en nuestro dominio, la parte de Cloudflare ya estará.
 
 Ahora ten paciencia para que se propaguen las DNS y puedas ver los cambios.
 
-**PD: en seohacks no está aplicado por lo que la imagen es solo a modo de ejemplo.**
-
-### Mixed content y como solucionarlo con SQL
+### Mixed content y cómo solucionarlo con SQL
 
 Aún falta un pequeño paso para poder tener una navegación segura.
 
 Es muy posible que aunque hayas hecho estos pasos no tengas el candado en el navegador.
 
-Si haces clic en la «i» de la información te saldrá el siguiente mensaje:
+Si haces clic en la «i» de la información te saldrá un mensaje avisando de que parte del contenido de la página no es seguro.
 
-Tal y como dice el mensaje **el problema está en las imágenes**.
+Lo más habitual es que **el problema esté en las imágenes**.
 
-Lo que pasa es que las imágenes están alojadas en en tu dominio con http:// por lo que la navegación no es 100% segura.
+Lo que pasa es que las imágenes están alojadas en tu dominio con http:// por lo que la navegación no es 100% segura.
 
 Para ello solo nos queda hacer un replace en SQL de http://dominio.tld a https://dominio.tld
+
+> **Nota (octubre 2026):** un replace directo en SQL puede romper los datos serializados de WordPress (opciones de widgets, ajustes de temas y plugins). Es más seguro hacerlo con `wp search-replace` de WP-CLI o con un plugin como Better Search Replace, y siempre con una copia de seguridad antes.
 
 Y de esta manera lograremos tener una navegación totalmente segura.
 
 **Ya podrás ver el candado en tu URL.**
 
 ¡Y eso es todo! En menos de 500 palabras has podido configurar un protocolo https y totalmente gratis.
-
-Espero que te haya gustado el post, que lo emplees y que lo compartas si te parece bueno.
 
 Un saludo 🙂

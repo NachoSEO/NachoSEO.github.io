@@ -1,8 +1,10 @@
 ---
 import LeadMagnet from '../blog/LeadMagnet.astro';
 import SectionLabel from '../SectionLabel.astro';
-import { Content as ReportEs } from '../../data/skills/quality-audit-report.es.md';
-import { Content as ReportEn } from '../../data/skills/quality-audit-report.en.md';
+import { Content as BeforeEs } from '../../data/skills/quality-audit-report-2026-10-04.es.md';
+import { Content as BeforeEn } from '../../data/skills/quality-audit-report-2026-10-04.en.md';
+import { Content as AfterEs } from '../../data/skills/quality-audit-report-2026-10-05.es.md';
+import { Content as AfterEn } from '../../data/skills/quality-audit-report-2026-10-05.en.md';
 import { localizedRoute } from '../../i18n/utils';
 import type { Lang } from '../../i18n/ui';
 
@@ -11,7 +13,8 @@ interface Props {
 }
 
 const { lang } = Astro.props;
-const Report = lang === 'es' ? ReportEs : ReportEn;
+const ReportBefore = lang === 'es' ? BeforeEs : BeforeEn;
+const ReportAfter = lang === 'es' ? AfterEs : AfterEn;
 const postUrl = lang === 'es' ? '/blog/quality-google-core-updates/' : '/en/blog/google-quality-core-updates/';
 
 const copy =
@@ -36,13 +39,38 @@ const copy =
           'Esta es mi plantilla de fichas de ciudad (te pego el texto). ¿Es contenido commodity?',
           'Caímos un 20 % en el último core update. Estas son nuestras secciones y cuántas páginas tiene cada una. ¿Por dónde empiezo?',
         ],
-        exampleLabel: 'Ejemplo real',
-        auditDate: 'Auditoría del 4 de octubre de 2026',
-        followUp:
-          'Voy a aplicar sus recomendaciones y volveré a pasarle la skill, para que veas el antes y el después y cómo ayuda a mejorar una web.',
-        exampleTitle: 'Se la he pasado a mi propia web',
+        exampleLabel: 'Antes y después',
+        exampleTitle: 'Se la he pasado a mi propia web dos veces',
         exampleIntro:
-          'Una página de cada page type de nachomascort.com. Este es el informe tal cual lo devolvió, con lo bueno y lo malo.',
+          'El 4 de octubre audité una página de cada page type de nachomascort.com. Apliqué lo que me pareció razonable de sus recomendaciones y el 5 de octubre volví a pasarle la skill, en una sesión nueva y sin enseñarle el primer informe.',
+        tableHead: ['Page type', '4 oct', '5 oct', 'Veredicto ahora'],
+        scores: [
+          { type: 'Home', before: 11, after: 11, verdict: 'Sólido con huecos' },
+          { type: 'Servicios', before: 9, after: 10, verdict: 'Sólido con huecos' },
+          { type: 'Casos', before: 9, after: 10, verdict: 'Sólido con huecos' },
+          { type: 'Herramientas', before: 11, after: 11, verdict: 'Sólido con huecos' },
+          { type: 'Blog nuevo (2026)', before: 12, after: 13, verdict: 'Sólido' },
+          { type: 'Archivo SEO Hacks', before: 5, after: 6, verdict: 'En riesgo' },
+        ],
+        changesTitle: 'Qué cambié entre una auditoría y otra',
+        changes: [
+          { text: 'Archivo de SEO Hacks: corregí los consejos que hoy son incorrectos (como bloquear el thin content por robots.txt), quité llamadas a la acción que ya no funcionan y erratas, y añadí a cada post una nota de qué sigue vigente.', href: '/blog/que-es-thin-content/' },
+          { text: 'Caso de Softonic: años y cargos, "antes de ChatGPT" en lugar de "no había LLM comerciales" y la historia del core update y los ccTLDs que antes solo estaba en el post.', href: '/casos/softonic-0-a-20-millones/' },
+          { text: 'Afirmaciones con fuente: los años de docencia cuadran y los logos de medios dicen "mencionado".', href: '/' },
+          { text: 'Servicio de consultoría: los ex ingenieros de Google Search que me contrataron tienen nombre (Cliqpod y Reverse Tech), la prueba aparece una vez, llms.txt se explica sin venderlo y el método se cuenta con el ejemplo de Softonic.', href: '/servicios/consultoria-seo-geo/' },
+          { text: 'Post de quality y comprobador de bots: la frase de Gary Illyes ahora enlaza a su fuente (y la matiza, porque dijo que los core updates trabajan por página) y el caso del robots.txt con 5xx lleva los plazos de Google.', href: '/blog/quality-google-core-updates/' },
+        ],
+        decisionTitle: 'Lo que decidí no hacer',
+        decision:
+          'Las dos auditorías piden quitar del índice casi todo el archivo de SEO Hacks. No lo he hecho: son posts míos de hace años, siguen recibiendo enlaces de seohacks.es y prefiero corregirlos a esconderlos. Por eso el archivo sigue "En riesgo". Tampoco he puesto gráficos en los casos, porque no tengo datos que pueda publicar.',
+        readingTitle: 'Cómo leer el resultado',
+        reading:
+          'La subida es pequeña y es lo esperable: los arreglos fueron de precisión y de limpieza, no de añadir contenido nuevo. Lo que mueve la nota de verdad, según la propia skill, son las pruebas (gráficos, capturas, datos propios) y piezas nuevas que no existan en otra web.',
+        afterNote:
+          'Después de este segundo informe corregí cuatro detalles que señalaba: los "8 años" de docencia que quedaban en la página de formación, una frase de plantilla del servicio, lo de "tarifas cerradas" frente a "precio cerrado" y lo del llms.txt en el post. Y tiene un error: dice que el logo de Google Search Central no enlaza a la mención, y sí lo hace.',
+        afterLabel: 'Informe del 5 de octubre de 2026',
+        beforeSummary: 'Ver el informe original del 4 de octubre de 2026',
+        seeLabel: 'Ver',
         outro: '¿Quieres el mismo informe de tu web?',
       }
     : {
@@ -65,13 +93,38 @@ const copy =
           "This is my city page template (pasting the text). Is it commodity content?",
           'We dropped 20% in the last core update. These are our sections and how many pages each has. Where do I start?',
         ],
-        exampleLabel: 'Real example',
-        auditDate: 'Audit run on 4 October 2026',
-        followUp:
-          "I'm going to apply its recommendations and run the skill again, so you can see the before and after and how it helps improve a site.",
-        exampleTitle: 'I ran it on my own site',
+        exampleLabel: 'Before and after',
+        exampleTitle: 'I ran it on my own site twice',
         exampleIntro:
-          "One page of each page type on nachomascort.com. This is the report exactly as it came back, good and bad. The audited pages are in Spanish.",
+          'On 4 October I audited one page of each page type on nachomascort.com. I applied the recommendations that made sense to me, and on 5 October I ran the skill again, in a fresh session and without showing it the first report. The audited pages are in Spanish.',
+        tableHead: ['Page type', '4 Oct', '5 Oct', 'Verdict now'],
+        scores: [
+          { type: 'Home', before: 11, after: 11, verdict: 'Solid with gaps' },
+          { type: 'Services', before: 9, after: 10, verdict: 'Solid with gaps' },
+          { type: 'Case studies', before: 9, after: 10, verdict: 'Solid with gaps' },
+          { type: 'Tools', before: 11, after: 11, verdict: 'Solid with gaps' },
+          { type: 'New blog (2026)', before: 12, after: 13, verdict: 'Strong' },
+          { type: 'SEO Hacks archive', before: 5, after: 6, verdict: 'At risk' },
+        ],
+        changesTitle: 'What I changed between the two audits',
+        changes: [
+          { text: 'SEO Hacks archive (in Spanish): I fixed advice that is wrong today (like blocking thin content with robots.txt), removed calls to action that no longer work and typos, and added a note to each post saying what still holds.', href: '/blog/que-es-thin-content/' },
+          { text: 'Softonic case study: years and job titles, "before ChatGPT" instead of "there were no commercial LLMs", and the core update and ccTLD story that used to live only in the post.', href: '/en/case-studies/softonic-0-to-20-million/' },
+          { text: 'Sourced claims: the years of teaching add up and the media logos say "mentioned".', href: '/en/' },
+          { text: 'Consulting service: the former Google Search engineers who hired me are named (Cliqpod and Reverse Tech), the proof appears once, llms.txt is explained without selling it and the method is told through the Softonic example.', href: '/en/services/seo-geo-consulting/' },
+          { text: 'Quality post and bot checker: the Gary Illyes quote now links to its source (and I qualified it, because he said core updates work page by page) and the robots.txt 5xx case includes Google\'s timelines.', href: '/en/blog/google-quality-core-updates/' },
+        ],
+        decisionTitle: 'What I decided not to do',
+        decision:
+          'Both audits ask to take almost the whole SEO Hacks archive out of the index. I have not done it: they are my own posts from years ago, they still get links from seohacks.es, and I would rather fix them than hide them. That is why the archive is still "At risk". I also have not added charts to the case studies, because I have no data I can publish.',
+        readingTitle: 'How to read the result',
+        reading:
+          'The increase is small, which is what you would expect: the fixes were about accuracy and cleanup, not new content. What really moves the score, according to the skill itself, is proof (charts, screenshots, original data) and new pieces that do not exist on another site.',
+        afterNote:
+          'After this second report I fixed four details it pointed out: the "8 years" of teaching still on the training page, a boilerplate sentence in the service, "tarifas cerradas" versus "precio cerrado", and the llms.txt part of the post. It also has one error: it says the Google Search Central logo does not link to the mention, and it does.',
+        afterLabel: 'Report from 5 October 2026',
+        beforeSummary: 'See the original report from 4 October 2026',
+        seeLabel: 'See',
         outro: 'Want the same report for your site?',
       };
 ---
@@ -114,12 +167,60 @@ const copy =
   <section class="mt-6">
     <SectionLabel label={copy.exampleLabel} />
     <h2 class="display-2 mt-3">{copy.exampleTitle}</h2>
-    <p class="meta mt-4"><time datetime="2026-10-04">{copy.auditDate}</time></p>
+    <p class="meta mt-4">
+      <time datetime="2026-10-04">4/10/2026</time> → <time datetime="2026-10-05">5/10/2026</time>
+    </p>
     <p class="lede mt-4">{copy.exampleIntro}</p>
-    <p class="mt-3 max-w-[58ch] text-[0.95rem] text-muted">{copy.followUp}</p>
+
     <div class="article-body skill-report mt-8 max-w-[52rem]">
-      <Report />
+      <table>
+        <thead>
+          <tr>{copy.tableHead.map((cell) => <th>{cell}</th>)}</tr>
+        </thead>
+        <tbody>
+          {
+            copy.scores.map((row) => (
+              <tr>
+                <td>{row.type}</td>
+                <td>{row.before}/16</td>
+                <td>
+                  <strong>{row.after}/16</strong>
+                  {row.after > row.before && <span class="text-muted"> (+{row.after - row.before})</span>}
+                </td>
+                <td>{row.verdict}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+
+      <h3>{copy.changesTitle}</h3>
+      <ul>
+        {copy.changes.map((change) => <li>{change.text} <a href={change.href} class="whitespace-nowrap">{copy.seeLabel} →</a></li>)}
+      </ul>
+
+      <h3>{copy.decisionTitle}</h3>
+      <p>{copy.decision}</p>
+
+      <h3>{copy.readingTitle}</h3>
+      <p>{copy.reading}</p>
     </div>
+
+    <div class="article-body skill-report mt-12 max-w-[52rem]">
+      <h2>{copy.afterLabel}</h2>
+      <p class="text-muted">{copy.afterNote}</p>
+      <ReportAfter />
+    </div>
+
+    <details class="faq-item mt-10 max-w-[52rem] border-t border-line pt-5">
+      <summary class="flex cursor-pointer list-none items-baseline justify-between gap-6 font-semibold">
+        {copy.beforeSummary}
+        <span class="faq-marker shrink-0 font-mono text-accent-ink" aria-hidden="true">+</span>
+      </summary>
+      <div class="article-body skill-report mt-6">
+        <ReportBefore />
+      </div>
+    </details>
   </section>
 
   <div class="max-w-[46rem]">

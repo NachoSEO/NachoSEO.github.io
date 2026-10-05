@@ -105,7 +105,10 @@ const webApplication = {
       </p>
       <p>
         One detail few people know: <strong>if the robots.txt returns a 5xx error, Google stops crawling the site</strong>
-        until it responds again. If it returns a 404, on the other hand, Google understands it can crawl everything.
+        for the first 12 hours and keeps retrying. Meanwhile it uses the last cached copy, for up to 30 days. After that,
+        if the rest of the site responds fine, it crawls as if there were no robots.txt. If it returns a 404, on the other
+        hand, Google understands from the start that it can crawl everything. The timings are in
+        <a href="https://developers.google.com/search/docs/crawling-indexing/robots/robots_txt#http-status-codes" rel="noopener">Google's robots.txt documentation</a>.
       </p>
 
       <h3>2. The firewall or CDN</h3>

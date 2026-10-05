@@ -11,14 +11,14 @@ metrics:
   - value: '100k → 1M+'
     label: 'useful pages in the catalog'
   - value: '+40%'
-    label: 'organic traffic YoY (2024 vs 2023)'
+    label: 'portfolio organic traffic, 2024 vs 2023'
   - value: '1B+'
     label: 'annual users in the portfolio'
 ---
 
 ## The context
 
-Softonic is one of the largest software download platforms in the world: a portfolio of six sites with over 1 billion users a year. At that scale, a template change reaches hundreds of thousands of URLs in hours and every point of traffic is millions of visits. As SEO Manager, my job was to grow that traffic in a market where Google changes the rules every few months.
+I was at Softonic from 2019 to 2024, first as SEO Specialist, then as Product Owner and finally as SEO Manager. Softonic is one of the largest software download platforms in the world: a portfolio of six sites (Softonic, download.com, CNET and others) with over 1 billion users a year. At that scale, a template change reaches hundreds of thousands of URLs in hours and every point of traffic is millions of visits. My job was to grow that traffic in a market where Google changes the rules every few months.
 
 ## The problem
 
@@ -28,12 +28,20 @@ The catalog covered about 100,000 applications, a fraction of the software peopl
 
 I designed and led a large-scale content generation program, the company's highest-impact initiative in that period:
 
-- **Demand detection**: semantic and programmatic keyword research to map what software people searched for and couldn't find in the catalog.
-- **Our own models, before ChatGPT**: the program started when commercial LLMs didn't exist yet. We trained our own generation models, with their quality pipelines, when almost nobody was producing AI content at this scale.
-- **Production with quality control**: generation and review pipelines that kept the editorial standard without people becoming the bottleneck.
+- **Demand detection**: semantic and programmatic keyword research to map what software people searched for and couldn't find in the catalog. A page was only created if there was real demand behind it.
+- **Our own models, before ChatGPT**: the program started before ChatGPT came out (November 2022), when almost nobody was producing AI content at this scale. Instead of relying on an external API, we trained our own generation models.
+- **Production with quality control**: every batch went through generation and review pipelines before publishing, to keep the editorial standard without people becoming the bottleneck.
 - **SEO architecture**: templates, internal links and structured data so every new page added authority to the whole.
-- **Agile methodology**: sprints, per-batch metrics and decisions made from performance data.
+- **Agile methodology**: sprints, per-batch metrics and decisions made from performance data. What didn't work in one batch wasn't repeated in the next.
+
+## What went wrong: translations and a core update
+
+Not everything went up. We consolidated the languages, which lived on subdomains, into the main domain. At first it worked very well and traffic grew. Then a core update hit us hard: a drop of over 20% on a site that gets millions of visits a day.
+
+When we analysed the causes, the conclusion was that the translations, which weren't as good as the original content, were lowering the quality of the site as a whole. So we moved the languages to their own ccTLDs, linked to each other with hreflang. With the next core update the main domain didn't just recover: it rose above the levels it had before the consolidation. And each language, on its own ccTLD, got more traffic than it had inside the main domain.
+
+The lesson for any large-scale content program is the same: Google looks at the quality of the whole site, and weak pages drag down the good ones. I cover it in more detail in [Quality at Google: what it is, how it is measured and how long it takes to recover from a core update](/en/blog/google-quality-core-updates/).
 
 ## The result
 
-In two years the program went from 0 to **20 million monthly organic sessions**, and the catalog grew from 100,000 to **over 1 million pages**. In 2024, the portfolio's organic traffic grew **40% year over year**. And the program kept running after I left.
+In two years the program went from 0 to **20 million monthly organic sessions**, and the catalog grew from 100,000 to **over 1 million pages**. In 2024, my last year, organic traffic for the whole portfolio (not just the program) grew **40%** over 2023. And the program kept running after I left.

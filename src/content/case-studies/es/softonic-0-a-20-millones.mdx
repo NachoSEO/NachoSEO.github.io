@@ -11,14 +11,14 @@ metrics:
   - value: '100k → 1M+'
     label: 'páginas útiles en el catálogo'
   - value: '+40%'
-    label: 'de tráfico orgánico en 2024 frente a 2023'
+    label: 'de tráfico orgánico del portfolio en 2024 frente a 2023'
   - value: '1.000M+'
     label: 'usuarios al año en el portfolio'
 ---
 
 ## El contexto
 
-Softonic es una de las mayores webs de descarga de software del mundo: un portfolio de seis webs con más de 1.000 millones de usuarios al año. A esa escala, un cambio en una plantilla llega a cientos de miles de URLs en horas, y cada punto de tráfico son millones de visitas. Como SEO Manager, mi trabajo era hacer crecer ese tráfico mientras Google cambiaba las reglas cada pocos meses.
+Estuve en Softonic de 2019 a 2024, primero como SEO Specialist, luego como Product Owner y al final como SEO Manager. Softonic es una de las mayores webs de descarga de software del mundo: un portfolio de seis webs (Softonic, download.com, CNET…) con más de 1.000 millones de usuarios al año. A esa escala, un cambio en una plantilla llega a cientos de miles de URLs en horas, y cada punto de tráfico son millones de visitas. Mi trabajo era hacer crecer ese tráfico mientras Google cambiaba las reglas cada pocos meses.
 
 ## El problema
 
@@ -28,12 +28,20 @@ El catálogo tenía unas 100.000 aplicaciones, una parte pequeña del software q
 
 Diseñé y dirigí un programa de contenido a gran escala, el proyecto con más impacto de la empresa en esos años:
 
-- **Encontrar la demanda**: un keyword research semántico y programático para saber qué software buscaba la gente y no encontraba en el catálogo.
-- **Modelos propios, antes de ChatGPT**: cuando arrancamos aún no había LLM comerciales. Entrenamos nuestros propios modelos de generación, con sus controles de calidad, cuando casi nadie hacía contenido con IA a esta escala.
-- **Producir sin perder calidad**: flujos de generación y revisión que mantenían el nivel editorial sin que el equipo fuera el cuello de botella.
+- **Encontrar la demanda**: un keyword research semántico y programático para saber qué software buscaba la gente y no encontraba en el catálogo. Solo se creaba una página si había demanda real detrás.
+- **Modelos propios, antes de ChatGPT**: el programa arrancó antes de que saliera ChatGPT (noviembre de 2022), cuando casi nadie hacía contenido con IA a esta escala. En lugar de depender de una API externa, entrenamos nuestros propios modelos de generación.
+- **Producir con controles de calidad**: cada lote pasaba por flujos de generación y revisión antes de publicarse, para mantener el nivel editorial sin que el equipo fuera el cuello de botella.
 - **Arquitectura SEO**: plantillas, enlazado interno y datos estructurados para que cada página nueva sumara autoridad al conjunto.
-- **Trabajo en sprints**: métricas por lote y decisiones basadas en datos de rendimiento.
+- **Trabajo en sprints**: métricas por lote y decisiones basadas en datos de rendimiento. Lo que no funcionaba en un lote no se repetía en el siguiente.
+
+## Lo que salió mal: las traducciones y un core update
+
+No todo fue subir. Consolidamos los idiomas, que estaban en subdominios, dentro del dominio principal. Al principio funcionó muy bien y el tráfico subió. Luego llegó un core update y nos dio fuerte: una caída de un 20 y pico por ciento en un site que hace millones de visitas al día.
+
+Al analizar las causas, la conclusión fue que las traducciones, que no tenían la calidad del contenido original, estaban bajando la calidad global del site. Así que movimos los idiomas a ccTLDs propios, enlazados entre sí con hreflang. Con el siguiente core update el dominio principal no solo recuperó: subió por encima de los niveles que tenía antes de la consolidación. Y cada idioma, en su ccTLD, superó el tráfico que había tenido dentro del dominio principal.
+
+La lección para un programa de contenido a escala es la misma: Google mira la calidad del site entero, y las páginas flojas arrastran a las buenas. La cuento con más detalle en [Quality en Google: qué es, cómo la mide y cuánto tarda en recuperarse una web de un core update](/blog/quality-google-core-updates/).
 
 ## El resultado
 
-En dos años el programa pasó de 0 a **20 millones de sesiones orgánicas al mes**, y el catálogo creció de 100.000 a **más de 1 millón de páginas**. En 2024 el tráfico orgánico del portfolio creció un **40 %** respecto al año anterior. Y el programa siguió funcionando después de que yo me fuera.
+En dos años el programa pasó de 0 a **20 millones de sesiones orgánicas al mes**, y el catálogo creció de 100.000 a **más de 1 millón de páginas**. En 2024, mi último año, el tráfico orgánico del portfolio entero (no solo el del programa) creció un **40 %** respecto a 2023. Y el programa siguió funcionando después de que yo me fuera.

@@ -5,7 +5,7 @@ lang: es
 translationKey: accesibilidad-web-seo-parte-1
 slug: accesibilidad-web-seo-parte-1
 pubDate: 2017-03-29
-updatedDate: 2017-06-26
+updatedDate: 2026-10-05
 tags: ['seo-tecnico', 'rastreo']
 category: seohacks
 ---
@@ -20,29 +20,27 @@ He de confesar que tenía pendiente publicar este post hace semanas, mejor tarde
 
 Hoy quiero hablar de accesibilidad web, sí, tal y como lees. Es un tema que, a priori, puede parecer sencillo si estás empleando un CMS típico pero la verdad es que es de todo menos sencillo.
 
-Este es la primera parte del post, la segunda parte en breve 😉
-
 Así que dejémonos de rollos y vamos al lío.
 
 Este post tenía que haber salido hace semanas porque quería hablar sobre el artículo del blog de webmasters de Google que habla sobre lo que significa en realidad el [Crawl Budget](/blog/crawl-budget-optimizar-http-304/).
 
 Este es el artículo en español: [https://webmaster-es.googleblog.com/2017/01/que-significa-presupuesto-de-rastreo.html](https://webmaster-es.googleblog.com/2017/01/que-significa-presupuesto-de-rastreo.html)
 
-Como verás, el artículo explica (al estilo Google) que significa el presupuesto de rastreo y tiene una sección de preguntas y respuestas que es la que quiero comentar, pero no es lo único que quiero comentar.
+Como verás, el artículo explica (al estilo Google) qué significa el presupuesto de rastreo y tiene una sección de preguntas y respuestas que es la que quiero comentar, pero no es lo único que quiero comentar.
 
 El otro día me estuve mirando la entrevista que le hizo Eric Enge a Gary Illyes sobre algunas etiquetas de SEO y la verdad es que es de visionado obligatorio:
 
 [Ver vídeo en YouTube](https://www.youtube.com/watch?v=GVKcMU7YNOQ)
 
-Debido al anterior post y a esta entrevista, por fin, he decidido a publicar este artículo.
+Debido al anterior post y a esta entrevista, por fin, me he decidido a publicar este artículo.
 
 ## ¿Cómo funciona Google?
 
-Para poder hablar de accesibilidad, **hay que entender como funciona Google**.
+Para poder hablar de accesibilidad, **hay que entender cómo funciona Google**.
 
 Debes saber que tiene 3 funciones principales: *Crawling, Indexing & Ranking*. Ya te adelanto que la accesibilidad afecta a todas ellas, de ahí su importancia.
 
-Si no conoces estas 3 funciones de Google, entonces deberías leer la guía SEO dónde te cuento en profundidad [cómo funciona Google](/blog/guia-seo/).
+Si no conoces estas 3 funciones de Google, entonces deberías leer la guía SEO donde te cuento en profundidad [cómo funciona Google](/blog/guia-seo/).
 
 Si lo prefieres en formato vídeo, aquí tienes otro de Matt Cutts donde te cuenta el mismo rollo.
 
@@ -54,15 +52,13 @@ Si lo prefieres en formato vídeo, aquí tienes otro de Matt Cutts donde te cuen
 
 El archivo robots también llamado *The Robots Exclusion Protocol* es un archivo en texto plano (.txt) que tiene la función de ofrecer unas directivas a los *bots* que visitan tu *site*.
 
-Estas directivas pueden ser ignoradas en cualquier momento por ciertos bots por lo que el archivo robots.txt no es la única solución al control de bots, también se puede hacer por .htacces pero eso ya es para otro post.
+Estas directivas pueden ser ignoradas en cualquier momento por ciertos bots por lo que el archivo robots.txt no es la única solución al control de bots, también se puede hacer por .htaccess.
 
 Es importante que sepas que este archivo es público y se puede acceder sin restricciones por lo que no lo uses para esconder contenido.
 
-Te voy a enseñar un ejemplo de un robots.txt mal aplicado:
+Si listas en el robots.txt las rutas que quieres esconder, cualquiera puede leerlas y saber exactamente dónde mirar.
 
-Es un ejemplo muy antiguo pero la verdad es que es perfecto para entender porque no se debe usar para este tipo de cosas.
-
-A nivel informativo te dejo [este post](http://searchengineland.com/fun-robots-txt-263796) dónde se recogen los robots.txt más curiosos de internet.
+A nivel informativo te dejo [este post](http://searchengineland.com/fun-robots-txt-263796) donde se recogen los robots.txt más curiosos de internet.
 
 #### ¿Qué es un bot?
 
@@ -113,15 +109,15 @@ Es importante que cuando vayamos a construir o modificar nuestro archivo robots 
 
 **Existe la directiva noindex** para realizar esa acción aunque **John Mueller de Google no lo recomienda**
 
+> **Nota (octubre 2026):** desde el 1 de septiembre de 2019 Google no admite `noindex` en el robots.txt, así que ya no funciona. Tampoco hace caso de `Crawl-delay`.
+
 > [@maxxeight](https://twitter.com/maxxeight) [@google](https://twitter.com/Google) [@DeepCrawl](https://twitter.com/DeepCrawl) I’d really avoid using the noindex there.
 >
 > — John ☆.o(≧▽≦)o.☆ (@JohnMu) [1 de septiembre de 2015](https://twitter.com/JohnMu/status/638644112359604224)
 
-En el momento en el que bloqueas una página ya indexada mediante un Disallow sucede lo siguiente:
+En el momento en el que bloqueas una página ya indexada mediante un Disallow, Googlebot no puede leer la página pero esta sigue en el índice de Google, y en los resultados aparece sin descripción, con un mensaje que lo atribuye al robots.txt.
 
-Lo que sucede es que Googlebot no puede leer la página pero sigue en el índice de Google, de ahí ese mensaje.
-
-Si quisieras que una página no indexara **tendrías que hacerlo mediante la etiqueta robots** (y no nos volvamos locos con el «desperdicio» del crawl budget, ya llegaremos ahí no te preocupes).
+Si quisieras que una página no se indexara **tendrías que hacerlo mediante la etiqueta robots** (y no nos volvamos locos con el «desperdicio» del crawl budget, ya llegaremos ahí no te preocupes).
 
 ##### Ejemplo 1: Bloqueando un directorio
 
@@ -139,7 +135,7 @@ Tenemos el mismo caso anterior pero añadiéndole un pequeño cambio, ahora el d
 
 En este caso el bot llegaría al directorio «a», no lo podría leer debido al archivo robots pero sí que lo mandaría al índice.
 
-Lo que supone que tendríamos el mensaje que tanto queremos todos en la description.
+Lo que supone que tendríamos en la description ese mensaje que tanto queremos todos.
 
 ###### Aquí viene la pregunta del millón: ¿Cómo solucionamos esto?
 
@@ -147,7 +143,7 @@ Lo que supone que tendríamos el mensaje que tanto queremos todos en la descript
 >
 > Si lo hicieras de esta manera, cuando el bot llegara al directorio «a» no podría ver dicha etiqueta, ya que no se le deja crawlear ninguna de esas páginas, provocando que la página siga apareciendo en los buscadores.
 >
-> La solución, más adelante 😉
+> La solución es hacerlo al revés: dejar que Google rastree esas páginas con la etiqueta meta robots en noindex, esperar a que salgan del índice y, solo entonces, bloquearlas en el robots.txt si quieres ahorrar rastreo.
 
 Pese a que podríamos estar hablando del archivo robots.txt mucho más, es momento de pasar al siguiente elemento que influye en la accesibilidad web. **La etiqueta meta robots.**
 
@@ -164,7 +160,7 @@ La etiqueta se encuentra en el head y se escribe de la siguiente manera:
 </head>
 ```
 
-Es una etiqueta que debe aparecer en cada una de las páginas de tu web para dar la indicación pertinente al bot. Si no añades la etiqueta se entiende que no bloqueas ninguna función al bot ya que por defecto esta en index, follow.
+Es una etiqueta que debe aparecer en cada una de las páginas de tu web para dar la indicación pertinente al bot. Si no añades la etiqueta se entiende que no bloqueas ninguna función al bot ya que por defecto está en index, follow.
 
 Las otras 3 combinaciones restantes son:
 
@@ -186,11 +182,11 @@ No te preocupes.
 
 La frecuencia de rastreo disminuye para todas aquellas páginas que no pueden llegar al índice de Google por cualquier motivo, así que el bot irá pasando cada vez menos por esas páginas.
 
-Te dejo con un fragmento de lo que comenta Gary sobre este tema al respecto:
+Te dejo con un fragmento de lo que comenta Gary al respecto:
 
 > Por lo general, se reducirá para cualquier página que no se pueda indexar por cualquier razón. \[···\] Y si el NoIndex todavía está allí, entonces poco a poco comenzaremos a no rastrear esa página tan a menudo. – Gary Illyes
 
-Por cierto, si quieres ver la entrevista por escrito, insto a que te leas [este post](https://www.stonetemple.com/seo-tags-virtual-keynote-with-gary-illyes-and-eric-enge/).
+Por cierto, si quieres ver la entrevista por escrito, te animo a que leas [este post](https://www.stonetemple.com/seo-tags-virtual-keynote-with-gary-illyes-and-eric-enge/).
 
 #### Index, Nofollow
 
@@ -198,11 +194,11 @@ En este caso la etiqueta indica que la página puede ser indexada pero no debe t
 
 Es un caso muy similar al del robots.txt cuando evites que crawlee una página e incluso Gary recomienda usar antes el archivo que la etiqueta meta robots nofollow.
 
-Por cierto te dejo con un vídeo de Romuald Fons por el cual me llego el post de la entrevista que habla justamente del tema del nofollow.
+Por cierto te dejo con un vídeo de Romuald Fons por el cual me llegó el post de la entrevista que habla justamente del tema del nofollow.
 
 [Ver vídeo en YouTube](https://www.youtube.com/watch?v=I5ODaMGMyxc)
 
-Y de ahí, el porque **nunca se recomienda poner enlaces internos nofollow**.
+Y de ahí el porqué de que **nunca se recomienda poner enlaces internos nofollow**.
 
 #### Nofollow, No Index
 
@@ -210,8 +206,6 @@ Por último, tenemos la etiqueta con noindex, nofollow.
 
 Como habrás podido adivinar, en este caso el bot ni indexa la página ni sigue los enlaces.
 
-(Te voy a cortar muy abruptamente porque no quiero dar unas «conclusiones» sin comentar el resto de elementos que falta, así que no me odies por cortar tan de sopetón 😉 )
+> **Nota (octubre 2026):** dos matices sobre lo anterior. Google ha explicado después que una página en noindex durante mucho tiempo acaba tratándose como noindex, nofollow, porque deja de rastrearse y sus enlaces dejan de contar. Y desde 2019 el nofollow es una indicación (hint) que Google puede tener en cuenta o no, no una orden.
 
-Y hasta aquí la primera parte del post sobre accesibilidad web. En la parte 2 hablaré del sitemap.xml, las etiquetas canonical, la paginación y la etiqueta hreflang (y hablaré de nuevo del meta robots).
-
-Deja tu opinión en los comentarios y si te ha gustado compártelo 🙂
+Y hasta aquí el post sobre accesibilidad web.

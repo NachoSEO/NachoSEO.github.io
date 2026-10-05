@@ -104,7 +104,10 @@ const webApplication = {
       </p>
       <p>
         Un detalle que poca gente conoce: <strong>si el robots.txt devuelve un error 5xx, Google deja de rastrear la web</strong>
-        hasta que vuelva a responder. Si devuelve un 404, en cambio, entiende que puede rastrearlo todo.
+        durante las primeras 12 horas y lo sigue reintentando. Mientras tanto usa la última copia que tenía guardada, hasta
+        30 días. Pasado ese plazo, si el resto de la web responde bien, rastrea como si no hubiera robots.txt. Si devuelve
+        un 404, en cambio, entiende desde el principio que puede rastrearlo todo. Los plazos están en la
+        <a href="https://developers.google.com/search/docs/crawling-indexing/robots/robots_txt#http-status-codes" rel="noopener">documentación de Google sobre robots.txt</a>.
       </p>
 
       <h3>2. El firewall o el CDN</h3>

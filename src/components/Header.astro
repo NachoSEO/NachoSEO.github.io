@@ -1,4 +1,5 @@
 ---
+import LogoMark from './LogoMark.astro';
 import { localizedRoute, otherLang, useTranslations } from '../i18n/utils';
 import type { Lang } from '../i18n/ui';
 
@@ -27,12 +28,13 @@ const nav = [
 
 <header class="on-dark relative">
   <div class="mx-auto flex max-w-5xl items-center justify-between gap-x-8 px-5 py-4 sm:px-6">
-    <a href={localizedRoute('home', lang)} class="group leading-tight">
-      <span class="font-display block text-xl font-semibold tracking-tight group-hover:text-accent-on-dark">
-        Nacho Mascort
-      </span>
-      <span class="block text-[0.65rem] font-semibold uppercase tracking-[0.12em] text-on-dark-muted">
-        {t('site.tagline')}
+    <a href={localizedRoute('home', lang)} class="logo-link flex items-center gap-3 leading-tight" aria-label="Nacho Mascort">
+      <LogoMark class="h-10 w-10 shrink-0" />
+      <span>
+        <span class="block font-mono text-[1.15rem] font-bold tracking-[-0.03em]">nacho<span class="accent">mascort</span></span>
+        <span class="mt-0.5 block text-[0.6rem] font-semibold uppercase tracking-[0.12em] text-on-dark-muted">
+          {t('site.tagline')}
+        </span>
       </span>
     </a>
 

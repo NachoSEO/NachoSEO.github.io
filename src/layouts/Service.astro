@@ -14,6 +14,7 @@ import ServiceFormats from '../components/service/ServiceFormats.astro';
 import TeachingProof from '../components/service/TeachingProof.astro';
 import { localizedRoute } from '../i18n/utils';
 import type { Lang } from '../i18n/ui';
+import type { ServiceId } from '../lib/brief';
 
 interface Props {
   entry: CollectionEntry<'services'>;
@@ -25,6 +26,13 @@ const { entry, path, alternatePath } = Astro.props;
 const lang = entry.data.lang as Lang;
 const { Content } = await render(entry);
 const hasBody = Boolean(entry.body?.trim());
+// Servicio que llega pre-marcado al formulario de presupuesto
+const briefServiceByKey: Record<string, ServiceId> = {
+  'seo-geo': 'geo',
+  'ai-automation': 'ia',
+  'fractional-growth': 'fraccional',
+  training: 'formacion',
+};
 
 const labels =
   lang === 'es'
@@ -83,5 +91,5 @@ const { page } = entry.data;
     )
   }
   <FaqAccordion lang={lang} faq={entry.data.faq} />
-  <NextStepCta lang={lang} />
+  <NextStepCta lang={lang} briefService={briefServiceByKey[entry.data.translationKey]} />
 </Base>

@@ -20,7 +20,3 @@
 # Descargas enlazadas desde los emails: fuera del índice
 /descargas/*
   X-Robots-Tag: noindex
-
-# Briefing de presupuesto: solo para clientes, fuera del índice
-/briefing/*
-  X-Robots-Tag: noindex

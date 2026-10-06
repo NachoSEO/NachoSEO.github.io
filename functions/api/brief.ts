@@ -14,8 +14,10 @@ interface Env {
 }
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const OK_PATH = '/briefing/gracias/';
-const ERROR_PATH = '/briefing/error/';
+const RESULT_PATHS = {
+  es: { ok: '/presupuesto/gracias/', error: '/presupuesto/error/', form: '/presupuesto/' },
+  en: { ok: '/en/quote/thanks/', error: '/en/quote/error/', form: '/en/quote/' },
+};
 
 const redirectTo = (request: Request, path: string) => Response.redirect(new URL(path, request.url).href, 303);
 
@@ -29,23 +31,24 @@ const verifyTurnstile = async (secret: string, token: string, ip: string | null)
 
 const text = (form: FormData, name: string, max: number) => String(form.get(name) ?? '').trim().slice(0, max);
 
-// Respuesta legible de un campo; las opciones con detalle se muestran como "Tienda online (500 productos)"
+// Respuesta legible (en español) de un campo; las opciones llegan como índice y las que tienen
+// detalle se muestran como "Tienda online (500 productos)"
 const answerFor = (form: FormData, field: BriefField) => {
   if (field.kind === 'text' || field.kind === 'textarea') return text(form, field.name, 3000);
 
   const chosen = new Set(form.getAll(field.name).map(String));
   return (field.options ?? [])
     .map((option, index) => {
-      if (!chosen.has(option.label)) return null;
+      if (!chosen.has(String(index))) return null;
       const detail = text(form, detailFieldName(field.name, index), 200);
-      return detail ? `${option.label} (${detail})` : option.label;
+      return detail ? `${option.label.es} (${detail})` : option.label.es;
     })
     .filter(Boolean)
     .join(', ');
 };
 
 const formatBrief = (form: FormData, selected: Set<ServiceId>, company: string) => {
-  const services = briefServices.filter((service) => selected.has(service.id)).map((service) => service.label);
+  const services = briefServices.filter((service) => selected.has(service.id)).map((service) => service.label.es);
   const blocks = briefSections
     .filter((section) => !section.service || selected.has(section.service))
     .map((section) => {
@@ -54,10 +57,10 @@ const formatBrief = (form: FormData, selected: Set<ServiceId>, company: string) 
         .map((field) => {
           const answer = answerFor(form, field);
           return field.kind === 'textarea' && answer.includes('\n')
-            ? `${field.label}\n${answer}`
-            : `${field.label}: ${answer || '—'}`;
+            ? `${field.label.es}\n${answer}`
+            : `${field.label.es}: ${answer || '—'}`;
         });
-      return [`== ${section.title.toUpperCase()} ==`, ...lines].join('\n');
+      return [`== ${section.title.es.toUpperCase()} ==`, ...lines].join('\n');
     });
 
   return [`Empresa: ${company || '—'}`, `Servicios: ${services.join(', ')}`, '', ...blocks.flatMap((block) => [block, ''])]
@@ -69,15 +72,18 @@ export const onRequestPost = async ({ request, env }: { request: Request; env: E
   // Solo envíos desde la propia web
   const origin = request.headers.get('Origin');
   if (origin && origin !== 'null' && new URL(origin).host !== new URL(request.url).host) {
-    return redirectTo(request, `${ERROR_PATH}?code=origin`);
+    return redirectTo(request, `${RESULT_PATHS.es.error}?code=origin`);
   }
 
   let form: FormData;
   try {
     form = await request.formData();
   } catch {
-    return redirectTo(request, `${ERROR_PATH}?code=body`);
+    return redirectTo(request, `${RESULT_PATHS.es.error}?code=body`);
   }
+
+  const lang = form.get('lang') === 'en' ? 'en' : 'es';
+  const { ok: OK_PATH, error: ERROR_PATH, form: FORM_PATH } = RESULT_PATHS[lang];
 
   // Honeypot: los bots rellenan el campo oculto; les respondemos como si nada
   if (form.get('company')) return redirectTo(request, OK_PATH);
@@ -114,8 +120,8 @@ export const onRequestPost = async ({ request, env }: { request: Request; env: E
       email,
       website,
       message: formatBrief(form, selected, company),
-      lang: 'es',
-      page: '/briefing/',
+      lang,
+      page: FORM_PATH,
       subject,
     }),
   }).catch(() => null);

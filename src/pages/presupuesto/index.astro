@@ -1,0 +1,33 @@
+---
+/**
+ * Briefing de presupuesto. Admite /presupuesto/?servicios=web,geo para llegar con servicios ya marcados
+ * (los botones de las páginas de servicio lo usan). Versión en inglés: /en/quote/.
+ */
+import Base from '../../layouts/Base.astro';
+import BriefForm from '../../components/BriefForm.astro';
+---
+
+<Base
+  lang="es"
+  title="Pide presupuesto — Nacho Mascort"
+  description="Cuéntame qué necesitas (web, SEO y GEO, IA, growth o formación) y te preparo una propuesta a medida. Son 5 minutos."
+  path="/presupuesto/"
+  alternatePath="/en/quote/"
+  breadcrumbs={[
+    { name: 'Inicio', path: '/' },
+    { name: 'Presupuesto', path: '/presupuesto/' },
+  ]}
+>
+  <div class="mx-auto max-w-3xl px-5 pt-16 pb-20 sm:px-6 md:pt-20">
+    <p class="section-label">Presupuesto</p>
+    <h1 class="display-1 mt-4">Cuéntame qué necesitas</h1>
+    <p class="lede mt-5">
+      Con esto te preparo una propuesta a medida. Son 5 minutos y solo verás las preguntas que afectan al precio
+      de lo que marques. Si algo no lo sabes, déjalo en blanco: lo vemos juntos.
+    </p>
+
+    <div class="mt-10">
+      <BriefForm lang="es" />
+    </div>
+  </div>
+</Base>

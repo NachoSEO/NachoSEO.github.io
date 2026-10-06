@@ -8,6 +8,8 @@ import tailwindcss from '@tailwindcss/vite';
 /** Rutas antiguas del Hexo de 2023 → destinos nuevos. Fuente única: genera el _redirects de Cloudflare Pages (301 reales)
     y los stubs meta-refresh de respaldo, que quedan fuera del sitemap. */
 export const legacyRedirects = {
+  // Primera URL del briefing, ya enviada a clientes
+  '/briefing/': '/presupuesto/',
   '/about/': '/sobre-mi/',
   '/scraping-content-hijacking-the-endpoint-calls-in-the-front-end/':
     '/en/blog/scraping-google-autocomplete-endpoints/',
@@ -48,7 +50,7 @@ export default defineConfig({
       },
       filter: (page) => {
         const path = new URL(page).pathname;
-        return !redirectTargetsBySource.has(path) && !/^\/(en\/thanks|gracias|briefing|contacto\/(gracias|error)|en\/contact\/(thanks|error))\//.test(path);
+        return !redirectTargetsBySource.has(path) && !/^\/(en\/thanks|gracias|contacto\/(gracias|error)|en\/contact\/(thanks|error)|presupuesto\/(gracias|error)|en\/quote\/(thanks|error))\//.test(path);
       },
     }),
     cloudflareRedirects,

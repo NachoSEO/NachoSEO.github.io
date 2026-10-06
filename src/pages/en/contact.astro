@@ -1,7 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
 import { site } from '../../site';
-import { useTranslations } from '../../i18n/utils';
+import { localizedRoute, useTranslations } from '../../i18n/utils';
 
 const t = useTranslations('en');
 ---
@@ -27,14 +27,19 @@ const t = useTranslations('en');
       honestly whether I can help and where I'd start.
     </p>
 
-    <a
-      href={site.calUrl}
-      data-umami-event="call-booking-click"
-      data-umami-event-placement="contact-page"
-      class="btn mt-9"
-    >
-      {t('cta.call30')}
-    </a>
+    <div class="mt-9 flex flex-wrap gap-3">
+      <a
+        href={site.calUrl}
+        data-umami-event="call-booking-click"
+        data-umami-event-placement="contact-page"
+        class="btn"
+      >
+        {t('cta.call30')}
+      </a>
+      <a href={localizedRoute('quote', 'en')} data-umami-event="quote-click" data-umami-event-placement="contact-page" class="btn btn--ghost">
+        Get a quote
+      </a>
+    </div>
 
     <section class="mt-16 max-w-[62ch] border-t border-ink pt-6">
       <h2 class="display-3">What to expect from the call</h2>

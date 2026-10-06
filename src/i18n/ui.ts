@@ -10,6 +10,7 @@ export const routes = {
   cases: { es: '/casos/', en: '/en/case-studies/' },
   blog: { es: '/blog/', en: '/en/blog/' },
   contact: { es: '/contacto/', en: '/en/contact/' },
+  quote: { es: '/presupuesto/', en: '/en/quote/' },
   tools: { es: '/herramientas/', en: '/en/tools/' },
   skills: { es: '/skills/', en: '/en/skills/' },
   qualitySkill: { es: '/skills/google-quality-audit/', en: '/en/skills/google-quality-audit/' },

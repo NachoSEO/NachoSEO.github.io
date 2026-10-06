@@ -5,7 +5,56 @@
  * y los contadores CSS renumeran los pasos visibles. El script solo pre-marca `?servicios=web,geo`.
  */
 import { briefSections, briefServices, detailFieldName, type BriefField, type BriefSection } from '../lib/brief';
+import { localizedRoute } from '../i18n/utils';
+import type { Lang } from '../i18n/ui';
 import Turnstile from './Turnstile.astro';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+
+const copy =
+  lang === 'es'
+    ? {
+        about: 'Sobre ti',
+        name: 'Nombre',
+        email: 'Email',
+        company: 'Empresa',
+        website: 'Web actual',
+        websitePlaceholder: 'tuempresa.com',
+        optional: 'opcional',
+        multi: 'varias opciones',
+        servicesTitle: '¿Qué necesitas?',
+        servicesIntro: 'Marca uno o varios. Solo verás las preguntas de lo que marques.',
+        empty: 'Marca al menos un servicio para ver sus preguntas.',
+        submit: 'Enviar briefing',
+        sending: 'Enviando…',
+        needService: 'Marca al menos un servicio.',
+        waitCaptcha: 'Un momento: estamos comprobando que no eres un robot. Vuelve a pulsar en unos segundos.',
+        privacy: 'Uso tus datos solo para preparar tu propuesta.',
+        privacyLink: 'Política de privacidad',
+      }
+    : {
+        about: 'About you',
+        name: 'Name',
+        email: 'Email',
+        company: 'Company',
+        website: 'Current website',
+        websitePlaceholder: 'yourcompany.com',
+        optional: 'optional',
+        multi: 'select all that apply',
+        servicesTitle: 'What do you need?',
+        servicesIntro: "Pick one or more. You'll only see the questions for what you pick.",
+        empty: 'Pick at least one service to see its questions.',
+        submit: 'Send brief',
+        sending: 'Sending…',
+        needService: 'Pick at least one service.',
+        waitCaptcha: "One moment: we're checking you're not a robot. Try again in a few seconds.",
+        privacy: 'I only use your data to prepare your proposal.',
+        privacyLink: 'Privacy policy',
+      };
 
 const fieldClasses = (field: BriefField) =>
   [
@@ -20,81 +69,90 @@ const sectionClasses = (section: BriefSection) =>
   ['brief-step', 'card', section.service ? `brief-block block-${section.service}` : null].filter(Boolean).join(' ');
 ---
 
-<form action="/api/brief" method="post" class="brief" id="brief-form">
+<form
+  action="/api/brief"
+  method="post"
+  class="brief"
+  id="brief-form"
+  data-msg-service={copy.needService}
+  data-msg-captcha={copy.waitCaptcha}
+  data-msg-sending={copy.sending}
+>
+  <input type="hidden" name="lang" value={lang} />
   <div class="brief-honeypot" aria-hidden="true">
     <label for="brief-company">Company</label>
     <input type="text" id="brief-company" name="company" tabindex="-1" autocomplete="off" />
   </div>
 
   <fieldset class="brief-step card">
-    <legend class="brief-legend"><span class="brief-num" aria-hidden="true"></span>Sobre ti</legend>
+    <legend class="brief-legend"><span class="brief-num" aria-hidden="true"></span>{copy.about}</legend>
     <div class="brief-grid">
       <div class="brief-field">
-        <label class="brief-label" for="brief-name">Nombre</label>
+        <label class="brief-label" for="brief-name">{copy.name}</label>
         <input type="text" id="brief-name" name="name" required maxlength="100" autocomplete="name" />
       </div>
       <div class="brief-field">
-        <label class="brief-label" for="brief-email">Email</label>
+        <label class="brief-label" for="brief-email">{copy.email}</label>
         <input type="email" id="brief-email" name="email" required maxlength="254" autocomplete="email" />
       </div>
       <div class="brief-field">
-        <label class="brief-label" for="brief-empresa">Empresa <span class="brief-optional">opcional</span></label>
+        <label class="brief-label" for="brief-empresa">{copy.company} <span class="brief-optional">{copy.optional}</span></label>
         <input type="text" id="brief-empresa" name="empresa" maxlength="150" autocomplete="organization" />
       </div>
       <div class="brief-field">
-        <label class="brief-label" for="brief-website">Web actual <span class="brief-optional">opcional</span></label>
-        <input type="text" id="brief-website" name="website" maxlength="200" inputmode="url" placeholder="tuempresa.com" />
+        <label class="brief-label" for="brief-website">{copy.website} <span class="brief-optional">{copy.optional}</span></label>
+        <input type="text" id="brief-website" name="website" maxlength="200" inputmode="url" placeholder={copy.websitePlaceholder} />
       </div>
     </div>
   </fieldset>
 
   <fieldset class="brief-step card">
-    <legend class="brief-legend"><span class="brief-num" aria-hidden="true"></span>¿Qué necesitas?</legend>
-    <p class="brief-intro">Marca uno o varios. Solo verás las preguntas de lo que marques.</p>
+    <legend class="brief-legend"><span class="brief-num" aria-hidden="true"></span>{copy.servicesTitle}</legend>
+    <p class="brief-intro">{copy.servicesIntro}</p>
     <div class="brief-services">
       {
         briefServices.map((service) => (
           <label class="brief-service" for={`svc-${service.id}`}>
             <input type="checkbox" class="svc-input" id={`svc-${service.id}`} name="servicios" value={service.id} />
-            <span class="brief-service-title">{service.label}</span>
-            <span class="brief-service-desc">{service.description}</span>
+            <span class="brief-service-title">{service.label[lang]}</span>
+            <span class="brief-service-desc">{service.description[lang]}</span>
           </label>
         ))
       }
     </div>
   </fieldset>
 
-  <p class="brief-empty">Marca al menos un servicio para ver sus preguntas.</p>
+  <p class="brief-empty">{copy.empty}</p>
 
   {
     briefSections.map((section) => (
       <fieldset class={sectionClasses(section)}>
         <legend class="brief-legend">
           <span class="brief-num" aria-hidden="true" />
-          {section.title}
+          {section.title[lang]}
         </legend>
-        {section.intro && <p class="brief-intro">{section.intro}</p>}
+        {section.intro && <p class="brief-intro">{section.intro[lang]}</p>}
         <div class="brief-fields">
           {section.fields.map((field) =>
             field.kind === 'text' || field.kind === 'textarea' ? (
               <div class={fieldClasses(field)}>
                 <label class="brief-label" for={`brief-${field.name}`}>
-                  {field.label}
+                  {field.label[lang]}
                 </label>
-                {field.hint && <p class="brief-hint">{field.hint}</p>}
+                {field.hint && <p class="brief-hint">{field.hint[lang]}</p>}
                 {field.kind === 'text' ? (
-                  <input type="text" id={`brief-${field.name}`} name={field.name} maxlength="500" placeholder={field.placeholder} />
+                  <input type="text" id={`brief-${field.name}`} name={field.name} maxlength="500" placeholder={field.placeholder?.[lang]} />
                 ) : (
-                  <textarea id={`brief-${field.name}`} name={field.name} maxlength="3000" rows="4" placeholder={field.placeholder} />
+                  <textarea id={`brief-${field.name}`} name={field.name} maxlength="3000" rows="4" placeholder={field.placeholder?.[lang]} />
                 )}
               </div>
             ) : (
               <fieldset class={fieldClasses(field)}>
                 <legend class="brief-label">
-                  {field.label}
-                  {field.kind === 'multi' && <span class="brief-optional">varias opciones</span>}
+                  {field.label[lang]}
+                  {field.kind === 'multi' && <span class="brief-optional">{copy.multi}</span>}
                 </legend>
-                {field.hint && <p class="brief-hint">{field.hint}</p>}
+                {field.hint && <p class="brief-hint">{field.hint[lang]}</p>}
                 <div class="brief-choices">
                   {field.options?.map((option, index) => (
                     <div class="brief-choice">
@@ -102,10 +160,10 @@ const sectionClasses = (section: BriefSection) =>
                         <input
                           type={field.kind === 'multi' ? 'checkbox' : 'radio'}
                           name={field.name}
-                          value={option.label}
+                          value={String(index)}
                           required={field.required && field.kind === 'single'}
                         />
-                        <span>{option.label}</span>
+                        <span>{option.label[lang]}</span>
                       </label>
                       {option.detail && (
                         <input
@@ -113,8 +171,8 @@ const sectionClasses = (section: BriefSection) =>
                           class="brief-choice-detail"
                           name={detailFieldName(field.name, index)}
                           maxlength="200"
-                          placeholder={option.detail}
-                          aria-label={`${option.label}: ${option.detail}`}
+                          placeholder={option.detail[lang]}
+                          aria-label={`${option.label[lang]}: ${option.detail[lang]}`}
                         />
                       )}
                     </div>
@@ -129,13 +187,13 @@ const sectionClasses = (section: BriefSection) =>
   }
 
   <div class="brief-submit">
-    <Turnstile lang="es" />
+    <Turnstile lang={lang} />
     <div class="brief-actions">
-      <button type="submit" data-umami-event="brief-submit" class="btn">Enviar briefing</button>
+      <button type="submit" data-umami-event="brief-submit" class="btn">{copy.submit}</button>
       <p class="brief-status" role="status" aria-live="polite"></p>
       <p class="text-xs text-muted">
-        Uso tus datos solo para preparar tu propuesta.
-        <a href="/privacidad/" class="underline decoration-accent underline-offset-4 hover:text-accent-ink">Política de privacidad</a>.
+        {copy.privacy}
+        <a href={localizedRoute('privacy', lang)} class="underline decoration-accent underline-offset-4 hover:text-accent-ink">{copy.privacyLink}</a>.
       </p>
     </div>
   </div>
@@ -145,13 +203,15 @@ const sectionClasses = (section: BriefSection) =>
   const form = document.querySelector<HTMLFormElement>('#brief-form');
   const serviceInputs = [...(form?.querySelectorAll<HTMLInputElement>('.svc-input') ?? [])];
 
-  // Enlaces personalizados por cliente: /briefing/?servicios=web,geo
-  const preselected = new URLSearchParams(location.search).get('servicios')?.split(',') ?? [];
+  // Enlaces personalizados por cliente: /presupuesto/?servicios=web,geo (o ?services= en inglés)
+  const params = new URLSearchParams(location.search);
+  const preselected = (params.get('servicios') ?? params.get('services'))?.split(',') ?? [];
   serviceInputs.forEach((input) => {
     if (preselected.includes(input.value)) input.checked = true;
     input.addEventListener('change', () => serviceInputs[0]?.setCustomValidity(''));
   });
 
+  const messages = form?.dataset ?? {};
   const submitButton = form?.querySelector<HTMLButtonElement>('button[type="submit"]');
   const status = form?.querySelector<HTMLElement>('.brief-status');
   const submitLabel = submitButton?.textContent ?? '';
@@ -164,14 +224,14 @@ const sectionClasses = (section: BriefSection) =>
     // La validación nativa no sabe exigir "al menos un checkbox": lo comprobamos antes de enviar
     if (!serviceInputs.some((input) => input.checked)) {
       event.preventDefault();
-      serviceInputs[0]?.setCustomValidity('Marca al menos un servicio.');
+      serviceInputs[0]?.setCustomValidity(messages.msgService ?? '');
       serviceInputs[0]?.reportValidity();
       return;
     }
     // Sin token de Turnstile el servidor lo rechaza como captcha
     if (!turnstileToken()) {
       event.preventDefault();
-      setStatus('Un momento: estamos comprobando que no eres un robot. Vuelve a pulsar en unos segundos.');
+      setStatus(messages.msgCaptcha ?? '');
       return;
     }
     // El token de Turnstile solo vale una vez: un segundo envío (doble clic) fallaría como captcha
@@ -182,7 +242,7 @@ const sectionClasses = (section: BriefSection) =>
     form.dataset.sending = 'true';
     setStatus('');
     if (submitButton) {
-      submitButton.textContent = 'Enviando…';
+      submitButton.textContent = messages.msgSending ?? '';
       submitButton.setAttribute('aria-disabled', 'true');
     }
   });

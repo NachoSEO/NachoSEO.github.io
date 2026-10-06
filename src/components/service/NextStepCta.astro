@@ -1,15 +1,20 @@
 ---
 import { site } from '../../site';
-import { useTranslations } from '../../i18n/utils';
+import { localizedRoute, useTranslations } from '../../i18n/utils';
 import type { Lang } from '../../i18n/ui';
+import type { ServiceId } from '../../lib/brief';
 
 interface Props {
   lang: Lang;
+  /** Servicio que llega pre-marcado al formulario de presupuesto */
+  briefService?: ServiceId;
 }
 
-const { lang } = Astro.props;
+const { lang, briefService } = Astro.props;
 const es = lang === 'es';
 const t = useTranslations(lang);
+
+const quoteUrl = `${localizedRoute('quote', lang)}${briefService ? `?${es ? 'servicios' : 'services'}=${briefService}` : ''}`;
 
 const steps = es
   ? [
@@ -44,6 +49,7 @@ const steps = es
 
     <div class="mt-10 flex flex-wrap items-center gap-x-6 gap-y-3">
       <a href={site.calUrl} data-umami-event="call-booking-click" data-umami-event-placement="service" class="btn">{t('cta.call30')}</a>
+      <a href={quoteUrl} data-umami-event="quote-click" data-umami-event-placement="service" class="btn btn--ghost">{es ? 'Pide presupuesto' : 'Get a quote'}</a>
       <p class="text-sm text-muted">
         {es ? 'O escríbeme a' : 'Or email me at'}
         <a href={`mailto:${site.email}`} data-umami-event="email-click" data-umami-event-placement="service" class="text-ink underline decoration-accent underline-offset-4 hover:text-accent-ink">{site.email}</a>

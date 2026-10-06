@@ -1,0 +1,30 @@
+---
+/** Quote brief (English version of /presupuesto/). Accepts /en/quote/?services=web,geo. */
+import Base from '../../../layouts/Base.astro';
+import BriefForm from '../../../components/BriefForm.astro';
+---
+
+<Base
+  lang="en"
+  title="Get a quote — Nacho Mascort"
+  description="Tell me what you need (website, SEO & GEO, AI, growth or training) and I'll prepare a tailored proposal. It takes 5 minutes."
+  path="/en/quote/"
+  alternatePath="/presupuesto/"
+  breadcrumbs={[
+    { name: 'Home', path: '/en/' },
+    { name: 'Quote', path: '/en/quote/' },
+  ]}
+>
+  <div class="mx-auto max-w-3xl px-5 pt-16 pb-20 sm:px-6 md:pt-20">
+    <p class="section-label">Quote</p>
+    <h1 class="display-1 mt-4">Tell me what you need</h1>
+    <p class="lede mt-5">
+      I'll use this to prepare a tailored proposal. It takes 5 minutes and you'll only see the questions that affect
+      the price of what you pick. If you don't know something, leave it blank: we'll figure it out together.
+    </p>
+
+    <div class="mt-10">
+      <BriefForm lang="en" />
+    </div>
+  </div>
+</Base>

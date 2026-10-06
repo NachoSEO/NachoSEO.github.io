@@ -1,0 +1,29 @@
+---
+/**
+ * Briefing de presupuesto: página privada (noindex, fuera del sitemap y de la navegación) que Nacho
+ * envía a cada cliente. Admite /briefing/?servicios=web,geo para llegar con servicios ya marcados.
+ */
+import Base from '../../layouts/Base.astro';
+import BriefForm from '../../components/BriefForm.astro';
+---
+
+<Base
+  lang="es"
+  title="Briefing de presupuesto — Nacho Mascort"
+  description="Cuéntame qué necesitas y te preparo una propuesta a medida."
+  path="/briefing/"
+  noindex
+>
+  <div class="mx-auto max-w-3xl px-5 pt-16 pb-20 sm:px-6 md:pt-20">
+    <p class="section-label">Briefing</p>
+    <h1 class="display-1 mt-4">Cuéntame qué necesitas</h1>
+    <p class="lede mt-5">
+      Con esto te preparo una propuesta a medida. Son 5 minutos y solo verás las preguntas que afectan al precio
+      de lo que marques. Si algo no lo sabes, déjalo en blanco: lo vemos juntos.
+    </p>
+
+    <div class="mt-10">
+      <BriefForm />
+    </div>
+  </div>
+</Base>

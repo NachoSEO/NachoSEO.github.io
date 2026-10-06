@@ -1,5 +1,5 @@
 ---
-/** Páginas de destino del formulario de contacto (functions/api/contact.ts) */
+/** Páginas de destino del formulario de contacto (functions/api/contact.ts) y del briefing (functions/api/brief.ts) */
 import Base from '../layouts/Base.astro';
 import { localizedRoute } from '../i18n/utils';
 import { site } from '../site';
@@ -8,9 +8,13 @@ interface Props {
   lang: 'es' | 'en';
   variant: 'ok' | 'error';
   path: string;
+  /** Textos propios para otros formularios; por defecto, los del contacto */
+  title?: string;
+  lede?: string;
+  steps?: string[];
 }
 
-const { lang, variant, path } = Astro.props;
+const { lang, variant, path, title, lede, steps } = Astro.props;
 const es = lang === 'es';
 
 const copy = es
@@ -63,7 +67,8 @@ const copy = es
       write: 'Email me at',
     };
 
-const text = copy[variant];
+const text = { ...copy[variant], ...(title && { title }), ...(lede && { lede }) };
+const nextSteps = steps ?? copy.steps;
 const linkClass = 'underline decoration-accent underline-offset-4 hover:text-accent-ink';
 ---
 
@@ -79,7 +84,7 @@ const linkClass = 'underline decoration-accent underline-offset-4 hover:text-acc
           <section class="result-card mt-10">
             <h2 class="result-title">{copy.stepsTitle}</h2>
             <ol class="result-steps">
-              {copy.steps.map((step) => (
+              {nextSteps.map((step) => (
                 <li>{step}</li>
               ))}
             </ol>

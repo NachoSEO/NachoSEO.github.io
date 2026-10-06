@@ -1,5 +1,5 @@
-// Recibe { name, email, website, message, lang, page } ya validado por la Pages Function
-// y lo envía como email a la dirección verificada en Email Routing.
+// Recibe { name, email, website, message, lang, page, subject? } ya validado por una Pages Function
+// (contact.ts o brief.ts) y lo envía como email a la dirección verificada en Email Routing.
 import { EmailMessage } from 'cloudflare:email';
 
 const FROM = 'formulario@nachomascort.com';
@@ -29,7 +29,9 @@ export default {
     const website = oneLine(data.website, 200);
     const page = oneLine(data.page, 300);
     const lang = data.lang === 'en' ? 'EN' : 'ES';
-    const message = String(data.message ?? '').slice(0, 5000);
+    const subject = oneLine(data.subject, 200) || `Contacto web: ${name}`;
+    // El briefing manda todas sus respuestas en el mensaje: más margen que el formulario de contacto
+    const message = String(data.message ?? '').slice(0, 20000);
     if (!name || !email || !message) return new Response('Bad request', { status: 400 });
 
     const body = [
@@ -48,7 +50,7 @@ export default {
       `From: ${encodeHeader('Formulario nachomascort.com')} <${FROM}>`,
       `To: <${TO}>`,
       `Reply-To: ${encodeHeader(name)} <${email}>`,
-      `Subject: ${encodeHeader(`Contacto web: ${name}`)}`,
+      `Subject: ${encodeHeader(subject)}`,
       `Message-ID: <${crypto.randomUUID()}@nachomascort.com>`,
       `Date: ${new Date().toUTCString()}`,
       'MIME-Version: 1.0',

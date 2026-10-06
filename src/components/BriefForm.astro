@@ -1,0 +1,453 @@
+---
+/**
+ * Formulario del briefing de presupuesto (POST nativo a functions/api/brief.ts, con Turnstile).
+ * Se adapta sin JS: las reglas :has() de abajo muestran solo los bloques de los servicios marcados,
+ * y los contadores CSS renumeran los pasos visibles. El script solo pre-marca `?servicios=web,geo`.
+ */
+import { briefSections, briefServices, detailFieldName, type BriefField, type BriefSection } from '../lib/brief';
+import Turnstile from './Turnstile.astro';
+
+const fieldClasses = (field: BriefField) =>
+  [
+    'brief-field',
+    ...(field.showWith ? ['show-with', ...field.showWith.map((service) => `show-with-${service}`)] : []),
+    field.hideWith ? `hide-with-${field.hideWith}` : null,
+  ]
+    .filter(Boolean)
+    .join(' ');
+
+const sectionClasses = (section: BriefSection) =>
+  ['brief-step', 'card', section.service ? `brief-block block-${section.service}` : null].filter(Boolean).join(' ');
+---
+
+<form action="/api/brief" method="post" class="brief" id="brief-form">
+  <div class="brief-honeypot" aria-hidden="true">
+    <label for="brief-company">Company</label>
+    <input type="text" id="brief-company" name="company" tabindex="-1" autocomplete="off" />
+  </div>
+
+  <fieldset class="brief-step card">
+    <legend class="brief-legend"><span class="brief-num" aria-hidden="true"></span>Sobre ti</legend>
+    <div class="brief-grid">
+      <div class="brief-field">
+        <label class="brief-label" for="brief-name">Nombre</label>
+        <input type="text" id="brief-name" name="name" required maxlength="100" autocomplete="name" />
+      </div>
+      <div class="brief-field">
+        <label class="brief-label" for="brief-email">Email</label>
+        <input type="email" id="brief-email" name="email" required maxlength="254" autocomplete="email" />
+      </div>
+      <div class="brief-field">
+        <label class="brief-label" for="brief-empresa">Empresa <span class="brief-optional">opcional</span></label>
+        <input type="text" id="brief-empresa" name="empresa" maxlength="150" autocomplete="organization" />
+      </div>
+      <div class="brief-field">
+        <label class="brief-label" for="brief-website">Web actual <span class="brief-optional">opcional</span></label>
+        <input type="text" id="brief-website" name="website" maxlength="200" inputmode="url" placeholder="tuempresa.com" />
+      </div>
+    </div>
+  </fieldset>
+
+  <fieldset class="brief-step card">
+    <legend class="brief-legend"><span class="brief-num" aria-hidden="true"></span>¿Qué necesitas?</legend>
+    <p class="brief-intro">Marca uno o varios. Solo verás las preguntas de lo que marques.</p>
+    <div class="brief-services">
+      {
+        briefServices.map((service) => (
+          <label class="brief-service" for={`svc-${service.id}`}>
+            <input type="checkbox" class="svc-input" id={`svc-${service.id}`} name="servicios" value={service.id} />
+            <span class="brief-service-title">{service.label}</span>
+            <span class="brief-service-desc">{service.description}</span>
+          </label>
+        ))
+      }
+    </div>
+  </fieldset>
+
+  <p class="brief-empty">Marca al menos un servicio para ver sus preguntas.</p>
+
+  {
+    briefSections.map((section) => (
+      <fieldset class={sectionClasses(section)}>
+        <legend class="brief-legend">
+          <span class="brief-num" aria-hidden="true" />
+          {section.title}
+        </legend>
+        {section.intro && <p class="brief-intro">{section.intro}</p>}
+        <div class="brief-fields">
+          {section.fields.map((field) =>
+            field.kind === 'text' || field.kind === 'textarea' ? (
+              <div class={fieldClasses(field)}>
+                <label class="brief-label" for={`brief-${field.name}`}>
+                  {field.label}
+                </label>
+                {field.hint && <p class="brief-hint">{field.hint}</p>}
+                {field.kind === 'text' ? (
+                  <input type="text" id={`brief-${field.name}`} name={field.name} maxlength="500" placeholder={field.placeholder} />
+                ) : (
+                  <textarea id={`brief-${field.name}`} name={field.name} maxlength="3000" rows="4" placeholder={field.placeholder} />
+                )}
+              </div>
+            ) : (
+              <fieldset class={fieldClasses(field)}>
+                <legend class="brief-label">
+                  {field.label}
+                  {field.kind === 'multi' && <span class="brief-optional">varias opciones</span>}
+                </legend>
+                {field.hint && <p class="brief-hint">{field.hint}</p>}
+                <div class="brief-choices">
+                  {field.options?.map((option, index) => (
+                    <div class="brief-choice">
+                      <label class="brief-choice-label">
+                        <input
+                          type={field.kind === 'multi' ? 'checkbox' : 'radio'}
+                          name={field.name}
+                          value={option.label}
+                          required={field.required && field.kind === 'single'}
+                        />
+                        <span>{option.label}</span>
+                      </label>
+                      {option.detail && (
+                        <input
+                          type="text"
+                          class="brief-choice-detail"
+                          name={detailFieldName(field.name, index)}
+                          maxlength="200"
+                          placeholder={option.detail}
+                          aria-label={`${option.label}: ${option.detail}`}
+                        />
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </fieldset>
+            ),
+          )}
+        </div>
+      </fieldset>
+    ))
+  }
+
+  <div class="brief-submit">
+    <Turnstile lang="es" />
+    <div class="brief-actions">
+      <button type="submit" data-umami-event="brief-submit" class="btn">Enviar briefing</button>
+      <p class="text-xs text-muted">
+        Uso tus datos solo para preparar tu propuesta.
+        <a href="/privacidad/" class="underline decoration-accent underline-offset-4 hover:text-accent-ink">Política de privacidad</a>.
+      </p>
+    </div>
+  </div>
+</form>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('#brief-form');
+  const serviceInputs = [...(form?.querySelectorAll<HTMLInputElement>('.svc-input') ?? [])];
+
+  // Enlaces personalizados por cliente: /briefing/?servicios=web,geo
+  const preselected = new URLSearchParams(location.search).get('servicios')?.split(',') ?? [];
+  serviceInputs.forEach((input) => {
+    if (preselected.includes(input.value)) input.checked = true;
+    input.addEventListener('change', () => serviceInputs[0]?.setCustomValidity(''));
+  });
+
+  // La validación nativa no sabe exigir "al menos un checkbox": lo comprobamos antes de enviar
+  form?.addEventListener('submit', (event) => {
+    if (serviceInputs.some((input) => input.checked)) return;
+    event.preventDefault();
+    serviceInputs[0]?.setCustomValidity('Marca al menos un servicio.');
+    serviceInputs[0]?.reportValidity();
+  });
+</script>
+
+<style>
+  .brief {
+    display: grid;
+    gap: 1.25rem;
+    counter-reset: step;
+  }
+
+  /* ============ Pasos ============ */
+
+  .brief-step {
+    counter-increment: step;
+    min-width: 0;
+    margin: 0;
+  }
+  .brief-legend {
+    float: left;
+    width: 100%;
+    padding: 0;
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.3rem, 1.15rem + 0.5vw, 1.5rem);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+  .brief-legend + * {
+    clear: both;
+  }
+  .brief-num::before {
+    content: counter(step, decimal-leading-zero);
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0;
+    color: var(--tone-accent-ink);
+  }
+  .brief-intro {
+    margin: 0;
+    padding-top: 0.4rem;
+    font-size: 0.92rem;
+    color: var(--tone-muted);
+  }
+  .brief-fields,
+  .brief-grid {
+    display: grid;
+    gap: 1.5rem;
+    padding-top: 1.25rem;
+  }
+  @media (min-width: 40rem) {
+    .brief-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+  }
+
+  /* ============ Campos ============ */
+
+  .brief-field {
+    display: grid;
+    gap: 0.4rem;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+  .brief-label {
+    padding: 0;
+    font-weight: 600;
+    font-size: 0.95rem;
+    line-height: 1.35;
+  }
+  fieldset.brief-field > .brief-label {
+    float: left;
+    width: 100%;
+    margin-bottom: 0.4rem;
+  }
+  fieldset.brief-field > .brief-label + * {
+    clear: both;
+  }
+  .brief-optional {
+    margin-left: 0.4rem;
+    font-weight: 400;
+    font-size: 0.78rem;
+    color: var(--tone-muted);
+  }
+  .brief-hint {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--tone-muted);
+  }
+  .brief input[type='text'],
+  .brief input[type='email'],
+  .brief textarea {
+    width: 100%;
+    padding: 0.55rem 0.75rem;
+    border: 1px solid var(--tone-line);
+    border-radius: 0.6rem;
+    background: var(--tone-raised);
+    color: var(--tone-ink);
+    font: inherit;
+    font-size: 0.95rem;
+  }
+  .brief textarea {
+    resize: vertical;
+    min-height: 6rem;
+  }
+  .brief input::placeholder,
+  .brief textarea::placeholder {
+    color: var(--tone-muted);
+    opacity: 0.75;
+  }
+  .brief input[type='text']:focus-visible,
+  .brief input[type='email']:focus-visible,
+  .brief textarea:focus-visible {
+    outline: 2px solid var(--tone-accent);
+    outline-offset: 1px;
+    border-color: var(--tone-ink);
+  }
+
+  /* ============ Opciones ============ */
+
+  .brief-choices {
+    display: grid;
+    gap: 0.5rem;
+  }
+  @media (min-width: 40rem) {
+    .brief-choices {
+      grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+    }
+  }
+  .brief-choice {
+    display: grid;
+    gap: 0.45rem;
+    padding: 0.6rem 0.8rem;
+    border: 1px solid var(--tone-line);
+    border-radius: 0.6rem;
+    background: var(--tone-paper);
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+  }
+  .brief-choice:hover {
+    border-color: var(--tone-muted);
+  }
+  .brief-choice:has(input:checked) {
+    border-color: var(--tone-accent);
+    background: var(--tone-raised);
+  }
+  .brief-choice-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    font-size: 0.92rem;
+    line-height: 1.35;
+    cursor: pointer;
+  }
+  .brief input[type='checkbox'],
+  .brief input[type='radio'] {
+    flex: none;
+    width: 1rem;
+    height: 1rem;
+    margin: 0.12rem 0 0;
+    accent-color: var(--tone-accent);
+  }
+  .brief .brief-choice-detail {
+    display: none;
+    padding: 0.4rem 0.6rem;
+    font-size: 0.88rem;
+  }
+  .brief-choice:has(input:checked) .brief-choice-detail {
+    display: block;
+  }
+
+  /* ============ Servicios ============ */
+
+  .brief-services {
+    display: grid;
+    gap: 0.6rem;
+    padding-top: 1.25rem;
+  }
+  @media (min-width: 40rem) {
+    .brief-services {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .brief-service {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 0.2rem 0.7rem;
+    padding: 0.9rem 1rem;
+    border: 1px solid var(--tone-line);
+    border-radius: 0.75rem;
+    background: var(--tone-paper);
+    cursor: pointer;
+    transition: border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+  }
+  .brief-service:hover {
+    border-color: var(--tone-ink);
+  }
+  .brief-service:has(input:checked) {
+    border-color: var(--tone-accent);
+    background: var(--tone-raised);
+    box-shadow: inset 3px 0 0 var(--tone-accent);
+  }
+  .brief-service:has(input:focus-visible) {
+    outline: 2px solid var(--tone-accent);
+    outline-offset: 2px;
+  }
+  .brief .brief-service input {
+    margin-top: 0.3rem;
+  }
+  .brief-service-title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.05rem;
+  }
+  .brief-service-desc {
+    grid-column: 2;
+    font-size: 0.85rem;
+    line-height: 1.45;
+    color: var(--tone-muted);
+  }
+
+  /* ============ Bloques condicionales ============ */
+  /* Ids de servicio de src/lib/brief.ts: un servicio nuevo necesita sus tres reglas */
+
+  .brief-block,
+  .show-with {
+    display: none;
+  }
+  .brief:has(#svc-web:checked) .block-web,
+  .brief:has(#svc-geo:checked) .block-geo,
+  .brief:has(#svc-ia:checked) .block-ia,
+  .brief:has(#svc-fraccional:checked) .block-fraccional,
+  .brief:has(#svc-formacion:checked) .block-formacion {
+    display: block;
+  }
+  .brief:has(#svc-web:checked) .show-with-web,
+  .brief:has(#svc-geo:checked) .show-with-geo,
+  .brief:has(#svc-ia:checked) .show-with-ia,
+  .brief:has(#svc-fraccional:checked) .show-with-fraccional,
+  .brief:has(#svc-formacion:checked) .show-with-formacion {
+    display: grid;
+  }
+  .brief:has(#svc-web:checked) .hide-with-web,
+  .brief:has(#svc-geo:checked) .hide-with-geo,
+  .brief:has(#svc-ia:checked) .hide-with-ia,
+  .brief:has(#svc-fraccional:checked) .hide-with-fraccional,
+  .brief:has(#svc-formacion:checked) .hide-with-formacion {
+    display: none;
+  }
+
+  .brief-empty {
+    margin: 0;
+    padding: 0.9rem 1.1rem;
+    border-left: 3px solid var(--tone-accent);
+    background: var(--tone-raised);
+    font-size: 0.92rem;
+    color: var(--tone-muted);
+  }
+  .brief:has(.svc-input:checked) .brief-empty {
+    display: none;
+  }
+
+  /* ============ Envío ============ */
+
+  .brief-submit {
+    display: grid;
+    gap: 1rem;
+    padding-top: 0.5rem;
+  }
+  .brief-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1.25rem;
+  }
+  .brief-honeypot {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  @media (max-width: 39.99rem) {
+    .brief-step.card {
+      padding: 1.25rem;
+    }
+  }
+</style>

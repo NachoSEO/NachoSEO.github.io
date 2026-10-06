@@ -48,7 +48,7 @@ export default defineConfig({
       },
       filter: (page) => {
         const path = new URL(page).pathname;
-        return !redirectTargetsBySource.has(path) && !/^\/(en\/thanks|gracias|contacto\/(gracias|error)|en\/contact\/(thanks|error))\//.test(path);
+        return !redirectTargetsBySource.has(path) && !/^\/(en\/thanks|gracias|briefing|contacto\/(gracias|error)|en\/contact\/(thanks|error))\//.test(path);
       },
     }),
     cloudflareRedirects,

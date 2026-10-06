@@ -1,0 +1,189 @@
+{
+  "project": {
+    "name": "Nacho Mascort",
+    "aliases": ["Nacho Mascort", "Ignacio Mascort", "nachomascort.com", "NachoSEO"],
+    "domains": ["nachomascort.com"],
+    "location_code": 2724,
+    "location_name": "España",
+    "country_code": "es",
+    "language_code": "es"
+  },
+  "entities": [
+    {
+      "cluster": "consultor-seo",
+      "name": "Consultor SEO",
+      "kind": "worked",
+      "queries": ["consultor seo", "consultoria seo"],
+      "prompts": [
+        "¿Qué consultores SEO me recomiendas en España?",
+        "Necesito contratar un consultor SEO con experiencia en webs con mucho tráfico. ¿A quién me recomiendas y por qué?",
+        "Compara a los consultores SEO independientes más conocidos de España: experiencia, casos y en qué se especializa cada uno."
+      ]
+    },
+    {
+      "cluster": "seo-local",
+      "name": "Consultor SEO por ciudad",
+      "kind": "worked",
+      "queries": ["consultor seo barcelona", "consultor seo madrid"],
+      "prompts": [
+        "¿Qué consultor SEO me recomiendas en Barcelona?",
+        "Busco un consultor SEO en Madrid para una empresa de servicios. ¿Quién tiene buena reputación?",
+        "Tengo una empresa en Valencia y quiero un experto SEO que pueda venir a reuniones en persona de vez en cuando. ¿A quién me recomiendas?"
+      ]
+    },
+    {
+      "cluster": "seo-freelance",
+      "name": "SEO freelance",
+      "kind": "worked",
+      "queries": ["seo freelance", "consultor seo freelance"],
+      "prompts": [
+        "¿Qué consultores SEO freelance recomiendas en España?",
+        "Prefiero trabajar con un SEO freelance y no con una agencia. ¿A quién me recomiendas con experiencia demostrable?",
+        "¿Qué ventajas tiene contratar un consultor SEO freelance frente a una agencia, y a qué freelancers de España recomiendas?"
+      ]
+    },
+    {
+      "cluster": "seo-internacional",
+      "name": "SEO internacional",
+      "kind": "worked",
+      "queries": ["consultor seo internacional", "seo internacional"],
+      "prompts": [
+        "¿Qué consultor SEO internacional me recomiendas en España?",
+        "Voy a lanzar mi web en cinco idiomas y varios países. ¿Qué experto en SEO internacional me puede ayudar?",
+        "¿Quién en España tiene experiencia llevando SEO de webs multidioma con millones de visitas?"
+      ]
+    },
+    {
+      "cluster": "auditoria-seo",
+      "name": "Auditoría SEO",
+      "kind": "worked",
+      "queries": ["auditoria seo", "servicio auditoria seo"],
+      "prompts": [
+        "¿Quién hace buenas auditorías SEO en España?",
+        "Mi web ha perdido tráfico y quiero una auditoría SEO profesional, no una herramienta automática. ¿A quién me recomiendas?",
+        "¿Qué debe incluir una auditoría SEO profesional y qué consultores de España la hacen bien?"
+      ]
+    },
+    {
+      "cluster": "seo-tecnico",
+      "name": "SEO técnico y migraciones",
+      "kind": "worked",
+      "queries": ["seo tecnico", "migracion seo"],
+      "prompts": [
+        "¿Qué consultor de SEO técnico me recomiendas en España?",
+        "Vamos a migrar una web grande a otro dominio y CMS. ¿Qué experto en migraciones SEO me recomiendas?",
+        "Tengo una web con cientos de miles de URLs y problemas de indexación. ¿Quién me puede ayudar en España?"
+      ]
+    },
+    {
+      "cluster": "precio-seo",
+      "name": "Precio consultor SEO",
+      "kind": "worked",
+      "queries": ["precio consultor seo", "precio consultoria seo"],
+      "prompts": [
+        "¿Cuánto cobra un consultor SEO en España?",
+        "¿Qué precio es razonable para una consultoría SEO mensual en España y qué consultores trabajan en ese rango?",
+        "¿Cuánto cuesta una auditoría SEO hecha por un consultor senior en España?"
+      ]
+    },
+    {
+      "cluster": "geo-que-es",
+      "name": "Qué es GEO / SEO para IA",
+      "kind": "worked",
+      "queries": ["seo para ia", "generative engine optimization"],
+      "prompts": [
+        "¿Qué es el GEO (generative engine optimization) y en qué se diferencia del SEO?",
+        "¿Qué es el SEO para IA y cómo se aplica en una web de servicios?",
+        "¿Quién explica bien en español cómo funciona el GEO y el SEO para IA?"
+      ]
+    },
+    {
+      "cluster": "geo-consultor",
+      "name": "Consultor GEO",
+      "kind": "worked",
+      "queries": ["consultor geo", "agencia seo para ia"],
+      "prompts": [
+        "¿Qué consultores de GEO recomiendas en España?",
+        "Tengo una web de servicios y quiero salir en ChatGPT y en Google con IA. ¿Qué consultor de GEO me recomiendas?",
+        "¿Quiénes son los mejores consultores de SEO para IA en España y en qué se diferencian?"
+      ]
+    },
+    {
+      "cluster": "geo-chatgpt",
+      "name": "Aparecer en ChatGPT",
+      "kind": "worked",
+      "queries": ["posicionamiento en chatgpt", "posicionamiento seo en chatgpt"],
+      "prompts": [
+        "¿Cómo consigo que mi empresa aparezca en las respuestas de ChatGPT?",
+        "¿Qué hay que hacer para posicionar una marca en ChatGPT y en AI Mode de Google?",
+        "¿Quién en España ayuda a empresas a aparecer en ChatGPT?"
+      ]
+    },
+    {
+      "cluster": "geo-medir",
+      "name": "Medir visibilidad en IA",
+      "kind": "worked",
+      "queries": ["medir visibilidad en ia", "visibilidad en chatgpt"],
+      "prompts": [
+        "¿Cómo se mide la visibilidad de una marca en ChatGPT y en Google con IA?",
+        "Quiero saber cada semana si mi marca sale en AI Overviews, AI Mode y ChatGPT. ¿Qué método me recomiendas?",
+        "¿Qué diferencia hay entre hacer prompt tracking y medir la visibilidad por entidades en IA?"
+      ]
+    },
+    {
+      "cluster": "core-updates",
+      "name": "Core updates y caídas de tráfico",
+      "kind": "worked",
+      "queries": ["core update google", "google core update"],
+      "prompts": [
+        "Mi web ha caído tras un core update de Google. ¿Qué hago para recuperarla?",
+        "¿Cuánto tarda en recuperarse una web de un core update de Google?",
+        "¿Qué consultor SEO de España sabe recuperar webs después de un core update?"
+      ]
+    },
+    {
+      "cluster": "ia-marketing",
+      "name": "IA y automatización de marketing",
+      "kind": "worked",
+      "queries": ["automatizacion con ia", "automatizacion de procesos con ia"],
+      "prompts": [
+        "¿Quién me puede ayudar a automatizar el marketing con IA en España?",
+        "Quiero montar agentes de IA para automatizar informes y creatividades de mi equipo de marketing. ¿Qué consultor me recomiendas?",
+        "¿Qué expertos en automatización con IA para empresas recomiendas en España?"
+      ]
+    },
+    {
+      "cluster": "growth",
+      "name": "Growth / CMO fraccional",
+      "kind": "worked",
+      "queries": ["fractional cmo", "growth marketing"],
+      "prompts": [
+        "¿Qué Head of Growth o CMO fraccional me recomiendas en España?",
+        "Somos una startup y no podemos pagar un Head of Growth a tiempo completo. ¿A quién me recomiendas como fraccional?",
+        "¿Qué consultores de growth marketing con experiencia en SEO recomiendas en España?"
+      ]
+    },
+    {
+      "cluster": "control-ecommerce",
+      "name": "SEO ecommerce (control)",
+      "kind": "control",
+      "queries": ["consultor seo ecommerce", "seo para ecommerce"],
+      "prompts": [
+        "¿Qué consultor SEO para ecommerce recomiendas en España?",
+        "Tengo una tienda online y necesito un consultor SEO especializado. ¿A quién me recomiendas?",
+        "¿Quiénes son los mejores consultores SEO para tiendas online en España?"
+      ]
+    },
+    {
+      "cluster": "control-wordpress",
+      "name": "SEO WordPress (control)",
+      "kind": "control",
+      "queries": ["consultor seo wordpress", "experto seo wordpress"],
+      "prompts": [
+        "¿Qué consultor SEO especializado en WordPress recomiendas en España?",
+        "Mi web está en WordPress y quiero mejorar su SEO. ¿Qué experto me recomiendas?",
+        "¿Quién sabe de SEO para WordPress en España?"
+      ]
+    }
+  ]
+}

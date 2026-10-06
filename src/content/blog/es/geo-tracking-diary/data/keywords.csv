@@ -1,0 +1,150 @@
+cluster,keyword,volumen_planner,competencia,origen
+geo-consultor,consultor geo,10-100,media,semilla
+geo-consultor,agencia seo para ia,0-10,baja,autocomplete
+geo-consultor,posicionamiento seo para ia,0-10,baja,autocomplete
+geo-consultor,consultor seo ia,sin dato,,manual
+geo-consultor,consultor aeo,sin dato,,manual
+geo-consultor,agencia geo,sin dato,,semilla
+geo-que-es,seo para ia,100-1K,alta,semilla
+geo-que-es,generative engine optimization,100-1K,alta,semilla
+geo-que-es,aeo seo,10-100,alta,autocomplete
+geo-que-es,seo llm,10-100,alta,semilla
+geo-que-es,geo seo,sin dato,,manual
+geo-que-es,que es geo seo,sin dato,,manual
+geo-que-es,seo vs geo,sin dato,,manual
+geo-que-es,answer engine optimization,sin dato,,manual
+geo-chatgpt,posicionamiento en chatgpt,10-100,alta,semilla
+geo-chatgpt,posicionamiento seo en chatgpt,10-100,baja,autocomplete
+geo-chatgpt,aparecer en chatgpt,0-10,baja,autocomplete
+geo-chatgpt,como aparecer en chatgpt,sin dato,,autocomplete
+geo-chatgpt,seo para chatgpt,sin dato,,manual
+geo-medir,medir visibilidad en ia,sin dato,,manual
+geo-medir,visibilidad en chatgpt,sin dato,,manual
+geo-medir,ai overviews,sin dato,,manual
+consultor-seo,consultor seo,1K-10K,media,semilla
+consultor-seo,consultoria seo,1K-10K,media,semilla
+consultor-seo,especialista en seo,1K-10K,media,planner
+consultor-seo,seo consultor,1K-10K,media,planner
+consultor-seo,experto seo,100-1K,media,semilla
+consultor-seo,especialista seo,100-1K,media,semilla
+consultor-seo,experto en seo,100-1K,media,planner
+consultor-seo,consultora seo,100-1K,media,planner
+consultor-seo,experto en posicionamiento web,100-1K,media,planner
+consultor-seo,consultor posicionamiento web,100-1K,media,planner
+consultor-seo,contratar consultor seo,100-1K,media,planner
+consultor-seo,consultor seo españa,10-100,media,semilla
+consultor-seo,mejor consultor seo,10-100,media,planner
+consultor-seo,mejor consultor seo españa,0-10,baja,autocomplete
+consultor-seo,consultor seo profesional,10-100,media,planner
+consultor-seo,consultor seo experto,10-100,media,planner
+consultor-seo,consultor seo para pymes,10-100,media,planner
+consultor-seo,contratar experto seo,10-100,media,planner
+seo-freelance,seo freelance,100-1K,media,semilla
+seo-freelance,consultor seo freelance,100-1K,media,autocomplete
+seo-freelance,consultor freelance seo,10-100,media,planner
+seo-freelance,especialista seo freelance,10-100,media,planner
+seo-freelance,experto seo freelance,10-100,media,planner
+seo-freelance,posicionamiento seo freelance,10-100,media,planner
+seo-freelance,freelance posicionamiento web,10-100,media,planner
+seo-freelance,contratar seo freelance,10-100,baja,planner
+seo-freelance,seo freelance españa,10-100,baja,planner
+precio-seo,precio consultor seo,10-100,alta,planner
+precio-seo,precio consultoria seo,10-100,media,planner
+precio-seo,precio hora consultor seo,10-100,baja,planner
+precio-seo,auditoria seo precio,10-100,media,semilla
+seo-local,consultor seo madrid,100-1K,media,semilla
+seo-local,consultor seo barcelona,100-1K,media,semilla
+seo-local,consultor seo valencia,100-1K,media,semilla
+seo-local,consultor seo sevilla,100-1K,media,semilla
+seo-local,consultor seo malaga,100-1K,media,semilla
+seo-local,consultor seo bilbao,100-1K,media,semilla
+seo-local,consultor seo zaragoza,100-1K,media,semilla
+seo-local,consultor seo alicante,100-1K,media,autocomplete
+seo-local,consultor seo marbella,100-1K,media,autocomplete
+seo-local,consultor seo granada,100-1K,media,semilla
+seo-local,consultor seo mallorca,100-1K,media,semilla
+seo-local,seo freelance madrid,100-1K,media,planner
+seo-local,consultor seo freelance barcelona,100-1K,media,planner
+seo-local,consultor seo freelance madrid,100-1K,media,planner
+seo-local,consultoria seo barcelona,100-1K,media,planner
+seo-local,consultoria seo zaragoza,100-1K,media,planner
+seo-local,experto seo barcelona,100-1K,media,planner
+seo-local,experto seo madrid,100-1K,media,planner
+seo-local,experto seo sevilla,100-1K,media,planner
+seo-local,experto seo valencia,100-1K,media,planner
+seo-local,consultor seo murcia,10-100,media,semilla
+seo-local,consultor seo canarias,10-100,media,semilla
+seo-local,consultor seo coruña,10-100,media,semilla
+seo-local,consultor seo vigo,10-100,media,semilla
+seo-local,consultor seo valladolid,10-100,media,semilla
+seo-local,consultor seo asturias,10-100,media,semilla
+seo-local,consultor seo girona,10-100,media,semilla
+seo-local,consultor seo tarragona,10-100,media,semilla
+seo-local,consultor seo oviedo,10-100,media,planner
+seo-local,consultor seo gijon,10-100,baja,planner
+seo-local,consultor seo palma de mallorca,10-100,media,planner
+seo-local,consultor seo san sebastian,0-10,baja,semilla
+seo-local,seo freelance barcelona,10-100,media,planner
+seo-local,seo freelance valencia,10-100,media,planner
+seo-local,consultoria seo sevilla,10-100,media,planner
+seo-local,consultoria seo malaga,10-100,baja,planner
+seo-local,especialista seo madrid,10-100,alta,planner
+seo-internacional,consultor seo internacional,100-1K,media,autocomplete
+seo-internacional,seo internacional,100-1K,media,semilla
+seo-internacional,consultoria seo internacional,100-1K,media,planner
+seo-internacional,experto seo internacional,10-100,media,planner
+seo-internacional,estrategia seo internacional,10-100,media,planner
+seo-internacional,posicionamiento seo internacional,10-100,media,planner
+seo-internacional,servicio seo internacional,10-100,media,planner
+seo-internacional,auditoria seo internacional,10-100,media,planner
+auditoria-seo,auditoria seo,100-1K,media,semilla
+auditoria-seo,servicio auditoria seo,100-1K,media,planner
+auditoria-seo,auditoria seo profesional,10-100,alta,semilla
+auditoria-seo,auditoria seo tecnica,10-100,media,semilla
+auditoria-seo,auditoria seo tecnico,10-100,media,planner
+auditoria-seo,contratar auditoria seo,10-100,media,planner
+auditoria-seo,servicio de auditoria seo,10-100,media,planner
+seo-tecnico,seo tecnico,100-1K,media,semilla
+seo-tecnico,seo técnico,100-1K,media,planner
+seo-tecnico,migracion seo,100-1K,media,semilla
+seo-tecnico,migraciones seo,10-100,media,planner
+seo-tecnico,consultor seo tecnico,10-100,media,semilla
+seo-tecnico,especialista seo tecnico,10-100,baja,planner
+seo-tecnico,consultoria seo tecnico,10-100,baja,planner
+seo-tecnico,seo enterprise,10-100,media,semilla
+seo-tecnico,seo para grandes webs,sin dato,,semilla
+core-updates,core update google,100-1K,media,semilla
+core-updates,google core update,100-1K,media,planner
+core-updates,penalizacion google,10-100,media,semilla
+core-updates,penalizacion google seo,10-100,media,planner
+core-updates,helpful content update,10-100,media,semilla
+core-updates,caida de trafico organico,0-10,baja,autocomplete
+core-updates,caida trafico google,0-10,baja,autocomplete
+core-updates,recuperar trafico organico,0-10,baja,semilla
+ia-marketing,automatizacion con ia,100-1K,sin dato,semilla
+ia-marketing,automatizacion de procesos con ia,100-1K,alta,semilla
+ia-marketing,ia para marketing,10-100,sin dato,semilla
+ia-marketing,inteligencia artificial para marketing,10-100,sin dato,planner
+ia-marketing,consultoría de inteligencia artificial,10-100,alta,planner
+ia-marketing,agentes de ia para marketing digital,10-100,sin dato,autocomplete
+ia-marketing,automatización de marketing con ia,0-10,baja,autocomplete
+ia-marketing,consultor ia marketing,0-10,baja,semilla
+ia-marketing,consultoria ia empresas,0-10,baja,semilla
+growth,growth marketing,100-1K,alta,semilla
+growth,fractional cmo,100-1K,media,semilla
+growth,head of growth,10-100,media,semilla
+growth,consultor growth marketing,10-100,baja,semilla
+growth,director de marketing externo,10-100,media,semilla
+growth,cmo freelance,10-100,baja,semilla
+growth,consultoria growth hacking,10-100,media,planner
+growth,growth marketing b2b,10-100,baja,planner
+growth,head of growth freelance,0-10,baja,semilla
+growth,director de marketing freelance,0-10,baja,semilla
+growth,cmo externo,0-10,baja,semilla
+control-ecommerce,consultor seo ecommerce,100-1K,media,planner
+control-ecommerce,seo para ecommerce,100-1K,media,semilla
+control-ecommerce,experto seo ecommerce,10-100,baja,planner
+control-ecommerce,posicionamiento seo ecommerce,10-100,baja,planner
+control-wordpress,consultor seo wordpress,100-1K,media,semilla
+control-wordpress,experto seo wordpress,10-100,media,planner
+control-wordpress,consultoria seo wordpress,10-100,media,planner

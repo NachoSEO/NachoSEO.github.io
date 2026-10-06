@@ -132,6 +132,7 @@ const sectionClasses = (section: BriefSection) =>
     <Turnstile lang="es" />
     <div class="brief-actions">
       <button type="submit" data-umami-event="brief-submit" class="btn">Enviar briefing</button>
+      <p class="brief-status" role="status" aria-live="polite"></p>
       <p class="text-xs text-muted">
         Uso tus datos solo para preparar tu propuesta.
         <a href="/privacidad/" class="underline decoration-accent underline-offset-4 hover:text-accent-ink">Política de privacidad</a>.
@@ -151,12 +152,50 @@ const sectionClasses = (section: BriefSection) =>
     input.addEventListener('change', () => serviceInputs[0]?.setCustomValidity(''));
   });
 
-  // La validación nativa no sabe exigir "al menos un checkbox": lo comprobamos antes de enviar
+  const submitButton = form?.querySelector<HTMLButtonElement>('button[type="submit"]');
+  const status = form?.querySelector<HTMLElement>('.brief-status');
+  const submitLabel = submitButton?.textContent ?? '';
+  const turnstileToken = () => form?.querySelector<HTMLInputElement>('[name="cf-turnstile-response"]')?.value;
+  const setStatus = (message: string) => {
+    if (status) status.textContent = message;
+  };
+
   form?.addEventListener('submit', (event) => {
-    if (serviceInputs.some((input) => input.checked)) return;
-    event.preventDefault();
-    serviceInputs[0]?.setCustomValidity('Marca al menos un servicio.');
-    serviceInputs[0]?.reportValidity();
+    // La validación nativa no sabe exigir "al menos un checkbox": lo comprobamos antes de enviar
+    if (!serviceInputs.some((input) => input.checked)) {
+      event.preventDefault();
+      serviceInputs[0]?.setCustomValidity('Marca al menos un servicio.');
+      serviceInputs[0]?.reportValidity();
+      return;
+    }
+    // Sin token de Turnstile el servidor lo rechaza como captcha
+    if (!turnstileToken()) {
+      event.preventDefault();
+      setStatus('Un momento: estamos comprobando que no eres un robot. Vuelve a pulsar en unos segundos.');
+      return;
+    }
+    // El token de Turnstile solo vale una vez: un segundo envío (doble clic) fallaría como captcha
+    if (form.dataset.sending) {
+      event.preventDefault();
+      return;
+    }
+    form.dataset.sending = 'true';
+    setStatus('');
+    if (submitButton) {
+      submitButton.textContent = 'Enviando…';
+      submitButton.setAttribute('aria-disabled', 'true');
+    }
+  });
+
+  // Al volver atrás desde la página de error, el formulario se restaura con el token ya gastado: pedimos otro
+  window.addEventListener('pageshow', (event) => {
+    if (!event.persisted || !form) return;
+    delete form.dataset.sending;
+    if (submitButton) {
+      submitButton.textContent = submitLabel;
+      submitButton.removeAttribute('aria-disabled');
+    }
+    (window as unknown as { turnstile?: { reset: () => void } }).turnstile?.reset();
   });
 </script>
 
@@ -436,6 +475,20 @@ const sectionClasses = (section: BriefSection) =>
     flex-wrap: wrap;
     align-items: center;
     gap: 0.75rem 1.25rem;
+  }
+  .brief-status {
+    flex-basis: 100%;
+    margin: 0;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--tone-accent-ink);
+  }
+  .brief-status:empty {
+    display: none;
+  }
+  .brief .btn[aria-disabled='true'] {
+    opacity: 0.7;
+    cursor: progress;
   }
   .brief-honeypot {
     position: absolute;

@@ -95,6 +95,33 @@ Ejemplo literal. Prompt: "Compara a los consultores SEO independientes más cono
 - Lección de proceso: con miles de keywords, la revisión de intención una a una no escala. La hice por reglas (taxonomía de 60 reglas en orden) revisando cada grupo y lo que quedaba sin clasificar; se colaron cosas como "webMASTER" en másteres o "reCURSOs" en cursos, y salieron al revisar.
 - Lección técnica: el navegador no deja sacar los datos de Google Ads a un archivo local; se leen por partes como texto. La primera vez perdí la sesión al navegar fuera de la pestaña y tuve que repetir las dos pasadas.
 
+### Arquitectura del sitio (propuesta, sin aplicar)
+- Artifact privado con la propuesta (v2.2). Decisiones tras discutirla:
+  - Seis servicios técnicos. Página de precios sin tarifa: modelos, qué mueve el precio, días de trabajo típicos y formulario.
+  - Guías grandes (empezando por GEO) con capítulos de SEO invitados y ebook. HTML primero; el PDF es la misma obra.
+  - Lo básico ("qué es llms.txt") en un glosario de una sola página, para no llenar el sitio de contenido commodity.
+  - Patentes y documentos de Google como categorías del blog, no como sección. El diario GEO, como post.
+  - "Investigación" pasa a "Estudios". Ninguna página de ciudad: las ciudades van en la home y en Sobre mí (una página "consultor SEO España" competiría con la home y olía a doorway).
+
+### Revisión adversarial de la propuesta: ¿basta para salir en la IA?
+- **No basta.** Lo que más pesa en las preguntas de "recomiéndame a alguien" pasa fuera de la web. El día 0, ChatGPT decidió los nombres antes de buscar y nachomascort.com no apareció en ninguna búsqueda `site:`. Ninguna página nueva cambia esa lista inicial; la cambian las menciones en otros sitios. El trabajo en la propia web hace tres cosas:
+  1. Que la verificación `site: … casos clientes trayectoria` encuentre pruebas cuando ya estás en la lista (Sobre mí, casos).
+  2. Que Google posicione las páginas que alimentan AI Overviews y AI Mode, donde sí se recupera desde el índice.
+  3. Producir material que otros citen (estudios, guía con invitados, patentes). En realidad es una palanca externa disfrazada de contenido propio.
+- **Lo informativo va a la fuente oficial.** En "¿cómo aparecer en ChatGPT?", los fan-outs fueron a `site:openai.com` y `site:developers.google.com/search`. Una guía GEO buena no garantiza citas en definiciones; su valor está en las menciones y los enlaces que gane.
+- **La marca está repartida.** El schema de la web dice "Consultor de SEO, GEO e IA" y "Head of AI en Reverse Tech", y además está Gradual (agencia de IA). ChatGPT me describió como "SEO + Growth + IA". Si la propuesta es "consultor técnico", la web, LinkedIn y las bios de BigSEO y Webpositer tienen que decir lo mismo; si no, cada fuente cuenta una historia distinta (el KPI 5 de Wil Reynolds, la distancia entre lo que dicen de ti y el tema que quieres ganar).
+- **La única mención vino de growth**, la parte que la propuesta saca del menú. Con 1 de 150 es ruido (IC 0,1-3,7 %), pero conviene no borrar growth de Sobre mí ni de LinkedIn mientras no haya datos.
+- **"Consultor SEO" en la home es la apuesta más difícil**: unos 50.000 de demanda y una SERP llena de agencias y consultores con años de enlaces. Es un objetivo a meses vista; lo realista a corto es auditoría, core updates, AI Overviews y GEO, donde hay poca competencia en español.
+- **Atribución.** Si se publica todo a la vez, el tracker no podrá decir qué movió qué. Reglas:
+  - No publicar nada antes de cerrar la línea base (2026-10-19).
+  - Publicar por tandas con fecha en este diario, cada tanda ligada a las entidades del tracker que debería mover.
+  - Añadir al tracker entidades para lo nuevo que hoy no se mide (patentes de Google, cómo funciona AI Mode) antes de publicarlo, para tener su base.
+- **Plazos distintos.** Lo que sale de la búsqueda en vivo (AI Overviews, AI Mode, ChatGPT con búsqueda) puede moverse en semanas. Lo que el modelo trae de memoria cambia cuando se reentrena, es decir, en meses.
+- **Capacidad.** Seis servicios, guía con invitados, una patente al mes, un estudio mensual y herramientas es mucho para una persona que además trabaja. Si se hace con prisa, acaba siendo justo el contenido commodity que se quería evitar. Prioridad: lo que verifica (Sobre mí, casos, servicios) y lo que genera menciones (estudio de consultores, guía GEO).
+- **El estudio "a quién recomienda la IA como consultor SEO"** tiene un conflicto de interés evidente si lo firma alguien que compite en ese ranking. Hay que publicar el método y los datos en bruto, y decir dónde salgo yo (o que me excluyo).
+- **Comprobado y bien**: el robots.txt permite todos los bots de IA (GPTBot, OAI-SearchBot, ChatGPT-User, PerplexityBot, ClaudeBot…), las peticiones con esos user agents devuelven 200 y el schema Person tiene sameAs (LinkedIn, X, GitHub, Speaker Deck). Pendiente: comprobar la indexación en Bing (Webmaster Tools, IndexNow), porque la búsqueda de ChatGPT se apoya en parte en Bing.
+- **Fase externa (después de la web)**: LinkedIn (sale en los fan-outs `site:linkedin.com/in`), entrar en las listas de "mejores consultores SEO de España" que el modelo usa para elegir nombres, perfiles en Malt (malt.es sale citado), que BigSEO y Webpositer me nombren como profesor, ponencias, podcasts y medios del sector, y que los autores invitados compartan la guía.
+
 ## Referencias para el post
 - Wil Reynolds, Seer Interactive. Re-imagining AI visibility KPIs in a query fan-out world. https://www.seerinteractive.com/insights/ai-visibility-kpis (hardwired, anti-recomendación, KPIs de credibilidad).
 - Dan Petrovic, DEJAN. Why we don't do prompt tracking. https://dejan.ai/blog/prompt-tracking (medir por entidades canónicas con una sonda fija y muchas muestras; es el método del geo-tracker).

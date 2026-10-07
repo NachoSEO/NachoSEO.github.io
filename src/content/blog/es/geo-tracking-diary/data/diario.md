@@ -38,7 +38,7 @@ Notas para el post. No es texto publicable: datos, decisiones e incidencias en o
 - ChatGPT, prompt "¿Qué consultores de growth marketing con experiencia en SEO recomiendas en España?".
 - Puesto 8 de 8 marcas, en una tabla. Delante: Julio Domínguez, Rafa Villaplana, Jazztel, Abanca, Santalucía, Sesame HR, Jordi Cívico.
 - Enlaza nachomascort.com (con utm_source=chatgpt.com).
-- Me describe como "SEO + Growth + IA", interesante para proyectos grandes, y cita Softonic y CNET. **Ojo: lo de CNET lo dice ChatGPT, no es una de mis cifras verificadas; no repetirlo en el post como dato propio.**
+- Me describe como "SEO + Growth + IA", interesante para proyectos grandes, y cita Softonic y CNET. Los dos salen en mi web (logos de clientes y caso de Softonic): ChatGPT está leyendo nachomascort.com.
 
 **Quién sale en mi lugar (marcas más nombradas en todas las respuestas)**
 Aleyda Solís (42), Orainti (32), ChatGPT (31), Natzir Turrado (26), Perplexity (24), Google (22), Gemini (21), BigSEO (20), Semrush (17), Webpositer (17), Shopify (16), WordPress (14), Fernando Maciá (11), Juan González Villa (11), MJ Cachón (11).

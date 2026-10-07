@@ -1,0 +1,3 @@
+# Redirecciones de Cloudflare Pages
+/servicios/consultoria-seo-geo/ /servicios/consultoria-seo-tecnica/ 301
+/servicios/consultoria-seo-geo.md /servicios/consultoria-seo-tecnica.md 301

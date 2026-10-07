@@ -36,6 +36,9 @@ export const bio: Record<Lang, BioSegment[][]> = {
     [
       { text: "Lo que monto son sistemas: procesos, automatización y equipos que siguen produciendo cuando yo ya no estoy." },
     ],
+    [
+      { text: "Vivo y trabajo en Barcelona. Casi todo mi trabajo es en remoto, con equipos de toda España y de fuera, en español y en inglés." },
+    ],
   ],
   en: [
     [

@@ -2,16 +2,20 @@
 import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import Cta from '../../components/Cta.astro';
+import SectionLabel from '../../components/SectionLabel.astro';
 
+// Los servicios de SEO técnico y GEO van primero (order < 7); growth, IA y formación, en un bloque aparte
 const services = (await getCollection('services', (entry) => entry.data.lang === 'es')).sort(
   (a, b) => a.data.order - b.data.order
 );
+const seoServices = services.filter((service) => service.data.order < 7);
+const otherServices = services.filter((service) => service.data.order >= 7);
 ---
 
 <Base
   lang="es"
-  title="Servicios — Nacho Mascort"
-  description="Head of Growth fraccional, sistemas de IA y automatización, consultoría SEO/GEO y formación. Servicios para empresas que quieren crecer con sistemas, no con humo."
+  title="Servicios de consultoría SEO técnica — Nacho Mascort"
+  description="Consultoría SEO técnica para webs grandes, auditoría, migraciones, SEO internacional, recuperar tráfico tras un core update y consultoría GEO."
   path="/servicios/"
   alternatePath="/en/services/"
   breadcrumbs={[
@@ -21,12 +25,15 @@ const services = (await getCollection('services', (entry) => entry.data.lang ===
 >
   <div class="mx-auto max-w-5xl px-5 pt-16 sm:px-6 sm:pt-20">
     <p class="meta">Servicios</p>
-    <h1 class="display-1 mt-5">Servicios de growth, IA y SEO</h1>
-    <p class="lede mt-6">Consultoría SEO y GEO, dirección de growth a tiempo parcial, sistemas de IA y formación. En todos trabajas directamente conmigo, y lo que montamos sigue funcionando cuando yo me voy.</p>
+    <h1 class="display-1 mt-5">Consultoría SEO técnica</h1>
+    <p class="lede mt-6">Para webs grandes y para los problemas caros: auditorías, migraciones, varios idiomas, caídas tras un core update y visibilidad en la IA. En todos trabajas directamente conmigo.</p>
+    <p class="mt-5 text-[0.95rem]">
+      <a href="/servicios/precios/" class="link-arrow">Cuánto cuesta y cómo calculo el precio</a>
+    </p>
 
     <div class="mt-12 grid gap-5 md:grid-cols-2">
       {
-        services.map((service) => (
+        seoServices.map((service) => (
           <a href={`/servicios/${service.data.slug}/`} class="card flex flex-col">
             <h2 class="card-title display-3 transition-colors">{service.data.title}</h2>
             <p class="mt-3 text-[0.95rem]">{service.data.tagline}</p>
@@ -37,6 +44,23 @@ const services = (await getCollection('services', (entry) => entry.data.lang ===
       }
     </div>
   </div>
+
+  <section id="otros" class="mx-auto max-w-5xl scroll-mt-24 px-5 pt-16 md:pt-24 sm:px-6">
+    <SectionLabel label="Otros servicios" />
+    <h2 class="display-2 mt-3">Growth, IA y formación</h2>
+    <ul class="row-list mt-8">
+      {
+        otherServices.map((service) => (
+          <li>
+            <a href={`/servicios/${service.data.slug}/`} class="row-link group grid gap-1 py-5 sm:grid-cols-[16rem_1fr] sm:gap-6 sm:px-2">
+              <span class="row-title display-3 transition-colors">{service.data.title}</span>
+              <span class="text-[0.95rem] text-muted">{service.data.tagline}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
 
   <Cta lang="es" />
 </Base>

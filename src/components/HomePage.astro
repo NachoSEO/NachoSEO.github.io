@@ -20,7 +20,9 @@ const { lang } = Astro.props;
 const t = useTranslations(lang);
 
 const byOrder = <T extends { data: { order: number } }>(a: T, b: T) => a.data.order - b.data.order;
-const services = (await getCollection('services', (entry) => entry.data.lang === lang)).sort(byOrder);
+const allServices = (await getCollection('services', (entry) => entry.data.lang === lang)).sort(byOrder);
+// En español la home enseña solo los servicios de SEO técnico y GEO (order < 7); growth, IA y formación van en /servicios/
+const services = lang === 'es' ? allServices.filter((service) => service.data.order < 7) : allServices;
 
 // Si aún no hay artículos en el idioma de la página, se muestran los del otro idioma.
 // El archivo de SEO Hacks (2015–2017) no cuenta como "lo último".
@@ -36,15 +38,14 @@ const copy =
   lang === 'es'
     ? {
         title: [
-          { text: 'Consultoría de ' },
-          { text: 'SEO, GEO e IA', accent: true },
-          { text: ' que genera ' },
-          { text: 'negocio', accent: true },
+          { text: 'Consultor ' },
+          { text: 'SEO técnico', accent: true },
+          { text: ' para webs grandes' },
         ],
         intro:
-          'He llevado webs como Softonic o word.tips, con millones de URLs y millones de visitas al día. He montado equipos, he hecho crecer negocios y trabajo con IA desde antes de que existiera ChatGPT.',
+          'He dirigido el SEO de webs como Softonic o word.tips, con millones de URLs y millones de visitas al día. Hoy ayudo a webs grandes a crecer en Google y a aparecer en las respuestas de ChatGPT, Gemini y los AI Overviews.',
         secondary: 'Escríbeme',
-        photoAlt: 'Nacho Mascort, consultor de growth, IA y SEO',
+        photoAlt: 'Nacho Mascort, consultor SEO técnico',
         pillarsLabel: 'Por qué yo',
         pillarsTitle: 'Por qué trabajar conmigo y no con una agencia',
         pillars: [
@@ -57,13 +58,21 @@ const copy =
             body: 'Softonic, download.com y CNET, con más de 1.000 millones de usuarios al año, y word.tips, donde dupliqué el tráfico hasta los 2 millones de visitas al día.',
           },
           {
-            title: 'Construyo soluciones propias que ahorran costes',
-            body: 'En vez de pagar herramientas carísimas, monto sistemas a medida. La fábrica de anuncios con IA de Reverse Tech ahorra unos 20.000 € al mes en plataformas externas, casi 240.000 € al año.',
+            title: 'He sacado una web grande de un core update',
+            body: 'En Softonic, un core update nos quitó un 20 y pico por ciento de tráfico. Encontramos la causa en las traducciones, separamos los idiomas en ccTLDs y con el siguiente core update el dominio principal superó su nivel anterior.',
           },
         ],
         servicesLabel: 'Servicios',
-        servicesTitle: 'Cuatro formas de trabajar conmigo',
+        servicesTitle: 'Los problemas en los que te puedo ayudar',
         servicesIntro: 'Trabajas directamente conmigo, sin juniors ni subcontratas. Y si otra opción te conviene más, te lo digo en la primera llamada.',
+        otherServices: { text: 'También hago growth, sistemas de IA y formación', href: '/servicios/#otros' },
+        pricing: { text: 'Cuánto cuesta y cómo calculo el precio', href: '/servicios/precios/' },
+        whereLabel: 'Dónde trabajo',
+        whereTitle: 'Desde Barcelona, en remoto para toda España',
+        where: [
+          'Vivo y trabajo en Barcelona. Casi todo mi trabajo es en remoto, con equipos de toda España y de fuera, en español y en inglés.',
+          'Si tu empresa está en Barcelona, también podemos vernos en persona.',
+        ],
         serviceLink: 'Ver el servicio',
         talksLabel: 'Docencia y charlas',
         talksTitle: 'Más de diez años enseñando lo que hago',
@@ -178,6 +187,14 @@ const copy =
       ))
     }
   </div>
+  {
+    'pricing' in copy && (
+      <p class="mt-8 flex flex-wrap gap-x-8 gap-y-3 text-[0.95rem]">
+        <a href={copy.pricing.href} class="link-arrow">{copy.pricing.text}</a>
+        <a href={copy.otherServices.href} class="link-arrow">{copy.otherServices.text}</a>
+      </p>
+    )
+  }
 </section>
 
 <CasesBand
@@ -227,6 +244,18 @@ const copy =
     </ul>
   </div>
 </section>
+
+{
+  'where' in copy && (
+    <section class="mx-auto max-w-5xl px-5 pt-16 md:pt-24 sm:px-6">
+      <SectionLabel label={copy.whereLabel} />
+      <h2 class="display-2 mt-3">{copy.whereTitle}</h2>
+      <div class="mt-6 max-w-[62ch] space-y-4 text-[1.05rem] leading-relaxed">
+        {copy.where.map((paragraph) => <p>{paragraph}</p>)}
+      </div>
+    </section>
+  )
+}
 
 <RecognitionLogos lang={lang} />
 

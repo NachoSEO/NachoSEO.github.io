@@ -6,6 +6,7 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { media, mediaTypeLabels, talks, teaching } from '../data/appearances';
 import { caseBrands } from '../data/case-brands';
+import { pricingPage } from '../data/pricing';
 import { aboutPage, bio, projects, timeline } from '../data/profile';
 import { localizedRoute, formatDate } from '../i18n/utils';
 import type { Lang } from '../i18n/ui';
@@ -101,7 +102,7 @@ async function buildAgentDocs(): Promise<AgentDoc[]> {
     // Home
     const homePath = localizedRoute('home', lang);
     const homeSummary = es
-      ? 'Consultoría de SEO, GEO e IA que genera negocio. Nacho Mascort, Barcelona.'
+      ? 'Consultor SEO técnico para webs grandes, también en GEO. Nacho Mascort, Barcelona.'
       : 'SEO, GEO & AI consulting that drives revenue. Nacho Mascort, Barcelona.';
     docs.push({
       path: homePath,
@@ -164,9 +165,9 @@ async function buildAgentDocs(): Promise<AgentDoc[]> {
     });
 
     // Servicios
-    const servicesTitle = es ? 'Servicios de growth, IA y SEO' : 'Growth, AI and SEO services';
+    const servicesTitle = es ? 'Consultoría SEO técnica' : 'Growth, AI and SEO services';
     const servicesSummary = es
-      ? 'Consultoría SEO y GEO, Head of Growth fraccional, sistemas de IA y formación.'
+      ? 'Consultoría SEO técnica para webs grandes, auditoría, migraciones, SEO internacional, recuperar tráfico tras un core update y GEO. También growth, sistemas de IA y formación.'
       : 'SEO and GEO consulting, fractional Head of Growth, AI systems and training.';
     docs.push({
       path: servicesBase,
@@ -176,6 +177,26 @@ async function buildAgentDocs(): Promise<AgentDoc[]> {
       summary: servicesSummary,
       markdown: [frontmatter({ title: servicesTitle, path: servicesBase, lang, summary: servicesSummary }), serviceLines.join('\n'), booking(lang)].join('\n\n'),
     });
+
+    if (es) {
+      docs.push({
+        path: pricingPage.path,
+        mdPath: mdPathFor(pricingPage.path),
+        lang,
+        title: pricingPage.title,
+        summary: pricingPage.description,
+        markdown: [
+          frontmatter({ title: pricingPage.title, path: pricingPage.path, lang, summary: pricingPage.description }),
+          pricingPage.lede,
+          `## Cómo trabajo y cuánto dura cada proyecto\n\n${pricingPage.formats.map((format) => `- **[${format.name}](${abs(format.href)})** (${format.duration}): ${format.detail}`).join('\n')}`,
+          `## Qué sube y qué baja el precio\n\n${pricingPage.drivers.map((driver) => `- **${driver.title}**: ${driver.detail}`).join('\n')}`,
+          `## Qué pedir a cualquier presupuesto SEO\n\n${pricingPage.checklist.map((item) => `- ${item}`).join('\n')}\n\nSeñales para desconfiar:\n\n${pricingPage.redFlags.map((item) => `- ${item}`).join('\n')}`,
+          `## FAQ\n\n${pricingPage.faq.map((item) => `### ${item.question}\n\n${item.answer}`).join('\n\n')}`,
+          `Formulario de presupuesto: ${abs(`${pricingPage.path}#presupuesto`)}`,
+          booking(lang),
+        ].join('\n\n'),
+      });
+    }
 
     for (const entry of langServices) {
       const { data } = entry;

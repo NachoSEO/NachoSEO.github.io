@@ -1,0 +1,37 @@
+---
+import SectionLabel from '../SectionLabel.astro';
+import type { Lang } from '../../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  example: {
+    title: string;
+    intro: string;
+    items: string[];
+    note?: string;
+    link?: { text: string; href: string };
+  };
+}
+
+const { lang, example } = Astro.props;
+const es = lang === 'es';
+---
+
+<section class="mx-auto max-w-5xl px-5 pt-16 md:pt-24 sm:px-6">
+  <SectionLabel label={es ? 'Un ejemplo real' : 'A real example'} />
+  <div class="card mt-3 md:p-10">
+    <h2 class="display-2">{example.title}</h2>
+    <p class="mt-4 max-w-[65ch] text-[1.02rem]">{example.intro}</p>
+    {
+      example.items.length > 0 && (
+        <ul class="mt-6 max-w-[70ch] space-y-2 font-mono text-[0.85rem] leading-relaxed">
+          {example.items.map((item) => (
+            <li class="border-l-2 border-accent pl-4">{item}</li>
+          ))}
+        </ul>
+      )
+    }
+    {example.note && <p class="mt-6 max-w-[65ch] text-[0.95rem] text-muted">{example.note}</p>}
+    {example.link && <a href={example.link.href} class="link-arrow mt-6 inline-block text-[0.95rem]">{example.link.text}</a>}
+  </div>
+</section>

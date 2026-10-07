@@ -12,6 +12,10 @@ import ServiceProcess from '../components/service/ServiceProcess.astro';
 import ServiceProof from '../components/service/ServiceProof.astro';
 import ServiceFormats from '../components/service/ServiceFormats.astro';
 import TeachingProof from '../components/service/TeachingProof.astro';
+import ServiceChecks from '../components/service/ServiceChecks.astro';
+import ServiceExample from '../components/service/ServiceExample.astro';
+import ServiceRelated from '../components/service/ServiceRelated.astro';
+import ClientLogos from '../components/ClientLogos.astro';
 import { localizedRoute } from '../i18n/utils';
 import type { Lang } from '../i18n/ui';
 import type { ServiceId } from '../lib/brief';
@@ -74,8 +78,11 @@ const { page } = entry.data;
   extraSchemaNodes={[serviceNode]}
 >
   <ServiceHero lang={lang} title={entry.data.title} tagline={entry.data.tagline} proof={page.heroProof} />
+  <ClientLogos lang={lang} />
   <ServiceFit lang={lang} fit={page.fit} />
   <ServicePov lang={lang} pov={page.pov} />
+  {page.checks && <ServiceChecks lang={lang} checks={page.checks} />}
+  {page.example && <ServiceExample lang={lang} example={page.example} />}
   <ServiceProcess lang={lang} process={page.process} />
   <DeliverablesGrid lang={lang} deliverables={entry.data.deliverables} />
   {
@@ -95,6 +102,7 @@ const { page } = entry.data;
       </div>
     )
   }
+  {page.related.length > 0 && <ServiceRelated lang={lang} related={page.related} />}
   <FaqAccordion lang={lang} faq={entry.data.faq} />
   <NextStepCta lang={lang} briefService={briefServiceByKey[entry.data.translationKey]} />
 </Base>

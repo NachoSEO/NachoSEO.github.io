@@ -1,0 +1,28 @@
+---
+import SectionLabel from '../SectionLabel.astro';
+import type { Lang } from '../../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  checks: { title: string; detail: string }[];
+}
+
+const { lang, checks } = Astro.props;
+const es = lang === 'es';
+---
+
+<section class="mx-auto max-w-5xl px-5 pt-16 md:pt-24 sm:px-6">
+  <SectionLabel label={es ? 'Qué miro' : 'What I look at'} />
+  <h2 class="display-2 mt-3 max-w-[26ch]">{es ? 'Lo que reviso y casi nadie mira' : 'What I check that most people skip'}</h2>
+  <ol class="row-list mt-8">
+    {
+      checks.map((check, index) => (
+        <li class="grid gap-1 py-5 sm:grid-cols-[3rem_16rem_1fr] sm:gap-6">
+          <span class="meta pt-1 text-accent-ink">{String(index + 1).padStart(2, '0')}</span>
+          <h3 class="font-semibold">{check.title}</h3>
+          <p class="max-w-[65ch] text-[0.95rem] text-muted">{check.detail}</p>
+        </li>
+      ))
+    }
+  </ol>
+</section>

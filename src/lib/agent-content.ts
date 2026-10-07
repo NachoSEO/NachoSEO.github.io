@@ -218,10 +218,19 @@ async function buildAgentDocs(): Promise<AgentDoc[]> {
           data.page.heroProof,
           `## ${es ? 'Para quién es' : "Who it's for"}\n\n${data.page.fit.yes.map((item) => `- ${item}`).join('\n')}\n\n${es ? 'No es para ti si:' : "It's not for you if:"}\n\n${data.page.fit.no.map((item) => `- ${item}`).join('\n')}`,
           `## ${data.page.pov.title}\n\n${data.page.pov.paragraphs.join('\n\n')}`,
+          data.page.checks
+            ? `## ${es ? 'Qué miro' : 'What I look at'}\n\n${data.page.checks.map((check) => `- **${check.title}**: ${check.detail}`).join('\n')}`
+            : '',
+          data.page.example
+            ? `## ${data.page.example.title}\n\n${data.page.example.intro}${data.page.example.items.length ? `\n\n${data.page.example.items.map((item) => `- ${item}`).join('\n')}` : ''}${data.page.example.note ? `\n\n${data.page.example.note}` : ''}${data.page.example.link ? `\n\n[${data.page.example.link.text}](${abs(data.page.example.link.href)})` : ''}`
+            : '',
           `## ${es ? 'Cómo trabajamos' : 'How we work'}\n\n${data.page.process.map((step, index) => `${index + 1}. **${step.title}** (${step.when}): ${step.detail}`).join('\n')}`,
           `## ${es ? 'Qué te llevas' : 'What you get'}\n\n${data.deliverables.map((item) => `- **${item.title}**: ${item.detail}`).join('\n')}`,
           casesForService.length ? `## ${es ? 'Resultados' : 'Results'}\n\n${casesForService.join('\n')}` : '',
           `## ${es ? 'Formatos y precio' : 'Formats and pricing'}\n\n${data.page.formats.map((format) => `- **${format.name}**: ${format.detail}`).join('\n')}\n\n${data.page.pricing}${data.page.availability ? `\n\n${data.page.availability}` : ''}`,
+          data.page.related.length
+            ? `## ${es ? 'Para leer antes de hablar' : 'Worth reading first'}\n\n${data.page.related.map((item) => `- [${item.title}](${abs(item.href)}): ${item.note}`).join('\n')}`
+            : '',
           `## FAQ\n\n${data.faq.map((item) => `### ${item.question}\n\n${item.answer}`).join('\n\n')}`,
           booking(lang),
         ]

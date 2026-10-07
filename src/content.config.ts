@@ -41,6 +41,20 @@ const services = defineCollection({
         formats: z.array(z.object({ name: z.string(), detail: z.string() })).min(1).max(2),
         pricing: z.string(),
         availability: z.string().optional(),
+        /** "Qué miro": lo que reviso en este servicio y otros suelen pasar por alto */
+        checks: z.array(z.object({ title: z.string(), detail: z.string() })).min(4).max(6).optional(),
+        /** Un ejemplo real del trabajo (entregable, diagnóstico o dato propio), con enlace opcional */
+        example: z
+          .object({
+            title: z.string(),
+            intro: z.string(),
+            items: z.array(z.string()).max(6).default([]),
+            note: z.string().optional(),
+            link: z.object({ text: z.string(), href: z.string() }).optional(),
+          })
+          .optional(),
+        /** Lecturas relacionadas: posts, casos, skills o guías propios */
+        related: z.array(z.object({ title: z.string(), href: z.string(), note: z.string() })).max(4).default([]),
       }),
   }),
 });

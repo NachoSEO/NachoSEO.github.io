@@ -49,6 +49,33 @@ Aleyda Solís (42), Orainti (32), ChatGPT (31), Natzir Turrado (26), Perplexity 
 whitepress.com, natzir.com, davidviejo.com, aleydasolis.com, monicacabani.com, orainti.com, omibu.com, rafavillaplana.com, useo.es, malt.es, mecagoenlos.com, mjcachon.com.
 - Directorios y marketplaces (malt.es, whitepress.com) aparecen junto a webs personales de consultores.
 
+### Fan-outs con `site:`: los candidatos ya vienen decididos (lo del "hardwire" que decía Will)
+[Pendiente: enlazar la fuente de Will.]
+
+ChatGPT no busca "consultores SEO" y elige entre lo que sale: primero decide los nombres (de memoria) y luego lanza búsquedas `site:` contra la web de cada candidato para verificar casos y trayectoria.
+
+Ejemplo literal. Prompt: "Compara a los consultores SEO independientes más conocidos de España: experiencia, casos y en qué se especializa cada uno." (ChatGPT, entidad Consultor SEO, 2026-10-06 18:03 UTC, respuesta 16). Fan-outs, en orden:
+1. consultores SEO España Fernando Maciá Luis Villanueva Dean Romero MJ Cachón casos clientes trayectoria
+2. SEO España consultor Fernando Maciá Luis Villanueva MJ Cachón Sergio Simarro casos
+3. site:fernandomacia.com SEO consultor casos clientes trayectoria
+4. site:lu1s.com SEO consultor casos clientes trayectoria Luis Villanueva
+5. site:mjcachon.com SEO consultora casos clientes trayectoria
+6. site:sergiosimarro.com SEO consultor casos clientes trayectoria
+7. Aleyda Solis SEO consultant Spain Orainti experience clients cases
+8. site:aleydasolis.com consulting SEO cases clients experience
+9. Natzir Turrado SEO consultor España experiencia casos
+10. site:natzir.com SEO consultor casos experiencia
+11. Fernando Maciá casos éxito SEO Human Level clientes
+12. site:humanlevel.com casos éxito SEO Fernando Maciá
+- Cita mjcachon.com/sobre-mi/ (3 citas en esa respuesta).
+- La primera búsqueda ya lleva los nombres. Si no estás en esa lista inicial, nunca llega a mirar tu web: nachomascort.com no aparece en ninguna `site:` del día 0.
+- El mismo patrón en otros prompts:
+  - "¿Quiénes son los mejores consultores de SEO para IA…?": busca por nombre a Lino Uruñuela, Sico de Andrés, MJ Cachón, Luis M. Villanueva y Antonio Díaz.
+  - "…webs multidioma con millones de visitas": `site:` a seocom.es, bigseo.com, useo.es y flat101.es.
+  - "Head of Growth / CMO fraccional", "consultor SEO WordPress" y migraciones: `site:linkedin.com/in …`. LinkedIn es una de las fuentes donde busca personas.
+  - "¿Cómo aparecer en ChatGPT?": `site:openai.com` y `site:developers.google.com/search`. Para lo informativo, va a la documentación oficial.
+- Lectura para el post: para las consultas de "recomiéndame a alguien" no basta con posicionar páginas. Hay que estar en la memoria del modelo (menciones, listas, LinkedIn, medios) para entrar en la lista inicial, y que tu web aguante la verificación `site:` (casos, clientes, trayectoria).
+
 ### Incidencias del día (para contar el "detrás")
 1. **Las pestañas del panel salían vacías.** El panel agrupaba por semana y ocultaba la semana en curso hasta cerrarla. Lo cambié: ahora todo se puede ver por día, semana o mes, y el periodo en curso se enseña como provisional (línea discontinua).
 2. **El 41 % de las respuestas del primer día falló al extraer las marcas** (122 de 296): Gemini devolvió 429 (cuota) y 503 (saturado) al lanzar 13 entidades de golpe. Con más del 10 % de fallos el día se marca incompleto. Arreglo: la respuesta se guarda y solo se reintenta la extracción, con esperas crecientes; las 122 se re-extrajeron desde el bruto guardado sin volver a pagar las muestras.

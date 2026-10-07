@@ -1,0 +1,451 @@
+<title>Mapa SEO nachomascort.com</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@500;600;700&family=Geist:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" />
+<style>
+  /* Layout: cabecera con cifras y controles; el mapa ocupa casi toda la pantalla; debajo, el plan de páginas como tabla */
+  :root {
+    --bg: #f4f5f5; --surface: #ffffff; --fg: #14333f; --muted: #5b6b71; --line: #dde2e3;
+    --accent: #c8073f; --accent-ink: #a8063a;
+    --s-existe: #1d7a55; --s-medias: #b07a06; --s-falta: #c8073f; --s-fuera: #8a979c;
+    --b1: #c8073f; --b2: #1f7a8c; --b3: #6b5ca5; --b4: #b07a06; --b5: #2f6f4f; --b6: #8a979c;
+    --display: "Instrument Sans", "Helvetica Neue", Arial, sans-serif;
+    --body: "Geist", system-ui, -apple-system, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0f2129; --surface: #14333f; --fg: #e8eef0; --muted: #9fb2b9; --line: #24495a;
+      --accent: #ff6b8e; --accent-ink: #ff8aa6;
+      --s-existe: #5ccf9c; --s-medias: #e8b84a; --s-falta: #ff6b8e; --s-fuera: #7d9097;
+      --b1: #ff6b8e; --b2: #4fc3d6; --b3: #a99be0; --b4: #e8b84a; --b5: #6fcf9f; --b6: #7d9097;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0f2129; --surface: #14333f; --fg: #e8eef0; --muted: #9fb2b9; --line: #24495a;
+    --accent: #ff6b8e; --accent-ink: #ff8aa6;
+    --s-existe: #5ccf9c; --s-medias: #e8b84a; --s-falta: #ff6b8e; --s-fuera: #7d9097;
+    --b1: #ff6b8e; --b2: #4fc3d6; --b3: #a99be0; --b4: #e8b84a; --b5: #6fcf9f; --b6: #7d9097;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  body { background: var(--bg); color: var(--fg); font-family: var(--body); font-size: 15px; line-height: 1.5; }
+  .wrap { padding-inline: 16px; padding-block: 20px 32px; max-width: 1400px; margin: 0 auto; display: grid; gap: 16px; }
+  header { display: grid; gap: 4px; }
+  .eyebrow { font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent-ink); margin: 0; }
+  h1 { font-family: var(--display); font-weight: 600; font-size: clamp(24px, 3vw, 34px); letter-spacing: -0.03em; line-height: 1.1; margin: 0; text-wrap: balance; }
+  h2 { font-family: var(--display); font-weight: 600; font-size: 20px; letter-spacing: -0.02em; margin: 0; text-wrap: balance; }
+  .sub { color: var(--muted); margin: 0; max-width: 78ch; }
+
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; }
+  .stat { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; display: grid; gap: 2px; min-width: 0; }
+  .stat .k { display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 13px; }
+  .stat .v { font-family: var(--display); font-weight: 600; font-size: 24px; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+  .stat .d { font-size: 12px; color: var(--muted); }
+  .dot { width: 10px; height: 10px; border-radius: 50%; flex: none; display: inline-block; }
+
+  .controls { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; }
+  .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; background: var(--surface); }
+  .seg button { font: inherit; font-size: 13px; padding: 6px 12px; border: 0; background: transparent; color: var(--fg); cursor: pointer; }
+  .seg button + button { border-left: 1px solid var(--line); }
+  .seg button[aria-pressed="true"] { background: var(--fg); color: var(--surface); }
+  .seg button:focus-visible, .search input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .search { flex: 1 1 220px; min-width: 0; max-width: 360px; }
+  .search input { width: 100%; font: inherit; font-size: 14px; padding: 7px 12px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); color: var(--fg); }
+  .hint { font-size: 12px; color: var(--muted); }
+
+  .map { position: relative; height: max(560px, calc(100vh - 300px)); background: var(--surface); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+  .map svg { width: 100%; height: 100%; display: block; }
+  .markmap { --markmap-text-color: var(--fg); --markmap-font: 400 14px/20px var(--body); --markmap-a-color: var(--accent); --markmap-code-bg: transparent; color: var(--fg); }
+  .n-root { font-family: var(--display); font-weight: 700; font-size: 17px; }
+  .n-tier { font-family: var(--display); font-weight: 600; font-size: 15px; }
+  .n-page, .n-cluster { font-weight: 600; }
+  .n-sub { font-weight: 500; }
+  .n-kw { color: var(--muted); }
+  .vol, .url { font-family: var(--mono); font-size: 11.5px; color: var(--muted); margin-left: 6px; font-variant-numeric: tabular-nums; }
+  .chip { display: inline-block; font-size: 10px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; padding: 0 5px; border-radius: 4px; margin-left: 6px; vertical-align: 1px; }
+  .chip.existe { color: var(--s-existe); background: color-mix(in srgb, var(--s-existe) 14%, transparent); }
+  .chip.medias { color: var(--s-medias); background: color-mix(in srgb, var(--s-medias) 16%, transparent); }
+  .chip.falta { color: var(--s-falta); background: color-mix(in srgb, var(--s-falta) 14%, transparent); }
+  .chip.fuera { color: var(--s-fuera); background: color-mix(in srgb, var(--s-fuera) 16%, transparent); }
+  .chip.p { color: var(--fg); background: color-mix(in srgb, var(--fg) 9%, transparent); }
+  mark { background: color-mix(in srgb, var(--accent) 22%, transparent); color: inherit; border-radius: 3px; }
+  .empty { position: absolute; inset: 0; display: grid; place-items: center; color: var(--muted); pointer-events: none; }
+
+  .plan { display: grid; gap: 10px; }
+  .tablebox { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; }
+  table { border-collapse: collapse; width: 100%; min-width: 760px; font-size: 14px; }
+  th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-size: 12px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); background: color-mix(in srgb, var(--fg) 4%, var(--surface)); position: sticky; top: 0; }
+  tr:last-child td { border-bottom: 0; }
+  td.num { font-family: var(--mono); font-size: 12.5px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  td .t { font-weight: 600; }
+  td .why { color: var(--muted); font-size: 13px; }
+  td .kws { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+  footer { font-size: 12px; color: var(--muted); max-width: 90ch; display: grid; gap: 4px; }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <p class="eyebrow">nachomascort.com · Keyword research v2 · España, español</p>
+    <h1>Qué páginas necesita la web para posicionar en SEO y en IA</h1>
+    <p class="sub" id="summary"></p>
+  </header>
+
+  <div class="stats" id="stats"></div>
+
+  <div class="controls">
+    <div class="seg" role="group" aria-label="Vista">
+      <button type="button" data-view="pages" aria-pressed="true">Páginas</button>
+      <button type="button" data-view="kw" aria-pressed="false">Keywords</button>
+    </div>
+    <div class="seg" role="group" aria-label="Nivel de detalle">
+      <button type="button" data-level="1" aria-pressed="false">Secciones</button>
+      <button type="button" data-level="2" aria-pressed="true">Páginas</button>
+      <button type="button" data-level="9" aria-pressed="false">Todo</button>
+    </div>
+    <label class="search" for="q"><input id="q" type="search" placeholder="Buscar página o keyword (p. ej. chatgpt, migración, precio)" autocomplete="off" /></label>
+    <span class="hint">Clic en un nodo para abrirlo o cerrarlo · rueda o pellizco para hacer zoom</span>
+  </div>
+
+  <div class="map"><svg id="mm"></svg><div class="empty" id="empty" hidden>Nada coincide con la búsqueda.</div></div>
+
+  <section class="plan" aria-labelledby="plan-h">
+    <h2 id="plan-h">Plan de páginas, por prioridad</h2>
+    <p class="sub">Prioridad = demanda del cluster × encaje con lo que vendes × prueba que ya tienes (casos, cifras). Las de prioridad alta son las primeras que montaría.</p>
+    <div class="tablebox"><table>
+      <thead><tr><th>Prioridad</th><th>Página</th><th>Estado</th><th>Demanda</th><th>Keywords objetivo</th></tr></thead>
+      <tbody id="plan"></tbody>
+    </table></div>
+  </section>
+
+  <footer>
+    <span>Fuente: Google Keyword Planner (API interna), idioma español, ubicación España, septiembre de 2025 a agosto de 2026. 47 semillas en 23 temas y una segunda pasada con las mejores keywords de cada subtema como semilla: 6.166 keywords tras quitar ruido.</span>
+    <span>La cuenta de Ads no tiene gasto activo, así que el Planner da tramos: &lt;10, 10–100, 100–1.000, 1.000–10.000, 10.000–100.000. Las sumas usan el valor que devuelve la API para cada tramo (50, 500, 5.000…) y sirven para comparar, no como tráfico real.</span>
+    <span>“Fuera de foco” agrupa demanda que no encaja (reseñas de Google, automatización industrial, marketing genérico, marcas de terceros) y no genera páginas. SEO ecommerce y SEO WordPress son grupos de control en el geo-tracker: no se tocan mientras dure la medición.</span>
+  </footer>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js" integrity="sha384-CjloA8y00+1SDAUkjs099PVfnY2KmDC2BZnws9kh8D/lX1s46w6EPhpXdqMfjK6i" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/markmap-view@0.18.12/dist/browser/index.js" integrity="sha384-p+gyhsDIg0RmvIKRr9BBGSyJ9NDDkiFsbilRwdZd20Q8mUL2v7e8+orY4pvTV52w" crossorigin="anonymous"></script>
+<script>
+// Volumen: valor de tramo que devuelve el Planner (0 = <10, 50 = 10–100, 500 = 100–1.000, 5000 = 1.000–10.000, 50000 = 10.000–100.000)
+const X = 50000, K = 5000, C = 500, D = 50, Z = 0;
+
+// ---------- Vista Páginas: secciones → páginas → keywords objetivo ----------
+const PAGES = [
+  { id: 'serv', n: 'Servicios', c: '--b1', p: [
+    { n: 'Consultor SEO', url: '/servicios/consultoria-seo-geo/', st: 'medias', pr: 'Alta', v: 50000, why: 'Existe, pero mezcla SEO y GEO en una página. Dale a “consultor seo” una página propia o reorienta el H1 y el título a esa keyword.', k: [['consultor seo',K],['consultoria seo',K],['especialista en seo',K],['seo consultor',K],['experto seo',C],['consultor seo freelance',C],['contratar consultor seo',C],['asesoria seo',C]] },
+    { n: 'Consultor GEO / SEO para IA', url: '/servicios/consultor-geo/', st: 'falta', pr: 'Alta', v: 2600, why: 'Demanda pequeña y temprana, pero es la que el diario mide en IA. Página propia con método, precio orientativo y casos.', k: [['seo para ia',C],['generative engine optimization',C],['geo seo',C],['aeo seo',D],['consultor geo',D],['agencia seo para ia',Z]] },
+    { n: 'Auditoría SEO', url: '/servicios/auditoria-seo/', st: 'falta', pr: 'Alta', v: 8750, why: 'Servicio de entrada con demanda comercial. Prueba ya publicada: la skill de auditoría de quality.', k: [['auditoria seo',C],['servicio auditoria seo',C],['auditoria web',C],['auditoria seo profesional',D],['auditoria seo tecnica',D],['precio auditoría seo',D]] },
+    { n: 'Recuperar tráfico tras un core update', url: '/servicios/recuperar-trafico-google/', st: 'falta', pr: 'Alta', v: 2250, why: 'Une el post de quality con un servicio. Quien busca esto tiene el problema hoy.', k: [['core update google',C],['penalizacion google',D],['por que mi web no aparece en google',D],['he perdido trafico en google',Z],['caida de trafico organico',Z],['recuperar trafico seo',Z]] },
+    { n: 'SEO técnico y webs grandes', url: '/servicios/seo-tecnico/', st: 'falta', pr: 'Alta', v: 2700, why: 'Encaja con Softonic y word.tips. Hoy el SEO técnico no tiene página de servicio.', k: [['seo tecnico',C],['seo técnico',C],['seo enterprise',D],['crawl budget',D],['javascript seo',D],['seo para webs grandes',Z]] },
+    { n: 'Precio del SEO', url: '/precio-seo/', st: 'falta', pr: 'Alta', v: 6750, why: 'Página con precios reales por tipo de proyecto y enlace al presupuesto. Quien busca precio está cerca de contratar.', k: [['precio seo',C],['presupuesto seo',C],['posicionamiento web precios',C],['posicionamiento seo precio',C],['cuanto cuesta el seo',D],['precio seo mensual',D]] },
+    { n: 'Migraciones SEO', url: '/servicios/migraciones-seo/', st: 'falta', pr: 'Media', v: 900, why: 'Proyecto caro y con riesgo: buen encaje para un consultor senior.', k: [['migracion seo',C],['migraciones seo',D],['redireccion 301 de un dominio a otro',D],['cambio de dominio seo',Z],['migrar web sin perder posicionamiento',Z]] },
+    { n: 'SEO internacional', url: '/servicios/seo-internacional/', st: 'falta', pr: 'Media', v: 3350, why: 'Softonic y word.tips son multidioma. Hoy no hay página.', k: [['seo internacional',C],['consultor seo internacional',C],['consultoria seo internacional',C],['agencia seo internacional',C],['hreflang',C],['estrategia seo internacional',D]] },
+    { n: 'Consultor SEO en tu ciudad', url: '/consultor-seo-[ciudad]/', st: 'falta', pr: 'Media', v: 17900, why: 'Solo una página, la de la ciudad donde trabajas de verdad (sin doorway pages). Madrid y Barcelona son las que más buscan.', k: [['consultor seo madrid',C],['consultor seo barcelona',C],['experto seo barcelona',C],['experto seo madrid',C],['consultor seo valencia',C],['seo freelance madrid',C]] },
+    { n: 'SEO para startups, SaaS y B2B', url: '/servicios/seo-startups-saas/', st: 'falta', pr: 'Media', v: 2200, why: 'Cruza con el perfil de Head of Growth. Sectores con prueba (Reverse Tech).', k: [['seo para startups',C],['seo b2b',C],['seo para pymes',C],['seo saas',D],['seo para saas',D]] },
+    { n: 'Head of Growth fraccional', url: '/servicios/head-of-growth-fraccional/', st: 'medias', pr: 'Media', v: 5250, why: 'Existe. Añade “fractional CMO” y “growth marketing” al contenido: es como se busca.', k: [['growth marketing',C],['growth hacking',C],['fractional cmo',C],['head of growth',D],['director de marketing externo',D],['consultor growth marketing',D]] },
+    { n: 'IA y automatización', url: '/servicios/ia-automatizacion/', st: 'medias', pr: 'Media', v: 68100, why: 'Existe. La demanda está en n8n, agentes de IA e IA para empresas: nómbralos y enseña casos (fábrica de anuncios).', k: [['n8n',X],['agentes de ia',K],['ia para empresas',C],['automatizacion con ia',C],['consultoria inteligencia artificial',C],['automatizacion de marketing',C]] },
+    { n: 'Formación y ponencias', url: '/servicios/formacion/', st: 'medias', pr: 'Baja', v: 20450, why: 'Existe. “curso seo” y “master seo” buscan escuelas: compite solo por formación in-company y avanzada.', k: [['curso seo',C],['master seo',C],['formacion seo',C],['curso seo avanzado',D],['curso seo tecnico',D]] },
+  ]},
+  { id: 'geo', n: 'Guías de búsqueda con IA', c: '--b2', p: [
+    { n: 'Guía GEO: qué es y cómo funciona', url: '/blog/geo-seo-para-ia/', st: 'falta', pr: 'Alta', v: 2600, why: 'Pilar del bloque. Enlaza al servicio de consultor GEO y a las guías de abajo.', k: [['seo para ia',C],['generative engine optimization',C],['geo seo',C],['geoseo',C],['aeo seo',D],['seo en la era de la ia',Z]] },
+    { n: 'Cómo aparecer en AI Overviews y AI Mode', url: '/blog/ai-overviews-ai-mode/', st: 'falta', pr: 'Alta', v: 10000, why: 'El término con más demanda del bloque y casi sin competencia en español.', k: [['ai overviews',K],['google ai mode',K],['aparecer en ai overviews',Z],['optimizar para ai overviews',Z],['citas en ai overviews',Z]] },
+    { n: 'Cómo posicionar una marca en ChatGPT', url: '/blog/posicionar-en-chatgpt/', st: 'falta', pr: 'Alta', v: 450, why: 'Con los fan-outs reales del tracker (búsquedas site: a la web de cada candidato).', k: [['posicionamiento en chatgpt',D],['seo chatgpt',D],['chatgpt para seo',D],['seo perplexity',D],['seo para llms',D]] },
+    { n: 'Cómo medir tu visibilidad en IA (diario GEO)', url: '/blog/diario-geo/', st: 'medias', pr: 'Alta', v: 50, why: 'Este post, en borrador. Pocas búsquedas, pero es la prueba de que el método funciona.', k: [['medir visibilidad en chatgpt',Z],['visibilidad en ia',Z],['medir visibilidad en ia',Z]] },
+    { n: 'Qué es llms.txt', url: '/blog/llms-txt/', st: 'falta', pr: 'Media', v: 500, why: 'Acompaña al generador de llms.txt (herramienta).', k: [['llms txt',C]] },
+  ]},
+  { id: 'guias', n: 'Guías SEO', c: '--b3', p: [
+    { n: 'Por qué mi web no aparece en Google', url: '/blog/mi-web-no-aparece-en-google/', st: 'falta', pr: 'Alta', v: 750, why: 'Checklist de diagnóstico. 15 formas de buscar lo mismo, todas de alguien con un problema.', k: [['por que mi web no aparece en google',D],['mi pagina web no aparece en google',D],['porque mi web no sale en google',D],['google no indexa mi web',D],['mi web ha dejado de salir en google',Z]] },
+    { n: 'Quality y core updates', url: '/blog/quality-google-core-updates/', st: 'existe', pr: 'Alta', v: 1650, why: 'Publicado el 3 de octubre. Enlázalo desde el servicio de recuperar tráfico.', k: [['core update google',C],['eeat',C],['helpful content',D],['google spam update',D]] },
+    { n: 'Keyword research paso a paso', url: '/blog/keyword-research/', st: 'falta', pr: 'Alta', v: 64250, why: 'Con el proceso de este diario y la skill. Mucha demanda informativa; atrae al perfil que contrata.', k: [['keyword research',K],['palabras clave',K],['estudio de palabras clave',C],['palabras clave long tail',C],['como buscar palabras clave',D]] },
+    { n: 'Checklist de migración SEO', url: '/blog/checklist-migracion-seo/', st: 'falta', pr: 'Media', v: 900, why: 'Pareja del servicio de migraciones.', k: [['migracion seo',C],['checklist migracion seo',Z],['migrar web sin perder posicionamiento',Z]] },
+    { n: 'Indexación en Google', url: '/blog/indexacion-google/', st: 'falta', pr: 'Media', v: 2800, why: 'Problema técnico frecuente, con búsquedas de “no indexa”.', k: [['indexar pagina en google',C],['paginas no indexadas',D],['google no indexa mi pagina',D],['saber si mi web esta indexada',D]] },
+    { n: 'Crawl budget', url: '/blog/crawl-budget-optimizar-http-304/', st: 'medias', pr: 'Media', v: 850, why: 'Existe en el archivo de 2016. Actualízalo para webs grandes de hoy.', k: [['crawl budget',D],['analisis de logs seo',Z],['paginacion seo',D],['faceted navigation seo',D]] },
+    { n: 'SEO para JavaScript (React, Next, Vue)', url: '/blog/seo-javascript/', st: 'falta', pr: 'Media', v: 850, why: 'Poca demanda, pero muy técnica: te diferencia.', k: [['javascript seo',D],['seo react',D],['seo nextjs',D],['vue js seo',D],['renderizado seo',Z]] },
+    { n: 'Hreflang y SEO internacional', url: '/blog/hreflang/', st: 'falta', pr: 'Media', v: 3350, why: 'Pareja del servicio de SEO internacional.', k: [['hreflang',C],['seo hreflang',D],['subdominio o subdirectorio',D],['web multidioma',D]] },
+    { n: 'KPIs e informe SEO', url: '/blog/kpis-seo/', st: 'falta', pr: 'Media', v: 1500, why: 'Lo buscan quienes ya invierten en SEO y deben justificarlo.', k: [['informe seo',C],['kpis seo',D],['metricas seo',D],['looker studio seo',D],['roi seo',D]] },
+    { n: 'SEO programático y con Python', url: '/blog/seo-programatico/', st: 'medias', pr: 'Media', v: 300, why: 'El post de scraping del autocomplete ya va por aquí. Encaja con IA y automatización.', k: [['seo programatico',D],['python para seo',D],['scraping seo',D],['seo automatizado',D]] },
+    { n: 'n8n para SEO y marketing', url: '/blog/n8n-seo/', st: 'falta', pr: 'Media', v: 55050, why: 'Puente entre el bloque SEO y el de automatización.', k: [['n8n',X],['n8n seo',D],['agentes de ia',K],['automatizacion de marketing',C]] },
+    { n: 'Guía SEO / qué es el SEO', url: '/blog/guia-seo/', st: 'medias', pr: 'Baja', v: 66500, why: 'Existe la guía de 2017. Volumen enorme y muy competido: actualízala, pero no es prioridad.', k: [['que es el seo',K],['que es seo',K],['seo que es',K],['que significa seo',C]] },
+  ]},
+  { id: 'tools', n: 'Herramientas gratis', c: '--b4', p: [
+    { n: 'Generador de llms.txt', url: '/herramientas/generador-llms-txt/', st: 'falta', pr: 'Alta', v: 500, why: 'Mismo formato que el generador de sitemap. Enlazable y la IA lo cita.', k: [['llms txt',C]] },
+    { n: 'Comprobador de robots.txt', url: '/herramientas/comprobador-robots-txt/', st: 'medias', pr: 'Media', v: 6500, why: 'El comprobador de bots ya lee robots.txt: dale su propia página.', k: [['robots txt',C],['tester robots txt',C],['ejemplo robots txt',D],['robots txt wordpress',D]] },
+    { n: 'Generador de sitemap XML', url: '/herramientas/generador-sitemap/', st: 'existe', pr: 'Baja', v: 2550, why: 'Publicado.', k: [['sitemap xml',C],['ejemplo sitemap',C],['sitemap xml ejemplo',D]] },
+    { n: 'Comprobador de bots de IA', url: '/herramientas/comprobador-bots/', st: 'existe', pr: 'Baja', v: 0, why: 'Publicado. Apoya la guía de cómo aparecer en ChatGPT.', k: [] },
+    { n: 'Comprobador de hreflang', url: '/herramientas/comprobador-hreflang/', st: 'falta', pr: 'Baja', v: 100, why: 'Pequeña, pero apoya el servicio internacional.', k: [['check hreflang',D],['hreflang test',D]] },
+  ]},
+  { id: 'prueba', n: 'Prueba y confianza', c: '--b5', p: [
+    { n: 'Casos de éxito', url: '/casos/', st: 'existe', pr: 'Alta', v: 0, why: 'Softonic, word.tips, Reverse Tech y la fábrica de anuncios. En el día 0, ChatGPT ya cita Softonic y CNET de esta web.', k: [] },
+    { n: 'Skills (auditoría de quality)', url: '/skills/google-quality-audit/', st: 'existe', pr: 'Media', v: 0, why: 'Publicada. Añade la skill de keyword research con clusters cuando el diario salga.', k: [] },
+    { n: 'Sobre mí', url: '/sobre-mi/', st: 'existe', pr: 'Media', v: 0, why: 'ChatGPT verifica candidatos con búsquedas site: “casos clientes trayectoria”. Esta página debe responderlas.', k: [] },
+  ]},
+  { id: 'fuera', n: 'No crear (fuera de foco)', c: '--b6', p: [
+    { n: 'SEO local y Google Business Profile', url: '—', st: 'fuera', pr: '—', v: 59950, why: 'Mucha demanda, pero no es tu servicio y se llena de negocios locales.', k: [['google business profile',X],['seo local',C],['ficha de google',C]] },
+    { n: 'SEO ecommerce', url: '—', st: 'fuera', pr: '—', v: 7050, why: 'Grupo de control del geo-tracker: no tocar mientras se mide.', k: [['seo ecommerce',C],['seo para ecommerce',C],['agencia seo ecommerce',C]] },
+    { n: 'Venta de enlaces y agencia de link building', url: '—', st: 'fuera', pr: '—', v: 3800, why: 'No vendes enlaces.', k: [['agencia linkbuilding',C],['comprar enlaces de calidad',D]] },
+    { n: 'Herramientas de terceros (Semrush, Ahrefs…)', url: '—', st: 'fuera', pr: '—', v: 81500, why: 'Búsquedas de marca y de afiliación.', k: [['semrush',X],['ahrefs',K],['screaming frog',K]] },
+  ]},
+];
+
+// ---------- Vista Keywords: bloque → cluster → subtema (n keywords, volumen) → keywords ----------
+const KW = [
+  { n: 'Servicios SEO', c: '--b1', cl: [
+    { n: 'Consultoría SEO', s: [
+      { n: 'Consultor y experto SEO', c: 127, v: 50000, f: 'core', k: [['consultor seo',K],['consultores seo',K],['consultoria seo',K],['especialista en seo',K],['seo consultor',K],['asesoria seo',C],['consultor posicionamiento web',C],['consultor seo freelance',C],['consultor seo local',C],['consultor seo internacional',C],['consultora seo',C],['contratar consultor seo',C],['especialista seo',C],['experto en seo',C],['experto seo',C],['experto en posicionamiento web',C],['consultor seo para pymes',D],['consultor seo profesional',D]] },
+      { n: 'Precio y presupuesto SEO', c: 72, v: 6750, f: 'core', k: [['precio seo',C],['presupuesto seo',C],['posicionamiento web precios',C],['posicionamiento seo precio',C],['precio posicionamiento en google',C],['cuanto cuesta el seo',D],['cuanto cuesta posicionar una web en google',D],['precio seo mensual',D],['precio seo local',D],['precio hora seo',D],['coste seo',D],['cotizacion seo',D]] },
+      { n: 'Estrategia SEO', c: 17, v: 850, f: 'core', k: [['seo estrategico',D],['estrategia seo marketing',D],['estrategia seo internacional',D],['estrategia seo para ecommerce',D],['como hacer una estrategia seo',D]] },
+    ]},
+    { n: 'Posicionamiento web', s: [
+      { n: 'Posicionar una web en Google', c: 324, v: 68850, f: 'core', k: [['posicionamiento web',K],['posicionamiento seo',K],['posicionar web',K],['seo posicionamiento',K],['mejorar seo',C],['optimizacion seo',C],['posicionamiento en google',C],['posicionar web en google',C],['posicionamiento organico',C],['posicionamiento en buscadores',C],['aparecer primero en google',D],['en que posicion esta mi web en google',D]] },
+    ]},
+    { n: 'Agencia SEO', s: [
+      { n: 'Agencia y empresa SEO', c: 307, v: 46800, f: 'core', k: [['agencia seo',K],['empresa seo',C],['agencia posicionamiento web',C],['agencia de seo',C],['empresas de posicionamiento en google',C],['servicios seo',C],['contratar seo',C],['mejor agencia seo',C],['seo para empresas',C],['campaña seo',C]] },
+    ]},
+    { n: 'Auditoría SEO', s: [
+      { n: 'Auditoría y análisis SEO', c: 96, v: 8750, f: 'core', k: [['auditoria seo',C],['auditoria seo gratis',C],['auditoria web',C],['informe seo',C],['servicio auditoria seo',C],['analisis competencia seo',D],['auditoria seo tecnica',D],['auditoria de contenidos',D],['auditoria seo profesional',D],['auditoria migracion web',D],['auditoria seo pasos',D]] },
+    ]},
+    { n: 'SEO por ciudad', s: [
+      { n: 'Consultor SEO en ciudades', c: 124, v: 17900, f: 'core', k: [['consultor seo madrid',C],['consultor seo barcelona',C],['consultor seo valencia',C],['consultor seo sevilla',C],['consultor seo malaga',C],['consultor seo bilbao',C],['consultor seo zaragoza',C],['consultor seo alicante',C],['consultor seo mallorca',C],['experto seo barcelona',C],['experto seo madrid',C],['seo freelance madrid',C],['consultor seo murcia',D]] },
+    ]},
+    { n: 'SEO internacional', s: [
+      { n: 'SEO internacional y multidioma', c: 44, v: 3350, f: 'core', k: [['seo internacional',C],['agencia seo internacional',C],['hreflang',C],['consultor seo internacional',C],['posicionamiento seo internacional',D],['seo en ingles',D],['subdominio o subdirectorio',D],['web multidioma',D],['seo multidioma',Z]] },
+    ]},
+    { n: 'SEO por sector', s: [
+      { n: 'SEO para sectores', c: 105, v: 9700, f: 'core', k: [['seo para startups',C],['seo b2b',C],['seo para pymes',C],['seo para abogados',C],['seo para dentistas',C],['seo para clínicas dentales',C],['seo para hoteles',C],['seo para inmobiliarias',C],['seo para restaurantes',C],['seo saas',D],['seo para saas',D]] },
+    ]},
+    { n: 'SEO ecommerce (control)', s: [
+      { n: 'SEO para ecommerce y tiendas online', c: 107, v: 7050, f: 'ctrl', k: [['seo ecommerce',C],['seo para ecommerce',C],['agencia seo ecommerce',C],['agencia seo shopify',C],['seo shopify',D],['seo prestashop',D],['seo woocommerce',D],['posicionar tienda online',D]] },
+    ]},
+    { n: 'SEO local', s: [
+      { n: 'SEO local y Google Business Profile', c: 101, v: 59950, f: 'adj', k: [['google business profile',X],['seo local',C],['ficha de google',C],['agencia seo local',C],['posicionamiento seo local',C],['servicio seo local',C],['posicionar negocio en google maps',D],['optimizar google my business',D]] },
+    ]},
+  ]},
+  { n: 'Búsqueda con IA (GEO)', c: '--b2', cl: [
+    { n: 'GEO / SEO para IA', s: [
+      { n: 'AI Overviews y AI Mode', c: 5, v: 10000, f: 'core', k: [['ai overviews',K],['google ai mode',K],['aparecer en ai overviews',Z],['optimizar para ai overviews',Z],['citas en ai overviews',Z]] },
+      { n: 'Qué es GEO, AEO y SEO para IA', c: 9, v: 2100, f: 'core', k: [['seo para ia',C],['generative engine optimization',C],['geo seo',C],['geoseo',C],['aeo seo',D],['seo con ia',D],['visibilidad en ia',Z],['seo en la era de la ia',Z]] },
+      { n: 'Posicionar en ChatGPT, Perplexity y LLMs', c: 10, v: 450, f: 'core', k: [['posicionamiento en chatgpt',D],['seo chatgpt',D],['chatgpt para seo',D],['openai seo',D],['seo perplexity',D],['seo para llms',D],['medir visibilidad en chatgpt',Z]] },
+      { n: 'llms.txt', c: 1, v: 500, f: 'core', k: [['llms txt',C]] },
+    ]},
+  ]},
+  { n: 'Google y algoritmos', c: '--b3', cl: [
+    { n: 'Core updates y penalizaciones', s: [
+      { n: 'Core updates', c: 12, v: 1050, f: 'core', k: [['core update google',C],['actualizacion algoritmo google',D],['helpful content',D],['google spam update',D],['links spam',D]] },
+      { n: 'Penalizaciones de Google', c: 9, v: 450, f: 'core', k: [['penalizacion google',D],['penalizaciones seo',D],['herramienta disavow',D],['google penaliza contenido duplicado',D]] },
+    ]},
+    { n: 'Mi web no aparece en Google', s: [
+      { n: 'Por qué no aparece o ha caído', c: 25, v: 750, f: 'core', k: [['por que mi web no aparece en google',D],['mi pagina web no aparece en google',D],['porque mi web no sale en google',D],['porque mi negocio no aparece en google',D],['porque mi pagina wordpress no aparece en google',D],['he perdido trafico en google',Z],['caida de trafico organico',Z],['recuperar trafico seo',Z],['penalizacion manual google',Z]] },
+    ]},
+    { n: 'Calidad y E-E-A-T', s: [
+      { n: 'E-E-A-T y calidad', c: 3, v: 600, f: 'core', k: [['eeat',C],['eeat google',D],['e eat',D]] },
+    ]},
+    { n: 'Google Discover y News', s: [
+      { n: 'Discover y Google News', c: 26, v: 7600, f: 'adj', k: [['google discover',K],['discover que es',C],['google discover seo',D],['seo google news',D]] },
+    ]},
+  ]},
+  { n: 'SEO técnico', c: '--b3', cl: [
+    { n: 'SEO técnico (general)', s: [
+      { n: 'SEO técnico y avanzado', c: 23, v: 1850, f: 'core', k: [['seo tecnico',C],['seo técnico',C],['seo avanzado',D],['seo enterprise',D],['enterprise seo',D],['seo programatico',D],['python para seo',D],['scraping seo',D],['seo para webs grandes',Z],['seo a escala',Z]] },
+    ]},
+    { n: 'Indexación y rastreo', s: [
+      { n: 'Indexación', c: 47, v: 2800, f: 'core', k: [['indexar pagina en google',C],['indexacion google',D],['paginas no indexadas',D],['google no indexa mi web',D],['hacer que google indexe mi web',D],['saber si mi web esta indexada',D]] },
+      { n: 'Rastreo, crawl budget y JavaScript', c: 20, v: 850, f: 'core', k: [['crawl budget',D],['javascript seo',D],['seo react',D],['seo nextjs',D],['vue js seo',D],['paginacion seo',D],['faceted navigation seo',D],['log analysis seo',D],['renderizado seo',Z]] },
+      { n: 'Robots.txt y sitemaps', c: 67, v: 6500, f: 'adj', k: [['robots txt',C],['sitemap xml',C],['tester robots txt',C],['sitemap xml wordpress',C],['ejemplo sitemap',C],['ejemplo robots txt',D]] },
+    ]},
+    { n: 'Migraciones', s: [
+      { n: 'Migraciones SEO', c: 13, v: 900, f: 'core', k: [['migracion seo',C],['migraciones seo',D],['redireccion 301 de un dominio a otro',D],['migracion wordpress',D],['cambio de dominio seo',Z],['migrar web sin perder posicionamiento',Z],['checklist migracion seo',Z]] },
+    ]},
+    { n: 'Arquitectura y on-page técnico', s: [
+      { n: 'Canonical, duplicados y redirecciones', c: 54, v: 3600, f: 'adj', k: [['redireccion 301',C],['redirecciones',C],['etiqueta canonical',D],['contenido duplicado',D],['redirecciones seo',D]] },
+      { n: 'Datos estructurados y schema', c: 36, v: 2700, f: 'adj', k: [['schema markup',C],['datos estructurados google',C],['datos estructurados seo',D],['que son los rich snippets',D]] },
+      { n: 'Arquitectura web', c: 4, v: 200, f: 'core', k: [['arquitectura web seo',D],['arquitectura seo',D],['arquitectura seo transaccional',D]] },
+    ]},
+    { n: 'WPO y Core Web Vitals', s: [
+      { n: 'Core Web Vitals y velocidad', c: 246, v: 18150, f: 'adj', k: [['core web vitals',C],['wpo',C],['velocidad de carga web',C],['test de velocidad web',C],['medir velocidad web',C],['largest contentful paint mejorar',D]] },
+    ]},
+    { n: 'SEO en CMS (control: WordPress)', s: [
+      { n: 'WordPress, Yoast y Rank Math', c: 233, v: 16600, f: 'ctrl', k: [['yoast seo',C],['rank math',C],['plugin seo wordpress',C],['seo en wordpress',C],['mejor plugin seo wordpress',D]] },
+      { n: 'Wix, Webflow, Joomla y otros', c: 23, v: 1150, f: 'adj', k: [['seo wix',D],['seo webflow',D],['seo joomla',D],['squarespace es malo para seo',D]] },
+    ]},
+  ]},
+  { n: 'Contenido, keywords y enlaces', c: '--b5', cl: [
+    { n: 'Keyword research', s: [
+      { n: 'Keyword research e intención', c: 628, v: 64250, f: 'adj', k: [['keyword research',K],['palabras clave',K],['keyword planner',K],['estudio de palabras clave',C],['palabras clave long tail',C],['planificador de palabras clave',C],['herramienta palabras clave',C],['como buscar palabras clave',D],['intencion de busqueda',D],['keywords transaccionales',D]] },
+    ]},
+    { n: 'Contenido SEO', s: [
+      { n: 'Redacción y estrategia de contenidos', c: 88, v: 5300, f: 'adj', k: [['contenido seo',C],['copywriting seo',C],['redaccion seo',D],['topic cluster',D],['plan de contenidos seo',D],['como escribir para seo',D]] },
+      { n: 'Canibalización y enlazado interno', c: 14, v: 700, f: 'adj', k: [['enlazado interno',D],['canibalizacion seo',D],['enlaces internos seo',D]] },
+    ]},
+    { n: 'Link building', s: [
+      { n: 'Link building y backlinks', c: 135, v: 15750, f: 'adj', k: [['link building',C],['backlinks',C],['backlinks de calidad',C],['guest posting',C],['enlaces dofollow',C],['seo off page',C],['digital pr',D]] },
+      { n: 'Servicio de link building', c: 22, v: 3800, f: 'out', k: [['agencia linkbuilding',C],['servicio de link building',C],['comprar enlaces de calidad',D],['precio linkbuilding',D]] },
+      { n: 'Autoridad de dominio', c: 25, v: 1700, f: 'adj', k: [['autoridad de dominio',C],['medir autoridad de dominio',D],['aumentar autoridad de dominio',D]] },
+    ]},
+  ]},
+  { n: 'Herramientas y medición', c: '--b4', cl: [
+    { n: 'Herramientas SEO', s: [
+      { n: 'Search Console', c: 83, v: 136400, f: 'adj', k: [['google search console',X],['google search console para que sirve',C],['configurar google search console',D],['google search console no indexa',D]] },
+      { n: 'Semrush, Ahrefs, Sistrix, Screaming Frog…', c: 163, v: 81500, f: 'out', k: [['semrush',X],['ahrefs',K],['screaming frog',K],['sistrix',K],['alternativas a semrush gratis',D]] },
+      { n: 'Analizar el SEO de una web', c: 258, v: 31800, f: 'adj', k: [['seo checker',K],['herramientas seo',C],['analisis seo',C],['herramientas seo gratis',C],['analizador seo',C],['ver posicionamiento de mi web',C]] },
+    ]},
+    { n: 'Analítica y KPIs SEO', s: [
+      { n: 'GA4, KPIs e informes', c: 90, v: 14800, f: 'adj', k: [['google analytics 4',K],['ga4',K],['kpis seo',D],['metricas seo',D],['looker studio seo',D],['roi seo',D],['cuadro de mando seo',D]] },
+    ]},
+  ]},
+  { n: 'IA, growth y formación', c: '--b2', cl: [
+    { n: 'Automatización con IA', s: [
+      { n: 'Agentes de IA y automatización', c: 122, v: 68100, f: 'core', k: [['n8n',X],['agentes de ia',K],['ia para empresas',C],['automatizacion con ia',C],['consultoria inteligencia artificial',C],['make automatizacion',C],['automatizacion de marketing',C],['chatgpt para empresas',C],['automatizacion de informes',D]] },
+    ]},
+    { n: 'Growth', s: [
+      { n: 'Growth marketing y growth hacking', c: 65, v: 4600, f: 'core', k: [['growth marketing',C],['growth hacking',C],['consultor growth marketing',D],['growth marketing b2b',D],['growth hacking b2b',D]] },
+      { n: 'CMO fraccional', c: 5, v: 650, f: 'core', k: [['fractional cmo',C],['head of growth',D],['director de marketing externo',D],['cmo externo',Z]] },
+      { n: 'Consultor de marketing digital', c: 152, v: 16600, f: 'adj', k: [['consultor marketing digital',C],['consultoria marketing digital',C],['consultor digital',C],['asesor marketing digital',D]] },
+      { n: 'Inbound y marketing de contenidos', c: 96, v: 12000, f: 'adj', k: [['marketing de contenidos',C],['inbound marketing que es',C],['agencia de inbound marketing',C]] },
+    ]},
+    { n: 'Aprender SEO', s: [
+      { n: 'Cursos y másteres de SEO', c: 256, v: 20450, f: 'adj', k: [['curso seo',C],['master seo',C],['aprender seo',C],['formacion seo',C],['curso seo avanzado',D],['curso seo tecnico',D]] },
+      { n: 'Qué es el SEO y conceptos', c: 358, v: 66500, f: 'adj', k: [['que es el seo',K],['que es seo',K],['seo que es',K],['que significa seo',C],['que es el posicionamiento seo',C]] },
+      { n: 'SEO y SEM, on page', c: 197, v: 53500, f: 'adj', k: [['seo y sem',K],['sem y seo',K],['diferencia entre seo y sem',C],['seo on page',C]] },
+      { n: 'Qué hace un SEO', c: 21, v: 1050, f: 'adj', k: [['que hace un seo',D],['que hace un seo manager',D],['profesional seo',D]] },
+    ]},
+  ]},
+  { n: 'Fuera de foco', c: '--b6', cl: [
+    { n: 'Ruido descartado', s: [
+      { n: 'Reseñas propias en Google', c: 32, v: 71800, f: 'out', k: [['reseñas google',X],['mis reseñas google',K],['google reseñas',K]] },
+      { n: 'Automatización industrial y RPA', c: 370, v: 45000, f: 'out', k: [['automatizacion industrial',K],['automatización',K],['automatizacion y control',C]] },
+      { n: 'Marketing genérico y redes sociales', c: 461, v: 37900, f: 'out', k: [['estrategias de marketing',K],['estrategias de marketing digital',C],['estrategia redes sociales',C]] },
+      { n: 'Otros canales (ASO, Amazon…)', c: 41, v: 3850, f: 'out', k: [['seo amazon',C],['aso app',C],['seo pinterest',D]] },
+      { n: 'Marcas de terceros', c: 81, v: 5400, f: 'out', k: [['seocom agency',C],['la fabrica del seo',C],['agencia seo neoattack',D]] },
+      { n: 'Descargas y cupones de herramientas', c: 33, v: 1650, f: 'out', k: [['cupon semrush',D],['descargar screaming frog',D]] },
+    ]},
+  ]},
+];
+
+const fmt = (n) => n.toLocaleString('es-ES');
+const TRAMO = { 0: '<10', 50: '10–100', 500: '100–1K', 5000: '1K–10K', 50000: '10K–100K' };
+const ST = { existe: 'Existe', medias: 'A medias', falta: 'Falta', fuera: 'No crear' };
+const FIT = { core: 'tu servicio', adj: 'atrae a tu cliente', out: 'fuera de foco', ctrl: 'control' };
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const css = (v) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const hl = (text, q) => {
+  const safe = esc(text);
+  if (!q) return safe;
+  const i = text.toLowerCase().indexOf(q);
+  return i < 0 ? safe : esc(text.slice(0, i)) + '<mark>' + esc(text.slice(i, i + q.length)) + '</mark>' + esc(text.slice(i + q.length));
+};
+
+// ---------- cabecera ----------
+const pages = PAGES.flatMap((s) => s.p.map((p) => ({ ...p, sec: s.n })));
+const toBuild = pages.filter((p) => p.st !== 'fuera');
+const count = (st) => toBuild.filter((p) => p.st === st).length;
+const subs = KW.flatMap((b) => b.cl.flatMap((c) => c.s));
+document.getElementById('summary').textContent =
+  `6.166 keywords de 23 temas SEO, agrupadas en ${subs.length} subtemas. De ahí salen ${toBuild.length} páginas: ${count('existe')} ya existen, ${count('medias')} existen pero hay que reorientarlas y ${count('falta')} faltan.`;
+const statCard = (label, color, value, detail) => `<div class="stat"><span class="k"><span class="dot" style="background:var(${color})"></span>${label}</span><span class="v">${value}</span><span class="d">${detail}</span></div>`;
+document.getElementById('stats').innerHTML = [
+  statCard('Prioridad alta', '--accent', toBuild.filter((p) => p.pr === 'Alta' && p.st !== 'existe').length, 'páginas por crear o reorientar primero'),
+  statCard('Faltan', '--s-falta', count('falta'), 'páginas nuevas'),
+  statCard('A medias', '--s-medias', count('medias'), 'existen, hay que reorientarlas'),
+  statCard('Existen', '--s-existe', count('existe'), 'ya cubren su cluster'),
+  statCard('No crear', '--s-fuera', pages.filter((p) => p.st === 'fuera').length, 'demanda que no encaja'),
+].join('');
+
+// ---------- árboles ----------
+function buildPages(q) {
+  const m = (s) => !q || s.toLowerCase().includes(q);
+  const secs = PAGES.map((s) => {
+    const ps = s.p.map((p) => {
+      const hit = m(p.n) || m(p.url) || m(s.n);
+      const kws = p.k.filter((k) => hit || m(k[0]));
+      if (!hit && !kws.length) return null;
+      return {
+        content: `<span class="n-page">${hl(p.n, q)}</span><span class="chip ${p.st}">${ST[p.st]}</span>${p.pr !== '—' ? `<span class="chip p">${p.pr}</span>` : ''}<span class="url">${esc(p.url)}</span>`,
+        payload: { c: s.c },
+        children: kws.map((k) => ({ content: `<span class="n-kw">${hl(k[0], q)}</span><span class="vol">${TRAMO[k[1]]}</span>`, payload: { c: s.c }, children: [] })),
+      };
+    }).filter(Boolean);
+    if (!ps.length) return null;
+    return { content: `<span class="n-tier">${esc(s.n)}</span>`, payload: { c: s.c }, children: ps };
+  }).filter(Boolean);
+  return { content: '<span class="n-root">nachomascort.com</span>', payload: {}, children: secs };
+}
+function buildKw(q) {
+  const m = (s) => !q || s.toLowerCase().includes(q);
+  const bl = KW.map((b) => {
+    const cls = b.cl.map((c) => {
+      const ss = c.s.map((s) => {
+        const hit = m(s.n) || m(c.n);
+        const kws = s.k.filter((k) => hit || m(k[0]));
+        if (!kws.length) return null;
+        return {
+          content: `<span class="n-sub">${hl(s.n, q)}</span><span class="vol">${fmt(s.c)} kws · ≈${fmt(s.v)}</span><span class="chip ${s.f === 'core' ? 'falta' : s.f === 'adj' ? 'medias' : 'fuera'}">${FIT[s.f]}</span>`,
+          payload: { c: b.c },
+          children: kws.map((k) => ({ content: `<span class="n-kw">${hl(k[0], q)}</span><span class="vol">${TRAMO[k[1]]}</span>`, payload: { c: b.c }, children: [] })),
+        };
+      }).filter(Boolean);
+      if (!ss.length) return null;
+      return { content: `<span class="n-cluster">${hl(c.n, q)}</span>`, payload: { c: b.c }, children: ss };
+    }).filter(Boolean);
+    if (!cls.length) return null;
+    return { content: `<span class="n-tier">${esc(b.n)}</span>`, payload: { c: b.c }, children: cls };
+  }).filter(Boolean);
+  return { content: '<span class="n-root">Keywords SEO · España</span>', payload: {}, children: bl };
+}
+function foldTo(node, level, depth = 0) {
+  node.payload = { ...(node.payload || {}), fold: depth >= level && node.children?.length ? 1 : 0 };
+  node.children?.forEach((ch) => foldTo(ch, level, depth + 1));
+}
+
+const mm = markmap.Markmap.create('#mm', {
+  autoFit: false, duration: 300, spacingVertical: 6, spacingHorizontal: 90, paddingX: 10, maxWidth: 420,
+  color: (node) => (node.payload?.c ? css(node.payload.c) : css('--fg')),
+});
+
+let view = 'pages', level = 2, query = '';
+async function render() {
+  const root = view === 'pages' ? buildPages(query) : buildKw(query);
+  document.getElementById('empty').hidden = root.children.length > 0;
+  // En la vista de keywords, "Páginas" equivale a ver hasta los subtemas
+  foldTo(root, query ? 9 : view === 'kw' && level === 2 ? 3 : level);
+  await mm.setData(root);
+  await mm.fit();
+}
+
+// ---------- tabla del plan ----------
+const PR = { Alta: 0, Media: 1, Baja: 2 };
+document.getElementById('plan').innerHTML = toBuild
+  .filter((p) => p.st !== 'existe' || p.pr === 'Alta')
+  .sort((a, b) => PR[a.pr] - PR[b.pr] || (a.st === b.st ? b.v - a.v : a.st === 'falta' ? -1 : b.st === 'falta' ? 1 : 0))
+  .map((p) => `<tr>
+    <td><span class="chip p">${p.pr}</span></td>
+    <td><span class="t">${esc(p.n)}</span> <span class="url">${esc(p.url)}</span><br><span class="why">${esc(p.why)}</span></td>
+    <td><span class="chip ${p.st}">${ST[p.st]}</span></td>
+    <td class="num">${p.v ? '≈' + fmt(p.v) : '–'}</td>
+    <td class="kws">${p.k.slice(0, 4).map((k) => `${esc(k[0])} (${TRAMO[k[1]]})`).join('<br>')}</td>
+  </tr>`).join('');
+
+// ---------- controles ----------
+document.querySelectorAll('[data-view]').forEach((btn) => btn.addEventListener('click', () => {
+  view = btn.dataset.view;
+  document.querySelectorAll('[data-view]').forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+  render();
+}));
+document.querySelectorAll('[data-level]').forEach((btn) => btn.addEventListener('click', () => {
+  level = Number(btn.dataset.level);
+  document.querySelectorAll('[data-level]').forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+  render();
+}));
+let timer;
+document.getElementById('q').addEventListener('input', (e) => {
+  clearTimeout(timer);
+  timer = setTimeout(() => { query = e.target.value.trim().toLowerCase(); render(); }, 200);
+});
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', render);
+new MutationObserver(render).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+render();
+</script>

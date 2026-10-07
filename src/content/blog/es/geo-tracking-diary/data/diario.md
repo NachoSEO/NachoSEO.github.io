@@ -87,5 +87,10 @@ Ejemplo literal. Prompt: "Compara a los consultores SEO independientes más cono
 
 ---
 
-## Día 1 · 2026-10-07
-- Plan: ampliar el keyword research.
+## Día 1 · 2026-10-07 · Keyword research v2 y mapa de páginas
+
+- Amplié el research a todo el mundo SEO: 23 temas, dos pasadas (amplitud y profundidad), 6.166 keywords útiles en 56 subtemas. Detalle: `kwr-v2.md`.
+- Con eso monté el mapa de páginas (`mapa-paginas.html`, publicado también como artifact privado): 28 páginas a mantener o crear, de las que 4 existen, 7 hay que reorientar y 17 faltan; 4 bloques de demanda descartados.
+- Prioridad alta, en orden: consultor SEO (reorientar la página actual), consultor GEO, auditoría SEO, recuperar tráfico tras un core update, SEO técnico y webs grandes, precio del SEO, guía GEO, AI Overviews y AI Mode, posicionar en ChatGPT, por qué mi web no aparece en Google, keyword research paso a paso, generador de llms.txt.
+- Lección de proceso: con miles de keywords, la revisión de intención una a una no escala. La hice por reglas (taxonomía de 60 reglas en orden) revisando cada grupo y lo que quedaba sin clasificar; se colaron cosas como "webMASTER" en másteres o "reCURSOs" en cursos, y salieron al revisar.
+- Lección técnica: el navegador no deja sacar los datos de Google Ads a un archivo local; se leen por partes como texto. La primera vez perdí la sesión al navegar fuera de la pestaña y tuve que repetir las dos pasadas.

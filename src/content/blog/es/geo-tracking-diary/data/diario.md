@@ -49,8 +49,8 @@ Aleyda Solís (42), Orainti (32), ChatGPT (31), Natzir Turrado (26), Perplexity 
 whitepress.com, natzir.com, davidviejo.com, aleydasolis.com, monicacabani.com, orainti.com, omibu.com, rafavillaplana.com, useo.es, malt.es, mecagoenlos.com, mjcachon.com.
 - Directorios y marketplaces (malt.es, whitepress.com) aparecen junto a webs personales de consultores.
 
-### Fan-outs con `site:`: los candidatos ya vienen decididos (lo del "hardwire" que decía Will)
-[Pendiente: enlazar la fuente de Will.]
+### Fan-outs con `site:`: los candidatos ya vienen decididos ("hardwired", Wil Reynolds)
+Fuente: Wil Reynolds (Seer Interactive), [Re-imagining AI visibility KPIs in a query fan-out world](https://www.seerinteractive.com/insights/ai-visibility-kpis). Mirando los fan-outs, ve que la IA ya trae "hardwired" (de serie) las marcas, publicaciones y personas en las que confía antes de buscar, y lanza búsquedas `site:` contra ellas. Propone medir si te recomiendan, no solo si sales (la "anti-recomendación": salir en la respuesta para que te descarten), y seguir las menciones en las publicaciones y personas en las que el modelo ya confía.
 
 ChatGPT no busca "consultores SEO" y elige entre lo que sale: primero decide los nombres (de memoria) y luego lanza búsquedas `site:` contra la web de cada candidato para verificar casos y trayectoria.
 
@@ -94,3 +94,8 @@ Ejemplo literal. Prompt: "Compara a los consultores SEO independientes más cono
 - Prioridad alta, en orden: consultor SEO (reorientar la página actual), consultor GEO, auditoría SEO, recuperar tráfico tras un core update, SEO técnico y webs grandes, precio del SEO, guía GEO, AI Overviews y AI Mode, posicionar en ChatGPT, por qué mi web no aparece en Google, keyword research paso a paso, generador de llms.txt.
 - Lección de proceso: con miles de keywords, la revisión de intención una a una no escala. La hice por reglas (taxonomía de 60 reglas en orden) revisando cada grupo y lo que quedaba sin clasificar; se colaron cosas como "webMASTER" en másteres o "reCURSOs" en cursos, y salieron al revisar.
 - Lección técnica: el navegador no deja sacar los datos de Google Ads a un archivo local; se leen por partes como texto. La primera vez perdí la sesión al navegar fuera de la pestaña y tuve que repetir las dos pasadas.
+
+## Referencias para el post
+- Wil Reynolds, Seer Interactive. Re-imagining AI visibility KPIs in a query fan-out world. https://www.seerinteractive.com/insights/ai-visibility-kpis (hardwired, anti-recomendación, KPIs de credibilidad).
+- Dan Petrovic, DEJAN. Why we don't do prompt tracking. https://dejan.ai/blog/prompt-tracking (medir por entidades canónicas con una sonda fija y muchas muestras; es el método del geo-tracker).
+

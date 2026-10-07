@@ -102,7 +102,7 @@ async function buildAgentDocs(): Promise<AgentDoc[]> {
     // Home
     const homePath = localizedRoute('home', lang);
     const homeSummary = es
-      ? 'Consultor SEO técnico para webs grandes, también en GEO. Nacho Mascort, Barcelona.'
+      ? 'Consultoría de SEO, GEO e IA que genera negocio. Nacho Mascort, Barcelona.'
       : 'SEO, GEO & AI consulting that drives revenue. Nacho Mascort, Barcelona.';
     docs.push({
       path: homePath,

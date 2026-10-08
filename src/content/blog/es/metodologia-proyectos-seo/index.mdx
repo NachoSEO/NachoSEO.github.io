@@ -1,6 +1,6 @@
 ---
 title: 'Mi metodología para proyectos SEO: del objetivo de negocio a la tarea de la semana'
-description: 'La metodología que uso desde hace años en empresas y con clientes: objetivo de negocio, datos, problema principal, OKRs por quarter, iniciativas y sprints semanales.'
+description: 'La metodología que uso y mejoro desde Softonic: objetivo de negocio, problema principal, OKRs por quarter, sprints semanales, métricas que tardan meses y automatizar lo operativo.'
 lang: es
 translationKey: seo-methodology
 slug: metodologia-proyectos-seo
@@ -9,34 +9,43 @@ tags: ['metodología', 'gestión de proyectos', 'consultoría seo']
 citations:
   - title: 'Procesos, metodologías y automatizaciones SEO en Softonic (Clinic SEO 2019)'
     url: 'https://speakerdeck.com/nachomascort/procesos-metodologias-y-automatizaciones-seo-en-softonic-clinic-seo'
-    author: 'Nacho Mascort'
-    date: '2019'
+    author: 'Nacho Mascort y Ferran Gavin'
+    date: '2019-12-16'
+  - title: 'How long does it take for Google to crawl, index, and serve a webpage?'
+    url: 'https://www.linkedin.com/feed/update/urn:li:activity:7512112386334642176/'
+    author: 'Estela Franco'
 ---
 
 import Tldr from '../../../../components/blog/Tldr.astro';
 import MethodFlow from '../../../../components/blog/methodology/MethodFlow.astro';
+import SoftonicScale from '../../../../components/blog/methodology/SoftonicScale.astro';
 import MethodLevels from '../../../../components/blog/methodology/MethodLevels.astro';
+import MetricLadder from '../../../../components/blog/methodology/MetricLadder.astro';
 import PlanExplorer from '../../../../components/blog/methodology/PlanExplorer.astro';
 import CapacityCalculator from '../../../../components/blog/methodology/CapacityCalculator.astro';
 import OpsVsInitiatives from '../../../../components/blog/methodology/OpsVsInitiatives.astro';
 
 <Tldr
   items={[
-    'Antes de tocar nada, el objetivo del cliente se traduce a algo <strong>medible</strong>.',
-    'Con datos de negocio y de analítica busco el <strong>problema principal</strong>.',
+    'Antes de tocar nada, el objetivo del cliente se traduce a algo <strong>medible</strong> y se busca el <strong>problema principal</strong> con datos de negocio.',
     'Cuatro objetivos posibles: <strong>crecer, recuperar, prevenir o aparecer</strong> en la IA.',
-    'Del objetivo anual a <strong>tareas de una semana</strong>, con una métrica por iniciativa.',
-    'Cada semana reviso un <strong>tablero con las tareas de todos los equipos</strong> que tocan la iniciativa.',
+    'Del objetivo anual a <strong>tareas de una semana</strong>. Cada iniciativa tiene su métrica, y cada semana se revisa el tablero.',
+    'En SEO el resultado tarda meses, así que la revisión semanal mira <strong>métricas adelantadas</strong>: desplegado, rastreado, indexado.',
+    'Lo operativo se registra y se <strong>automatiza</strong>. En Softonic, así pasamos a llevar 20 idiomas y subidas diarias con menos gente.',
   ]}
 />
 
 Cuando alguien me contrata, una de las primeras preguntas es "¿y cómo vas a trabajar?". Este post es la respuesta larga.
 
-Es la metodología que llevo años usando y puliendo en distintas empresas y con clientes. Una primera versión la conté en [Clinic SEO 2019](https://speakerdeck.com/nachomascort/procesos-metodologias-y-automatizaciones-seo-en-softonic-clinic-seo), cuando la aplicaba en Softonic. Desde entonces la he ido ajustando con equipos de distintos tamaños, propios y de cliente.
+Una primera versión la aplicábamos en Softonic. En 2019 la contamos Ferran Gavin y yo en [Clinic SEO](https://speakerdeck.com/nachomascort/procesos-metodologias-y-automatizaciones-seo-en-softonic-clinic-seo): cómo trabajábamos el catálogo con los equipos de desarrollo y cómo la automatización nos dejó crecer sin crecer en gente. Este fue el cambio que enseñamos aquel día:
 
-Tiene dos partes. La primera decide qué hay que hacer. La segunda, cómo se hace:
+<SoftonicScale />
+
+Desde entonces la he usado y ajustado en otras empresas y con clientes, con equipos de tamaños muy distintos. Lo que sigue es la versión de hoy. Tiene una parte para decidir qué hay que hacer y otra para decidir cómo:
 
 <MethodFlow />
+
+Casi todo lo que vas a leer sobre metodologías ágiles vale para cualquier equipo. Lo que la hace distinta para SEO son tres cosas, y son las que más espacio ocupan en este post: Google tarda semanas o meses en reflejar un cambio, casi todo el trabajo depende de otros equipos y el trabajo operativo se come la hoja de ruta si no lo automatizas.
 
 ## 1. Traducir "quiero vender más" a algo medible
 
@@ -47,24 +56,26 @@ Casi todos los proyectos empiezan con un objetivo abstracto. "Quiero vender más
 - ¿En qué tienes ventaja sobre tu competencia? ¿Precio, catálogo, marca, servicio?
 - ¿Qué mercados importan? ¿Qué idioma, qué país?
 
-Las respuestas cambian el proyecto entero. Si el producto con más margen es el que menos búsquedas tiene, la estrategia no se parece en nada a la de quien vende un producto de volumen con margen pequeño. Y esto lo cruzo con mi propio research: qué se busca, quién posiciona hoy y qué dicen de ti fuera de tu web.
+Las respuestas cambian el proyecto entero. Si el producto con más margen es el que menos búsquedas tiene, la estrategia no se parece en nada a la de quien vende un producto de volumen con margen pequeño.
+
+En Softonic, por ejemplo, "más tráfico" no decía nada. La pregunta útil era qué programas merecía la pena tener y cuánto trabajo meter en cada uno. Cada ficha se valoraba por su potencial de búsqueda, y cuando una empezaba a rendir decidíamos si mejorarla con su tráfico, su RPM y cuánto tiempo esperábamos que siguiera viva. Esos tres datos son negocio puro, y ninguno sale de una herramienta SEO.
 
 ## 2. Datos antes que opiniones
 
-No puedo decirte por dónde empezar sin datos. Al principio de cada proyecto reviso tres cosas:
+No puedo decirte por dónde empezar sin datos. Al principio de cada proyecto reviso tres capas:
 
-- **Plan de datos y analítica.** Qué se mide, qué no y si lo que se mide es fiable. A veces el primer entregable es arreglar la medición.
-- **Datos de negocio.** Ventas, márgenes, leads, valor de cada cliente. La analítica web sin datos de negocio te dice cuánta gente entra, pero no cuánto vale.
-- **Estado del SEO.** Search Console, rastreo, logs e indexación por page type.
+- **Técnica.** Tiempos de carga, hits de Googlebot, uptime, rastreo e indexación por page type.
+- **Producto y negocio.** Ventas o leads por línea, conversión, revenue por página, márgenes.
+- **SEO.** Desglose del tráfico, contenido flojo, canibalizaciones, reparto de keywords por page type.
 
-Aquí hay que pensar en negocio. El porcentaje de rebote de la home importa poco. Importa cuánto factura cada tipo de página, cuánto podría facturar y qué lo frena.
+Son las mismas tres capas de KPIs que usábamos en Softonic. La capa de negocio es la que más se olvida y la que decide las prioridades: el porcentaje de rebote de la home importa poco; importa cuánto factura cada tipo de página, cuánto podría facturar y qué lo frena.
 
 ### Lo que pido la primera semana
 
 - Una llamada para entender el negocio, la historia de la web y los cambios recientes: migraciones, rediseños, caídas.
 - Acceso a Search Console y a la analítica.
 - Los logs del servidor de las últimas semanas, si se pueden sacar.
-- Los datos de negocio que el cliente quiera compartir: ventas o leads por línea de producto, márgenes, mercados.
+- Los datos de negocio que se puedan compartir: ventas o leads por línea de producto, márgenes, mercados.
 
 Con eso y un rastreo completo tengo casi todo para el paso siguiente.
 
@@ -81,7 +92,7 @@ Ese problema define el tipo de objetivo, y no siempre es crecer:
 | Vas a migrar o rediseñar | **Prevenir**: que no haya caída y, si se puede, aprovechar para subir. |
 | La IA recomienda a tu competencia | **Aparecer**: entrar en las respuestas de ChatGPT, Gemini o los AI Overviews. |
 
-En una migración, por ejemplo, el mejor resultado es que nadie note nada en el tráfico y la web nueva empiece a crecer. Prevenir también es un objetivo, y a menudo el que más dinero ahorra.
+En una migración, el mejor resultado es que nadie note nada en el tráfico y la web nueva empiece a crecer. Prevenir también es un objetivo, y a menudo el que más dinero ahorra.
 
 ## 4. Del objetivo anual a la semana
 
@@ -99,18 +110,22 @@ Un ejemplo basado en lo que vivimos en [Softonic](/casos/softonic-0-a-20-millone
 
 <MethodLevels />
 
-Si una iniciativa dura más de un quarter, la parto por milestones. Así cada quarter cierra algo que se puede medir.
+Las tareas no salen solo del plan. En Softonic entraban por tres vías, y sigo trabajando igual: **la auditoría** (lo que sale de revisar los KPIs), **los stakeholders** (peticiones de producto, contenido o negocio) y **las alertas** (algo se ha roto). Las tres van al mismo backlog y compiten por la misma capacidad.
 
-## 5. KPIs de control y OKRs
+## 5. Métricas que se mueven esta semana y métricas que tardan meses
 
-Antes de definir las iniciativas, decido qué voy a mirar durante el quarter. Uso dos tipos de métricas:
+Antes de definir las iniciativas, decido qué voy a mirar durante el quarter:
 
-- **KPIs de control.** Métricas que tienen que seguir sanas mientras trabajamos en otra cosa: tráfico de las páginas que facturan, indexación, errores. Si se mueven, hay que mirar por qué.
-- **OKRs.** Los resultados que el quarter tiene que conseguir. Me dicen si vamos bien o si hay que corregir algo antes de salirnos del camino.
+- **KPIs de control.** Métricas que tienen que seguir sanas mientras trabajamos en otra cosa: tráfico de las páginas que facturan, indexación, errores.
+- **OKRs.** Los resultados que el quarter tiene que conseguir.
 
-Cada iniciativa tiene su propia métrica, ligada a esos KPIs u OKRs. Si una iniciativa no mueve ninguna, me pregunto por qué la estamos haciendo.
+Aquí está la primera diferencia con un equipo de producto. Si cambias un botón, al día siguiente sabes si convierte mejor. Si cambias una plantilla, Google tiene que rastrearla, indexarla y volver a valorarla, y cada paso tiene su plazo:
 
-Lo reviso todo cada semana. Prefiero esa frecuencia porque es la misma unidad de tiempo en la que se planifica el trabajo, así que el dato y la decisión van al mismo ritmo.
+<MetricLadder />
+
+Por eso la revisión semanal no mira el tráfico. Mira la parte izquierda de la escalera: si lo de esta semana está desplegado, si Googlebot ya lo ha visto y si está indexado. Las posiciones, los clics y el negocio se miran contra los OKRs del quarter. Si en la semana dos de una iniciativa juzgas el tráfico, vas a parar cosas que funcionan y a seguir con otras que no.
+
+Cada iniciativa tiene su propia métrica, ligada a esos KPIs u OKRs. Si una iniciativa no mueve ninguna, me pregunto por qué la estamos haciendo. Y a veces la métrica buena es una que te inventas para tu negocio. En Softonic creamos tres para el catálogo: **velocidad** (cuánto tardábamos en publicar un programa frente a la competencia), **huecos** (qué porcentaje de los programas top de la competencia no teníamos) y **frescura** (qué porcentaje de nuestras fichas estaba desfasado).
 
 ## 6. Sprints semanales con un Kanban ligero
 
@@ -125,8 +140,10 @@ Las reglas por defecto:
 - **Se termina lo empezado antes de empezar algo nuevo.** El tablero se consume de derecha a izquierda.
 - **"En espera" es solo para bloqueos externos.** Algo que depende de otro equipo, de un proveedor o de un acceso.
 - **Tareas pequeñas.** Un solo responsable por tarea; si hay dos, son dos tareas. Y que quepa en una semana; si no, se parte por entregables.
-- **Dos tareas en curso por persona como máximo.** La multitarea sale cara.
+- **Dos tareas en curso por persona como máximo.** Con más trabajo abierto a la vez, cada tarea tarda más en salir; es la ley de Little aplicada a un tablero.
 - **Las peticiones externas van al backlog.** Se priorizan en la planificación de la semana siguiente. La excepción son los fuegos: si algo se rompe, va primero.
+
+Uso sprints de una semana, cuando muchas guías de SEO ágil proponen dos. Con una semana, el plan se corrige cuatro veces al mes, y como lo que miro cada semana son las métricas rápidas de la escalera, siempre hay algo que revisar.
 
 ### Cuánto cabe en una semana
 
@@ -134,22 +151,30 @@ Para no llenar una semana de más, calculo la capacidad de cada persona con una 
 
 <CapacityCalculator />
 
-La fórmula sirve para no sobrecargar el sprint. No controlo las horas de nadie; me importa que salgan los objetivos.
+La fórmula sirve para no sobrecargar el sprint. No controlo las horas de nadie; me importa que salgan los objetivos. Por eso tampoco uso story points con escala de Fibonacci: con horas aproximadas, cualquiera del equipo entiende al momento si la semana cabe.
 
-### Lo operativo también va al tablero
+## 7. Lo operativo se registra y se automatiza
 
 Hay dos tipos de tareas:
 
-- **Operativas.** El día a día que mantiene todo funcionando: informes, revisiones, publicaciones.
+- **Operativas.** El día a día que mantiene todo funcionando: informes, revisiones, comprobaciones.
 - **De iniciativa.** El trabajo que mueve los OKRs.
 
-Las operativas también van al tablero, aunque se repitan cada semana. Si las registras, ves cuánto tiempo se llevan y cuáles se pueden automatizar. Al principio de un proyecto lo operativo ocupa casi toda la semana. A medida que se automatiza, deja hueco a las iniciativas:
+Las operativas también van al tablero, aunque se repitan cada semana. Si las registras, ves cuánto tiempo se llevan y cuáles se pueden automatizar.
+
+En Softonic, el registro nos enseñó que en diez meses habíamos hecho catorce tareas sobre redirecciones, muchas para tocar lógicas de hace más de diez años. Así que montamos un comprobador: una muestra de URLs con todas esas lógicas que se revisaba cada día y avisaba en cuanto un origen o un destino fallaba. Hicimos lo mismo con otras tareas que se repetían:
+
+- **Rastreos propios** sobre un conjunto representativo de URLs, con umbrales que hacían saltar una alerta.
+- **Alertas de Googlebot** en tiempo real y por códigos de estado.
+- **Una API de Google Trends** que cada día sacaba las keywords en tendencia de 20 países a partir de 13 semillas por país. Los programas que salían de ahí rendían 10 veces más que el resto, porque llegar el primero a un programa nuevo da mucha ventaja.
+
+Todas las alertas iban a un canal de Slack y a una lista de correo. Cada automatización saca una tarea operativa del tablero y deja ese hueco para las iniciativas:
 
 <OpsVsInitiatives />
 
-El objetivo a largo plazo es que lo operativo sea lo mínimo y el equipo dedique casi todo su tiempo a lo que mueve el negocio.
+Ese es el motivo de la tabla del principio: con menos gente pudimos llevar más proyectos, más idiomas y subidas diarias, porque lo repetitivo ya no lo hacía nadie a mano.
 
-## 7. La revisión semanal
+## 8. La revisión semanal
 
 Una vez por semana repasamos el tablero en una reunión corta. Contesta tres preguntas:
 
@@ -163,19 +188,23 @@ En esa reunión se corrige el plan. Algo se retrasa porque está en espera, algo
 
 El error que más proyectos me ha retrasado es planificar solo las tareas de SEO. Casi ninguna iniciativa es solo de SEO. Montar una web nueva incluye mucho más que programarla: antes hay diseño, hay que decidir qué se va a medir y cómo, hay contenido que adaptar y luego está la parte de SEO. En el ejemplo de los ccTLDs trabajan cinco equipos, y el hreflang no se puede hacer hasta que Tecnología monta los dominios.
 
-Si en tu tablero solo están tus tareas, no ves que estás esperando a otro equipo hasta que ya llegas tarde. Por eso meto en el tablero todas las tareas de la iniciativa, las haga yo, alguien de mi equipo o un proveedor externo con el que nos coordinamos cada pocas semanas. Así las dependencias se ven en el Gantt antes de que bloqueen a nadie, y en la revisión semanal se habla de ellas a tiempo.
+Si en tu tablero solo están tus tareas, no ves que estás esperando a otro equipo hasta que ya llegas tarde. Por eso meto en el tablero todas las tareas de la iniciativa, las haga yo, alguien de mi equipo o un proveedor externo con el que nos coordinamos cada pocas semanas. Así las dependencias se ven en el Gantt antes de que bloqueen a nadie.
+
+El otro problema llega cuando hay muchos equipos desplegando a la vez. En Softonic, con despliegue continuo y varios proyectos en paralelo, un cambio de otro equipo podía romper algo nuestro y había tareas que se revertían. Sin las alertas de la sección anterior, nos habríamos enterado por el tráfico, semanas tarde.
 
 ## Herramientas
 
 Uso Notion, pero sirve cualquier herramienta que guarde las tareas en una base de datos y te deje verlas de varias formas. Lo importante es que la misma base de tareas tenga una vista de tablero, para el día a día, y una vista de Gantt, para planificar el quarter y ver las dependencias. Si tienes que mantener las dos a mano en sitios distintos, acabarán sin coincidir.
+
+Para las alertas y las automatizaciones no hay una herramienta que valga para todo. En Softonic usábamos herramientas de terceros donde servían y scripts propios donde no. La regla era adaptar la herramienta a lo que necesitábamos saber, y que lo que nos dijera sirviera para decidir algo.
 
 ## Cómo encaja con cada tipo de proyecto
 
 La estructura es la misma; cambian el objetivo y el ritmo:
 
 - **[Auditoría](/servicios/auditoria-seo/).** Es la parte 1 a 3 de este post en un proyecto cerrado: objetivo, datos y problema principal, con un plan priorizado al final. El plan ya sale en formato de iniciativas y tareas.
-- **[Recuperar tráfico tras un core update](/servicios/recuperar-trafico/).** El objetivo es recuperar, el horizonte es de 3 a 6 meses y los KPIs de control vigilan las páginas que aguantaron.
-- **[Migración](/servicios/migraciones-seo/).** El objetivo es prevenir. Las tareas se concentran antes del lanzamiento y las semanas siguientes son casi todo seguimiento.
+- **[Recuperar tráfico tras un core update](/servicios/recuperar-trafico/).** El objetivo es recuperar y el horizonte, de 3 a 6 meses. Cada semana se miran las métricas rápidas; el tráfico, al cierre del quarter.
+- **[Migración](/servicios/migraciones-seo/).** El objetivo es prevenir. Las tareas se concentran antes del lanzamiento y las semanas siguientes son casi todo seguimiento y alertas.
 - **[Consultoría mensual](/servicios/consultoria-seo-tecnica/).** Todo el ciclo, con la revisión semanal junto a tu equipo.
 
 Si quieres ver cómo quedaría en tu caso, [reserva una llamada de 30 minutos](https://cal.com/nacho-mascort/30min) y lo vemos con tus datos.

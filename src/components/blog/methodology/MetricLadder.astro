@@ -1,0 +1,126 @@
+---
+/**
+ * Escalera de métricas de un cambio SEO: de lo que se ve el mismo día a lo que tarda meses.
+ * Los plazos de Google salen de los slides de Gary Illyes en Search Central Live Deep Dive Europe 2026
+ * (fotos de Estela Franco), los mismos del post de quality.
+ */
+const steps = [
+  { name: 'Desplegado', where: 'QA, alertas, rastreo propio', when: 'El mismo día' },
+  { name: 'Rastreado', where: 'Logs, hits de Googlebot', when: 'Horas o días' },
+  { name: 'Indexado', where: 'Search Console', when: 'De 1,5 h a meses', worst: 'o nunca, si falla la calidad' },
+  { name: 'Mostrado', where: 'Titles, snippets, rich results', when: 'De 1-2 días a semanas', worst: 'datos estructurados: o nunca' },
+  { name: 'Posiciones y clics', where: 'Search Console, rank tracking', when: 'Semanas' },
+  { name: 'Negocio', where: 'Ventas, leads, margen', when: 'Meses', worst: 'tras un core update: 3-6 meses' },
+];
+---
+
+<figure class="metric-ladder not-prose my-10">
+  <ol>
+    {
+      steps.map((step, index) => (
+        <li style={`--tone: ${[6, 14, 24, 72, 84, 96][index]}%`} class:list={[index >= 3 && 'is-dark']}>
+          <span class="ml-name">{step.name}</span>
+          <span class="ml-where">{step.where}</span>
+          <span class="ml-when">
+            {step.when}
+            {step.worst && <em>{step.worst}</em>}
+          </span>
+        </li>
+      ))
+    }
+  </ol>
+  <div class="ml-scale" aria-hidden="true">
+    <span>Revisión semanal</span>
+    <span>Revisión del quarter</span>
+  </div>
+  <figcaption>
+    Cuánto tarda en verse un cambio, de lo más rápido a lo más lento. Los plazos de indexado, mostrado y recuperación son los que enseñó Google en Search Central Live Deep Dive Europe 2026.
+  </figcaption>
+</figure>
+
+<style>
+  @layer components {
+    figure.metric-ladder ol {
+      list-style: none;
+      padding-left: 0;
+      margin-top: 0;
+    }
+    figure.metric-ladder li + li {
+      margin-top: 0;
+    }
+  }
+  .metric-ladder {
+    font-size: 0.8rem;
+    line-height: 1.35;
+  }
+  .metric-ladder ol {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 0.3rem;
+  }
+  .metric-ladder li {
+    display: grid;
+    align-content: start;
+    gap: 0.2rem;
+    border-radius: 0.5rem;
+    padding: 0.6rem 0.55rem;
+    /* Del petróleo claro al oscuro: cuanto más a la derecha, más tarda */
+    background: color-mix(in srgb, var(--color-ink) var(--tone), var(--color-raised));
+    color: var(--color-ink);
+  }
+  .metric-ladder li.is-dark {
+    color: var(--color-on-dark);
+  }
+  .ml-name {
+    font-weight: 700;
+  }
+  .ml-where {
+    font-size: 0.72rem;
+    opacity: 0.75;
+  }
+  .ml-when {
+    margin-top: 0.3rem;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+  }
+  .ml-when em {
+    display: block;
+    margin-top: 0.15rem;
+    font-family: var(--font-sans);
+    font-size: 0.68rem;
+    font-style: normal;
+    opacity: 0.8;
+  }
+  .ml-scale {
+    display: grid;
+    grid-template-columns: 3fr 3fr;
+    gap: 0.3rem;
+    margin-top: 0.35rem;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .ml-scale span {
+    border-top: 2px solid var(--color-accent);
+    padding-top: 0.25rem;
+    color: var(--color-accent-ink);
+  }
+  .ml-scale span:last-child {
+    border-color: var(--color-ink);
+    color: var(--color-ink);
+  }
+  .metric-ladder figcaption {
+    margin-top: 0.6rem;
+    color: var(--color-muted);
+    font-size: 0.8rem;
+  }
+  @media (max-width: 640px) {
+    .metric-ladder ol {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .ml-scale {
+      display: none;
+    }
+  }
+</style>

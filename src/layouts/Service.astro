@@ -7,7 +7,6 @@ import FaqAccordion from '../components/service/FaqAccordion.astro';
 import NextStepCta from '../components/service/NextStepCta.astro';
 import ServiceFit from '../components/service/ServiceFit.astro';
 import ServiceProcess from '../components/service/ServiceProcess.astro';
-import ServiceExample from '../components/service/ServiceExample.astro';
 import ServiceApproach from '../components/service/ServiceApproach.astro';
 import ServiceEvidence from '../components/service/ServiceEvidence.astro';
 import ServiceOffer from '../components/service/ServiceOffer.astro';
@@ -77,8 +76,7 @@ const { page } = entry.data;
   <ServiceHero lang={lang} title={entry.data.title} tagline={entry.data.tagline} proof={page.heroProof} />
   <ClientLogos lang={lang} />
   <ServiceApproach lang={lang} pov={page.pov} checks={page.checks} />
-  {page.example && <ServiceExample lang={lang} example={page.example} />}
-  <ServiceEvidence lang={lang} proofCases={page.proofCases} related={page.related} exampleHref={page.example?.link?.href} />
+  <ServiceEvidence lang={lang} proofCases={page.proofCases} related={page.related} />
   <ServiceProcess lang={lang} process={page.process} />
   {page.engagement && <ServiceEngagement lang={lang} />}
   <ServiceOffer

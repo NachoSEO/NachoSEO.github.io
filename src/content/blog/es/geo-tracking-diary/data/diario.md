@@ -141,6 +141,19 @@ Para el análisis:
 - Ninguna de las menciones es nueva para el modelo: ya existían fuera. Lo que cambia es que ahora están en mi web, que es donde ChatGPT verifica a los candidatos.
 - Hallazgo: tenía menciones en medios de referencia (SER, SEJ, LearningSEO) que no aparecían en la web. Antes de buscar menciones nuevas, conviene inventariar las que ya existen.
 
+## Día 3 · 2026-10-09 · Fase 1 de la arquitectura publicada (en plena línea base)
+
+Publicado en nachomascort.com, en español e inglés (merge de la PR #1 y paridad EN después):
+- Servicios técnicos nuevos: consultor SEO técnico (sustituye a la consultoría SEO/GEO, con 301 desde /servicios/consultoria-seo-geo/), auditoría, migraciones, SEO internacional, recuperar tráfico tras un core update y consultoría GEO. Plantilla nueva: qué hago, pruebas, cronología, entregables, formatos, precio y preguntas frecuentes.
+- Página de precios sin tarifa, con el formulario de presupuesto (/servicios/precios/, /en/services/pricing/).
+- Post "Mi metodología para proyectos SEO" (ES y EN), con fecha 9 de octubre, y la calculadora del valor de una sesión orgánica en /herramientas/.
+- Home: misma cabecera de marca; abajo, solo los servicios técnicos y un bloque de dónde trabajo.
+
+Para el análisis:
+- Es el cambio grande de la web y cae antes de cerrar la línea base (2026-10-19). A partir de aquí, la comparación limpia es la de antes y después del 9 de octubre, no la línea base completa.
+- Entidades que debería mover: consultor SEO / consultor SEO técnico, auditoría SEO, migraciones, SEO internacional, recuperar tráfico, GEO. Las de control (SEO ecommerce, SEO WordPress) no tienen página nueva.
+- Incidencia: el 301 de la URL antigua no funcionó en el primer despliegue, porque la build regenera _redirects desde astro.config y pisaba public/_redirects. Arreglado el mismo día.
+
 ## Referencias para el post
 - Wil Reynolds, Seer Interactive. Re-imagining AI visibility KPIs in a query fan-out world. https://www.seerinteractive.com/insights/ai-visibility-kpis (hardwired, anti-recomendación, KPIs de credibilidad).
 - Dan Petrovic, DEJAN. Why we don't do prompt tracking. https://dejan.ai/blog/prompt-tracking (medir por entidades canónicas con una sonda fija y muchas muestras; es el método del geo-tracker).

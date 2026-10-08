@@ -29,6 +29,14 @@ export const teaching: { period: string; current?: boolean; school: string; prog
   },
   {
     period: '',
+    current: true,
+    school: 'Asdrubal SEO',
+    program: { es: 'Máster de SEO Técnico', en: 'Technical SEO Master' },
+    topics: { es: 'Migraciones web', en: 'Web migrations' },
+    url: 'https://sanchezdonate.net/master-seo-tecnico/',
+  },
+  {
+    period: '',
     school: 'Wontalia',
     program: { es: 'Cursos online', en: 'Online courses' },
     topics: {
@@ -141,6 +149,34 @@ export const media: { type: MediaType; outlet: string; title: string; url: strin
     title: 'How Softonic Generates 40M+ Monthly Visits',
     lang: 'en',
     url: 'https://prerender.io/resources/case-studies/how-prerender-helps-softonic-score-a-92-in-da-and-pagespeed/',
+  },
+  {
+    type: 'mention',
+    outlet: 'Search Engine Roundtable',
+    title: 'Google Search Spam Updates Use AI To Find AI Spam & More',
+    lang: 'en',
+    url: 'https://www.seroundtable.com/google-search-spam-updates-ai-42226.html',
+  },
+  {
+    type: 'mention',
+    outlet: 'LearningSEO.io (Aleyda Solís)',
+    title: 'SEO Learning Roadmap: Automate SEO tasks',
+    lang: 'en',
+    url: 'https://learningseo.io/seo_roadmap/automate-tasks/',
+  },
+  {
+    type: 'mention',
+    outlet: 'Search Engine Journal',
+    title: 'How to Generate Text from Images with Python',
+    lang: 'en',
+    url: 'https://www.searchenginejournal.com/generate-text-from-images-with-python/324001/',
+  },
+  {
+    type: 'mention',
+    outlet: 'Search Engine Journal',
+    title: 'How to Automate the URL Inspection Tool with Python & JavaScript',
+    lang: 'en',
+    url: 'https://www.searchenginejournal.com/automate-url-inspection-tool-python-javascript/301639/',
   },
   {
     type: 'press',

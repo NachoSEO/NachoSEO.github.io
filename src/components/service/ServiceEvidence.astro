@@ -1,0 +1,73 @@
+---
+/**
+ * Pruebas en una banda compacta: casos con su cifra y, debajo, lecturas propias relacionadas.
+ * Sin casos, enseña docencia y charlas.
+ */
+import { getCollection } from 'astro:content';
+import CaseLogo from '../CaseLogo.astro';
+import SectionLabel from '../SectionLabel.astro';
+import TeachingProof from './TeachingProof.astro';
+import { caseBrands } from '../../data/case-brands';
+import { localizedRoute } from '../../i18n/utils';
+import type { Lang } from '../../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  proofCases: { caseKey: string; summary: string }[];
+  related?: { title: string; href: string; note: string }[];
+}
+
+const { lang, proofCases, related = [] } = Astro.props;
+const es = lang === 'es';
+const casesBase = localizedRoute('cases', lang);
+const allCases = await getCollection('caseStudies', (entry) => entry.data.lang === lang);
+const items = proofCases
+  .map((proof) => ({ proof, entry: allCases.find((entry) => entry.data.translationKey === proof.caseKey) }))
+  .filter((item) => item.entry);
+// Las lecturas que son casos ya están arriba: solo se enseñan las demás
+const reading = related.filter((item) => !item.href.startsWith(casesBase));
+---
+
+{
+  items.length === 0 ? (
+    <TeachingProof lang={lang} />
+  ) : (
+    <section class="on-dark mt-16 md:mt-24">
+      <div class="mx-auto max-w-5xl px-5 py-12 md:py-16 sm:px-6">
+        <SectionLabel label={es ? 'Lo he hecho antes' : "I've done it before"} />
+        <ul class="mt-6 border-t border-white/15">
+          {items.map(({ proof, entry }) => {
+            const brand = caseBrands[proof.caseKey]?.brand;
+            const [metric] = entry!.data.metrics;
+            return (
+              <li class="border-b border-white/15">
+                <a href={`${casesBase}${entry!.data.slug}/`} class="case-row group grid items-center gap-x-6 gap-y-2 px-2 py-5 sm:grid-cols-[8rem_10rem_1fr_auto]">
+                  <span class="flex h-7 items-center">{brand && <CaseLogo brand={brand} class="case-logo" />}</span>
+                  {metric && (
+                    <span>
+                      <span class="accent block font-display text-2xl font-semibold tracking-tight">{metric.value}</span>
+                      <span class="block text-xs text-on-dark-muted">{metric.label}</span>
+                    </span>
+                  )}
+                  <span class="text-[0.95rem]">{proof.summary}</span>
+                  <span class="case-arrow hidden sm:inline-block" aria-hidden="true">→</span>
+                </a>
+              </li>
+            );
+          })}
+        </ul>
+        {reading.length > 0 && (
+          <p class="mt-6 text-sm text-on-dark-muted">
+            {es ? 'Para leer antes de hablar: ' : 'Worth reading first: '}
+            {reading.map((item, index) => (
+              <>
+                {index > 0 && ' · '}
+                <a href={item.href} class="font-semibold text-on-dark underline decoration-accent-on-dark underline-offset-4 hover:text-accent-on-dark">{item.title}</a>
+              </>
+            ))}
+          </p>
+        )}
+      </div>
+    </section>
+  )
+}

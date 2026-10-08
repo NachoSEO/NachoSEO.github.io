@@ -3,18 +3,14 @@ import type { CollectionEntry } from 'astro:content';
 import { render } from 'astro:content';
 import Base from './Base.astro';
 import ServiceHero from '../components/service/ServiceHero.astro';
-import DeliverablesGrid from '../components/service/DeliverablesGrid.astro';
 import FaqAccordion from '../components/service/FaqAccordion.astro';
 import NextStepCta from '../components/service/NextStepCta.astro';
 import ServiceFit from '../components/service/ServiceFit.astro';
-import ServicePov from '../components/service/ServicePov.astro';
 import ServiceProcess from '../components/service/ServiceProcess.astro';
-import ServiceProof from '../components/service/ServiceProof.astro';
-import ServiceFormats from '../components/service/ServiceFormats.astro';
-import TeachingProof from '../components/service/TeachingProof.astro';
-import ServiceChecks from '../components/service/ServiceChecks.astro';
 import ServiceExample from '../components/service/ServiceExample.astro';
-import ServiceRelated from '../components/service/ServiceRelated.astro';
+import ServiceApproach from '../components/service/ServiceApproach.astro';
+import ServiceEvidence from '../components/service/ServiceEvidence.astro';
+import ServiceOffer from '../components/service/ServiceOffer.astro';
 import ClientLogos from '../components/ClientLogos.astro';
 import { localizedRoute } from '../i18n/utils';
 import type { Lang } from '../i18n/ui';
@@ -80,19 +76,17 @@ const { page } = entry.data;
   <ServiceHero lang={lang} title={entry.data.title} tagline={entry.data.tagline} proof={page.heroProof} />
   <ClientLogos lang={lang} />
   <ServiceFit lang={lang} fit={page.fit} />
-  <ServicePov lang={lang} pov={page.pov} />
-  {page.checks && <ServiceChecks lang={lang} checks={page.checks} />}
+  <ServiceApproach lang={lang} pov={page.pov} checks={page.checks} />
   {page.example && <ServiceExample lang={lang} example={page.example} />}
+  <ServiceEvidence lang={lang} proofCases={page.proofCases} related={page.related} />
   <ServiceProcess lang={lang} process={page.process} />
-  <DeliverablesGrid lang={lang} deliverables={entry.data.deliverables} />
-  {
-    page.proofCases.length > 0 ? (
-      <ServiceProof lang={lang} proofCases={page.proofCases} />
-    ) : (
-      <TeachingProof lang={lang} />
-    )
-  }
-  <ServiceFormats lang={lang} formats={page.formats} pricing={page.pricing} availability={page.availability} />
+  <ServiceOffer
+    lang={lang}
+    deliverables={entry.data.deliverables}
+    formats={page.formats}
+    pricing={page.pricing}
+    availability={page.availability}
+  />
   {
     hasBody && (
       <div class="mx-auto max-w-5xl px-5 pt-16 md:pt-24 sm:px-6">
@@ -102,7 +96,6 @@ const { page } = entry.data;
       </div>
     )
   }
-  {page.related.length > 0 && <ServiceRelated lang={lang} related={page.related} />}
   <FaqAccordion lang={lang} faq={entry.data.faq} />
   <NextStepCta lang={lang} briefService={briefServiceByKey[entry.data.translationKey]} />
 </Base>

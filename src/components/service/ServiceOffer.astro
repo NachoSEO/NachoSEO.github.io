@@ -1,0 +1,46 @@
+---
+/** Qué te llevas y cómo se contrata, en una sola sección: entregables a un lado, formatos y precio al otro */
+import SectionLabel from '../SectionLabel.astro';
+import type { Lang } from '../../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  deliverables: { title: string; detail: string }[];
+  formats: { name: string; detail: string }[];
+  pricing: string;
+  availability?: string;
+}
+
+const { lang, deliverables, formats, pricing, availability } = Astro.props;
+const es = lang === 'es';
+---
+
+<section class="mx-auto max-w-5xl px-5 pt-16 md:pt-24 sm:px-6">
+  <SectionLabel label={es ? 'Qué te llevas' : 'What you get'} />
+  <h2 class="display-2 mt-3">{es ? 'Entregables, formatos y precio' : 'Deliverables, formats and pricing'}</h2>
+  <div class="mt-10 grid gap-10 md:grid-cols-[1.3fr_1fr]">
+    <ul>
+      {
+        deliverables.map((deliverable) => (
+          <li class="border-t border-line py-4">
+            <h3 class="font-semibold">{deliverable.title}</h3>
+            <p class="mt-1 text-[0.95rem] text-muted">{deliverable.detail}</p>
+          </li>
+        ))
+      }
+    </ul>
+    <div class="grid content-start gap-4">
+      {
+        formats.map((format) => (
+          <div class="card">
+            <h3 class="font-semibold">{format.name}</h3>
+            <p class="mt-2 text-[0.95rem] text-muted">{format.detail}</p>
+          </div>
+        ))
+      }
+      <p class="text-[0.95rem]">{pricing}</p>
+      {es && <a href="/servicios/precios/" class="link-arrow text-[0.95rem]">Cuánto cuesta y cómo calculo el precio</a>}
+      {availability && <p class="text-[0.95rem] font-semibold">{availability}</p>}
+    </div>
+  </div>
+</section>

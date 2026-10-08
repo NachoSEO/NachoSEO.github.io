@@ -14,6 +14,29 @@ citations:
   - title: 'How long does it take for Google to crawl, index, and serve a webpage?'
     url: 'https://www.linkedin.com/feed/update/urn:li:activity:7512112386334642176/'
     author: 'Estela Franco'
+  - title: 'Page indexing report'
+    url: 'https://support.google.com/webmasters/answer/7440203'
+    publisher: 'Google Search Console Help'
+  - title: 'Managing crawling of faceted navigation URLs'
+    url: 'https://developers.google.com/search/docs/crawling-indexing/crawling-managing-faceted-navigation'
+    publisher: 'Google Search Central'
+  - title: 'Block Search indexing with noindex'
+    url: 'https://developers.google.com/search/docs/crawling-indexing/block-indexing'
+    publisher: 'Google Search Central'
+  - title: 'Set goals with OKRs'
+    url: 'https://rework.withgoogle.com/guides/set-goals-with-okrs/steps/introduction/'
+    publisher: 'Google re:Work'
+  - title: 'The Kanban Guide'
+    url: 'https://prokanban.org/the-kanban-guide/'
+    author: 'Daniel S. Vacanti y ProKanban.org'
+  - title: 'A Proof for the Queuing Formula: L = λW'
+    url: 'https://doi.org/10.1287/opre.9.3.383'
+    author: 'John D. C. Little'
+    publisher: 'Operations Research'
+    date: '1961'
+  - title: 'Why the Fibonacci Sequence Works Well for Estimating'
+    url: 'https://www.mountaingoatsoftware.com/blog/why-the-fibonacci-sequence-works-well-for-estimating'
+    author: 'Mike Cohn'
 ---
 
 import Tldr from '../../../../components/blog/Tldr.astro';
@@ -26,11 +49,11 @@ import OpsVsInitiatives from '../../../../components/blog/methodology/OpsVsIniti
 
 <Tldr
   items={[
-    'Antes de tocar nada, el objetivo del cliente se baja a la <strong>cuenta de resultados</strong>: margen, CAC, valor del cliente. De ahí sale el <strong>valor de cada sesión orgánica</strong>.',
-    'Cuatro objetivos posibles: <strong>crecer, recuperar, prevenir o aparecer</strong> en la IA.',
-    'Del objetivo anual a <strong>tareas de una semana</strong>. Cada iniciativa tiene su métrica, y cada semana se revisa el tablero.',
-    'El tráfico se vigila cada día, pero el avance de cada iniciativa se mide con <strong>métricas adelantadas</strong>: desplegado, rastreado, indexado.',
-    'Lo operativo se registra y se <strong>automatiza</strong>, para que la capacidad del equipo vaya a lo que mueve el negocio.',
+    'El objetivo del cliente se baja a la <strong>cuenta de resultados</strong> (margen, CAC, valor del cliente) y de ahí sale el <strong>valor de cada sesión orgánica</strong>.',
+    'Una <strong>tabla por page type</strong> cruza SEO y dinero. El problema principal es el paso donde se atasca más valor; ojo con separar rastreo de calidad.',
+    'El problema se convierte en un objetivo del quarter con <strong>KR en absoluto</strong>, del punto de partida a la meta, y en iniciativas con tareas de una semana.',
+    'El tráfico se vigila <strong>cada día</strong> como KPI de control; el impacto de cada iniciativa se juzga en su <strong>ventana de tiempo</strong>.',
+    'Sprints semanales con un <strong>Kanban ligero</strong>, las tareas de <strong>todos los equipos</strong> en el mismo tablero y lo operativo, automatizado.',
   ]}
 />
 
@@ -109,7 +132,7 @@ Cuatro detalles que marcan la diferencia al montarla:
 
 Con la tabla delante, recorro cada page type por los pasos que hay entre una URL y el dinero: rastreo, indexación, posiciones, clics y conversión. El problema principal es el paso donde se queda atascado el valor más grande. A menudo no coincide con el error más visible de la auditoría.
 
-Ojo con "no indexada", porque esconde dos problemas con soluciones opuestas. Search Console los separa:
+Ojo con "no indexada", porque esconde dos problemas con soluciones opuestas. El [informe de indexación de Search Console](https://support.google.com/webmasters/answer/7440203) los separa:
 
 - **"Descubierta: actualmente sin indexar".** Google conoce la URL pero no la ha rastreado. Suele ser un problema de rastreo: no llega, no le da prioridad o se gasta las visitas en otras URLs.
 - **"Rastreada: actualmente sin indexar".** Google la ha visitado y ha decidido no indexarla. Ahí el problema suele ser de calidad: contenido pobre, duplicado o páginas demasiado parecidas entre sí.
@@ -126,7 +149,7 @@ Siguiendo con el ejemplo, las 28.300 fichas sin indexar se reparten así: unas 1
 | Categorías | **Posiciones** | Indexadas y con valor alto, pero entre la posición 4 y la 10 en sus consultas principales | Contenido y enlazado interno, después de lo anterior |
 | Blog | **Conversión** | Mucho tráfico, valor por sesión de 0,05 € | Enlazar a categorías; no ampliar el blog este quarter |
 
-En las 19.800 fichas sin rastrear, los filtros y las fichas son el mismo problema visto desde dos lados: el rastreo que se va a los filtros es el que les falta a las fichas. Ese es el problema principal, porque es el bloque más grande y bloquea lo demás. Las 8.500 rastreadas y sin indexar son otro problema, de calidad, y liberar rastreo no las va a meter en el índice.
+En las 19.800 fichas sin rastrear, los filtros y las fichas son el mismo problema visto desde dos lados: el rastreo que se va a los filtros es el que les falta a las fichas. Ese es el problema principal, porque es el bloque más grande y bloquea lo demás. Las 8.500 rastreadas y sin indexar son otro problema, de [calidad](/blog/quality-google-core-updates/), y liberar rastreo no las va a meter en el índice. Google también documenta cómo [gestionar el rastreo de la navegación por filtros](https://developers.google.com/search/docs/crawling-indexing/crawling-managing-faceted-navigation).
 
 Para decidir el orden pongo un número a cada problema. Si las fichas pasaran del 41 % al 80 % de indexación (unas 18.700 más, que pueden salir de las 19.800 sin rastrear) y las nuevas rindieran como las que ya están, serían unos 49.500 clics más al mes, unos 34.600 € al mes con su valor por sesión. Las URLs que entran tarde suelen ser las más flojas, así que lo divido entre dos: unos 17.000 € al mes en juego. Con ese número en la mano, la conversación con el equipo de desarrollo sobre los filtros es muy distinta.
 
@@ -157,14 +180,14 @@ En el ejemplo, el problema principal eran las fichas sin indexar, y los 17.000 �
 
 <MethodLevels />
 
-El blog, que en el diagnóstico salía como problema de conversión, entra como una tarea de enlazado y no como iniciativa propia: este quarter no es la prioridad. Las 8.500 fichas con problema de calidad van al quarter siguiente como una iniciativa aparte, con su propia métrica. Y las tareas no salen solo del plan. Entran por tres vías: **la auditoría** (lo que sale de revisar los KPIs), **los stakeholders** (peticiones de producto, contenido o negocio) y **las alertas** (algo se ha roto). Las tres van al mismo backlog y compiten por la misma capacidad.
+El blog, que en el diagnóstico salía como problema de conversión, entra como una tarea de enlazado y no como iniciativa propia: este quarter no es la prioridad. Las 8.500 fichas con problema de calidad van al quarter siguiente como una iniciativa aparte, con su propia métrica. Y fíjate en que el noindex va a los filtros sueltos sin demanda y el bloqueo en robots.txt a las combinaciones de varios filtros: son URLs distintas a propósito, porque si Google no puede rastrear una URL [tampoco ve su noindex](https://developers.google.com/search/docs/crawling-indexing/block-indexing). Y las tareas no salen solo del plan. Entran por tres vías: **la auditoría** (lo que sale de revisar los KPIs), **los stakeholders** (peticiones de producto, contenido o negocio) y **las alertas** (algo se ha roto). Las tres van al mismo backlog y compiten por la misma capacidad.
 
 ## 5. Métricas que se mueven esta semana y métricas que tardan meses
 
 Antes de definir las iniciativas, decido qué voy a mirar durante el quarter:
 
 - **KPIs de control.** Métricas que tienen que seguir sanas mientras trabajamos en otra cosa: el tráfico, que se vigila cada día, la indexación y los errores.
-- **OKRs.** El objetivo del quarter y sus resultados clave (KR): lo que tiene que haber cambiado al cerrar el quarter.
+- **OKRs.** El objetivo del quarter y sus resultados clave (KR): lo que tiene que haber cambiado al cerrar el quarter. Google explica bien el formato en su [guía de OKRs](https://rework.withgoogle.com/guides/set-goals-with-okrs/steps/introduction/).
 
 Los KR los escribo siempre en absoluto, del punto de partida al objetivo: "fichas indexadas, de 19.700 a 38.400". **Hay dos formas habituales de escribirlos que yo no uso:**
 
@@ -175,7 +198,7 @@ Y hay que contar con el retraso: la acción de SEO se hace un día y el impacto 
 
 Los KPIs de control dependen de dónde se te puede romper el negocio. En [word.tips](/casos/word-tips-2-millones-visitas/), con picos de 2 millones de visitas al día, un error en una plantilla llegaba a cientos de miles de URLs en horas, así que el KPI de control era el rendimiento por plantilla. En una web pequeña con pocas páginas que facturan, basta con vigilar esas páginas una a una.
 
-Aquí está la primera diferencia con un equipo de producto. Si cambias un botón, al día siguiente sabes si convierte mejor. Si cambias una plantilla, Google tiene que rastrearla, indexarla y volver a valorarla, y cada paso tiene su plazo:
+Aquí está la primera diferencia con un equipo de producto. Si cambias un botón, al día siguiente sabes si convierte mejor. Si cambias una plantilla, Google tiene que rastrearla, indexarla y volver a valorarla, y cada paso tiene su plazo. Los de Google son los que enseñó en Barcelona y que cuento en el [post sobre quality y core updates](/blog/quality-google-core-updates/):
 
 <MetricLadder />
 
@@ -192,7 +215,7 @@ Cada iniciativa tiene su propia métrica, ligada a esos KPIs u OKRs. Si una inic
 
 > **Una aclaración antes de seguir.** Lo que cuento a partir de aquí son generalizaciones: cómo trabajo por defecto. Hay casos en los que hago justo lo contrario. Léelo como un punto de partida y no como una norma: cada web y cada negocio es un mundo, y la metodología se adapta a lo que necesita cada uno.
 
-Las tareas se reparten por semanas y las gestiono en un tablero con cuatro columnas: "Por hacer", "En curso", "En espera" y "Hecho". Lo llamo ligero porque tiene pocas reglas: las justas para que el trabajo avance y todo el equipo vea en qué estado está cada tarea. Si en un proyecto alguna regla nos frena en vez de ayudar, la cambiamos.
+Las tareas se reparten por semanas y las gestiono con [Kanban](https://prokanban.org/the-kanban-guide/), en un tablero con cuatro columnas: "Por hacer", "En curso", "En espera" y "Hecho". Lo llamo ligero porque tiene pocas reglas: las justas para que el trabajo avance y todo el equipo vea en qué estado está cada tarea. Si en un proyecto alguna regla nos frena en vez de ayudar, la cambiamos.
 
 Este es el plan de las fichas semana a semana. Muévete entre semanas para ver cómo avanza el tablero, y cambia a la vista Gantt para comparar lo planificado con lo real:
 
@@ -203,7 +226,7 @@ Las reglas por defecto:
 - **Se termina lo empezado antes de empezar algo nuevo.** El tablero se consume de derecha a izquierda.
 - **"En espera" es solo para bloqueos externos.** Algo que depende de otro equipo, de un proveedor o de un acceso.
 - **Tareas pequeñas.** Un solo responsable por tarea; si hay dos, son dos tareas. Y que quepa en una semana; si no, se parte por entregables.
-- **Dos tareas en curso por persona como máximo.** Con más trabajo abierto a la vez, cada tarea tarda más en salir; es la ley de Little aplicada a un tablero. Con la IA cuesta más cumplirla: con varios agentes trabajando en paralelo es muy fácil abrir cinco frentes a la vez. Pero revisar y decidir sigue siendo trabajo de una persona, y el foco se pierde igual.
+- **Dos tareas en curso por persona como máximo.** Con más trabajo abierto a la vez, cada tarea tarda más en salir; es la [ley de Little](https://doi.org/10.1287/opre.9.3.383) aplicada a un tablero: el tiempo medio que tarda una tarea es el trabajo en curso dividido entre lo que el equipo termina por semana. Con la IA cuesta más cumplirla: con varios agentes trabajando en paralelo es muy fácil abrir cinco frentes a la vez. Pero revisar y decidir sigue siendo trabajo de una persona, y el foco se pierde igual.
 - **Las peticiones externas van al backlog.** Se priorizan en la planificación de la semana siguiente. La excepción son los fuegos: si algo se rompe, va primero.
 
 Uso sprints de una semana, cuando muchas guías de SEO ágil proponen dos. Con una semana, el plan se corrige cuatro veces al mes, y como lo que miro cada semana son las métricas rápidas de la escalera, siempre hay algo que revisar.
@@ -214,7 +237,7 @@ Para no llenar una semana de más, calculo la capacidad de cada persona con una 
 
 <CapacityCalculator />
 
-La fórmula sirve para no sobrecargar el sprint. No controlo las horas de nadie; me importa que salgan los objetivos. Por eso tampoco uso story points con escala de Fibonacci: con horas aproximadas, cualquiera del equipo entiende al momento si la semana cabe.
+La fórmula sirve para no sobrecargar el sprint. No controlo las horas de nadie; me importa que salgan los objetivos. Por eso tampoco uso [story points con escala de Fibonacci](https://www.mountaingoatsoftware.com/blog/why-the-fibonacci-sequence-works-well-for-estimating): con horas aproximadas, cualquiera del equipo entiende al momento si la semana cabe.
 
 ## 7. Lo operativo se registra y se automatiza
 
@@ -273,7 +296,7 @@ Para las alertas y las automatizaciones no hay una herramienta que valga para to
 La estructura es la misma; cambian el objetivo y el ritmo:
 
 - **[Auditoría](/servicios/auditoria-seo/).** Es la parte 1 a 3 de este post en un proyecto cerrado: objetivo, datos y problema principal, con un plan priorizado al final. El plan ya sale en formato de iniciativas y tareas.
-- **[Recuperar tráfico tras un core update](/servicios/recuperar-trafico/).** El objetivo es recuperar y el horizonte, de 3 a 6 meses. El tráfico se vigila cada día; la recuperación se juzga contra los KR del quarter.
+- **[Recuperar tráfico tras un core update](/servicios/recuperar-trafico/).** El objetivo es recuperar y el horizonte, de [3 a 6 meses](/blog/quality-google-core-updates/). El tráfico se vigila cada día; la recuperación se juzga contra los KR del quarter.
 - **[Migración](/servicios/migraciones-seo/).** El objetivo es prevenir. Las tareas se concentran antes del lanzamiento y las semanas siguientes son casi todo seguimiento y alertas.
 - **[Consultoría mensual](/servicios/consultoria-seo-tecnica/).** Todo el ciclo, con la revisión semanal junto a tu equipo.
 

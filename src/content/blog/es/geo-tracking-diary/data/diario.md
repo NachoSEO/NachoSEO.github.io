@@ -122,6 +122,25 @@ Ejemplo literal. Prompt: "Compara a los consultores SEO independientes más cono
 - **Comprobado y bien**: el robots.txt permite todos los bots de IA (GPTBot, OAI-SearchBot, ChatGPT-User, PerplexityBot, ClaudeBot…), las peticiones con esos user agents devuelven 200 y el schema Person tiene sameAs (LinkedIn, X, GitHub, Speaker Deck). Pendiente: comprobar la indexación en Bing (Webmaster Tools, IndexNow), porque la búsqueda de ChatGPT se apoya en parte en Bing.
 - **Fase externa (después de la web)**: LinkedIn (sale en los fan-outs `site:linkedin.com/in`), entrar en las listas de "mejores consultores SEO de España" que el modelo usa para elegir nombres, perfiles en Malt (malt.es sale citado), que BigSEO y Webpositer me nombren como profesor, ponencias, podcasts y medios del sector, y que los autores invitados compartan la guía.
 
+## Día 2 · 2026-10-08 · Primeros cambios publicados (en plena línea base)
+
+Publicados en nachomascort.com, sin nada de la fase 1 de arquitectura, que sigue en local:
+
+- **08:00 UTC (commit fff96d9) · Menciones y docencia en texto**
+  - Sobre mí, en "Podcasts, medios y artículos", cuatro menciones nuevas:
+    - Search Engine Roundtable (5 oct 2026): Barry Schwartz incrusta mi tuit sobre la skill de auditoría de quality.
+    - Search Engine Journal (2019, dos artículos de Hamlet Batista): uno cita mi herramienta de content parity, el otro me pone entre los SEO a seguir para Python.
+    - LearningSEO.io de Aleyda Solís: recomienda mi guía de Node.js ("Finding SEO opportunities through rising trends") en la parte de automatizar tareas.
+  - Docencia: Máster de SEO Técnico de Asdrubal SEO (clase de migraciones), en Sobre mí, la home y el servicio de formación. En BigSEO ya constaba que doy migraciones y logs.
+- **08:06 UTC (commit b2794eb) · Logos en la home**
+  - "He dado clase en": Asdrubal.
+  - "Me han mencionado": Search Engine Roundtable, Search Engine Journal y LearningSEO.io, cada uno enlazado a la pieza que me menciona.
+
+Para el análisis:
+- Es un cambio dentro de la línea base (2026-10-05 → 2026-10-19), así que la base ya no es del todo "sin tocar nada". Afecta sobre todo a la verificación `site: … casos clientes trayectoria`, porque añade trayectoria y menciones en texto en Sobre mí. No añade páginas ni cambia títulos.
+- Ninguna de las menciones es nueva para el modelo: ya existían fuera. Lo que cambia es que ahora están en mi web, que es donde ChatGPT verifica a los candidatos.
+- Hallazgo: tenía menciones en medios de referencia (SER, SEJ, LearningSEO) que no aparecían en la web. Antes de buscar menciones nuevas, conviene inventariar las que ya existen.
+
 ## Referencias para el post
 - Wil Reynolds, Seer Interactive. Re-imagining AI visibility KPIs in a query fan-out world. https://www.seerinteractive.com/insights/ai-visibility-kpis (hardwired, anti-recomendación, KPIs de credibilidad).
 - Dan Petrovic, DEJAN. Why we don't do prompt tracking. https://dejan.ai/blog/prompt-tracking (medir por entidades canónicas con una sonda fija y muchas muestras; es el método del geo-tracker).

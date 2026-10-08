@@ -5,36 +5,72 @@
  */
 interface Props {
   title: string;
+  lang?: 'es' | 'en';
 }
 
-const { title } = Astro.props;
+const { title, lang = 'es' } = Astro.props;
+const en = lang === 'en';
 const t = title.toLowerCase();
 
+// Los títulos de los entregables se escriben en cada idioma: la detección vale para los dos
 const kind = (() => {
   if (/fan-out/.test(t)) return 'fanout';
-  if (/medición de partida/.test(t)) return 'presence';
-  if (/fuentes|menciones/.test(t)) return 'sources';
-  if (/hreflang|estructura internacional/.test(t)) return 'hreflang';
-  if (/demanda por mercado|expansión/.test(t)) return 'markets';
-  if (/inventario|mapa de redirecciones/.test(t)) return 'redirects';
-  if (/rastreo e indexación/.test(t)) return 'crawl';
+  if (/medición de partida|baseline measurement/.test(t)) return 'presence';
+  if (/fuentes|menciones|sources?|mentions/.test(t)) return 'sources';
+  if (/hreflang|estructura internacional|international structure/.test(t)) return 'hreflang';
+  if (/demanda por mercado|expansión|demand by market|expansion/.test(t)) return 'markets';
+  if (/inventario|mapa de redirecciones|inventory|redirect map/.test(t)) return 'redirects';
+  if (/rastreo e indexación|crawling and indexing/.test(t)) return 'crawl';
   if (/quality|calidad/.test(t)) return 'scores';
-  if (/hoja de ruta|plan/.test(t)) return 'roadmap';
+  if (/hoja de ruta|plan|roadmap/.test(t)) return 'roadmap';
   if (/staging/.test(t)) return 'staging';
-  if (/lanzamiento/.test(t)) return 'launch';
-  if (/revisión de cambios/.test(t)) return 'ticket';
-  if (/medición|seguimiento/.test(t)) return 'metrics';
-  if (/método|documentado/.test(t)) return 'doc';
-  if (/sesión/.test(t)) return 'session';
-  if (/page type|diagnóstico|auditoría|caída/.test(t)) return 'table';
+  if (/lanzamiento|^(supported )?launch/.test(t)) return 'launch';
+  if (/revisión de cambios|review of changes/.test(t)) return 'ticket';
+  if (/medición|seguimiento|measurement|monitoring/.test(t)) return 'metrics';
+  if (/método|documentado|method|documented/.test(t)) return 'doc';
+  if (/sesión|session/.test(t)) return 'session';
+  if (/page type|diagnóstico|auditoría|caída|diagnosis|audit|drop/.test(t)) return 'table';
   return 'checklist';
 })();
 
-const tableRows = [
-  { name: 'Categorías', width: 92, value: '72.200 €' },
-  { name: 'Fichas', width: 48, value: '36.400 €' },
-  { name: 'Blog', width: 6, value: '3.050 €' },
-];
+const copy = en
+  ? {
+      table: [['Categories', 92, '€72,200'], ['Product pages', 48, '€36,400'], ['Blog', 6, '€3,050']],
+      crawl: ['Indexed', 'Discovered', 'Crawled'],
+      scores: ['Effort', 'Originality', 'Talent', 'Accuracy'],
+      ticket: ['SEO-142 · In review', 'Noindex on filters without demand', 'Canonical and meta robots', 'No block in robots.txt', 'Internal linking'],
+      staging: ['staging.example.com · review', 'Indexable, no inherited noindex', 'Canonicals to the new URLs', 'Content visible without JavaScript'],
+      launch: ['/old/sneakers', 'new URLs'],
+      presence: ['Answers that name you', '12%'],
+      metrics: ['Indexed', '28,100'],
+      doc: 'SEO QA process',
+      session: ['Team session · 60 min', 'Issues in order of impact', 'Who fixes each one', 'Questions answered'],
+      redirects: ['/old/sneakers', '/sneakers/', '/old/red-sneakers', '/sneakers/red/', '/old/offer-2019'],
+      hreflang: ['example.es', 'example.mx', 'example.com'],
+      markets: [['Spain', 88], ['Mexico', 64], ['Argentina', 31]],
+      fanout: ['"best seo consultants spain"', 'site:example.com case studies clients', '"[brand] reviews experience"'],
+      sources: [['Industry media', 74], ['Lists and rankings', 52], ['Profiles', 33]],
+      checklist: ['Case studies with data', 'Who you are and what you have done', 'Structured data'],
+    }
+  : {
+      table: [['Categorías', 92, '72.200 €'], ['Fichas', 48, '36.400 €'], ['Blog', 6, '3.050 €']],
+      crawl: ['Indexada', 'Descubierta', 'Rastreada'],
+      scores: ['Esfuerzo', 'Originalidad', 'Talento', 'Exactitud'],
+      ticket: ['SEO-142 · En revisión', 'Noindex en filtros sin demanda', 'Canonical y meta robots', 'Sin bloqueo en robots.txt', 'Enlazado interno'],
+      staging: ['staging.ejemplo.com · revisión', 'Indexable y sin noindex heredado', 'Canonicals a las URLs nuevas', 'Contenido visible sin JavaScript'],
+      launch: ['/old/zapatillas', 'URLs nuevas'],
+      presence: ['Respuestas que te nombran', '12 %'],
+      metrics: ['Indexadas', '28.100'],
+      doc: 'Proceso de QA de SEO',
+      session: ['Sesión con el equipo · 60 min', 'Problemas por orden de impacto', 'Quién arregla cada uno', 'Dudas resueltas'],
+      redirects: ['/old/zapatillas', '/zapatillas/', '/old/zapatillas-rojas', '/zapatillas/rojas/', '/old/oferta-2019'],
+      hreflang: ['ejemplo.es', 'ejemplo.mx', 'ejemplo.com'],
+      markets: [['España', 88], ['México', 64], ['Argentina', 31]],
+      fanout: ['"mejores consultores seo españa"', 'site:ejemplo.com casos clientes', '"[marca] opiniones experiencia"'],
+      sources: [['Medios del sector', 74], ['Listas y rankings', 52], ['Perfiles', 33]],
+      checklist: ['Casos con datos', 'Quién eres y qué has hecho', 'Datos estructurados'],
+    };
+const tableRows = copy.table.map(([name, width, value]) => ({ name, width, value }));
 ---
 
 <div class="dp" aria-hidden="true">
@@ -56,16 +92,21 @@ const tableRows = [
     {
       kind === 'crawl' && (
         <div class="dp-stack">
-          <span class="dp-seg ok" style="flex: 41">Indexada</span>
-          <span class="dp-seg crawl" style="flex: 41">Descubierta</span>
-          <span class="dp-seg bad" style="flex: 18">Rastreada</span>
+          <span class="dp-seg ok" style="flex: 41">{copy.crawl[0]}</span>
+          <span class="dp-seg crawl" style="flex: 41">{copy.crawl[1]}</span>
+          <span class="dp-seg bad" style="flex: 18">{copy.crawl[2]}</span>
         </div>
       )
     }
     {
       kind === 'scores' && (
         <div class="dp-rows">
-          {[['Esfuerzo', 3], ['Originalidad', 2], ['Talento', 3], ['Exactitud', 4]].map(([name, score]) => (
+          {[
+            [copy.scores[0], 3],
+            [copy.scores[1], 2],
+            [copy.scores[2], 3],
+            [copy.scores[3], 4],
+          ].map(([name, score]) => (
             <div class="dp-row">
               <span>{name}</span>
               <span class="dp-dots">{[1, 2, 3, 4].map((dot) => <i class:list={[dot <= Number(score) && 'on']} />)}</span>
@@ -92,30 +133,30 @@ const tableRows = [
     {
       kind === 'ticket' && (
         <div class="dp-ticket">
-          <p class="dp-mono">SEO-142 · En revisión</p>
-          <p class="dp-strong">Noindex en filtros sin demanda</p>
-          <p class="dp-check on">Canonical y meta robots</p>
-          <p class="dp-check on">Sin bloqueo en robots.txt</p>
-          <p class="dp-check">Enlazado interno</p>
+          <p class="dp-mono">{copy.ticket[0]}</p>
+          <p class="dp-strong">{copy.ticket[1]}</p>
+          <p class="dp-check on">{copy.ticket[2]}</p>
+          <p class="dp-check on">{copy.ticket[3]}</p>
+          <p class="dp-check">{copy.ticket[4]}</p>
         </div>
       )
     }
     {
       kind === 'staging' && (
         <div class="dp-session">
-          <p class="dp-mono">staging.ejemplo.com · revisión</p>
-          <p class="dp-check on">Indexable y sin noindex heredado</p>
-          <p class="dp-check on">Canonicals a las URLs nuevas</p>
-          <p class="dp-check">Contenido visible sin JavaScript</p>
+          <p class="dp-mono">{copy.staging[0]}</p>
+          <p class="dp-check on">{copy.staging[1]}</p>
+          <p class="dp-check on">{copy.staging[2]}</p>
+          <p class="dp-check">{copy.staging[3]}</p>
         </div>
       )
     }
     {
       kind === 'launch' && (
         <div class="dp-redirects dp-mono">
-          <p><span>/old/zapatillas</span> → 301 ✓</p>
+          <p><span>{copy.launch[0]}</span> → 301 ✓</p>
           <p><span>robots.txt</span> → 200 ✓</p>
-          <p><span>sitemap.xml</span> → URLs nuevas ✓</p>
+          <p><span>sitemap.xml</span> → {copy.launch[1]} ✓</p>
         </div>
       )
     }
@@ -123,8 +164,8 @@ const tableRows = [
       kind === 'presence' && (
         <div class="dp-metrics">
           <div>
-            <p class="dp-mono">Respuestas que te nombran</p>
-            <p class="dp-big">12 %</p>
+            <p class="dp-mono">{copy.presence[0]}</p>
+            <p class="dp-big">{copy.presence[1]}</p>
           </div>
           <svg viewBox="0 0 100 36" class="dp-spark">
             <polyline points="0,30 20,31 35,28 50,29 65,24 80,22 100,17" />
@@ -136,8 +177,8 @@ const tableRows = [
       kind === 'metrics' && (
         <div class="dp-metrics">
           <div>
-            <p class="dp-mono">Indexadas</p>
-            <p class="dp-big">28.100</p>
+            <p class="dp-mono">{copy.metrics[0]}</p>
+            <p class="dp-big">{copy.metrics[1]}</p>
           </div>
           <svg viewBox="0 0 100 36" class="dp-spark">
             <polyline points="0,32 20,31 35,30 50,26 65,18 80,11 100,4" />
@@ -148,7 +189,7 @@ const tableRows = [
     {
       kind === 'doc' && (
         <div class="dp-doc">
-          <p class="dp-strong">Proceso de QA de SEO</p>
+          <p class="dp-strong">{copy.doc}</p>
           <span style="width: 90%" />
           <span style="width: 75%" />
           <span style="width: 82%" />
@@ -159,35 +200,35 @@ const tableRows = [
     {
       kind === 'session' && (
         <div class="dp-session">
-          <p class="dp-mono">Sesión con el equipo · 60 min</p>
-          <p class="dp-check on">Problemas por orden de impacto</p>
-          <p class="dp-check on">Quién arregla cada uno</p>
-          <p class="dp-check on">Dudas resueltas</p>
+          <p class="dp-mono">{copy.session[0]}</p>
+          <p class="dp-check on">{copy.session[1]}</p>
+          <p class="dp-check on">{copy.session[2]}</p>
+          <p class="dp-check on">{copy.session[3]}</p>
         </div>
       )
     }
     {
       kind === 'redirects' && (
         <div class="dp-redirects dp-mono">
-          <p><span>/old/zapatillas</span> → /zapatillas/</p>
-          <p><span>/old/zapatillas-rojas</span> → /zapatillas/rojas/</p>
-          <p><span>/old/oferta-2019</span> → 410</p>
+          <p><span>{copy.redirects[0]}</span> → {copy.redirects[1]}</p>
+          <p><span>{copy.redirects[2]}</span> → {copy.redirects[3]}</p>
+          <p><span>{copy.redirects[4]}</span> → 410</p>
         </div>
       )
     }
     {
       kind === 'hreflang' && (
         <div class="dp-redirects dp-mono">
-          <p>hreflang="es-ES" → ejemplo.es</p>
-          <p>hreflang="es-MX" → ejemplo.mx</p>
-          <p>hreflang="x-default" → ejemplo.com</p>
+          <p>hreflang="es-ES" → {copy.hreflang[0]}</p>
+          <p>hreflang="es-MX" → {copy.hreflang[1]}</p>
+          <p>hreflang="x-default" → {copy.hreflang[2]}</p>
         </div>
       )
     }
     {
       kind === 'markets' && (
         <div class="dp-rows">
-          {[['España', 88], ['México', 64], ['Argentina', 31]].map(([name, width]) => (
+          {copy.markets.map(([name, width]) => (
             <div class="dp-row">
               <span>{name}</span>
               <span class="dp-track"><span style={`width: ${width}%`} /></span>
@@ -199,16 +240,14 @@ const tableRows = [
     {
       kind === 'fanout' && (
         <div class="dp-redirects dp-mono">
-          <p>"mejores consultores seo españa"</p>
-          <p>site:ejemplo.com casos clientes</p>
-          <p>"[marca] opiniones experiencia"</p>
+          {copy.fanout.map((query) => <p>{query}</p>)}
         </div>
       )
     }
     {
       kind === 'sources' && (
         <div class="dp-rows">
-          {[['Medios del sector', 74], ['Listas y rankings', 52], ['Perfiles', 33]].map(([name, width]) => (
+          {copy.sources.map(([name, width]) => (
             <div class="dp-row">
               <span>{name}</span>
               <span class="dp-track"><span style={`width: ${width}%`} /></span>
@@ -220,9 +259,9 @@ const tableRows = [
     {
       kind === 'checklist' && (
         <div class="dp-session">
-          <p class="dp-check on">Casos con datos</p>
-          <p class="dp-check on">Quién eres y qué has hecho</p>
-          <p class="dp-check">Datos estructurados</p>
+          <p class="dp-check on">{copy.checklist[0]}</p>
+          <p class="dp-check on">{copy.checklist[1]}</p>
+          <p class="dp-check">{copy.checklist[2]}</p>
         </div>
       )
     }

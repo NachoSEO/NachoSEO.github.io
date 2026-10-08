@@ -35,7 +35,7 @@ const quoteUrl = `${localizedRoute('quote', lang)}${briefService ? `?${es ? 'ser
     {
       deliverables.map((deliverable, index) => (
         <li class:list={['card flex flex-col gap-4', deliverables.length % 3 === 2 && index === 0 && 'lg:col-span-2']}>
-          <DeliverablePreview title={deliverable.title} />
+          <DeliverablePreview title={deliverable.title} lang={lang} />
           <div>
             <h3 class="font-semibold">{deliverable.title}</h3>
             <p class="mt-1.5 text-[0.95rem] text-muted">{deliverable.detail}</p>
@@ -68,7 +68,7 @@ const quoteUrl = `${localizedRoute('quote', lang)}${briefService ? `?${es ? 'ser
     <div class="flex flex-wrap items-center gap-3 md:justify-end">
       <a href={site.calUrl} data-umami-event="call-booking-click" data-umami-event-placement="service-offer" class="btn">{t('cta.call30')}</a>
       <a href={quoteUrl} data-umami-event="quote-click" data-umami-event-placement="service-offer" class="btn btn--ghost">{es ? 'Pide presupuesto' : 'Get a quote'}</a>
-      {es && <a href="/servicios/precios/" class="w-full text-sm text-on-dark-muted underline decoration-accent-on-dark underline-offset-4 hover:text-on-dark md:text-right">Cuánto cuesta y cómo calculo el precio</a>}
+      <a href={es ? '/servicios/precios/' : '/en/services/pricing/'} class="w-full text-sm text-on-dark-muted underline decoration-accent-on-dark underline-offset-4 hover:text-on-dark md:text-right">{es ? 'Cuánto cuesta y cómo calculo el precio' : 'How much it costs and how I price it'}</a>
     </div>
   </div>
 </section>

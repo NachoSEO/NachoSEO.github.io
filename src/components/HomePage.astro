@@ -21,8 +21,8 @@ const t = useTranslations(lang);
 
 const byOrder = <T extends { data: { order: number } }>(a: T, b: T) => a.data.order - b.data.order;
 const allServices = (await getCollection('services', (entry) => entry.data.lang === lang)).sort(byOrder);
-// En español la home enseña solo los servicios de SEO técnico y GEO (order < 7); growth, IA y formación van en /servicios/
-const services = lang === 'es' ? allServices.filter((service) => service.data.order < 7) : allServices;
+// La home enseña solo los servicios de SEO técnico y GEO (order < 7); growth, IA y formación van en la página de servicios
+const services = allServices.filter((service) => service.data.order < 7);
 
 // Si aún no hay artículos en el idioma de la página, se muestran los del otro idioma.
 // El archivo de SEO Hacks (2015–2017) no cuenta como "lo último".
@@ -118,8 +118,10 @@ const copy =
           },
         ],
         servicesLabel: 'Services',
-        servicesTitle: 'Four ways to work with me',
+        servicesTitle: 'The problems I can help with',
         servicesIntro: "You work with me directly, with no juniors or subcontractors. And if another option suits you better, I'll tell you on the first call.",
+        otherServices: { text: 'I also do growth, AI systems and training', href: '/en/services/#other' },
+        pricing: { text: 'How much it costs and how I price it', href: '/en/services/pricing/' },
         serviceLink: 'See the service',
         talksLabel: 'Teaching and talks',
         talksTitle: 'Over ten years teaching what I do',

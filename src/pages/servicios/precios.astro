@@ -7,7 +7,7 @@ import Base from '../../layouts/Base.astro';
 import BriefForm from '../../components/BriefForm.astro';
 import FaqAccordion from '../../components/service/FaqAccordion.astro';
 import SectionLabel from '../../components/SectionLabel.astro';
-import { pricingPage } from '../../data/pricing';
+import { pricingPage, pricingPageEn } from '../../data/pricing';
 ---
 
 <Base
@@ -15,6 +15,7 @@ import { pricingPage } from '../../data/pricing';
   title={`${pricingPage.title} — Nacho Mascort`}
   description={pricingPage.description}
   path={pricingPage.path}
+  alternatePath={pricingPageEn.path}
   breadcrumbs={[
     { name: 'Inicio', path: '/' },
     { name: 'Servicios', path: '/servicios/' },

@@ -6,7 +6,7 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { media, mediaTypeLabels, talks, teaching } from '../data/appearances';
 import { caseBrands } from '../data/case-brands';
-import { pricingPage } from '../data/pricing';
+import { pricingPages } from '../data/pricing';
 import { aboutPage, bio, projects, timeline } from '../data/profile';
 import { localizedRoute, formatDate } from '../i18n/utils';
 import type { Lang } from '../i18n/ui';
@@ -174,10 +174,10 @@ async function buildAgentDocs(): Promise<AgentDoc[]> {
     });
 
     // Servicios
-    const servicesTitle = es ? 'Consultoría SEO técnica' : 'Growth, AI and SEO services';
+    const servicesTitle = es ? 'Consultoría SEO técnica' : 'Technical SEO and GEO services';
     const servicesSummary = es
       ? 'Consultoría SEO técnica, auditoría, migraciones, SEO internacional, recuperar tráfico tras un core update y GEO. También growth, sistemas de IA y formación.'
-      : 'SEO and GEO consulting, fractional Head of Growth, AI systems and training.';
+      : 'Technical SEO consulting, audits, migrations, international SEO, core update recovery and GEO. Also fractional growth, AI systems and training.';
     docs.push({
       path: servicesBase,
       mdPath: mdPathFor(servicesBase),
@@ -187,25 +187,24 @@ async function buildAgentDocs(): Promise<AgentDoc[]> {
       markdown: [frontmatter({ title: servicesTitle, path: servicesBase, lang, summary: servicesSummary }), serviceLines.join('\n'), booking(lang)].join('\n\n'),
     });
 
-    if (es) {
-      docs.push({
-        path: pricingPage.path,
-        mdPath: mdPathFor(pricingPage.path),
-        lang,
-        title: pricingPage.title,
-        summary: pricingPage.description,
-        markdown: [
-          frontmatter({ title: pricingPage.title, path: pricingPage.path, lang, summary: pricingPage.description }),
-          pricingPage.lede,
-          `## Cómo trabajo y cuánto dura cada proyecto\n\n${pricingPage.formats.map((format) => `- **[${format.name}](${abs(format.href)})** (${format.duration}): ${format.detail}`).join('\n')}`,
-          `## Qué sube y qué baja el precio\n\n${pricingPage.drivers.map((driver) => `- **${driver.title}**: ${driver.detail}`).join('\n')}`,
-          `## Qué pedir a cualquier presupuesto SEO\n\n${pricingPage.checklist.map((item) => `- ${item}`).join('\n')}\n\nSeñales para desconfiar:\n\n${pricingPage.redFlags.map((item) => `- ${item}`).join('\n')}`,
-          `## FAQ\n\n${pricingPage.faq.map((item) => `### ${item.question}\n\n${item.answer}`).join('\n\n')}`,
-          `Formulario de presupuesto: ${abs(`${pricingPage.path}#presupuesto`)}`,
-          booking(lang),
-        ].join('\n\n'),
-      });
-    }
+    const pricing = pricingPages[lang];
+    docs.push({
+      path: pricing.path,
+      mdPath: mdPathFor(pricing.path),
+      lang,
+      title: pricing.title,
+      summary: pricing.description,
+      markdown: [
+        frontmatter({ title: pricing.title, path: pricing.path, lang, summary: pricing.description }),
+        pricing.lede,
+        `## ${es ? 'Cómo trabajo y cuánto dura cada proyecto' : 'How I work and how long each project lasts'}\n\n${pricing.formats.map((format) => `- **[${format.name}](${abs(format.href)})** (${format.duration}): ${format.detail}`).join('\n')}`,
+        `## ${es ? 'Qué sube y qué baja el precio' : 'What pushes the price up or down'}\n\n${pricing.drivers.map((driver) => `- **${driver.title}**: ${driver.detail}`).join('\n')}`,
+        `## ${es ? 'Qué pedir a cualquier presupuesto SEO' : 'What to ask of any SEO quote'}\n\n${pricing.checklist.map((item) => `- ${item}`).join('\n')}\n\n${es ? 'Señales para desconfiar' : 'Red flags'}:\n\n${pricing.redFlags.map((item) => `- ${item}`).join('\n')}`,
+        `## FAQ\n\n${pricing.faq.map((item) => `### ${item.question}\n\n${item.answer}`).join('\n\n')}`,
+        `${es ? 'Formulario de presupuesto' : 'Quote form'}: ${abs(`${pricing.path}#presupuesto`)}`,
+        booking(lang),
+      ].join('\n\n'),
+    });
 
     for (const entry of langServices) {
       const { data } = entry;

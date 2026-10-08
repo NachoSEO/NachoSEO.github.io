@@ -18,6 +18,8 @@ export const legacyRedirects = {
   '/archives/': '/blog/',
   '/archives/2023/': '/blog/',
   '/archives/2023/01/': '/blog/',
+  // Fase 1 de la arquitectura (oct 2026): la consultoría SEO/GEO se dividió en servicios técnicos
+  '/servicios/consultoria-seo-geo/': '/servicios/consultoria-seo-tecnica/',
 };
 
 const redirectTargetsBySource = new Set(Object.keys(legacyRedirects));

@@ -1,0 +1,125 @@
+---
+/** Las 48.000 fichas del ejemplo, partidas por estado de indexación, con la acción que pide cada parte */
+const parts = [
+  { label: 'Indexadas', value: 19700, tone: 'ok', status: 'En el índice', action: 'Posicionarlas mejor' },
+  { label: 'Descubiertas, sin rastrear', value: 19800, tone: 'crawl', status: '"Descubierta: actualmente sin indexar"', action: 'Liberar rastreo y enlazarlas' },
+  { label: 'Rastreadas, sin indexar', value: 8500, tone: 'quality', status: '"Rastreada: actualmente sin indexar"', action: 'Arreglar la calidad' },
+];
+const total = parts.reduce((sum, part) => sum + part.value, 0);
+// En español, forzamos el punto de miles también en números de 4 cifras (8.500), como en el resto del post
+const format = (value: number) => value.toLocaleString('es-ES', { useGrouping: 'always' } as Intl.NumberFormatOptions);
+---
+
+<figure class="indexing-split not-prose my-10">
+  <p class="is-title">Las {format(total)} fichas de producto</p>
+  <div class="is-bar" role="img" aria-label={parts.map((part) => `${part.label}: ${format(part.value)}`).join('; ')}>
+    {parts.map((part) => <span class={`is-seg is-${part.tone}`} style={`flex: ${part.value}`}>{Math.round((part.value / total) * 100)} %</span>)}
+  </div>
+  <ul class="is-legend">
+    {
+      parts.map((part) => (
+        <li>
+          <i class={`is-${part.tone}`} aria-hidden="true" />
+          <span class="is-label">
+            <strong>{format(part.value)}</strong> {part.label.toLowerCase()}
+          </span>
+          <span class="is-status">{part.status}</span>
+          <span class="is-action">→ {part.action}</span>
+        </li>
+      ))
+    }
+  </ul>
+  <figcaption>Datos inventados del ejemplo. Las dos partes sin indexar parecen el mismo problema y piden acciones opuestas.</figcaption>
+</figure>
+
+<style>
+  @layer components {
+    figure.indexing-split ul {
+      list-style: none;
+      padding-left: 0;
+      margin-top: 0;
+    }
+    figure.indexing-split li + li {
+      margin-top: 0;
+    }
+    figure.indexing-split p {
+      margin-top: 0;
+    }
+  }
+  .indexing-split {
+    border: 1px solid var(--color-line);
+    border-radius: 0.875rem;
+    background: var(--color-raised);
+    padding: 0.9rem;
+    font-size: 0.82rem;
+    line-height: 1.4;
+  }
+  .is-title {
+    font-weight: 700;
+  }
+  .is-bar {
+    display: flex;
+    gap: 2px;
+    height: 1.9rem;
+    margin-top: 0.5rem;
+    overflow: hidden;
+    border-radius: 0.4rem;
+  }
+  .is-seg {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.5rem;
+    color: #fff;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 600;
+  }
+  .is-ok {
+    background: #2f6f4f;
+  }
+  .is-crawl {
+    background: var(--color-ink);
+  }
+  .is-quality {
+    background: var(--color-accent);
+  }
+  .is-legend {
+    display: grid;
+    gap: 0.35rem;
+    margin-top: 0.75rem;
+  }
+  .is-legend li {
+    display: grid;
+    grid-template-columns: 0.6rem minmax(9rem, 1fr) minmax(10rem, 1.3fr) minmax(9rem, 1fr);
+    align-items: baseline;
+    gap: 0.6rem;
+  }
+  .is-legend i {
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 0.15rem;
+  }
+  .is-status {
+    color: var(--color-muted);
+    font-size: 0.75rem;
+  }
+  .is-action {
+    font-weight: 600;
+    color: var(--color-accent-ink);
+  }
+  .indexing-split figcaption {
+    margin-top: 0.7rem;
+    color: var(--color-muted);
+    font-size: 0.78rem;
+  }
+  @media (max-width: 640px) {
+    .is-legend li {
+      grid-template-columns: 0.6rem 1fr;
+    }
+    .is-status,
+    .is-action {
+      grid-column: 2;
+    }
+  }
+</style>

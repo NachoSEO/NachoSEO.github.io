@@ -42,6 +42,8 @@ citations:
 import Tldr from '../../../../components/blog/Tldr.astro';
 import MethodFlow from '../../../../components/blog/methodology/MethodFlow.astro';
 import MethodLevels from '../../../../components/blog/methodology/MethodLevels.astro';
+import IndexingSplit from '../../../../components/blog/methodology/IndexingSplit.astro';
+import KrTracking from '../../../../components/blog/methodology/KrTracking.astro';
 import MetricLadder from '../../../../components/blog/methodology/MetricLadder.astro';
 import PlanExplorer from '../../../../components/blog/methodology/PlanExplorer.astro';
 import CapacityCalculator from '../../../../components/blog/methodology/CapacityCalculator.astro';
@@ -88,6 +90,8 @@ Cada modelo de negocio añade sus propias preguntas:
 Con esas respuestas calculo cuánto vale una sesión orgánica en cada page type:
 
 > Valor por sesión = tasa de conversión × ticket medio × margen bruto
+
+Puedes hacer la cuenta para tu web, con ventas, leads o publicidad, en la [calculadora del valor de una sesión orgánica](/herramientas/calculadora-valor-sesion-seo/).
 
 Con eso priorizo el plan: demanda que puedo captar por page type, multiplicada por el valor de cada sesión. A veces sale que el page type con más tráfico es el que menos dinero deja, y el que nadie miraba es el que paga el proyecto.
 
@@ -139,7 +143,11 @@ Ojo con "no indexada", porque esconde dos problemas con soluciones opuestas. El 
 
 Los logs lo confirman: si Googlebot visita la URL y aun así no entra en el índice, liberar rastreo no va a arreglar nada.
 
-Siguiendo con el ejemplo, las 28.300 fichas sin indexar se reparten así: unas 19.800 descubiertas y sin rastrear, y unas 8.500 rastreadas y sin indexar. En los logs, Googlebot dedica a los filtros muchas más visitas que a las fichas:
+Siguiendo con el ejemplo, las 28.300 fichas sin indexar se reparten así:
+
+<IndexingSplit />
+
+En los logs, además, Googlebot dedica a los filtros muchas más visitas que a las fichas:
 
 | Page type | Dónde se atasca | La prueba | Qué se hace primero |
 |---|---|---|---|
@@ -195,6 +203,10 @@ Los KR los escribo siempre en absoluto, del punto de partida al objetivo: "ficha
 - **En incremental** ("+17.000 € al mes"). Si antes hacías 50 y quieres llegar a 65, y la primera semana haces 10 más, no sabes qué parte es base y qué parte es incremental. Con el total, sabes desde la primera semana si vas en camino, y si hablamos de ingresos, puedes calcular qué deberían estar aportando las acciones de SEO.
 
 Y hay que contar con el retraso: la acción de SEO se hace un día y el impacto llega semanas después. El KR en absoluto y con su línea de partida permite ver cuándo empieza a moverse.
+
+Así se ve el KR1 del ejemplo semana a semana:
+
+<KrTracking />
 
 Los KPIs de control dependen de dónde se te puede romper el negocio. En [word.tips](/casos/word-tips-2-millones-visitas/), con picos de 2 millones de visitas al día, un error en una plantilla llegaba a cientos de miles de URLs en horas, así que el KPI de control era el rendimiento por plantilla. En una web pequeña con pocas páginas que facturan, basta con vigilar esas páginas una a una.
 

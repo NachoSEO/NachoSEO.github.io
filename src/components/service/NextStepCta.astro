@@ -8,9 +8,11 @@ interface Props {
   lang: Lang;
   /** Servicio que llega pre-marcado al formulario de presupuesto */
   briefService?: ServiceId;
+  /** Frase de disponibilidad del servicio (p. ej. máximo de clientes a la vez) */
+  availability?: string;
 }
 
-const { lang, briefService } = Astro.props;
+const { lang, briefService, availability } = Astro.props;
 const es = lang === 'es';
 const t = useTranslations(lang);
 
@@ -18,42 +20,88 @@ const quoteUrl = `${localizedRoute('quote', lang)}${briefService ? `?${es ? 'ser
 
 const steps = es
   ? [
-      'Una llamada de 30 minutos: me cuentas en qué punto estás y qué quieres conseguir.',
-      'En menos de 24 horas te digo si puedo ayudarte y por dónde empezaría.',
-      'Te mando una propuesta con alcance y plazos, o te digo con franqueza que no te hace falta.',
+      { title: 'Me cuentas tu caso', detail: 'Una llamada de 30 minutos sobre en qué punto estás y qué quieres conseguir.' },
+      { title: 'Te digo si puedo ayudarte', detail: 'En menos de 24 horas, con por dónde empezaría. Si no te hago falta, también te lo digo.' },
+      { title: 'Propuesta cerrada', detail: 'Alcance, plazos y precio por escrito, antes de empezar nada.' },
     ]
   : [
-      'A 30-minute call: tell me where you are and what you want to achieve.',
-      "Within 24h I tell you whether I can help and where I'd start.",
-      "A concrete proposal with scope and milestones, or I tell you that you don't need it.",
+      { title: 'You tell me about your case', detail: 'A 30-minute call about where you are and what you want to achieve.' },
+      { title: 'I tell you if I can help', detail: "Within 24 hours, with where I'd start. If you don't need me, I'll tell you that too." },
+      { title: 'A fixed proposal', detail: 'Scope, timeline and price in writing, before anything starts.' },
     ];
 ---
 
 <section class="mx-auto max-w-5xl px-5 pt-16 md:pt-24 sm:px-6">
-  <div class="border-t border-ink pt-10">
-    <h2 class="display-2">{es ? '¿Hablamos de tu caso?' : 'Want to talk about your case?'}</h2>
-    <p class="mt-4 text-muted">
-      {es ? 'Así funciona cuando reservas:' : 'This is exactly what happens when you book:'}
-    </p>
-
-    <ol class="mt-8 grid gap-x-8 gap-y-6 md:grid-cols-3">
-      {
-        steps.map((text, index) => (
-          <li class="border-t border-line pt-4">
-            <p class="meta text-accent-ink">{String(index + 1).padStart(2, '0')}</p>
-            <p class="mt-2 text-[0.95rem]">{text}</p>
-          </li>
-        ))
-      }
-    </ol>
-
-    <div class="mt-10 flex flex-wrap items-center gap-x-6 gap-y-3">
-      <a href={site.calUrl} data-umami-event="call-booking-click" data-umami-event-placement="service" class="btn">{t('cta.call30')}</a>
-      <a href={quoteUrl} data-umami-event="quote-click" data-umami-event-placement="service" class="btn btn--ghost">{es ? 'Pide presupuesto' : 'Get a quote'}</a>
-      <p class="text-sm text-muted">
-        {es ? 'O escríbeme a' : 'Or email me at'}
-        <a href={`mailto:${site.email}`} data-umami-event="email-click" data-umami-event-placement="service" class="text-ink underline decoration-accent underline-offset-4 hover:text-accent-ink">{site.email}</a>
-      </p>
+  <div class="next-step on-dark">
+    <div class="grid gap-8 md:grid-cols-[1.1fr_1fr] md:gap-12">
+      <div>
+        <p class="meta text-accent-on-dark">{es ? 'Siguiente paso' : 'Next step'}</p>
+        <h2 class="display-2 mt-3">{es ? '¿Hablamos de tu caso?' : 'Shall we talk about your case?'}</h2>
+        <p class="mt-4 max-w-[48ch] text-on-dark-muted">
+          {es ? 'Trabajas directamente conmigo desde la primera llamada.' : 'You work directly with me from the very first call.'}
+          {availability && <> {availability}</>}
+        </p>
+        <div class="mt-8 flex flex-wrap items-center gap-3">
+          <a href={site.calUrl} data-umami-event="call-booking-click" data-umami-event-placement="service" class="btn">{t('cta.call30')} →</a>
+          <a href={quoteUrl} data-umami-event="quote-click" data-umami-event-placement="service" class="btn btn--ghost">{es ? 'Pide presupuesto' : 'Get a quote'}</a>
+        </div>
+        <p class="mt-5 text-sm text-on-dark-muted">
+          {es ? 'O escríbeme a' : 'Or email me at'}{' '}
+          <a href={`mailto:${site.email}`} data-umami-event="email-click" data-umami-event-placement="service" class="text-on-dark underline decoration-accent-on-dark underline-offset-4">{site.email}</a>
+        </p>
+      </div>
+      <ol class="next-steps">
+        {
+          steps.map((step, index) => (
+            <li>
+              <span class="ns-n" aria-hidden="true">{index + 1}</span>
+              <span>
+                <span class="block font-semibold">{step.title}</span>
+                <span class="mt-1 block text-[0.92rem] text-on-dark-muted">{step.detail}</span>
+              </span>
+            </li>
+          ))
+        }
+      </ol>
     </div>
   </div>
 </section>
+
+<style>
+  .next-step {
+    border-radius: 1.5rem;
+    background: var(--color-dark);
+    color: var(--color-on-dark);
+    padding: 2rem 1.5rem;
+    box-shadow: 0 18px 40px -12px rgb(20 51 63 / 0.45);
+  }
+  @media (min-width: 768px) {
+    .next-step {
+      padding: 2.75rem 2.75rem;
+    }
+  }
+  .next-steps {
+    display: grid;
+    gap: 1.1rem;
+    align-content: center;
+  }
+  .next-steps li {
+    display: flex;
+    gap: 0.9rem;
+    border-top: 1px solid rgb(255 255 255 / 0.15);
+    padding-top: 1rem;
+  }
+  .ns-n {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 1.8rem;
+    height: 1.8rem;
+    border: 2px solid var(--color-accent-on-dark);
+    border-radius: 999px;
+    color: var(--color-accent-on-dark);
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    font-weight: 700;
+  }
+</style>

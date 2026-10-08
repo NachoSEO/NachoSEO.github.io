@@ -5,9 +5,11 @@ import type { Lang } from '../../i18n/ui';
 
 interface Props {
   lang: Lang;
+  /** Dentro de otra sección: sin sección propia ni título grande */
+  embedded?: boolean;
 }
 
-const { lang } = Astro.props;
+const { lang, embedded = false } = Astro.props;
 const es = lang === 'es';
 
 const levels = es
@@ -41,10 +43,18 @@ const levels = es
     ];
 ---
 
-<section class="mx-auto max-w-5xl px-5 pt-16 md:pt-24 sm:px-6">
-  <SectionLabel label={es ? 'Cuánto me meto' : 'How involved I get'} />
-  <h2 class="display-2 mt-3 max-w-[26ch]">{es ? 'De una consultoría guiada a trabajar dentro de tu equipo' : 'From guided consulting to working inside your team'}</h2>
-  <div class="engagement mt-10">
+<section class:list={[!embedded && 'mx-auto max-w-5xl px-5 pt-16 md:pt-24 sm:px-6', embedded && 'mt-10']}>
+  {
+    embedded ? (
+      <h4 class="font-semibold">{es ? 'En el acompañamiento, tú eliges cuánto me meto' : 'In ongoing work, you choose how involved I get'}</h4>
+    ) : (
+      <>
+        <SectionLabel label={es ? 'Cuánto me meto' : 'How involved I get'} />
+        <h2 class="display-2 mt-3 max-w-[26ch]">{es ? 'De una consultoría guiada a trabajar dentro de tu equipo' : 'From guided consulting to working inside your team'}</h2>
+      </>
+    )
+  }
+  <div class:list={['engagement', embedded ? 'mt-5' : 'mt-10']}>
     <div class="eg-scale" aria-hidden="true">
       <span>{es ? 'Menos implicación' : 'Less involvement'}</span>
       <span>{es ? 'Más implicación' : 'More involvement'}</span>

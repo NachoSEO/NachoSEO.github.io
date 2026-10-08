@@ -5,12 +5,10 @@ import Base from './Base.astro';
 import ServiceHero from '../components/service/ServiceHero.astro';
 import FaqAccordion from '../components/service/FaqAccordion.astro';
 import NextStepCta from '../components/service/NextStepCta.astro';
-import ServiceFit from '../components/service/ServiceFit.astro';
 import ServiceProcess from '../components/service/ServiceProcess.astro';
 import ServiceApproach from '../components/service/ServiceApproach.astro';
 import ServiceEvidence from '../components/service/ServiceEvidence.astro';
 import ServiceOffer from '../components/service/ServiceOffer.astro';
-import ServiceEngagement from '../components/service/ServiceEngagement.astro';
 import ClientLogos from '../components/ClientLogos.astro';
 import { localizedRoute } from '../i18n/utils';
 import type { Lang } from '../i18n/ui';
@@ -57,6 +55,16 @@ const serviceNode = {
 
 const { page } = entry.data;
 
+// El "no es para ti" vive ahora en las preguntas frecuentes, justo antes del precio
+const notFit = page.fit.no.length
+  ? [{ question: lang === 'es' ? '¿Cuándo no te conviene contratarme?' : "When shouldn't you hire me?", answer: page.fit.no.map((item) => `${lang === 'es' ? 'Si' : 'If'} ${item.charAt(0).toLowerCase()}${item.slice(1)}`).join(' ') }]
+  : [];
+const priceIndex = entry.data.faq.findIndex((item) => /cuesta|cost|price/i.test(item.question));
+const faq =
+  priceIndex === -1
+    ? [...entry.data.faq, ...notFit]
+    : [...entry.data.faq.slice(0, priceIndex), ...notFit, ...entry.data.faq.slice(priceIndex)];
+
 ---
 
 <Base
@@ -70,7 +78,7 @@ const { page } = entry.data;
     { name: labels.services, path: localizedRoute('services', lang) },
     { name: entry.data.title, path },
   ]}
-  faq={entry.data.faq}
+  faq={faq}
   extraSchemaNodes={[serviceNode]}
 >
   <ServiceHero lang={lang} title={entry.data.title} tagline={entry.data.tagline} proof={page.heroProof} />
@@ -78,7 +86,6 @@ const { page } = entry.data;
   <ServiceApproach lang={lang} pov={page.pov} checks={page.checks} />
   <ServiceEvidence lang={lang} proofCases={page.proofCases} related={page.related} />
   <ServiceProcess lang={lang} process={page.process} loopFrom={page.processLoopFrom} />
-  {page.engagement && <ServiceEngagement lang={lang} />}
   <ServiceOffer
     lang={lang}
     deliverables={entry.data.deliverables}
@@ -86,6 +93,7 @@ const { page } = entry.data;
     pricing={page.pricing}
     availability={page.availability}
     briefService={briefServiceByKey[entry.data.translationKey]}
+    engagement={page.engagement}
   />
   {
     hasBody && (
@@ -96,7 +104,6 @@ const { page } = entry.data;
       </div>
     )
   }
-  <ServiceFit lang={lang} fit={page.fit} />
-  <FaqAccordion lang={lang} faq={entry.data.faq} />
-  <NextStepCta lang={lang} briefService={briefServiceByKey[entry.data.translationKey]} />
+  <FaqAccordion lang={lang} faq={faq} />
+  <NextStepCta lang={lang} briefService={briefServiceByKey[entry.data.translationKey]} availability={page.availability} />
 </Base>

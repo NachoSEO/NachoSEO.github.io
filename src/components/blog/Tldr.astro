@@ -7,9 +7,11 @@ interface Props {
   items: string[];
   label?: string;
   lang?: 'es' | 'en';
+  /** Enlace opcional que se ve siempre, también con el resumen cerrado (p. ej. al lead magnet del post) */
+  link?: { text: string; href: string };
 }
 
-const { items, label = 'TL;DR', lang = 'es' } = Astro.props;
+const { items, label = 'TL;DR', lang = 'es', link } = Astro.props;
 const copy = {
   es: { aria: 'Resumen', cue: (count: number) => `Resumen en ${count} puntos` },
   en: { aria: 'Summary', cue: (count: number) => `Summary in ${count} points` },
@@ -34,6 +36,7 @@ const copy = {
       }
     </ol>
   </details>
+  {link && <a href={link.href} class="tc-link">{link.text} →</a>}
 </aside>
 
 <style>
@@ -100,6 +103,17 @@ const copy = {
   .tldr-compact li {
     display: flex;
     gap: 0.6rem;
+  }
+  .tc-link {
+    display: block;
+    border-top: 1px solid var(--color-line);
+    padding: 0.6rem 1rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-accent-ink);
+  }
+  .tc-link:hover {
+    text-decoration: underline;
   }
   .tc-n {
     flex-shrink: 0;

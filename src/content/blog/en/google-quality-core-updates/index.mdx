@@ -124,23 +124,19 @@ citations:
 ---
 
 import LeadMagnet from '../../../../components/blog/LeadMagnet.astro';
+import Tldr from '../../../../components/blog/Tldr.astro';
 
-<aside class="tldr" aria-label="Summary">
-
-<details>
-<summary><span class="tldr-label">TL;DR</span> <span class="tldr-cue">Show summary</span></summary>
-
-- For Google, quality is effort, originality, talent or skill, and accuracy. It's judged the same whether a person or an AI wrote the content.
-- Commodity content is content anyone could have written: if you swap your brand for a competitor's and the page is still just as useful, it's commodity.
-- Quality is attached to each URL before anyone searches. Core updates apply page by page, but that quality also inherits signals from the whole site, which is why weak pages drag down the good ones.
-- Recovering from a core update takes 3 to 6 months on average. With a low-quality site, Google can take months to index you, or never do it.
-- What to do: group your URLs by page type, run them through the four pillars and improve, consolidate or remove the commodity.
-
-</details>
-
-[Take me straight to the skill that audits a site's quality →](#skill)
-
-</aside>
+<Tldr
+  lang="en"
+  items={[
+    "For Google, quality is effort, originality, talent or skill, and accuracy. It's judged the same whether a person or an AI wrote the content.",
+    "Commodity content is content anyone could have written: if you swap your brand for a competitor's and the page is still just as useful, it's commodity.",
+    'Quality is attached to each URL before anyone searches. Core updates apply page by page, but that quality also inherits signals from the whole site, which is why weak pages drag down the good ones.',
+    'Recovering from a core update takes 3 to 6 months on average. With a low-quality site, Google can take months to index you, or never do it.',
+    'What to do: group your URLs by page type, run them through the four pillars and improve, consolidate or remove the commodity.',
+  ]}
+  link={{ text: "Take me straight to the skill that audits a site's quality", href: '#skill' }}
+/>
 
 In early October I was at the Search Central Live Deep Dive Europe 2026 that Google ran in Barcelona. Three days of talks with people from Search, and one of them was about quality, given by Duy Nguyen, Search Quality Analyst and one of the people who lead the anti-spam teams.
 

@@ -6,6 +6,7 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { media, mediaTypeLabels, talks, teaching } from '../data/appearances';
 import { caseBrands } from '../data/case-brands';
+import { pricingPage } from '../data/pricing';
 import { aboutPage, bio, projects, timeline } from '../data/profile';
 import { localizedRoute, formatDate } from '../i18n/utils';
 import type { Lang } from '../i18n/ui';
@@ -34,11 +35,20 @@ const byOrder = <T extends { data: { order: number } }>(a: T, b: T) => a.data.or
 const byDateDesc = (a: CollectionEntry<'blog'>, b: CollectionEntry<'blog'>) =>
   b.data.pubDate.valueOf() - a.data.pubDate.valueOf();
 
-/** Quita sintaxis de MDX que no aporta fuera de la web: imágenes relativas e imports */
+/** El componente <Tldr items={[...]} /> pasa a ser una lista en Markdown */
+function tldrToMarkdown(_match: string, rawItems: string): string {
+  const items = [...rawItems.matchAll(/'((?:[^'\\]|\\.)*)'|"((?:[^"\\]|\\.)*)"/g)].map((item) =>
+    (item[1] ?? item[2]).replace(/\\(['"])/g, '$1').replace(/<[^>]+>/g, '')
+  );
+  return `**TL;DR**\n\n${items.map((item) => `- ${item}`).join('\n')}`;
+}
+
+/** Quita sintaxis de MDX que no aporta fuera de la web: imágenes relativas, imports y componentes */
 function cleanMdx(body = ''): string {
   return body
     .replace(/^import .*$/gm, '')
-    .replace(/^<[A-Z][\w]*[^>]*\/>$/gm, '')
+    .replace(/<Tldr\b[^>]*?items=\{\[([\s\S]*?)\]\}[^>]*?\/>/g, tldrToMarkdown)
+    .replace(/<[A-Z]\w*(?:\s[^<>]*?)?\/>/g, '')
     .replace(/!\[([^\]]*)\]\(\.\/[^)]+\)/g, (_match, alt: string) => (alt ? `[Imagen: ${alt}]` : ''))
     .replace(/\]\(\//g, `](${SITE_URL}/`)
     .replace(/\n{3,}/g, '\n\n')
@@ -164,9 +174,9 @@ async function buildAgentDocs(): Promise<AgentDoc[]> {
     });
 
     // Servicios
-    const servicesTitle = es ? 'Servicios de growth, IA y SEO' : 'Growth, AI and SEO services';
+    const servicesTitle = es ? 'Consultoría SEO técnica' : 'Growth, AI and SEO services';
     const servicesSummary = es
-      ? 'Consultoría SEO y GEO, Head of Growth fraccional, sistemas de IA y formación.'
+      ? 'Consultoría SEO técnica, auditoría, migraciones, SEO internacional, recuperar tráfico tras un core update y GEO. También growth, sistemas de IA y formación.'
       : 'SEO and GEO consulting, fractional Head of Growth, AI systems and training.';
     docs.push({
       path: servicesBase,
@@ -176,6 +186,26 @@ async function buildAgentDocs(): Promise<AgentDoc[]> {
       summary: servicesSummary,
       markdown: [frontmatter({ title: servicesTitle, path: servicesBase, lang, summary: servicesSummary }), serviceLines.join('\n'), booking(lang)].join('\n\n'),
     });
+
+    if (es) {
+      docs.push({
+        path: pricingPage.path,
+        mdPath: mdPathFor(pricingPage.path),
+        lang,
+        title: pricingPage.title,
+        summary: pricingPage.description,
+        markdown: [
+          frontmatter({ title: pricingPage.title, path: pricingPage.path, lang, summary: pricingPage.description }),
+          pricingPage.lede,
+          `## Cómo trabajo y cuánto dura cada proyecto\n\n${pricingPage.formats.map((format) => `- **[${format.name}](${abs(format.href)})** (${format.duration}): ${format.detail}`).join('\n')}`,
+          `## Qué sube y qué baja el precio\n\n${pricingPage.drivers.map((driver) => `- **${driver.title}**: ${driver.detail}`).join('\n')}`,
+          `## Qué pedir a cualquier presupuesto SEO\n\n${pricingPage.checklist.map((item) => `- ${item}`).join('\n')}\n\nSeñales para desconfiar:\n\n${pricingPage.redFlags.map((item) => `- ${item}`).join('\n')}`,
+          `## FAQ\n\n${pricingPage.faq.map((item) => `### ${item.question}\n\n${item.answer}`).join('\n\n')}`,
+          `Formulario de presupuesto: ${abs(`${pricingPage.path}#presupuesto`)}`,
+          booking(lang),
+        ].join('\n\n'),
+      });
+    }
 
     for (const entry of langServices) {
       const { data } = entry;
@@ -197,10 +227,19 @@ async function buildAgentDocs(): Promise<AgentDoc[]> {
           data.page.heroProof,
           `## ${es ? 'Para quién es' : "Who it's for"}\n\n${data.page.fit.yes.map((item) => `- ${item}`).join('\n')}\n\n${es ? 'No es para ti si:' : "It's not for you if:"}\n\n${data.page.fit.no.map((item) => `- ${item}`).join('\n')}`,
           `## ${data.page.pov.title}\n\n${data.page.pov.paragraphs.join('\n\n')}`,
-          `## ${es ? 'Cómo trabajamos' : 'How we work'}\n\n${data.page.process.map((step, index) => `${index + 1}. **${step.title}** (${step.when}): ${step.detail}`).join('\n')}`,
+          data.page.checks
+            ? `## ${es ? 'Qué miro' : 'What I look at'}\n\n${data.page.checks.map((check) => `- **${check.title}**: ${check.detail}`).join('\n')}`
+            : '',
+          data.page.example
+            ? `## ${data.page.example.title}\n\n${data.page.example.intro}${data.page.example.items.length ? `\n\n${data.page.example.items.map((item) => `- ${item}`).join('\n')}` : ''}${data.page.example.note ? `\n\n${data.page.example.note}` : ''}${data.page.example.link ? `\n\n[${data.page.example.link.text}](${abs(data.page.example.link.href)})` : ''}`
+            : '',
+          `## ${es ? 'Cómo trabajamos' : 'How we work'}\n\n${data.page.process.map((step, index) => `${index + 1}. **${step.title}**: ${step.detail}`).join('\n')}`,
           `## ${es ? 'Qué te llevas' : 'What you get'}\n\n${data.deliverables.map((item) => `- **${item.title}**: ${item.detail}`).join('\n')}`,
           casesForService.length ? `## ${es ? 'Resultados' : 'Results'}\n\n${casesForService.join('\n')}` : '',
           `## ${es ? 'Formatos y precio' : 'Formats and pricing'}\n\n${data.page.formats.map((format) => `- **${format.name}**: ${format.detail}`).join('\n')}\n\n${data.page.pricing}${data.page.availability ? `\n\n${data.page.availability}` : ''}`,
+          data.page.related.length
+            ? `## ${es ? 'Para leer antes de hablar' : 'Worth reading first'}\n\n${data.page.related.map((item) => `- [${item.title}](${abs(item.href)}): ${item.note}`).join('\n')}`
+            : '',
           `## FAQ\n\n${data.faq.map((item) => `### ${item.question}\n\n${item.answer}`).join('\n\n')}`,
           booking(lang),
         ]

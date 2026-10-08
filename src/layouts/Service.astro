@@ -3,15 +3,13 @@ import type { CollectionEntry } from 'astro:content';
 import { render } from 'astro:content';
 import Base from './Base.astro';
 import ServiceHero from '../components/service/ServiceHero.astro';
-import DeliverablesGrid from '../components/service/DeliverablesGrid.astro';
 import FaqAccordion from '../components/service/FaqAccordion.astro';
 import NextStepCta from '../components/service/NextStepCta.astro';
-import ServiceFit from '../components/service/ServiceFit.astro';
-import ServicePov from '../components/service/ServicePov.astro';
 import ServiceProcess from '../components/service/ServiceProcess.astro';
-import ServiceProof from '../components/service/ServiceProof.astro';
-import ServiceFormats from '../components/service/ServiceFormats.astro';
-import TeachingProof from '../components/service/TeachingProof.astro';
+import ServiceApproach from '../components/service/ServiceApproach.astro';
+import ServiceEvidence from '../components/service/ServiceEvidence.astro';
+import ServiceOffer from '../components/service/ServiceOffer.astro';
+import ClientLogos from '../components/ClientLogos.astro';
 import { localizedRoute } from '../i18n/utils';
 import type { Lang } from '../i18n/ui';
 import type { ServiceId } from '../lib/brief';
@@ -29,6 +27,11 @@ const hasBody = Boolean(entry.body?.trim());
 // Servicio que llega pre-marcado al formulario de presupuesto
 const briefServiceByKey: Record<string, ServiceId> = {
   'seo-geo': 'geo',
+  'seo-audit': 'geo',
+  'seo-migrations': 'geo',
+  'international-seo': 'geo',
+  'traffic-recovery': 'geo',
+  geo: 'geo',
   'ai-automation': 'ia',
   'fractional-growth': 'fraccional',
   training: 'formacion',
@@ -52,6 +55,16 @@ const serviceNode = {
 
 const { page } = entry.data;
 
+// El "no es para ti" vive ahora en las preguntas frecuentes, justo antes del precio
+const notFit = page.fit.no.length
+  ? [{ question: lang === 'es' ? '¿Cuándo no te conviene contratarme?' : "When shouldn't you hire me?", answer: page.fit.no.map((item) => `${lang === 'es' ? 'Si' : 'If'} ${item.charAt(0).toLowerCase()}${item.slice(1)}`).join(' ') }]
+  : [];
+const priceIndex = entry.data.faq.findIndex((item) => /cuesta|cost|price/i.test(item.question));
+const faq =
+  priceIndex === -1
+    ? [...entry.data.faq, ...notFit]
+    : [...entry.data.faq.slice(0, priceIndex), ...notFit, ...entry.data.faq.slice(priceIndex)];
+
 ---
 
 <Base
@@ -65,22 +78,23 @@ const { page } = entry.data;
     { name: labels.services, path: localizedRoute('services', lang) },
     { name: entry.data.title, path },
   ]}
-  faq={entry.data.faq}
+  faq={faq}
   extraSchemaNodes={[serviceNode]}
 >
   <ServiceHero lang={lang} title={entry.data.title} tagline={entry.data.tagline} proof={page.heroProof} />
-  <ServiceFit lang={lang} fit={page.fit} />
-  <ServicePov lang={lang} pov={page.pov} />
-  <ServiceProcess lang={lang} process={page.process} />
-  <DeliverablesGrid lang={lang} deliverables={entry.data.deliverables} />
-  {
-    page.proofCases.length > 0 ? (
-      <ServiceProof lang={lang} proofCases={page.proofCases} />
-    ) : (
-      <TeachingProof lang={lang} />
-    )
-  }
-  <ServiceFormats lang={lang} formats={page.formats} pricing={page.pricing} availability={page.availability} />
+  <ClientLogos lang={lang} />
+  <ServiceApproach lang={lang} pov={page.pov} checks={page.checks} />
+  <ServiceEvidence lang={lang} proofCases={page.proofCases} related={page.related} />
+  <ServiceProcess lang={lang} process={page.process} loopFrom={page.processLoopFrom} />
+  <ServiceOffer
+    lang={lang}
+    deliverables={entry.data.deliverables}
+    formats={page.formats}
+    pricing={page.pricing}
+    availability={page.availability}
+    briefService={briefServiceByKey[entry.data.translationKey]}
+    engagement={page.engagement}
+  />
   {
     hasBody && (
       <div class="mx-auto max-w-5xl px-5 pt-16 md:pt-24 sm:px-6">
@@ -90,6 +104,6 @@ const { page } = entry.data;
       </div>
     )
   }
-  <FaqAccordion lang={lang} faq={entry.data.faq} />
-  <NextStepCta lang={lang} briefService={briefServiceByKey[entry.data.translationKey]} />
+  <FaqAccordion lang={lang} faq={faq} />
+  <NextStepCta lang={lang} briefService={briefServiceByKey[entry.data.translationKey]} availability={page.availability} />
 </Base>

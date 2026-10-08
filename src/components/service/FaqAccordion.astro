@@ -1,5 +1,6 @@
 ---
 import SectionLabel from '../SectionLabel.astro';
+import { site } from '../../site';
 import type { Lang } from '../../i18n/ui';
 
 interface Props {
@@ -12,21 +13,79 @@ const es = lang === 'es';
 ---
 
 <section class="mx-auto max-w-5xl px-5 pt-16 md:pt-24 sm:px-6">
-  <SectionLabel label="FAQ" />
-  <div class="mt-6 grid gap-10 md:grid-cols-[1fr_2fr] md:gap-14">
-    <h2 class="display-2">{es ? 'Preguntas frecuentes' : 'Frequently asked questions'}</h2>
-    <div class="row-list">
+  <div class="grid gap-10 md:grid-cols-[1fr_2fr] md:gap-14">
+    <div class="md:sticky md:top-28 md:self-start">
+      <SectionLabel label="FAQ" />
+      <h2 class="display-2 mt-3">{es ? 'Preguntas frecuentes' : 'Frequently asked questions'}</h2>
+      <p class="mt-4 text-[0.95rem] text-muted">
+        {es ? '¿No está tu pregunta? Escríbeme a ' : "Can't find your question? Email me at "}
+        <a href={`mailto:${site.email}`} data-umami-event="email-click" data-umami-event-placement="faq" class="text-ink underline decoration-accent underline-offset-4 hover:text-accent-ink">{site.email}</a>
+        {es ? ' y te contesto en menos de 24 horas.' : " and I'll reply within 24 hours."}
+      </p>
+    </div>
+    <div class="faq-list">
       {
-        faq.map((item) => (
-          <details name="faq" class="faq-item py-5">
-            <summary class="flex cursor-pointer list-none items-baseline justify-between gap-6 font-semibold">
-              {item.question}
-              <span class="faq-marker shrink-0 font-mono text-accent-ink" aria-hidden="true">+</span>
+        faq.map((item, index) => (
+          <details name="faq" class="faq-item" open={index === 0}>
+            <summary class="faq-summary">
+              <span class="faq-n" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+              <span class="faq-q">{item.question}</span>
+              <span class="faq-marker" aria-hidden="true" />
             </summary>
-            <p class="max-w-[62ch] pt-3 text-muted">{item.answer}</p>
+            <p class="faq-a">{item.answer}</p>
           </details>
         ))
       }
     </div>
   </div>
 </section>
+
+<style>
+  .faq-list {
+    display: grid;
+    gap: 0.6rem;
+  }
+  .faq-item {
+    border: 1px solid var(--color-line);
+    border-radius: 0.875rem;
+    background: var(--color-raised);
+    transition: border-color 0.2s ease;
+  }
+  .faq-item[open] {
+    border-color: color-mix(in srgb, var(--color-accent) 45%, var(--color-line));
+  }
+  .faq-summary {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: baseline;
+    gap: 0.9rem;
+    padding: 1rem 1.2rem;
+    cursor: pointer;
+    list-style: none;
+    font-weight: 600;
+  }
+  .faq-summary::-webkit-details-marker {
+    display: none;
+  }
+  .faq-n {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-accent-ink);
+  }
+  .faq-marker {
+    width: 0.55rem;
+    height: 0.55rem;
+    border-right: 2px solid var(--color-accent-ink);
+    border-bottom: 2px solid var(--color-accent-ink);
+    transform: rotate(45deg) translateY(-3px);
+    transition: transform 0.2s ease;
+  }
+  .faq-item[open] .faq-marker {
+    transform: rotate(-135deg) translateY(-1px);
+  }
+  .faq-a {
+    max-width: 62ch;
+    padding: 0 1.2rem 1.1rem 3.4rem;
+    color: var(--color-muted);
+  }
+</style>

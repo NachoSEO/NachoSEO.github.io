@@ -124,23 +124,19 @@ citations:
 ---
 
 import LeadMagnet from '../../../../components/blog/LeadMagnet.astro';
+import Tldr from '../../../../components/blog/Tldr.astro';
 
-<aside class="tldr" aria-label="Resumen">
-
-<details>
-<summary><span class="tldr-label">TL;DR</span> <span class="tldr-cue">Ver resumen</span></summary>
-
-- Para Google, quality es effort, originality, talent o skill y accuracy. Se juzga igual si el contenido lo escribe una persona o una IA.
-- El contenido commodity es el que podría haber escrito cualquiera: si cambias tu marca por la de un competidor y la página sigue valiendo igual, es commodity.
-- Quality va pegada a cada URL antes de que alguien busque. Los core updates se aplican página a página, pero esa quality también hereda señales del site entero, y por eso las páginas flojas arrastran a las buenas.
-- Recuperarse de un core update lleva de 3 a 6 meses de media. Con una web de baja calidad, Google puede tardar meses en indexarte o no hacerlo nunca.
-- Qué hacer: agrupa tus URLs por page type, pásalos por los cuatro pilares y mejora, consolida o elimina lo commodity.
-
-</details>
-
-[Llévame directamente a la skill que evalúa la quality de un site →](#skill)
-
-</aside>
+<Tldr
+  lang="es"
+  items={[
+    'Para Google, quality es effort, originality, talent o skill y accuracy. Se juzga igual si el contenido lo escribe una persona o una IA.',
+    'El contenido commodity es el que podría haber escrito cualquiera: si cambias tu marca por la de un competidor y la página sigue valiendo igual, es commodity.',
+    'Quality va pegada a cada URL antes de que alguien busque. Los core updates se aplican página a página, pero esa quality también hereda señales del site entero, y por eso las páginas flojas arrastran a las buenas.',
+    'Recuperarse de un core update lleva de 3 a 6 meses de media. Con una web de baja calidad, Google puede tardar meses en indexarte o no hacerlo nunca.',
+    'Qué hacer: agrupa tus URLs por page type, pásalos por los cuatro pilares y mejora, consolida o elimina lo commodity.',
+  ]}
+  link={{ text: 'Llévame directamente a la skill que evalúa la quality de un site', href: '#skill' }}
+/>
 
 A principios de octubre estuve en el Search Central Live Deep Dive Europe 2026 que Google montó en Barcelona. Tres días de charlas con gente de Search, y una de ellas fue sobre quality, de la mano de Duy Nguyen, Search Quality Analyst y una de las personas que lleva los equipos de anti-spam.
 
@@ -418,7 +414,7 @@ En el año 2000 bastaba con ser una naranja. Entre las 20.000 de 2025, tienes qu
 
 Si tienes miles de URLs y un core update te ha movido el tráfico, o te preocupa el siguiente, reviso tus page types contigo y te digo cuáles mejorar, consolidar o quitar. Trabajas directamente conmigo.
 
-[Ver la consultoría SEO y GEO →](/servicios/consultoria-seo-geo/) · [Reservar una llamada de 30 minutos](https://cal.com/nacho-mascort/30min)
+[Ver cómo recupero tráfico tras un core update →](/servicios/recuperar-trafico/) · [Reservar una llamada de 30 minutos](https://cal.com/nacho-mascort/30min)
 
 </aside>
 

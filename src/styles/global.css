@@ -606,6 +606,13 @@ body {
     font-size: 0.9rem;
     border-collapse: collapse;
   }
+  /* En móvil, las tablas anchas hacen scroll dentro de sí mismas en vez de ensanchar la página */
+  @media (max-width: 40rem) {
+    .article-body table {
+      display: block;
+      overflow-x: auto;
+    }
+  }
   .article-body th,
   .article-body td {
     text-align: left;

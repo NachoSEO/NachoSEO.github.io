@@ -35,12 +35,30 @@ const services = defineCollection({
         process: z
           .array(z.object({ when: z.string(), title: z.string(), detail: z.string() }))
           .min(3)
-          .max(4),
+          .max(6),
         /** Casos enlazados como prueba; si está vacío, la página muestra docencia y charlas */
         proofCases: z.array(z.object({ caseKey: z.string(), summary: z.string() })).max(3).default([]),
         formats: z.array(z.object({ name: z.string(), detail: z.string() })).min(1).max(2),
         pricing: z.string(),
         availability: z.string().optional(),
+        /** "Qué miro": lo que reviso en este servicio y otros suelen pasar por alto */
+        checks: z.array(z.object({ title: z.string(), detail: z.string() })).min(4).max(6).optional(),
+        /** Un ejemplo real del trabajo (entregable, diagnóstico o dato propio), con enlace opcional */
+        example: z
+          .object({
+            title: z.string(),
+            intro: z.string(),
+            items: z.array(z.string()).max(6).default([]),
+            note: z.string().optional(),
+            link: z.object({ text: z.string(), href: z.string() }).optional(),
+          })
+          .optional(),
+        /** Paso (índice desde 0) a partir del cual el proceso se repite: se marca como flujo constante */
+        processLoopFrom: z.number().int().min(1).optional(),
+        /** Enseña el rango de implicación (de consultoría guiada a trabajar dentro del equipo) */
+        engagement: z.boolean().default(true),
+        /** Lecturas relacionadas: posts, casos, skills o guías propios */
+        related: z.array(z.object({ title: z.string(), href: z.string(), note: z.string() })).max(4).default([]),
       }),
   }),
 });

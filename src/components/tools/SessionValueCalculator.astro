@@ -1,0 +1,310 @@
+---
+/**
+ * Calculadora del valor de una sesión orgánica según el modelo de negocio (ventas, leads o publicidad).
+ * Todo en el navegador. Sin JS muestra el ejemplo de ventas con sus valores por defecto.
+ */
+interface Props {
+  lang?: 'es' | 'en';
+}
+const { lang = 'es' } = Astro.props;
+
+const copy = {
+  es: {
+    modelsAria: 'Modelo de negocio',
+    formulaPrefix: 'Valor por sesión =',
+    clicks: 'Clics orgánicos sin marca al mes',
+    session: 'Valor por sesión',
+    month: 'Al mes',
+    year: 'Al año',
+    thousand: 'Cada 1.000 clics más al mes',
+    sessionOut: '0,48 €',
+    monthOut: '9.600 €',
+    yearOut: '115.200 €',
+    thousandOut: '480 €',
+    models: [
+      {
+        id: 'sales',
+        label: 'Ventas',
+        formula: 'conversión × ticket medio × margen bruto',
+        fields: [
+          { name: 'conv', label: 'Tasa de conversión', unit: '%', value: 1.5, step: 0.1 },
+          { name: 'ticket', label: 'Ticket medio', unit: '€', value: 80, step: 1 },
+          { name: 'margin', label: 'Margen bruto', unit: '%', value: 40, step: 1 },
+        ],
+      },
+      {
+        id: 'leads',
+        label: 'Leads B2B',
+        formula: 'conversión a lead × tasa de cierre × valor del contrato × margen',
+        fields: [
+          { name: 'conv', label: 'Conversión a lead', unit: '%', value: 1, step: 0.1 },
+          { name: 'close', label: 'Tasa de cierre', unit: '%', value: 15, step: 1 },
+          { name: 'deal', label: 'Valor medio del contrato', unit: '€', value: 6000, step: 100 },
+          { name: 'margin', label: 'Margen', unit: '%', value: 60, step: 1 },
+        ],
+      },
+      {
+        id: 'ads',
+        label: 'Publicidad',
+        formula: 'RPM ÷ 1.000 × páginas vistas por sesión',
+        fields: [
+          { name: 'rpm', label: 'RPM (por 1.000 páginas)', unit: '€', value: 8, step: 0.5 },
+          { name: 'pages', label: 'Páginas vistas por sesión', unit: '', value: 2.5, step: 0.1 },
+        ],
+      },
+    ],
+  },
+  en: {
+    modelsAria: 'Business model',
+    formulaPrefix: 'Value per session =',
+    clicks: 'Non-brand organic clicks per month',
+    session: 'Value per session',
+    month: 'Per month',
+    year: 'Per year',
+    thousand: 'Per 1,000 extra clicks a month',
+    sessionOut: '€0.48',
+    monthOut: '€9,600',
+    yearOut: '€115,200',
+    thousandOut: '€480',
+    models: [
+      {
+        id: 'sales',
+        label: 'Sales',
+        formula: 'conversion rate × average order value × gross margin',
+        fields: [
+          { name: 'conv', label: 'Conversion rate', unit: '%', value: 1.5, step: 0.1 },
+          { name: 'ticket', label: 'Average order value', unit: '€', value: 80, step: 1 },
+          { name: 'margin', label: 'Gross margin', unit: '%', value: 40, step: 1 },
+        ],
+      },
+      {
+        id: 'leads',
+        label: 'B2B leads',
+        formula: 'lead conversion × close rate × contract value × margin',
+        fields: [
+          { name: 'conv', label: 'Lead conversion', unit: '%', value: 1, step: 0.1 },
+          { name: 'close', label: 'Close rate', unit: '%', value: 15, step: 1 },
+          { name: 'deal', label: 'Average contract value', unit: '€', value: 6000, step: 100 },
+          { name: 'margin', label: 'Margin', unit: '%', value: 60, step: 1 },
+        ],
+      },
+      {
+        id: 'ads',
+        label: 'Advertising',
+        formula: 'RPM ÷ 1,000 × pageviews per session',
+        fields: [
+          { name: 'rpm', label: 'RPM (per 1,000 pageviews)', unit: '€', value: 8, step: 0.5 },
+          { name: 'pages', label: 'Pageviews per session', unit: '', value: 2.5, step: 0.1 },
+        ],
+      },
+    ],
+  },
+}[lang];
+const { models } = copy;
+---
+
+<div class="svc not-prose" data-session-calc data-lang={lang}>
+  <div class="svc-tabs" role="tablist" aria-label={copy.modelsAria}>
+    {models.map((model, index) => <button type="button" role="tab" aria-selected={String(index === 0)} data-model={model.id}>{model.label}</button>)}
+  </div>
+
+  <div class="svc-grid">
+    <div class="svc-inputs">
+      {
+        models.map((model, index) => (
+          <fieldset data-fields={model.id} hidden={index !== 0}>
+            <legend class="svc-formula">{copy.formulaPrefix} {model.formula}</legend>
+            {model.fields.map((field) => (
+              <label>
+                <span>{field.label}</span>
+                <span class="svc-input">
+                  <input type="number" min="0" step={field.step} value={field.value} data-field={field.name} inputmode="decimal" />
+                  <em>{field.unit}</em>
+                </span>
+              </label>
+            ))}
+          </fieldset>
+        ))
+      }
+      <label class="svc-clicks">
+        <span>{copy.clicks}</span>
+        <span class="svc-input">
+          <input type="number" min="0" step="100" value="20000" data-clicks inputmode="numeric" />
+          <em></em>
+        </span>
+      </label>
+    </div>
+
+    <div class="svc-result" aria-live="polite">
+      <p class="svc-label">{copy.session}</p>
+      <p class="svc-big" data-out="session">{copy.sessionOut}</p>
+      <dl>
+        <div><dt>{copy.month}</dt><dd data-out="month">{copy.monthOut}</dd></div>
+        <div><dt>{copy.year}</dt><dd data-out="year">{copy.yearOut}</dd></div>
+        <div><dt>{copy.thousand}</dt><dd data-out="thousand">{copy.thousandOut}</dd></div>
+      </dl>
+    </div>
+  </div>
+</div>
+
+<style>
+  .svc {
+    border: 1px solid var(--color-line);
+    border-radius: 1rem;
+    background: var(--color-raised);
+    padding: 1rem;
+  }
+  .svc-tabs {
+    display: inline-flex;
+    gap: 0.15rem;
+    border: 1px solid var(--color-line);
+    border-radius: 999px;
+    padding: 0.15rem;
+  }
+  .svc-tabs button {
+    border-radius: 999px;
+    padding: 0.3rem 0.9rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-muted);
+  }
+  .svc-tabs button[aria-selected='true'] {
+    background: var(--color-ink);
+    color: var(--color-on-dark);
+  }
+  .svc-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    gap: 1.25rem;
+    margin-top: 1rem;
+  }
+  .svc-inputs fieldset {
+    display: grid;
+    gap: 0.5rem;
+  }
+  .svc-formula {
+    margin-bottom: 0.4rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-muted);
+  }
+  .svc-inputs label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    font-size: 0.9rem;
+  }
+  .svc-clicks {
+    margin-top: 0.75rem;
+    border-top: 1px solid var(--color-line);
+    padding-top: 0.75rem;
+  }
+  .svc-input {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+  .svc-input input {
+    width: 6.5rem;
+    border: 1px solid var(--color-line);
+    border-radius: 0.4rem;
+    padding: 0.3rem 0.45rem;
+    font-family: var(--font-mono);
+    text-align: right;
+  }
+  .svc-input em {
+    width: 1rem;
+    font-style: normal;
+    color: var(--color-muted);
+  }
+  .svc-result {
+    border-radius: 0.75rem;
+    background: var(--color-dark);
+    color: var(--color-on-dark);
+    padding: 1rem;
+  }
+  .svc-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--color-accent-on-dark);
+  }
+  .svc-big {
+    font-family: var(--font-display);
+    font-size: 2.4rem;
+    font-weight: 600;
+    line-height: 1.1;
+  }
+  .svc-result dl {
+    display: grid;
+    gap: 0.35rem;
+    margin-top: 0.9rem;
+    font-size: 0.88rem;
+  }
+  .svc-result dl div {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+    border-top: 1px solid color-mix(in srgb, var(--color-on-dark) 18%, transparent);
+    padding-top: 0.35rem;
+  }
+  .svc-result dt {
+    color: var(--color-on-dark-muted);
+  }
+  .svc-result dd {
+    font-family: var(--font-mono);
+  }
+  @media (max-width: 640px) {
+    .svc-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+  const formulas: Record<string, (v: Record<string, number>) => number> = {
+    sales: (v) => (v.conv / 100) * v.ticket * (v.margin / 100),
+    leads: (v) => (v.conv / 100) * (v.close / 100) * v.deal * (v.margin / 100),
+    ads: (v) => (v.rpm / 1000) * v.pages,
+  };
+
+  for (const root of document.querySelectorAll<HTMLElement>('[data-session-calc]')) {
+    let model = 'sales';
+    const isEnglish = root.dataset.lang === 'en';
+    const euro = (value: number, decimals = 0) => {
+      const formatted = value.toLocaleString(isEnglish ? 'en-US' : 'es-ES', {
+        minimumFractionDigits: decimals,
+        maximumFractionDigits: decimals,
+        useGrouping: 'always',
+      } as Intl.NumberFormatOptions);
+      return isEnglish ? `€${formatted}` : `${formatted} €`;
+    };
+    const out = (name: string) => root.querySelector<HTMLElement>(`[data-out="${name}"]`)!;
+
+    const update = () => {
+      const values: Record<string, number> = {};
+      root.querySelectorAll<HTMLInputElement>(`[data-fields="${model}"] [data-field]`).forEach((input) => {
+        values[input.dataset.field!] = Math.max(0, Number(input.value) || 0);
+      });
+      const clicks = Math.max(0, Number(root.querySelector<HTMLInputElement>('[data-clicks]')!.value) || 0);
+      const perSession = formulas[model](values);
+      out('session').textContent = euro(perSession, perSession < 10 ? 2 : 0);
+      out('month').textContent = euro(perSession * clicks);
+      out('year').textContent = euro(perSession * clicks * 12);
+      out('thousand').textContent = euro(perSession * 1000);
+    };
+
+    root.querySelectorAll<HTMLButtonElement>('[data-model]').forEach((tab) =>
+      tab.addEventListener('click', () => {
+        model = tab.dataset.model!;
+        root.querySelectorAll('[data-model]').forEach((other) => other.setAttribute('aria-selected', String(other === tab)));
+        root.querySelectorAll<HTMLElement>('[data-fields]').forEach((set) => (set.hidden = set.dataset.fields !== model));
+        update();
+      })
+    );
+    root.querySelectorAll('input').forEach((input) => input.addEventListener('input', update));
+    update();
+  }
+</script>

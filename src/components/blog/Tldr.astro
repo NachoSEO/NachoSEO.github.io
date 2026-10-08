@@ -1,0 +1,125 @@
+---
+/**
+ * Resumen plegable para el inicio de un post: cerrado por defecto y, al abrirlo, puntos cortos numerados en una columna.
+ * Pensado para frases de una línea; el resumen largo va en el propio post.
+ */
+interface Props {
+  items: string[];
+  label?: string;
+  lang?: 'es' | 'en';
+  /** Enlace opcional que se ve siempre, también con el resumen cerrado (p. ej. al lead magnet del post) */
+  link?: { text: string; href: string };
+}
+
+const { items, label = 'TL;DR', lang = 'es', link } = Astro.props;
+const copy = {
+  es: { aria: 'Resumen', cue: (count: number) => `Resumen en ${count} puntos` },
+  en: { aria: 'Summary', cue: (count: number) => `Summary in ${count} points` },
+}[lang];
+---
+
+<aside class="tldr-compact not-prose" aria-label={copy.aria}>
+  <details>
+    <summary>
+      <span class="tc-label">{label}</span>
+      <span class="tc-cue">{copy.cue(items.length)}</span>
+      <span class="tc-icon" aria-hidden="true"></span>
+    </summary>
+    <ol>
+      {
+        items.map((item, index) => (
+          <li>
+            <span class="tc-n" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+            <span set:html={item} />
+          </li>
+        ))
+      }
+    </ol>
+  </details>
+  {link && <a href={link.href} class="tc-link">{link.text} →</a>}
+</aside>
+
+<style>
+  @layer components {
+    aside.tldr-compact ol {
+      list-style: none;
+      padding-left: 0;
+      margin-top: 0;
+    }
+    aside.tldr-compact li + li {
+      margin-top: 0;
+    }
+  }
+  .tldr-compact {
+    margin-block: 0 2.25rem;
+    border: 1px solid var(--color-line);
+    border-left: 3px solid var(--color-accent);
+    border-radius: 0.75rem;
+    background: var(--color-raised);
+    font-size: 0.9rem;
+    line-height: 1.45;
+  }
+  .tldr-compact summary {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.7rem 1rem;
+    cursor: pointer;
+    list-style: none;
+  }
+  .tldr-compact summary::-webkit-details-marker {
+    display: none;
+  }
+  .tc-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-accent-ink);
+  }
+  .tc-cue {
+    color: var(--color-muted);
+    font-size: 0.85rem;
+  }
+  /* Chevron que gira al abrir */
+  .tc-icon {
+    width: 0.5rem;
+    height: 0.5rem;
+    margin-left: auto;
+    border-right: 2px solid var(--color-accent-ink);
+    border-bottom: 2px solid var(--color-accent-ink);
+    transform: rotate(45deg) translateY(-2px);
+    transition: transform 0.2s ease;
+  }
+  .tldr-compact details[open] .tc-icon {
+    transform: rotate(-135deg) translateY(-2px);
+  }
+  .tldr-compact ol {
+    display: grid;
+    gap: 0.5rem;
+    border-top: 1px solid var(--color-line);
+    padding: 0.75rem 1rem 0.85rem;
+  }
+  .tldr-compact li {
+    display: flex;
+    gap: 0.6rem;
+  }
+  .tc-link {
+    display: block;
+    border-top: 1px solid var(--color-line);
+    padding: 0.6rem 1rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-accent-ink);
+  }
+  .tc-link:hover {
+    text-decoration: underline;
+  }
+  .tc-n {
+    flex-shrink: 0;
+    padding-top: 0.12rem;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--color-accent-ink);
+  }
+</style>

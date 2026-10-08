@@ -1,0 +1,44 @@
+---
+/** Qué hago: la postura a la izquierda y, a la derecha, la lista de lo que reviso como prueba */
+import SectionLabel from '../SectionLabel.astro';
+import type { Lang } from '../../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  pov: { title: string; paragraphs: string[] };
+  checks?: { title: string; detail: string }[];
+}
+
+const { lang, pov, checks = [] } = Astro.props;
+const es = lang === 'es';
+---
+
+<section class="mx-auto max-w-5xl px-5 pt-16 md:pt-24 sm:px-6">
+  <div class:list={['grid gap-10', checks.length > 0 && 'md:grid-cols-[1fr_1.15fr] md:gap-14']}>
+    <div class="md:sticky md:top-28 md:self-start">
+      <SectionLabel label={es ? 'Qué hago' : 'What I do'} />
+      <h2 class="display-2 mt-3">{pov.title}</h2>
+      <div class="mt-6 space-y-4 text-[1.02rem] leading-relaxed">
+        {pov.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+      </div>
+    </div>
+    {
+      checks.length > 0 && (
+        <div>
+          <p class="meta">{es ? 'Lo que reviso' : 'What I check'}</p>
+          <ol class="mt-4 grid gap-3">
+            {checks.map((check, index) => (
+              <li class="card flex gap-4">
+                <span class="font-display text-2xl font-semibold leading-none text-accent-ink">{String(index + 1).padStart(2, '0')}</span>
+                <span>
+                  <span class="block font-semibold">{check.title}</span>
+                  <span class="mt-1 block text-[0.95rem] text-muted">{check.detail}</span>
+                </span>
+              </li>
+            ))}
+          </ol>
+        </div>
+      )
+    }
+  </div>
+</section>

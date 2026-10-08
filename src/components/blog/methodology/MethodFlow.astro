@@ -1,0 +1,109 @@
+---
+/** Todo el recorrido de la metodología en una línea: de qué hay que hacer a cómo se hace */
+interface Props {
+  lang?: 'es' | 'en';
+}
+const { lang = 'es' } = Astro.props;
+const copy = {
+  es: {
+    label: 'Recorrido de la metodología',
+    steps: [
+      { group: 'Qué hacer', items: ['Objetivo de negocio', 'Datos', 'Problema principal'] },
+      { group: 'Cómo hacerlo', items: ['Objetivo anual y quarters', 'KPIs y OKRs', 'Iniciativas', 'Tareas', 'Revisión semanal'] },
+    ],
+  },
+  en: {
+    label: 'The methodology end to end',
+    steps: [
+      { group: 'What to do', items: ['Business goal', 'Data', 'Main problem'] },
+      { group: 'How to do it', items: ['Annual goal and quarters', 'KPIs and OKRs', 'Initiatives', 'Tasks', 'Weekly review'] },
+    ],
+  },
+}[lang];
+const { steps } = copy;
+---
+
+<figure class="method-flow not-prose my-8" aria-label={copy.label}>
+  {
+    steps.map((step, groupIndex) => (
+      <div class="mf-group">
+        <span class="mf-label">{step.group}</span>
+        <ol>
+          {step.items.map((item, index) => (
+            <li>
+              <span class="mf-n">{String((groupIndex === 0 ? 0 : 3) + index + 1).padStart(2, '0')}</span>
+              {item}
+            </li>
+          ))}
+        </ol>
+      </div>
+    ))
+  }
+</figure>
+
+<style>
+  @layer components {
+    figure.method-flow ol {
+      list-style: none;
+      padding-left: 0;
+      margin-top: 0;
+    }
+    figure.method-flow li + li {
+      margin-top: 0;
+    }
+  }
+  .method-flow {
+    display: grid;
+    grid-template-columns: 3fr 5fr;
+    gap: 0.5rem;
+    font-size: 0.78rem;
+    line-height: 1.3;
+  }
+  .mf-group {
+    border: 1px solid var(--color-line);
+    border-radius: 0.75rem;
+    background: var(--color-raised);
+    padding: 0.6rem 0.7rem 0.7rem;
+  }
+  .mf-group:last-child {
+    border-color: var(--color-dark);
+    background: var(--color-dark);
+    color: var(--color-on-dark);
+  }
+  .mf-label {
+    display: block;
+    margin-bottom: 0.45rem;
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--color-accent-ink);
+  }
+  .mf-group:last-child .mf-label {
+    color: var(--color-accent-on-dark);
+  }
+  .mf-group ol {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+  }
+  .mf-group li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    border-radius: 999px;
+    background: color-mix(in srgb, currentColor 8%, transparent);
+    padding: 0.2rem 0.6rem 0.2rem 0.3rem;
+    font-weight: 600;
+  }
+  .mf-n {
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    opacity: 0.6;
+  }
+  @media (max-width: 640px) {
+    .method-flow {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

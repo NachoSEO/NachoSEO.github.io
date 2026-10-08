@@ -1,0 +1,91 @@
+---
+import Base from '../../layouts/Base.astro';
+import Cta from '../../components/Cta.astro';
+import FaqAccordion from '../../components/service/FaqAccordion.astro';
+import SessionValueCalculator from '../../components/tools/SessionValueCalculator.astro';
+
+const path = '/herramientas/calculadora-valor-sesion-seo/';
+
+const faq = [
+  {
+    question: '¿Por qué uso el margen y no la facturación?',
+    answer:
+      'Porque dos productos que facturan lo mismo pueden dejar dinero muy distinto. Si priorizas el SEO por facturación, puedes acabar empujando lo que más vende y menos deja. Con el margen bruto comparas lo que de verdad aporta cada sesión.',
+  },
+  {
+    question: '¿Qué clics pongo?',
+    answer:
+      'Los clics orgánicos sin marca de Search Console. El tráfico de marca lo trae la marca, y si lo mezclas, el valor del SEO sale inflado.',
+  },
+  {
+    question: '¿Saco la conversión de la analítica?',
+    answer:
+      'Mejor del backend: pedidos o leads reales atribuidos al canal orgánico. La analítica web suele quedarse corta por el consentimiento de cookies, así que úsala para repartir entre page types y no como total.',
+  },
+  {
+    question: '¿Cómo lo uso para priorizar?',
+    answer:
+      'Calcula el valor por sesión de cada page type (categorías, fichas, blog…) y multiplícalo por los clics que puedes ganar en cada uno. El orden que sale casi nunca coincide con el del volumen de búsquedas.',
+  },
+];
+
+const webApplication = {
+  '@type': 'WebApplication',
+  name: 'Calculadora del valor de una sesión orgánica',
+  url: `https://nachomascort.com${path}`,
+  applicationCategory: 'BusinessApplication',
+  operatingSystem: 'Any',
+  browserRequirements: 'Requires JavaScript',
+  inLanguage: 'es',
+  isAccessibleForFree: true,
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' },
+  author: { '@id': 'https://nachomascort.com/#person' },
+};
+---
+
+<Base
+  lang="es"
+  title="Calculadora del valor de una sesión orgánica (SEO) — Nacho Mascort"
+  description="Calcula cuánto vale cada sesión orgánica de tu web según tu modelo de negocio (ventas, leads o publicidad) y cuánto deja tu SEO al mes y al año."
+  path={path}
+  alternatePath="/en/tools/organic-session-value-calculator/"
+  breadcrumbs={[
+    { name: 'Inicio', path: '/' },
+    { name: 'Herramientas', path: '/herramientas/' },
+    { name: 'Calculadora del valor de una sesión orgánica', path },
+  ]}
+  faq={faq}
+  extraSchemaNodes={[webApplication]}
+>
+  <div class="mx-auto max-w-5xl px-5 pt-16 sm:px-6 sm:pt-20">
+    <p class="meta"><a href="/herramientas/" class="hover:text-ink">Herramientas</a> · Negocio</p>
+    <h1 class="display-1 mt-5">Calculadora del valor de una sesión orgánica</h1>
+    <p class="lede mt-6">
+      Cuánto deja de verdad cada visita que te trae Google, según tu modelo de negocio. Con ese número puedes comparar page
+      types, priorizar el plan SEO y saber qué vale cada mil clics más.
+    </p>
+
+    <div class="mt-10">
+      <SessionValueCalculator />
+    </div>
+  </div>
+
+  <article class="mx-auto max-w-5xl px-5 pt-16 sm:px-6 md:pt-24">
+    <p class="section-label">Cómo usarla</p>
+    <div class="article-body mt-4">
+      <h2>Una cifra por page type</h2>
+      <p>
+        El valor por sesión cambia mucho de un tipo de página a otro. Una categoría puede dejar varios euros por sesión y
+        un post del blog, unos céntimos. Calcula un valor para cada page type y multiplícalo por sus clics: así ves qué
+        partes de tu web pagan el proyecto y cuáles solo traen tráfico.
+      </p>
+      <p>
+        Es el primer paso de la metodología con la que trabajo los proyectos SEO. La cuento entera, con un ejemplo de
+        principio a fin, en <a href="/blog/metodologia-proyectos-seo/">mi metodología para proyectos SEO</a>.
+      </p>
+    </div>
+  </article>
+
+  <FaqAccordion lang="es" faq={faq} />
+  <Cta lang="es" />
+</Base>

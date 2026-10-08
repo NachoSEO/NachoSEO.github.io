@@ -1,0 +1,385 @@
+---
+/**
+ * Miniatura ilustrativa de un entregable (tabla, hoja de ruta, ticket, panel…), elegida por el título.
+ * Son maquetas con datos de ejemplo, para que se vea qué forma tiene lo que te llevas.
+ */
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+const t = title.toLowerCase();
+
+const kind = (() => {
+  if (/fan-out/.test(t)) return 'fanout';
+  if (/medición de partida/.test(t)) return 'presence';
+  if (/fuentes|menciones/.test(t)) return 'sources';
+  if (/hreflang|estructura internacional/.test(t)) return 'hreflang';
+  if (/demanda por mercado|expansión/.test(t)) return 'markets';
+  if (/inventario|mapa de redirecciones/.test(t)) return 'redirects';
+  if (/rastreo e indexación/.test(t)) return 'crawl';
+  if (/quality|calidad/.test(t)) return 'scores';
+  if (/hoja de ruta|plan/.test(t)) return 'roadmap';
+  if (/staging/.test(t)) return 'staging';
+  if (/lanzamiento/.test(t)) return 'launch';
+  if (/revisión de cambios/.test(t)) return 'ticket';
+  if (/medición|seguimiento/.test(t)) return 'metrics';
+  if (/método|documentado/.test(t)) return 'doc';
+  if (/sesión/.test(t)) return 'session';
+  if (/page type|diagnóstico|auditoría|caída/.test(t)) return 'table';
+  return 'checklist';
+})();
+
+const tableRows = [
+  { name: 'Categorías', width: 92, value: '72.200 €' },
+  { name: 'Fichas', width: 48, value: '36.400 €' },
+  { name: 'Blog', width: 6, value: '3.050 €' },
+];
+---
+
+<div class="dp" aria-hidden="true">
+  <div class="dp-bar"><i></i><i></i><i></i></div>
+  <div class="dp-body">
+    {
+      kind === 'table' && (
+        <div class="dp-rows">
+          {tableRows.map((row) => (
+            <div class="dp-row">
+              <span>{row.name}</span>
+              <span class="dp-track"><span style={`width: ${row.width}%`} /></span>
+              <span class="dp-num">{row.value}</span>
+            </div>
+          ))}
+        </div>
+      )
+    }
+    {
+      kind === 'crawl' && (
+        <div class="dp-stack">
+          <span class="dp-seg ok" style="flex: 41">Indexada</span>
+          <span class="dp-seg crawl" style="flex: 41">Descubierta</span>
+          <span class="dp-seg bad" style="flex: 18">Rastreada</span>
+        </div>
+      )
+    }
+    {
+      kind === 'scores' && (
+        <div class="dp-rows">
+          {[['Esfuerzo', 3], ['Originalidad', 2], ['Talento', 3], ['Exactitud', 4]].map(([name, score]) => (
+            <div class="dp-row">
+              <span>{name}</span>
+              <span class="dp-dots">{[1, 2, 3, 4].map((dot) => <i class:list={[dot <= Number(score) && 'on']} />)}</span>
+              <span class="dp-num">{score}/4</span>
+            </div>
+          ))}
+        </div>
+      )
+    }
+    {
+      kind === 'roadmap' && (
+        <div class="dp-gantt">
+          {[
+            [0, 2, 'seo'],
+            [1, 3, 'tech'],
+            [3, 2, 'content'],
+            [4, 2, 'seo'],
+          ].map(([start, span, team]) => (
+            <span class={`dp-g ${team}`} style={`grid-column: ${Number(start) + 1} / span ${span}`} />
+          ))}
+        </div>
+      )
+    }
+    {
+      kind === 'ticket' && (
+        <div class="dp-ticket">
+          <p class="dp-mono">SEO-142 · En revisión</p>
+          <p class="dp-strong">Noindex en filtros sin demanda</p>
+          <p class="dp-check on">Canonical y meta robots</p>
+          <p class="dp-check on">Sin bloqueo en robots.txt</p>
+          <p class="dp-check">Enlazado interno</p>
+        </div>
+      )
+    }
+    {
+      kind === 'staging' && (
+        <div class="dp-session">
+          <p class="dp-mono">staging.ejemplo.com · revisión</p>
+          <p class="dp-check on">Indexable y sin noindex heredado</p>
+          <p class="dp-check on">Canonicals a las URLs nuevas</p>
+          <p class="dp-check">Contenido visible sin JavaScript</p>
+        </div>
+      )
+    }
+    {
+      kind === 'launch' && (
+        <div class="dp-redirects dp-mono">
+          <p><span>/old/zapatillas</span> → 301 ✓</p>
+          <p><span>robots.txt</span> → 200 ✓</p>
+          <p><span>sitemap.xml</span> → URLs nuevas ✓</p>
+        </div>
+      )
+    }
+    {
+      kind === 'presence' && (
+        <div class="dp-metrics">
+          <div>
+            <p class="dp-mono">Respuestas que te nombran</p>
+            <p class="dp-big">12 %</p>
+          </div>
+          <svg viewBox="0 0 100 36" class="dp-spark">
+            <polyline points="0,30 20,31 35,28 50,29 65,24 80,22 100,17" />
+          </svg>
+        </div>
+      )
+    }
+    {
+      kind === 'metrics' && (
+        <div class="dp-metrics">
+          <div>
+            <p class="dp-mono">Indexadas</p>
+            <p class="dp-big">28.100</p>
+          </div>
+          <svg viewBox="0 0 100 36" class="dp-spark">
+            <polyline points="0,32 20,31 35,30 50,26 65,18 80,11 100,4" />
+          </svg>
+        </div>
+      )
+    }
+    {
+      kind === 'doc' && (
+        <div class="dp-doc">
+          <p class="dp-strong">Proceso de QA de SEO</p>
+          <span style="width: 90%" />
+          <span style="width: 75%" />
+          <span style="width: 82%" />
+          <span style="width: 60%" />
+        </div>
+      )
+    }
+    {
+      kind === 'session' && (
+        <div class="dp-session">
+          <p class="dp-mono">Sesión con el equipo · 60 min</p>
+          <p class="dp-check on">Problemas por orden de impacto</p>
+          <p class="dp-check on">Quién arregla cada uno</p>
+          <p class="dp-check on">Dudas resueltas</p>
+        </div>
+      )
+    }
+    {
+      kind === 'redirects' && (
+        <div class="dp-redirects dp-mono">
+          <p><span>/old/zapatillas</span> → /zapatillas/</p>
+          <p><span>/old/zapatillas-rojas</span> → /zapatillas/rojas/</p>
+          <p><span>/old/oferta-2019</span> → 410</p>
+        </div>
+      )
+    }
+    {
+      kind === 'hreflang' && (
+        <div class="dp-redirects dp-mono">
+          <p>hreflang="es-ES" → ejemplo.es</p>
+          <p>hreflang="es-MX" → ejemplo.mx</p>
+          <p>hreflang="x-default" → ejemplo.com</p>
+        </div>
+      )
+    }
+    {
+      kind === 'markets' && (
+        <div class="dp-rows">
+          {[['España', 88], ['México', 64], ['Argentina', 31]].map(([name, width]) => (
+            <div class="dp-row">
+              <span>{name}</span>
+              <span class="dp-track"><span style={`width: ${width}%`} /></span>
+            </div>
+          ))}
+        </div>
+      )
+    }
+    {
+      kind === 'fanout' && (
+        <div class="dp-redirects dp-mono">
+          <p>"mejores consultores seo españa"</p>
+          <p>site:ejemplo.com casos clientes</p>
+          <p>"[marca] opiniones experiencia"</p>
+        </div>
+      )
+    }
+    {
+      kind === 'sources' && (
+        <div class="dp-rows">
+          {[['Medios del sector', 74], ['Listas y rankings', 52], ['Perfiles', 33]].map(([name, width]) => (
+            <div class="dp-row">
+              <span>{name}</span>
+              <span class="dp-track"><span style={`width: ${width}%`} /></span>
+            </div>
+          ))}
+        </div>
+      )
+    }
+    {
+      kind === 'checklist' && (
+        <div class="dp-session">
+          <p class="dp-check on">Casos con datos</p>
+          <p class="dp-check on">Quién eres y qué has hecho</p>
+          <p class="dp-check">Datos estructurados</p>
+        </div>
+      )
+    }
+  </div>
+</div>
+
+<style>
+  .dp {
+    overflow: hidden;
+    border: 1px solid var(--color-line);
+    border-radius: 0.6rem;
+    background: var(--color-paper);
+    font-size: 0.68rem;
+    line-height: 1.35;
+  }
+  .dp-bar {
+    display: flex;
+    gap: 0.25rem;
+    border-bottom: 1px solid var(--color-line);
+    padding: 0.35rem 0.5rem;
+  }
+  .dp-bar i {
+    width: 0.4rem;
+    height: 0.4rem;
+    border-radius: 999px;
+    background: var(--color-line);
+  }
+  .dp-body {
+    min-height: 5.6rem;
+    padding: 0.6rem 0.7rem;
+  }
+  .dp-rows {
+    display: grid;
+    gap: 0.4rem;
+  }
+  .dp-row {
+    display: grid;
+    grid-template-columns: 5.5rem 1fr auto;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .dp-track {
+    height: 0.45rem;
+    overflow: hidden;
+    border-radius: 999px;
+    background: var(--color-line);
+  }
+  .dp-track span {
+    display: block;
+    height: 100%;
+    background: var(--color-accent);
+  }
+  .dp-num,
+  .dp-mono {
+    font-family: var(--font-mono);
+    color: var(--color-muted);
+  }
+  .dp-stack {
+    display: flex;
+    gap: 2px;
+    overflow: hidden;
+    margin-top: 1.2rem;
+    border-radius: 0.3rem;
+  }
+  .dp-seg {
+    padding: 0.35rem 0.3rem;
+    color: #fff;
+    font-size: 0.6rem;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  .ok {
+    background: #2f6f4f;
+  }
+  .crawl,
+  .tech {
+    background: var(--color-ink);
+  }
+  .bad,
+  .seo {
+    background: var(--color-accent);
+  }
+  .content {
+    background: #6b5ca5;
+  }
+  .dp-dots {
+    display: flex;
+    gap: 0.2rem;
+  }
+  .dp-dots i {
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 999px;
+    background: var(--color-line);
+  }
+  .dp-dots i.on {
+    background: var(--color-accent);
+  }
+  .dp-gantt {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 0.35rem 0.2rem;
+    padding-top: 0.2rem;
+  }
+  .dp-g {
+    height: 0.75rem;
+    border-radius: 0.2rem;
+  }
+  .dp-ticket,
+  .dp-session,
+  .dp-doc {
+    display: grid;
+    gap: 0.25rem;
+  }
+  .dp-strong {
+    color: var(--color-ink);
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+  .dp-check::before {
+    content: '○';
+    margin-right: 0.35rem;
+    color: var(--color-muted);
+  }
+  .dp-check.on::before {
+    content: '✓';
+    color: var(--color-accent-ink);
+  }
+  .dp-metrics {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: end;
+    gap: 0.8rem;
+  }
+  .dp-big {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--color-ink);
+  }
+  .dp-spark polyline {
+    fill: none;
+    stroke: var(--color-accent);
+    stroke-width: 2.5;
+  }
+  .dp-doc span {
+    display: block;
+    height: 0.4rem;
+    border-radius: 999px;
+    background: var(--color-line);
+  }
+  .dp-redirects {
+    display: grid;
+    gap: 0.35rem;
+    font-size: 0.64rem;
+  }
+  .dp-redirects span {
+    color: var(--color-ink);
+  }
+</style>

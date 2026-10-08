@@ -1,0 +1,354 @@
+---
+/**
+ * El ejemplo de plan.ts como base de tareas con dos vistas (tablero y Gantt) y un selector de semana.
+ * Se renderiza en la semana 4; el script mueve las tarjetas y las barras al cambiar de semana o de vista.
+ * Sin JS se ve el tablero de la semana 4.
+ */
+import { getPlan, statusAt, weeks, type Lang } from './plan';
+
+interface Props {
+  lang?: Lang;
+}
+const { lang = 'es' } = Astro.props;
+const { statuses, tasks, teams } = getPlan(lang);
+const copy = {
+  es: {
+    week: 'Semana',
+    view: 'Vista',
+    board: 'Tablero',
+    late: '· tarde',
+    waitsFor: 'Espera a:',
+    planned: (planned: number, start: number, end: number) => `planificada en S${planned}, hecha en S${start}${end > start ? `–S${end}` : ''}`,
+    caption:
+      'Ejemplo simplificado. Cambia de semana: en la 4, el noindex de los filtros va tarde y la revisión de los logs queda en espera. En el Gantt, el recuadro es la semana planificada (en rojo si está en espera) y la barra, la real.',
+  },
+  en: {
+    week: 'Week',
+    view: 'View',
+    board: 'Board',
+    late: '· late',
+    waitsFor: 'Waiting for:',
+    planned: (planned: number, start: number, end: number) => `planned for W${planned}, done in W${start}${end > start ? `–W${end}` : ''}`,
+    caption:
+      'Simplified example. Switch weeks: in week 4, the noindex on the filters is late and the log review is on hold. In the Gantt view, the dashed box is the planned week (red if on hold) and the bar is the actual one.',
+  },
+}[lang];
+const weekPrefix = lang === 'en' ? 'W' : 'S';
+
+const initialWeek = 4;
+const weekList = Array.from({ length: weeks }, (_, index) => index + 1);
+const isLate = (task: (typeof tasks)[number], week: number) => week > task.planned && statusAt(task, week) !== 'done';
+---
+
+<figure class="plan-explorer not-prose my-10" data-plan-explorer data-week={initialWeek}>
+  <div class="pe-bar">
+    <div class="pe-weeks" role="radiogroup" aria-label={copy.week}>
+      <span class="pe-bar-label">{copy.week}</span>
+      {
+        weekList.map((week) => (
+          <button type="button" role="radio" aria-checked={String(week === initialWeek)} data-week-button={week}>
+            {week}
+          </button>
+        ))
+      }
+    </div>
+    <div class="pe-tabs" role="tablist" aria-label={copy.view}>
+      <button type="button" role="tab" aria-selected="true" data-view="board">{copy.board}</button>
+      <button type="button" role="tab" aria-selected="false" data-view="gantt">Gantt</button>
+    </div>
+  </div>
+
+  <div class="pe-board" data-panel="board">
+    {
+      statuses.map((status) => (
+        <div class="pe-col" data-status={status.id}>
+          <p class="pe-col-title">
+            {status.label} <span data-count>{tasks.filter((task) => statusAt(task, initialWeek) === status.id).length}</span>
+          </p>
+          <ul data-list>
+            {tasks
+              .filter((task) => statusAt(task, initialWeek) === status.id)
+              .map((task) => (
+                <li class="pe-card" data-task={task.id} style={`--team: ${teams[task.team].color}`}>
+                  <span class="pe-card-title">{task.title}</span>
+                  <span class="pe-card-meta">
+                    {teams[task.team].label}
+                    <span class="pe-late" hidden={!isLate(task, initialWeek)}>{copy.late}</span>
+                  </span>
+                  {task.blockedBy && (
+                    <span class="pe-blocked" hidden={statusAt(task, initialWeek) !== 'hold'}>
+                      {copy.waitsFor} {task.blockedBy}
+                    </span>
+                  )}
+                </li>
+              ))}
+          </ul>
+        </div>
+      ))
+    }
+  </div>
+
+  <div class="pe-gantt" data-panel="gantt" hidden style={`--weeks: ${weeks}; --now: ${initialWeek}`}>
+    {weekList.map((week) => <span class="pe-gantt-head" data-head={week} style={`grid-row: 1; grid-column: ${week + 1}`}>{weekPrefix}{week}</span>)}
+    {
+      tasks.map((task, index) => (
+        <>
+          <span class="pe-gantt-label" title={task.title} style={`grid-row: ${index + 2}`}>
+            <i style={`--team: ${teams[task.team].color}`} aria-hidden="true" />
+            {task.title}
+          </span>
+          <span class="pe-planned" data-planned={task.id} style={`grid-row: ${index + 2}; grid-column: ${task.planned + 1}`} aria-hidden="true" />
+          <span
+            class="pe-actual"
+            data-bar={task.id}
+            style={`--team: ${teams[task.team].color}; grid-row: ${index + 2}; grid-column: ${task.start + 1} / ${task.end + 2}`}
+            title={`${teams[task.team].label}: ${copy.planned(task.planned, task.start, task.end)}`}
+          />
+        </>
+      ))
+    }
+  </div>
+
+  <figcaption>
+    <span class="pe-legend">
+      {
+        Object.values(teams).map((team) => (
+          <span>
+            <i style={`--team: ${team.color}`} aria-hidden="true" />
+            {team.label}
+          </span>
+        ))
+      }
+    </span>
+    {copy.caption}
+  </figcaption>
+</figure>
+
+<style>
+  @layer components {
+    figure.plan-explorer ul {
+      list-style: none;
+      padding-left: 0;
+      margin-top: 0;
+    }
+    figure.plan-explorer li + li {
+      margin-top: 0;
+    }
+    figure.plan-explorer p {
+      margin-top: 0;
+    }
+  }
+  .plan-explorer {
+    border: 1px solid var(--color-line);
+    border-radius: 0.875rem;
+    background: var(--color-raised);
+    padding: 0.85rem;
+    font-size: 0.8rem;
+    line-height: 1.35;
+  }
+  .pe-bar {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+  .pe-weeks,
+  .pe-tabs {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.15rem;
+    border: 1px solid var(--color-line);
+    border-radius: 999px;
+    padding: 0.15rem;
+  }
+  .pe-bar-label {
+    padding-inline: 0.5rem 0.25rem;
+    color: var(--color-muted);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .pe-weeks button,
+  .pe-tabs button {
+    min-width: 1.8rem;
+    border-radius: 999px;
+    padding: 0.2rem 0.6rem;
+    font-weight: 600;
+    color: var(--color-muted);
+  }
+  .pe-weeks button[aria-checked='true'],
+  .pe-tabs button[aria-selected='true'] {
+    background: var(--color-ink);
+    color: var(--color-on-dark);
+  }
+  .pe-board {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(8.5rem, 1fr));
+    gap: 0.5rem;
+    overflow-x: auto;
+  }
+  .pe-col {
+    border-radius: 0.6rem;
+    background: color-mix(in srgb, var(--color-line) 40%, transparent);
+    padding: 0.5rem;
+    min-height: 9rem;
+  }
+  .pe-col-title {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.4rem;
+    font-weight: 700;
+  }
+  .pe-col-title span {
+    color: var(--color-muted);
+    font-weight: 500;
+  }
+  .pe-col ul {
+    display: grid;
+    gap: 0.35rem;
+  }
+  .pe-card {
+    display: grid;
+    gap: 0.1rem;
+    border-left: 3px solid var(--team);
+    border-radius: 0.35rem;
+    background: var(--color-raised);
+    padding: 0.35rem 0.45rem;
+    box-shadow: 0 1px 0 var(--color-line);
+  }
+  .pe-card-title {
+    font-weight: 500;
+  }
+  .pe-card-meta {
+    color: var(--color-muted);
+    font-size: 0.7rem;
+  }
+  .pe-late,
+  .pe-blocked {
+    color: var(--color-accent-ink);
+    font-size: 0.7rem;
+  }
+  .pe-gantt {
+    display: grid;
+    grid-template-columns: minmax(15.5rem, 2.6fr) repeat(var(--weeks), minmax(1.9rem, 1fr));
+    min-width: 32rem;
+    grid-auto-rows: 1.35rem;
+    align-items: center;
+    row-gap: 0.15rem;
+    overflow-x: auto;
+  }
+  .pe-gantt-head {
+    text-align: center;
+    color: var(--color-muted);
+    font-size: 0.7rem;
+    font-weight: 600;
+  }
+  .pe-gantt-head.is-now {
+    color: var(--color-accent-ink);
+  }
+  .pe-gantt-label {
+    grid-column: 1;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    overflow: hidden;
+    padding-right: 0.5rem;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  .pe-gantt-label i,
+  .pe-legend i {
+    flex-shrink: 0;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 0.15rem;
+    background: var(--team);
+  }
+  /* Recuadro de la semana planificada y barra de la real, en la misma fila */
+  .pe-planned,
+  .pe-actual {
+    height: 0.95rem;
+    border-radius: 0.25rem;
+  }
+  .pe-planned {
+    margin-inline: 0.1rem;
+    border: 1.5px dashed var(--color-muted);
+  }
+  .pe-planned.is-hold {
+    border-color: var(--color-accent);
+    background: color-mix(in srgb, var(--color-accent) 10%, transparent);
+  }
+  .pe-actual {
+    margin-inline: 0.2rem;
+    background: var(--team);
+    opacity: 0.25;
+  }
+  .pe-actual.is-done,
+  .pe-actual.is-doing {
+    opacity: 1;
+  }
+  .pe-actual.is-doing {
+    background: repeating-linear-gradient(135deg, var(--team) 0 5px, color-mix(in srgb, var(--team) 60%, white) 5px 10px);
+  }
+  .plan-explorer figcaption {
+    margin-top: 0.75rem;
+    color: var(--color-muted);
+    font-size: 0.8rem;
+  }
+  .pe-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.9rem;
+    margin-bottom: 0.35rem;
+  }
+  .pe-legend span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+</style>
+
+<script>
+  import { statusAt, taskStructure as tasks } from './plan';
+
+  for (const root of document.querySelectorAll<HTMLElement>('[data-plan-explorer]')) {
+    const cards = new Map([...root.querySelectorAll<HTMLElement>('[data-task]')].map((card) => [card.dataset.task!, card]));
+    const bars = new Map([...root.querySelectorAll<HTMLElement>('[data-bar]')].map((bar) => [bar.dataset.bar!, bar]));
+    const columns = new Map([...root.querySelectorAll<HTMLElement>('[data-status]')].map((col) => [col.dataset.status!, col]));
+
+    const setWeek = (week: number) => {
+      root.querySelectorAll<HTMLButtonElement>('[data-week-button]').forEach((button) =>
+        button.setAttribute('aria-checked', String(Number(button.dataset.weekButton) === week))
+      );
+      root.querySelectorAll<HTMLElement>('[data-head]').forEach((head) => head.classList.toggle('is-now', Number(head.dataset.head) === week));
+      for (const task of tasks) {
+        const status = statusAt(task, week);
+        const card = cards.get(task.id)!;
+        columns.get(status)!.querySelector('[data-list]')!.append(card);
+        card.querySelector<HTMLElement>('.pe-late')!.hidden = !(week > task.planned && status !== 'done');
+        const blocked = card.querySelector<HTMLElement>('.pe-blocked');
+        if (blocked) blocked.hidden = status !== 'hold';
+        const bar = bars.get(task.id)!;
+        bar.classList.toggle('is-done', status === 'done');
+        bar.classList.toggle('is-doing', status === 'doing');
+        root.querySelector(`[data-planned="${task.id}"]`)!.classList.toggle('is-hold', status === 'hold');
+      }
+      columns.forEach((col) => {
+        col.querySelector('[data-count]')!.textContent = String(col.querySelectorAll('[data-task]').length);
+      });
+    };
+
+    const setView = (view: string) => {
+      root.querySelectorAll<HTMLButtonElement>('[data-view]').forEach((tab) => tab.setAttribute('aria-selected', String(tab.dataset.view === view)));
+      root.querySelectorAll<HTMLElement>('[data-panel]').forEach((panel) => (panel.hidden = panel.dataset.panel !== view));
+    };
+
+    root.querySelectorAll<HTMLButtonElement>('[data-week-button]').forEach((button) =>
+      button.addEventListener('click', () => setWeek(Number(button.dataset.weekButton)))
+    );
+    root.querySelectorAll<HTMLButtonElement>('[data-view]').forEach((tab) => tab.addEventListener('click', () => setView(tab.dataset.view!)));
+    setWeek(Number(root.dataset.week));
+  }
+</script>

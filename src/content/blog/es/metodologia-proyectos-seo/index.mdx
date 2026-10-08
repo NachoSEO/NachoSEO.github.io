@@ -1,0 +1,330 @@
+---
+title: 'Mi metodología para proyectos SEO: del objetivo de negocio a la tarea de la semana'
+description: 'La metodología que llevo años usando con empresas y clientes: objetivos desde la cuenta de resultados, OKRs por quarter, sprints semanales, métricas que tardan meses y automatizar lo operativo.'
+lang: es
+translationKey: seo-methodology
+slug: metodologia-proyectos-seo
+pubDate: 2026-10-09
+tags: ['metodología', 'gestión de proyectos', 'consultoría seo']
+citations:
+  - title: 'Procesos, metodologías y automatizaciones SEO en Softonic (Clinic SEO 2019)'
+    url: 'https://speakerdeck.com/nachomascort/procesos-metodologias-y-automatizaciones-seo-en-softonic-clinic-seo'
+    author: 'Nacho Mascort y Ferran Gavin'
+    date: '2019-12-16'
+  - title: 'How long does it take for Google to crawl, index, and serve a webpage?'
+    url: 'https://www.linkedin.com/feed/update/urn:li:activity:7512112386334642176/'
+    author: 'Estela Franco'
+  - title: 'Page indexing report'
+    url: 'https://support.google.com/webmasters/answer/7440203'
+    publisher: 'Google Search Console Help'
+  - title: 'Managing crawling of faceted navigation URLs'
+    url: 'https://developers.google.com/search/docs/crawling-indexing/crawling-managing-faceted-navigation'
+    publisher: 'Google Search Central'
+  - title: 'Block Search indexing with noindex'
+    url: 'https://developers.google.com/search/docs/crawling-indexing/block-indexing'
+    publisher: 'Google Search Central'
+  - title: 'Set goals with OKRs'
+    url: 'https://rework.withgoogle.com/guides/set-goals-with-okrs/steps/introduction/'
+    publisher: 'Google re:Work'
+  - title: 'The Kanban Guide'
+    url: 'https://prokanban.org/the-kanban-guide/'
+    author: 'Daniel S. Vacanti y ProKanban.org'
+  - title: 'A Proof for the Queuing Formula: L = λW'
+    url: 'https://doi.org/10.1287/opre.9.3.383'
+    author: 'John D. C. Little'
+    publisher: 'Operations Research'
+    date: '1961'
+  - title: 'Why the Fibonacci Sequence Works Well for Estimating'
+    url: 'https://www.mountaingoatsoftware.com/blog/why-the-fibonacci-sequence-works-well-for-estimating'
+    author: 'Mike Cohn'
+---
+
+import LeadMagnet from '../../../../components/blog/LeadMagnet.astro';
+import Tldr from '../../../../components/blog/Tldr.astro';
+import MethodFlow from '../../../../components/blog/methodology/MethodFlow.astro';
+import MethodLevels from '../../../../components/blog/methodology/MethodLevels.astro';
+import IndexingSplit from '../../../../components/blog/methodology/IndexingSplit.astro';
+import KrTracking from '../../../../components/blog/methodology/KrTracking.astro';
+import MetricLadder from '../../../../components/blog/methodology/MetricLadder.astro';
+import PlanExplorer from '../../../../components/blog/methodology/PlanExplorer.astro';
+import CapacityCalculator from '../../../../components/blog/methodology/CapacityCalculator.astro';
+import OpsVsInitiatives from '../../../../components/blog/methodology/OpsVsInitiatives.astro';
+
+<Tldr
+  items={[
+    'El objetivo del cliente se baja a la <strong>cuenta de resultados</strong> (margen, CAC, valor del cliente) y de ahí sale el <strong>valor de cada sesión orgánica</strong>.',
+    'Una <strong>tabla por page type</strong> cruza SEO y dinero. El problema principal es el paso donde se atasca más valor; ojo con separar rastreo de calidad.',
+    'El problema se convierte en un objetivo del quarter con <strong>KR en absoluto</strong>, del punto de partida a la meta, y en iniciativas con tareas de una semana.',
+    'El tráfico se vigila <strong>cada día</strong> como KPI de control; el impacto de cada iniciativa se juzga en su <strong>ventana de tiempo</strong>.',
+    'Sprints semanales con un <strong>Kanban ligero</strong>, las tareas de <strong>todos los equipos</strong> en el mismo tablero y lo operativo, automatizado.',
+  ]}
+/>
+
+Cuando alguien me contrata, una de las primeras preguntas es "¿y cómo vas a trabajar?". Este post es la respuesta larga.
+
+Es la metodología que llevo años usando y ajustando en distintas empresas y con clientes, con equipos de tamaños muy distintos. Una primera versión la contamos Ferran Gavin y yo en [Clinic SEO 2019](https://speakerdeck.com/nachomascort/procesos-metodologias-y-automatizaciones-seo-en-softonic-clinic-seo); lo que sigue es la versión de hoy. Tiene una parte para decidir qué hay que hacer y otra para decidir cómo:
+
+<MethodFlow />
+
+Casi todo lo que vas a leer sobre metodologías ágiles vale para cualquier equipo. Lo que la hace distinta para SEO son tres cosas, y son las que más espacio ocupan en este post: Google tarda semanas o meses en reflejar un cambio, casi todo el trabajo depende de otros equipos y el trabajo operativo se come la hoja de ruta si no lo automatizas.
+
+## 1. Traducir "quiero vender más" a la cuenta de resultados
+
+Casi todos los proyectos empiezan con un objetivo abstracto. "Quiero vender más", "quiero más tráfico", "quiero salir en ChatGPT". Con eso no se puede priorizar nada. Lo que hago es bajar ese objetivo a la cuenta de resultados, línea a línea, porque el SEO toca casi todas:
+
+| Línea del P&L | Lo que pregunto | Qué cambia en el plan SEO |
+|---|---|---|
+| **Ingresos** | ¿Qué líneas o categorías facturan más? ¿Cuál es el ticket medio y cuánto se repite la compra? ¿Qué parte de la facturación es estacional? | Qué page types y categorías van primero, y en qué quarter hay que tenerlos posicionados. |
+| **Margen bruto** | ¿Qué margen deja cada línea después de coste de producto, devoluciones y logística? ¿Hay productos que se venden mucho y no dejan nada? | Un producto con mucho volumen y poco margen puede valer menos que uno de nicho. Priorizo por margen. |
+| **Coste de adquisición** | ¿Cuánto pagas por cliente en cada canal? ¿Qué parte de tu inversión en paid va a búsquedas que podrías ganar en orgánico? ¿Cuánto pesa la marca en las ventas? | Las keywords donde el CPC es caro y convierte son las primeras candidatas. Cada venta orgánica ahí baja el CAC mezclado. |
+| **Valor del cliente** | ¿Cuánto vale un cliente a 12 o 24 meses? ¿Qué canal trae clientes que repiten más? | Una keyword que trae clientes que repiten vale más que otra con más volumen y una sola compra. |
+| **Capacidad y costes fijos** | ¿Cuántas horas de desarrollo y de contenido hay de verdad cada sprint? ¿Qué proveedores ya están pagados? | El plan tiene que caber en la capacidad real. Si una iniciativa necesita tres meses de desarrollo que no hay, se queda en el backlog. |
+| **Caja e inventario** | ¿Hay stock que hay que rotar? ¿Productos que van a desaparecer? ¿Lanzamientos en camino? | No empujo lo que no se puede servir, y preparo antes de tiempo lo que se va a lanzar. |
+
+Cada modelo de negocio añade sus propias preguntas:
+
+- **Ecommerce:** margen por categoría, tasa de devolución, roturas de stock, peso de los marketplaces.
+- **SaaS:** MRR, churn, ARPA, conversión de prueba a pago y qué keywords traen cuentas que no se dan de baja a los tres meses.
+- **B2B con leads:** valor medio del contrato, ciclo de venta, tasa de cierre por origen. Un lead de una keyword transaccional no vale lo mismo que uno de un post informativo.
+- **Medios y webs que monetizan con publicidad:** RPM por page type, páginas vistas por sesión, densidad de anuncios.
+
+Con esas respuestas calculo cuánto vale una sesión orgánica en cada page type:
+
+> Valor por sesión = tasa de conversión × ticket medio × margen bruto
+
+Puedes hacer la cuenta para tu web, con ventas, leads o publicidad, en la [calculadora del valor de una sesión orgánica](/herramientas/calculadora-valor-sesion-seo/).
+
+Con eso priorizo el plan: demanda que puedo captar por page type, multiplicada por el valor de cada sesión. A veces sale que el page type con más tráfico es el que menos dinero deja, y el que nadie miraba es el que paga el proyecto.
+
+Dos casos en los que trabajé enseñan lo distinto que sale el plan según el modelo de negocio:
+
+| | Softonic | Reverse Tech |
+|---|---|---|
+| **Cómo gana dinero** | Publicidad | Suscripciones |
+| **Qué vale una visita** | Su RPM: cada página vista monetiza | Nada, hasta que se suscribe y se queda |
+| **Estrategia** | Volumen: cubrir todo el software que la gente busca | Intención: tráfico transaccional que convierta |
+| **Métrica para priorizar** | Páginas vistas por sesión, RPM y vida esperada de cada ficha | Conversión a suscriptor y LTV por keyword |
+
+En [Softonic](/casos/softonic-0-a-20-millones/), cada ficha se valoraba por su potencial de búsqueda, y cuando una empezaba a rendir decidíamos si mejorarla con tres datos: su tráfico, su RPM y cuánto tiempo esperábamos que siguiera viva. Con publicidad, más páginas útiles con demanda eran más ingresos. Pero no bastaba con traer la visita: un usuario que veía cuatro páginas generaba el doble que uno que veía dos. Por eso las páginas vistas por sesión eran una métrica para priorizar, y el recorrido del usuario dentro de la web (alternativas, programas relacionados, siguiente paso tras la descarga) se diseñaba pensando en ella.
+
+En [Reverse Tech](/casos/reverse-tech-area-organica/) el modelo era de suscripción, y ahí el volumen servía de poco. Una visita informativa que nunca se suscribe no paga nada, por mucho que suba la gráfica de tráfico. Buscábamos tráfico transaccional, de gente con intención de compra, y dentro de ese tráfico, el que acababa en suscriptores que se quedaban más meses: el de LTV más alto.
+
+Mismo método y dos estrategias opuestas. Ninguna de las dos decisiones sale de una herramienta SEO; las dos salen de la cuenta de resultados.
+
+## 2. Una tabla por page type que cruza SEO y dinero
+
+Con las respuestas del punto 1 y los accesos de la primera semana (Search Console, analítica, logs, un rastreo completo y los datos de negocio que se puedan compartir), monto siempre la misma tabla. Una fila por page type y, en las columnas, todo lo que hace falta para decidir:
+
+| Page type | URLs | Indexadas | Clics sin marca / mes | Valor por sesión | Valor orgánico / mes |
+|---|---|---|---|---|---|
+| Categorías | 1.200 | 94 % | 38.000 | 1,90 € | 72.200 € |
+| Fichas de producto | 48.000 | 41 % | 52.000 | 0,70 € | 36.400 € |
+| Filtros indexables | 210.000 | 8 % | 6.000 | 0,40 € | 2.400 € |
+| Blog | 900 | 88 % | 61.000 | 0,05 € | 3.050 € |
+
+*Datos inventados para el ejemplo.*
+
+Esta tabla suele contradecir lo que el equipo cree. En el ejemplo, el blog trae más clics que nada y casi no deja dinero. Las categorías dejan el doble que las fichas con menos tráfico. Y hay 210.000 filtros que apenas se indexan ni aportan, mientras las fichas, que sí facturan, tienen indexadas menos de la mitad. La tabla no dice por qué; eso toca averiguarlo en el paso siguiente.
+
+Cuatro detalles que marcan la diferencia al montarla:
+
+- **Clics sin marca.** El tráfico de marca lo trae la marca. Lo separo en Search Console desde el primer día, porque si no, cualquier subida de notoriedad parece trabajo SEO.
+- **Indexadas, según los logs y Search Console.** El porcentaje de URLs indexadas por page type, cruzado con lo que Googlebot visita de verdad en los logs, enseña dónde se gasta el rastreo y dónde falta.
+- **El valor sale del backend.** Ingresos o leads reales por page type, con su margen. La analítica web suele quedarse corta por el consentimiento de cookies y la atribución, así que la uso para repartir porcentajes entre page types.
+- **Una fila por plantilla.** En una web grande los problemas viven en las plantillas. Mirar URLs sueltas esconde el patrón.
+
+## 3. Encontrar el problema principal: dónde se pierde el dinero
+
+Con la tabla delante, recorro cada page type por los pasos que hay entre una URL y el dinero: rastreo, indexación, posiciones, clics y conversión. El problema principal es el paso donde se queda atascado el valor más grande. A menudo no coincide con el error más visible de la auditoría.
+
+Ojo con "no indexada", porque esconde dos problemas con soluciones opuestas. El [informe de indexación de Search Console](https://support.google.com/webmasters/answer/7440203) los separa:
+
+- **"Descubierta: actualmente sin indexar".** Google conoce la URL pero no la ha rastreado. Suele ser un problema de rastreo: no llega, no le da prioridad o se gasta las visitas en otras URLs.
+- **"Rastreada: actualmente sin indexar".** Google la ha visitado y ha decidido no indexarla. Ahí el problema suele ser de calidad: contenido pobre, duplicado o páginas demasiado parecidas entre sí.
+
+Los logs lo confirman: si Googlebot visita la URL y aun así no entra en el índice, liberar rastreo no va a arreglar nada.
+
+Siguiendo con el ejemplo, las 28.300 fichas sin indexar se reparten así:
+
+<IndexingSplit />
+
+En los logs, además, Googlebot dedica a los filtros muchas más visitas que a las fichas:
+
+| Page type | Dónde se atasca | La prueba | Qué se hace primero |
+|---|---|---|---|
+| Fichas sin rastrear (19.800) | **Rastreo** | "Descubierta: actualmente sin indexar"; en los logs, Googlebot casi no las visita | Liberar rastreo y reforzar el enlazado a las fichas |
+| Fichas rastreadas sin indexar (8.500) | **Calidad** | "Rastreada: actualmente sin indexar"; variantes de color y talla casi idénticas, fichas con dos líneas de texto | Consolidar variantes y mejorar o quitar las fichas pobres |
+| Filtros indexables | **Rastreo** | 210.000 URLs que se llevan buena parte de las visitas de Googlebot y no aportan | Sacar del índice los filtros sin demanda y cortar el rastreo de combinaciones |
+| Categorías | **Posiciones** | Indexadas y con valor alto, pero entre la posición 4 y la 10 en sus consultas principales | Contenido y enlazado interno, después de lo anterior |
+| Blog | **Conversión** | Mucho tráfico, valor por sesión de 0,05 € | Enlazar a categorías; no ampliar el blog este quarter |
+
+En las 19.800 fichas sin rastrear, los filtros y las fichas son el mismo problema visto desde dos lados: el rastreo que se va a los filtros es el que les falta a las fichas. Ese es el problema principal, porque es el bloque más grande y bloquea lo demás. Las 8.500 rastreadas y sin indexar son otro problema, de [calidad](/blog/quality-google-core-updates/), y liberar rastreo no las va a meter en el índice. Google también documenta cómo [gestionar el rastreo de la navegación por filtros](https://developers.google.com/search/docs/crawling-indexing/crawling-managing-faceted-navigation).
+
+Para decidir el orden pongo un número a cada problema. Si las fichas pasaran del 41 % al 80 % de indexación (unas 18.700 más, que pueden salir de las 19.800 sin rastrear) y las nuevas rindieran como las que ya están, serían unos 49.500 clics más al mes, unos 34.600 € al mes con su valor por sesión. Las URLs que entran tarde suelen ser las más flojas, así que lo divido entre dos: unos 17.000 € al mes en juego. Con ese número en la mano, la conversación con el equipo de desarrollo sobre los filtros es muy distinta.
+
+El problema principal también define el tipo de objetivo, que no siempre es crecer:
+
+| Situación | Objetivo |
+|---|---|
+| La web funciona y quieres más | **Crecer**: más tráfico y más negocio de las páginas que facturan. |
+| Un core update te ha quitado tráfico | **Recuperar**: encontrar la causa y volver al nivel anterior, o superarlo. |
+| Vas a migrar o rediseñar | **Prevenir**: que no haya caída y, si se puede, aprovechar para subir. |
+| La IA recomienda a tu competencia | **Aparecer**: entrar en las respuestas de ChatGPT, Gemini o los AI Overviews. |
+
+En una migración, el mejor resultado es que nadie note nada en el tráfico y la web nueva empiece a crecer. Prevenir también es un objetivo, y a menudo el que más dinero ahorra.
+
+<LeadMagnet lang="es" source="metodologia-proyectos-seo" intro="Si en tu diagnóstico también sale un problema de calidad, como las 8.500 fichas del ejemplo, esta skill revisa tus page types con los criterios de Google:" />
+
+## 4. Del problema principal al plan del quarter
+
+El diagnóstico dice qué hay que resolver primero y cuánto vale. Ahora hay que convertirlo en trabajo que quepa en el calendario y en la capacidad real del equipo.
+
+Lo parto por tiempo. Si el proyecto va a durar un año o más, fijo un objetivo anual y lo divido en quarters, que es la unidad natural de una empresa. Cada quarter tiene sus subobjetivos o milestones, y dentro de cada uno trabajo con tres niveles:
+
+| Nivel | Qué es | Cuánto dura |
+|---|---|---|
+| **Theme o milestone** | Una meta estratégica amplia, que da dirección a todo lo que cuelga de ella. | De un quarter a varios años |
+| **Iniciativa** | Un proyecto concreto que acerca al theme, con su propia métrica. | De varias semanas a varios meses |
+| **Tarea** | Una pieza de trabajo con un solo responsable. | Una semana como máximo |
+
+En el ejemplo, el problema principal eran las fichas sin indexar, y los 17.000 € al mes en juego se convierten en el objetivo del quarter y sus dos resultados clave:
+
+<MethodLevels />
+
+El blog, que en el diagnóstico salía como problema de conversión, entra como una tarea de enlazado y no como iniciativa propia: este quarter no es la prioridad.
+
+Las 8.500 fichas con problema de calidad van al quarter siguiente como una iniciativa aparte, con su propia métrica.
+
+Fíjate también en que el noindex va a los filtros sueltos sin demanda y el bloqueo en robots.txt a las combinaciones de varios filtros: son URLs distintas a propósito, porque si Google no puede rastrear una URL [tampoco ve su noindex](https://developers.google.com/search/docs/crawling-indexing/block-indexing).
+
+Las tareas, además, no salen solo del plan. Entran por tres vías: **la auditoría** (lo que sale de revisar los KPIs), **los stakeholders** (peticiones de producto, contenido o negocio) y **las alertas** (algo se ha roto). Las tres van al mismo backlog y compiten por la misma capacidad.
+
+## 5. Métricas que se mueven esta semana y métricas que tardan meses
+
+Antes de definir las iniciativas, decido qué voy a mirar durante el quarter:
+
+- **KPIs de control.** Métricas que tienen que seguir sanas mientras trabajamos en otra cosa: el tráfico, que se vigila cada día, la indexación y los errores.
+- **OKRs.** El objetivo del quarter y sus resultados clave (KR): lo que tiene que haber cambiado al cerrar el quarter. Google explica bien el formato en su [guía de OKRs](https://rework.withgoogle.com/guides/set-goals-with-okrs/steps/introduction/).
+
+Los KR los escribo siempre en absoluto, del punto de partida al objetivo: "fichas indexadas, de 19.700 a 38.400". **Hay dos formas habituales de escribirlos que yo no uso:**
+
+- **En porcentaje** ("+20 % de tráfico"). Cuando veo un KR así, salta una alarma: suele indicar que no ha habido mucho análisis detrás. ¿20 % sobre qué base, medida cuándo? El porcentaje está bien para contárselo a otros stakeholders, pero para seguirlo cada semana necesitas el número.
+- **En incremental** ("+17.000 € al mes"). Si antes hacías 50 y quieres llegar a 65, y la primera semana haces 10 más, no sabes qué parte es base y qué parte es incremental. Con el total, sabes desde la primera semana si vas en camino, y si hablamos de ingresos, puedes calcular qué deberían estar aportando las acciones de SEO.
+
+Y hay que contar con el retraso: la acción de SEO se hace un día y el impacto llega semanas después. El KR en absoluto y con su línea de partida permite ver cuándo empieza a moverse.
+
+Los KPIs de control dependen de dónde se te puede romper el negocio. En [word.tips](/casos/word-tips-2-millones-visitas/), con picos de 2 millones de visitas al día, un error en una plantilla llegaba a cientos de miles de URLs en horas, así que el KPI de control era el rendimiento por plantilla. En una web pequeña con pocas páginas que facturan, basta con vigilar esas páginas una a una.
+
+Aquí está la primera diferencia con un equipo de producto. Si cambias un botón, al día siguiente sabes si convierte mejor. Si cambias una plantilla, Google tiene que rastrearla, indexarla y volver a valorarla, y cada paso tiene su plazo. Los de Google son los que enseñó en Barcelona y que cuento en el [post sobre quality y core updates](/blog/quality-google-core-updates/):
+
+<MetricLadder />
+
+El tráfico tiene dos papeles distintos:
+
+- **Como KPI de control, se mira siempre**: cada día y, en webs grandes, casi en tiempo real. Aunque el objetivo sea el negocio, la puerta de entrada es la web, y el tráfico es la primera métrica que avisa si algo se rompe.
+- **Como medida del impacto de una iniciativa, se evalúa en una ventana de tiempo** que depende de la iniciativa y del cambio.
+
+Esa ventana la fijo al definir cada iniciativa. Hasta que se cumple, la revisión semanal mira la parte izquierda de la escalera: si está desplegado, si Googlebot ya lo ha visto y si está indexado. Si juzgas el impacto antes de tiempo, vas a parar cosas que funcionan y a seguir con otras que no.
+
+Así se ve en el KR1 del ejemplo. La línea apenas se mueve hasta que sale el noindex de los filtros, y a partir de ahí sube con la pendiente que hace falta, aunque todavía por debajo del ritmo lineal:
+
+<KrTracking />
+
+Cada iniciativa tiene su propia métrica, ligada a esos KPIs u OKRs. Si una iniciativa no mueve ninguna, me pregunto por qué la estamos haciendo. Y a veces la métrica buena es una que te inventas para tu negocio. En una web de catálogo, por ejemplo, funcionan muy bien tres: **velocidad** (cuánto tardas en publicar un producto nuevo frente a la competencia), **huecos** (qué porcentaje de los productos top de la competencia no tienes) y **frescura** (qué porcentaje de tus fichas está desfasado).
+
+## 6. Sprints semanales con un Kanban ligero
+
+> **Una aclaración antes de seguir.** Lo que cuento a partir de aquí son generalizaciones: cómo trabajo por defecto. Hay casos en los que hago justo lo contrario. Léelo como un punto de partida y no como una norma: cada web y cada negocio es un mundo, y la metodología se adapta a lo que necesita cada uno.
+
+Las tareas se reparten por semanas y las gestiono con [Kanban](https://prokanban.org/the-kanban-guide/), en un tablero con cuatro columnas: "Por hacer", "En curso", "En espera" y "Hecho". Lo llamo ligero porque tiene pocas reglas: las justas para que el trabajo avance y todo el equipo vea en qué estado está cada tarea. Si en un proyecto alguna regla nos frena en vez de ayudar, la cambiamos.
+
+Este es el plan de las fichas semana a semana. Muévete entre semanas para ver cómo avanza el tablero, y cambia a la vista Gantt para comparar lo planificado con lo real:
+
+<PlanExplorer />
+
+Las reglas por defecto:
+
+- **Se termina lo empezado antes de empezar algo nuevo.** El tablero se consume de derecha a izquierda.
+- **"En espera" es solo para bloqueos externos.** Algo que depende de otro equipo, de un proveedor o de un acceso.
+- **Tareas pequeñas.** Un solo responsable por tarea; si hay dos, son dos tareas. Y que quepa en una semana; si no, se parte por entregables.
+- **Dos tareas en curso por persona como máximo.** Con más trabajo abierto a la vez, cada tarea tarda más en salir; es la [ley de Little](https://doi.org/10.1287/opre.9.3.383) aplicada a un tablero: el tiempo medio que tarda una tarea es el trabajo en curso dividido entre lo que el equipo termina por semana. Con la IA cuesta más cumplirla: con varios agentes trabajando en paralelo es muy fácil abrir cinco frentes a la vez. Pero revisar y decidir sigue siendo trabajo de una persona, y el foco se pierde igual.
+- **Las peticiones externas van al backlog.** Se priorizan en la planificación de la semana siguiente. La excepción son los fuegos: si algo se rompe, va primero.
+
+Uso sprints de una semana, cuando muchas guías de SEO ágil [proponen dos](https://www.searchenginejournal.com/the-problem-with-always-on-seo-why-you-need-sprints-not-checklists/554236/). Con una semana, el plan se corrige cuatro veces al mes, y como lo que miro cada semana son las métricas rápidas de la escalera, siempre hay algo que revisar.
+
+### Cuánto cabe en una semana
+
+Para no llenar una semana de más, calculo la capacidad de cada persona con una fórmula sencilla: horas totales por un ratio productivo, menos las horas de reuniones. Por defecto uso un ratio de 0,75, que deja margen para correos, interrupciones y cambios de contexto. Prueba con tus números:
+
+<CapacityCalculator />
+
+La fórmula sirve para no sobrecargar el sprint. No controlo las horas de nadie; me importa que salgan los objetivos. Por eso tampoco uso [story points con escala de Fibonacci](https://www.mountaingoatsoftware.com/blog/why-the-fibonacci-sequence-works-well-for-estimating): con horas aproximadas, cualquiera del equipo entiende al momento si la semana cabe.
+
+## 7. Lo operativo se registra y se automatiza
+
+Hay dos tipos de tareas:
+
+- **Operativas.** El día a día que mantiene todo funcionando: informes, revisiones, comprobaciones.
+- **De iniciativa.** El trabajo que mueve los OKRs.
+
+Las operativas también van al tablero, aunque se repitan cada semana. Si las registras, ves cuánto tiempo se llevan y cuáles se pueden automatizar.
+
+En Softonic, el registro nos enseñó que en diez meses habíamos hecho catorce tareas sobre redirecciones, muchas para tocar lógicas de hace más de diez años, y con los mismos checks repetidos una y otra vez. La solución fue un comprobador: una muestra de URLs con todas esas lógicas que se revisa cada día y avisa en cuanto un origen o un destino falla. Son las automatizaciones que monto casi siempre:
+
+- **Comprobación diaria de redirecciones** sobre una muestra que cubre todas las reglas.
+- **Rastreos propios** sobre un conjunto representativo de URLs, con umbrales que hacen saltar una alerta.
+- **Alertas de Googlebot** por códigos de estado y por caídas de rastreo.
+- **Detección de tendencias**, cuando el negocio depende de llegar el primero a lo nuevo.
+
+Cada automatización saca una tarea operativa del tablero y deja ese hueco para las iniciativas:
+
+<OpsVsInitiatives />
+
+En el caso que contamos en Clinic SEO, eso fue lo que permitió llevar más proyectos y más idiomas, con despliegues diarios, sin crecer en gente.
+
+## 8. La revisión semanal
+
+Una vez por semana repasamos el tablero en una reunión corta. Contesta tres preguntas:
+
+1. ¿En qué nos centramos la semana pasada?
+2. ¿Hay algo bloqueado?
+3. ¿Qué toca esta semana?
+
+En esa reunión se corrige el plan. Algo se retrasa porque está en espera, algo se adelanta porque ha surgido una oportunidad o un fuego, una iniciativa se para porque su métrica no se mueve. Solo se comenta lo que importa al equipo entero; las tareas operativas están en el tablero, pero no hace falta hablar de ellas.
+
+## Lo que he visto torcerse: las tareas de los demás
+
+El error de planificación más frecuente que veo es que cada equipo planifica sus tareas y no las del resto. Como mucho, se tienen en cuenta las de Tecnología.
+
+Un ejemplo típico: toca programar algo y está en el sprint de desarrollo, pero nadie ha reservado tiempo para el QA de SEO antes de publicarlo, y el cambio sale sin revisar o se queda esperando.
+
+Casi ninguna iniciativa es solo de un equipo. Montar una web nueva incluye mucho más que programarla: antes hay diseño, hay que decidir qué se va a medir y cómo, hay contenido que adaptar y luego está la parte de SEO.
+
+En el ejemplo de las fichas trabajan cinco equipos, y no se puede revisar el rastreo en los logs hasta que Tecnología aplica el noindex a los filtros.
+
+Si en tu tablero solo están tus tareas, no ves que estás esperando a otro equipo hasta que ya llegas tarde. Por eso meto en el tablero todas las tareas de la iniciativa, las haga yo, alguien de mi equipo o un proveedor externo con el que nos coordinamos cada pocas semanas. Así las dependencias se ven en el Gantt antes de que bloqueen a nadie.
+
+El otro problema llega cuando hay muchos equipos desplegando a la vez. Con despliegue continuo y varios proyectos en paralelo, un cambio de otro equipo puede romper algo tuyo, y hay tareas que se revierten. Sin las alertas de la sección anterior, te enteras por el tráfico, semanas tarde.
+
+## Herramientas
+
+Sirve cualquier herramienta que guarde las tareas en una base de datos y te deje verlas de varias formas. Lo importante es que la misma base de tareas tenga una vista de tablero, para el día a día, y una vista de Gantt, para planificar el quarter y ver las dependencias. Si tienes que mantener las dos a mano en sitios distintos, acabarán sin coincidir.
+
+Trello, Wrike o cualquier tablero Kanban te valen, y Linear parece que está empezando a ganar tracción. Yo me he peleado con casi todas, y la que más me gusta es Notion: tiene una flexibilidad que no he encontrado en ninguna otra. A cambio, tiene más curva de aprendizaje.
+
+Si quieres empezar sin montarlo desde cero, la plantilla gratuita [Agile Project Management de Notion](https://www.notion.com/templates/agile-project-management-notion) sigue casi todo lo que cuento en este post.
+
+Para las alertas y las automatizaciones no hay una herramienta que valga para todo. Uso herramientas de terceros donde sirven y scripts propios donde no. La regla es adaptar la herramienta a lo que necesitas saber, y que lo que te diga sirva para decidir algo.
+
+## Cómo encaja con cada tipo de proyecto
+
+La estructura es la misma; cambian el objetivo y el ritmo:
+
+- **[Auditoría](/servicios/auditoria-seo/).** Es la parte 1 a 3 de este post en un proyecto cerrado: objetivo, datos y problema principal, con un plan priorizado al final. El plan ya sale en formato de iniciativas y tareas.
+- **[Recuperar tráfico tras un core update](/servicios/recuperar-trafico/).** El objetivo es recuperar y el horizonte, de [3 a 6 meses](/blog/quality-google-core-updates/). El tráfico se vigila cada día; la recuperación se juzga contra los KR del quarter.
+- **[Migración](/servicios/migraciones-seo/).** El objetivo es prevenir. Las tareas se concentran antes del lanzamiento y las semanas siguientes son casi todo seguimiento y alertas.
+- **[Consultoría mensual](/servicios/consultoria-seo-tecnica/).** Todo el ciclo, con la revisión semanal junto a tu equipo.
+
+<LeadMagnet lang="es" source="metodologia-proyectos-seo-final" intro="Y si quieres empezar por el diagnóstico de calidad de tu web, te mando la skill que uso:" />
+
+Si quieres ver cómo quedaría en tu caso, [reserva una llamada de 30 minutos](https://cal.com/nacho-mascort/30min) y lo vemos con tus datos.

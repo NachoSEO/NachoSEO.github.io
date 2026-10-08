@@ -1,31 +1,161 @@
 ---
+/** "De la primera llamada a los resultados" como cronología: horizontal en escritorio, vertical en móvil */
 import SectionLabel from '../SectionLabel.astro';
 import type { Lang } from '../../i18n/ui';
 
 interface Props {
   lang: Lang;
   process: { when: string; title: string; detail: string }[];
+  /** Desde este paso el trabajo es un flujo constante que se repite */
+  loopFrom?: number;
 }
 
-const { lang, process } = Astro.props;
+const { lang, process, loopFrom } = Astro.props;
 const es = lang === 'es';
 ---
 
 <section class="mx-auto max-w-5xl px-5 pt-16 md:pt-24 sm:px-6">
   <SectionLabel label={es ? 'Cómo trabajamos' : 'How we work'} />
   <h2 class="display-2 mt-3">{es ? 'De la primera llamada a los resultados' : 'From the first call to results'}</h2>
-  <ol class="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+  <ol class="timeline mt-12" style={`--steps: ${process.length}`}>
     {
       process.map((step, index) => (
-        <li class="card">
-          <p class="flex items-baseline justify-between gap-3">
-            <span class="font-display text-3xl font-semibold text-accent-ink">{String(index + 1).padStart(2, '0')}</span>
-            <span class="meta text-right">{step.when}</span>
-          </p>
-          <h3 class="mt-4 font-semibold">{step.title}</h3>
-          <p class="mt-2 text-[0.95rem] text-muted">{step.detail}</p>
+        <li class:list={['tl-step', loopFrom !== undefined && index >= loopFrom && 'is-loop']}>
+          <span class="tl-when">{step.when}</span>
+          <span class="tl-node" aria-hidden="true">{index + 1}</span>
+          <h3 class="tl-title">{step.title}</h3>
+          <p class="tl-detail">{step.detail}</p>
         </li>
       ))
     }
   </ol>
+  {
+    loopFrom !== undefined && (
+      <p class="tl-loop-note mt-8 max-w-[65ch]">
+        <span aria-hidden="true">↻</span>
+        {es
+          ? `Los ${loopFrom} primeros pasos se hacen una vez, al empezar. A partir de «${process[loopFrom].title}», el trabajo se convierte en un flujo constante que se repite.`
+          : `The first ${loopFrom} steps happen once, at the start. From "${process[loopFrom].title}" onwards, the work becomes a steady flow that repeats.`}
+      </p>
+    )
+  }
+  <p class="mt-10 max-w-[65ch] text-[0.95rem] text-muted">
+    {
+      es
+        ? 'Es la misma metodología en todos los proyectos: objetivo de negocio, diagnóstico por page type, resultados clave en absoluto y una revisión cada semana.'
+        : 'It is the same methodology in every project: a business goal, a diagnosis by page type, absolute key results and a weekly review.'
+    }{' '}
+    <a href={es ? '/blog/metodologia-proyectos-seo/' : '/en/blog/seo-project-methodology/'} class="link-arrow text-ink">
+      {es ? 'La cuento entera en este post' : 'I explain it in full in this post'}
+    </a>
+  </p>
 </section>
+
+<style>
+  .timeline {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(var(--steps), minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+  /* Línea que une los nodos, a la altura de los círculos */
+  .timeline::before {
+    content: '';
+    position: absolute;
+    top: 2.35rem;
+    left: 1rem;
+    /* Acaba en el centro del último nodo */
+    right: calc((100% - (var(--steps) - 1) * 1.25rem) / var(--steps) - 1rem);
+    height: 2px;
+    background: linear-gradient(90deg, var(--color-accent), color-mix(in srgb, var(--color-ink) 60%, transparent));
+  }
+  .tl-step {
+    position: relative;
+    display: grid;
+    align-content: start;
+    gap: 0.4rem;
+  }
+  .tl-when {
+    min-height: 1.2rem;
+    color: var(--color-muted);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  /* Pasos que se repiten: fondo suave y etiqueta en frambuesa */
+  .tl-step.is-loop {
+    border-radius: 0.75rem;
+    background: color-mix(in srgb, var(--color-accent) 6%, transparent);
+    margin: -0.5rem -0.4rem;
+    padding: 0.5rem 0.4rem;
+  }
+  .tl-step.is-loop .tl-when {
+    color: var(--color-accent-ink);
+  }
+  .tl-loop-note {
+    display: flex;
+    gap: 0.6rem;
+    border-left: 3px solid var(--color-accent);
+    padding-left: 0.9rem;
+    font-size: 0.95rem;
+  }
+  .tl-loop-note span {
+    color: var(--color-accent-ink);
+    font-weight: 700;
+  }
+  .tl-node {
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border: 2px solid var(--color-accent);
+    border-radius: 999px;
+    background: var(--color-paper);
+    color: var(--color-accent-ink);
+    font-family: var(--font-display);
+    font-size: 0.95rem;
+    font-weight: 700;
+  }
+  .tl-step:last-child .tl-node {
+    background: var(--color-accent);
+    color: var(--color-on-dark);
+  }
+  .tl-title {
+    margin-top: 0.4rem;
+    font-weight: 650;
+    line-height: 1.3;
+  }
+  .tl-detail {
+    color: var(--color-muted);
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+  @media (max-width: 768px) {
+    .timeline {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+      padding-left: 2.75rem;
+    }
+    .timeline::before {
+      top: 0.5rem;
+      bottom: 0.5rem;
+      left: 0.95rem;
+      right: auto;
+      width: 2px;
+      height: auto;
+      background: linear-gradient(180deg, var(--color-accent), color-mix(in srgb, var(--color-ink) 60%, transparent));
+    }
+    .tl-node {
+      position: absolute;
+      top: 0;
+      left: -2.75rem;
+    }
+    .tl-title {
+      margin-top: 0;
+    }
+    .tl-when {
+      min-height: 0;
+    }
+  }
+</style>

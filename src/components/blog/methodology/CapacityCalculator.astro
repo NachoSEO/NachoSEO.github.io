@@ -1,0 +1,172 @@
+---
+/** Calculadora de capacidad semanal: (horas × ratio productivo) − reuniones. Sin JS muestra el ejemplo de 40 h y 8 h. */
+interface Props {
+  lang?: 'es' | 'en';
+}
+const { lang = 'es' } = Astro.props;
+const copy = {
+  es: {
+    hours: 'Horas a la semana',
+    meetings: 'Horas de reuniones',
+    ratio: 'Ratio productivo',
+    formula: '(40 × 0,75) − 8',
+    total: 'horas de trabajo planificable',
+    work: 'Planificable',
+    meet: 'Reuniones',
+    rest: 'Interrupciones y cambios de contexto',
+  },
+  en: {
+    hours: 'Hours per week',
+    meetings: 'Meeting hours',
+    ratio: 'Productive ratio',
+    formula: '(40 × 0.75) − 8',
+    total: 'plannable work hours',
+    work: 'Plannable',
+    meet: 'Meetings',
+    rest: 'Interruptions and context switching',
+  },
+}[lang];
+---
+
+<figure class="capacity not-prose my-8" data-capacity data-lang={lang}>
+  <div class="cap-inputs">
+    <label>
+      <span>{copy.hours}</span>
+      <input type="number" min="1" max="80" value="40" data-hours inputmode="numeric" />
+    </label>
+    <label>
+      <span>{copy.meetings}</span>
+      <input type="number" min="0" max="60" value="8" data-meetings inputmode="numeric" />
+    </label>
+    <label>
+      <span>{copy.ratio}</span>
+      <input type="number" min="0.4" max="1" step="0.05" value="0.75" data-ratio inputmode="decimal" />
+    </label>
+  </div>
+  <div class="cap-result">
+    <p class="cap-formula" data-formula>{copy.formula}</p>
+    <p class="cap-total"><strong data-total>22</strong> {copy.total}</p>
+    <div class="cap-bar" aria-hidden="true">
+      <span class="cap-work" data-bar-work style="width: 55%"></span>
+      <span class="cap-meet" data-bar-meet style="width: 20%"></span>
+      <span class="cap-rest" data-bar-rest style="width: 25%"></span>
+    </div>
+    <p class="cap-legend"><span><i class="cap-work"></i>{copy.work}</span><span><i class="cap-meet"></i>{copy.meet}</span><span><i class="cap-rest"></i>{copy.rest}</span></p>
+  </div>
+</figure>
+
+<style>
+  @layer components {
+    figure.capacity p {
+      margin-top: 0;
+    }
+  }
+  .capacity {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+    gap: 1rem;
+    border: 1px solid var(--color-line);
+    border-radius: 0.875rem;
+    background: var(--color-raised);
+    padding: 0.9rem;
+    font-size: 0.8rem;
+  }
+  .cap-inputs {
+    display: grid;
+    gap: 0.45rem;
+  }
+  .cap-inputs label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    color: var(--color-muted);
+  }
+  .cap-inputs input {
+    width: 4.5rem;
+    border: 1px solid var(--color-line);
+    border-radius: 0.4rem;
+    padding: 0.2rem 0.4rem;
+    font-family: var(--font-mono);
+    color: var(--color-ink);
+    text-align: right;
+  }
+  .cap-formula {
+    font-family: var(--font-mono);
+    color: var(--color-muted);
+  }
+  .cap-total {
+    margin-top: 0.15rem;
+  }
+  .cap-total strong {
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    color: var(--color-accent-ink);
+  }
+  .cap-bar {
+    display: flex;
+    height: 0.6rem;
+    margin-top: 0.5rem;
+    overflow: hidden;
+    border-radius: 999px;
+  }
+  .cap-legend {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.2rem 0.4rem;
+    margin-top: 0.45rem;
+    color: var(--color-muted);
+    font-size: 0.7rem;
+  }
+  .cap-legend span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    margin-right: 0.6rem;
+    white-space: nowrap;
+  }
+  .cap-legend i {
+    display: inline-block;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 0.15rem;
+  }
+  .cap-work {
+    background: var(--color-accent);
+  }
+  .cap-meet {
+    background: var(--color-ink);
+  }
+  .cap-rest {
+    background: var(--color-line);
+  }
+  @media (max-width: 640px) {
+    .capacity {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+  for (const root of document.querySelectorAll<HTMLElement>('[data-capacity]')) {
+    const locale = root.dataset.lang === 'en' ? 'en-US' : 'es-ES';
+    const format = (value: number) => value.toLocaleString(locale, { maximumFractionDigits: 2 });
+    const field = (name: string) => root.querySelector<HTMLInputElement>(`[data-${name}]`)!;
+    const update = () => {
+      const hours = Math.max(1, Number(field('hours').value) || 0);
+      const meetings = Math.max(0, Number(field('meetings').value) || 0);
+      const ratio = Math.min(1, Math.max(0, Number(field('ratio').value) || 0));
+      const total = Math.max(0, hours * ratio - meetings);
+      root.querySelector('[data-formula]')!.textContent = `(${format(hours)} × ${format(ratio)}) − ${format(meetings)}`;
+      root.querySelector('[data-total]')!.textContent = format(total);
+      const meetShare = Math.min(100, (meetings / hours) * 100);
+      const workShare = Math.min(100 - meetShare, (total / hours) * 100);
+      root.querySelector<HTMLElement>('[data-bar-work]')!.style.width = `${workShare}%`;
+      root.querySelector<HTMLElement>('[data-bar-meet]')!.style.width = `${meetShare}%`;
+      root.querySelector<HTMLElement>('[data-bar-rest]')!.style.width = `${Math.max(0, 100 - workShare - meetShare)}%`;
+    };
+    root.querySelectorAll('input').forEach((input) => input.addEventListener('input', update));
+    update();
+  }
+</script>

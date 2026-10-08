@@ -1,20 +1,46 @@
 ---
 title: 'Mi metodología para proyectos SEO: del objetivo de negocio a la tarea de la semana'
-description: 'Cómo trabajo un proyecto SEO: objetivo de negocio, datos, problema principal, OKRs por quarter, iniciativas y sprints semanales con un Kanban ligero.'
+description: 'La metodología que uso desde hace años en empresas y con clientes: objetivo de negocio, datos, problema principal, OKRs por quarter, iniciativas y sprints semanales.'
 lang: es
 translationKey: seo-methodology
 slug: metodologia-proyectos-seo
 pubDate: 2026-10-08
 tags: ['metodología', 'gestión de proyectos', 'consultoría seo']
+citations:
+  - title: 'Procesos, metodologías y automatizaciones SEO en Softonic (Clinic SEO 2019)'
+    url: 'https://speakerdeck.com/nachomascort/procesos-metodologias-y-automatizaciones-seo-en-softonic-clinic-seo'
+    author: 'Nacho Mascort'
+    date: '2019'
 ---
 
+import MethodFlow from '../../../../components/blog/methodology/MethodFlow.astro';
 import MethodLevels from '../../../../components/blog/methodology/MethodLevels.astro';
-import PlanViews from '../../../../components/blog/methodology/PlanViews.astro';
+import PlanExplorer from '../../../../components/blog/methodology/PlanExplorer.astro';
+import CapacityCalculator from '../../../../components/blog/methodology/CapacityCalculator.astro';
 import OpsVsInitiatives from '../../../../components/blog/methodology/OpsVsInitiatives.astro';
 
-Cuando alguien me contrata, una de las primeras preguntas es "¿y cómo vas a trabajar?". Este post es la respuesta larga. Es la metodología con la que dirijo el equipo de marketing orgánico de [Reverse Tech](/casos/reverse-tech-area-organica/), ocho personas entre SEO, YouTube, email, redes y afiliación, y la misma que uso con cada cliente de consultoría.
+<aside class="tldr" aria-label="Resumen">
 
-Tiene dos partes. La primera decide qué hay que hacer: objetivo de negocio, datos y problema principal. La segunda decide cómo se hace: objetivos por quarter, iniciativas, tareas y una revisión cada semana.
+<details>
+<summary><span class="tldr-label">TL;DR</span> <span class="tldr-cue">Ver resumen</span></summary>
+
+- Antes de tocar nada traduzco el objetivo del cliente a algo medible y busco el problema principal con datos de negocio además de los de analítica.
+- El objetivo puede ser crecer, recuperar, prevenir o aparecer en la IA. Cada uno pide un plan distinto.
+- El plan baja del objetivo anual a quarters, themes, iniciativas con su métrica y tareas de una semana como máximo.
+- Cada semana reviso el tablero: qué se hizo, qué está bloqueado y qué toca. Ahí se corrige el plan.
+- En el tablero van las tareas de todos los equipos que tocan la iniciativa. Si solo ves las tuyas, los bloqueos te pillan tarde.
+
+</details>
+
+</aside>
+
+Cuando alguien me contrata, una de las primeras preguntas es "¿y cómo vas a trabajar?". Este post es la respuesta larga.
+
+Es la metodología que llevo años usando y puliendo en distintas empresas y con clientes. Una primera versión la conté en [Clinic SEO 2019](https://speakerdeck.com/nachomascort/procesos-metodologias-y-automatizaciones-seo-en-softonic-clinic-seo), cuando la aplicaba en Softonic. Desde entonces la he ido ajustando con equipos de distintos tamaños, propios y de cliente.
+
+Tiene dos partes. La primera decide qué hay que hacer. La segunda, cómo se hace:
+
+<MethodFlow />
 
 ## 1. Traducir "quiero vender más" a algo medible
 
@@ -36,6 +62,15 @@ No puedo decirte por dónde empezar sin datos. Al principio de cada proyecto rev
 - **Estado del SEO.** Search Console, rastreo, logs e indexación por page type.
 
 Aquí hay que pensar en negocio. El porcentaje de rebote de la home importa poco. Importa cuánto factura cada tipo de página, cuánto podría facturar y qué lo frena.
+
+### Lo que pido la primera semana
+
+- Una llamada para entender el negocio, la historia de la web y los cambios recientes: migraciones, rediseños, caídas.
+- Acceso a Search Console y a la analítica.
+- Los logs del servidor de las últimas semanas, si se pueden sacar.
+- Los datos de negocio que el cliente quiera compartir: ventas o leads por línea de producto, márgenes, mercados.
+
+Con eso y un rastreo completo tengo casi todo para el paso siguiente.
 
 ## 3. Encontrar el problema principal
 
@@ -61,10 +96,10 @@ A partir de ahí trabajo con tres niveles:
 | Nivel | Qué es | Cuánto dura |
 |---|---|---|
 | **Theme** | Una meta estratégica amplia, que da dirección a todo lo que cuelga de ella. | De un quarter a varios años |
-| **Iniciativa** | Un proyecto concreto que acerca al theme. | De varias semanas a varios meses |
-| **Tarea** | Una pieza de trabajo con un responsable. | Una semana como máximo |
+| **Iniciativa** | Un proyecto concreto que acerca al theme, con su propia métrica. | De varias semanas a varios meses |
+| **Tarea** | Una pieza de trabajo con un solo responsable. | Una semana como máximo |
 
-Un ejemplo basado en lo que vivimos en [Softonic](/casos/softonic-0-a-20-millones/), cuando un core update nos quitó un 20 y pico por ciento de tráfico y la causa resultó estar en las traducciones:
+Un ejemplo basado en lo que vivimos en [Softonic](/casos/softonic-0-a-20-millones/), cuando un core update nos quitó un 20 y pico por ciento de tráfico y la causa resultó estar en las traducciones. Lo he simplificado para que quepa en una pantalla:
 
 <MethodLevels />
 
@@ -83,11 +118,11 @@ Lo reviso todo cada semana. Prefiero esa frecuencia porque es la misma unidad de
 
 ## 6. Sprints semanales con un Kanban ligero
 
-Las tareas se reparten por semanas: en la semana 1 hacemos esto, en la 2 aquello. Para gestionarlas uso un tablero Kanban, con columnas de "Por hacer", "En curso", "En espera" y "Hecho". Lo llamo ligero porque las reglas sirven para ir más rápido y tener todo a la vista. Si alguna nos frena, la cambiamos.
+Las tareas se reparten por semanas y las gestiono en un tablero con cuatro columnas: "Por hacer", "En curso", "En espera" y "Hecho". Lo llamo ligero porque las reglas sirven para ir más rápido y tener todo a la vista. Si alguna nos frena, la cambiamos.
 
-Así se ve el ejemplo de antes en la semana 4, con una tarea de Tecnología que va tarde y bloquea el hreflang. Cambia a la vista Gantt para ver el mismo plan en el tiempo:
+Este es el ejemplo anterior semana a semana. Muévete entre semanas para ver cómo avanza el tablero, y cambia a la vista Gantt para comparar lo planificado con lo real:
 
-<PlanViews />
+<PlanExplorer />
 
 Las reglas por defecto:
 
@@ -99,11 +134,11 @@ Las reglas por defecto:
 
 ### Cuánto cabe en una semana
 
-Para no llenar una semana de más, calculo la capacidad de cada persona con una fórmula sencilla:
+Para no llenar una semana de más, calculo la capacidad de cada persona con una fórmula sencilla: horas totales por un ratio productivo, menos las horas de reuniones. Por defecto uso un ratio de 0,75, que deja margen para correos, interrupciones y cambios de contexto. Prueba con tus números:
 
-> Capacidad = (horas totales × 0,75) − horas de reuniones
+<CapacityCalculator />
 
-Con 40 horas a la semana y 8 de reuniones: (40 × 0,75) − 8 = **22 horas de trabajo real**. El 0,75 cubre todo lo que no es trabajo planificado: interrupciones, correos, cambios de contexto. La fórmula sirve para no sobrecargar el sprint. No controlo las horas de nadie; me importa que salgan los objetivos.
+La fórmula sirve para no sobrecargar el sprint. No controlo las horas de nadie; me importa que salgan los objetivos.
 
 ### Lo operativo también va al tablero
 

@@ -1,7 +1,7 @@
 /**
  * Ejemplo del post de metodología: un theme con dos iniciativas y sus tareas, repartidas por equipo y semana.
  * Basado en el caso de Softonic (idiomas a ccTLDs tras un core update), simplificado e ilustrativo.
- * Lo usan el esquema de niveles y la vista Tablero/Gantt, así los dos cuentan lo mismo.
+ * Cada tarea tiene la semana planificada y la real, así el explorador puede enseñar retrasos y bloqueos.
  */
 export type Team = 'seo' | 'tech' | 'design' | 'data' | 'content';
 export type Status = 'todo' | 'doing' | 'hold' | 'done';
@@ -22,52 +22,50 @@ export const statuses: { id: Status; label: string }[] = [
 ];
 
 export interface Task {
+  id: string;
   title: string;
   team: Team;
-  /** Semana del plan en la que empieza y acaba (una tarea cabe en una semana) */
+  initiative: 0 | 1;
+  /** Semana planificada (una tarea cabe en una semana) */
+  planned: number;
+  /** Semanas en las que de verdad se trabajó */
   start: number;
   end: number;
-  status: Status;
-  note?: string;
-}
-
-export interface Initiative {
-  title: string;
-  metric: string;
-  tasks: Task[];
+  /** Semanas en las que estuvo bloqueada por otra tarea */
+  hold?: number[];
+  blockedBy?: string;
 }
 
 export const theme = {
   title: 'Recuperar el tráfico perdido en el core update',
-  okr: 'Volver al nivel de tráfico anterior al core update en el dominio principal',
+  okr: 'Volver al tráfico previo al core update en el dominio principal',
 };
 
-export const initiatives: Initiative[] = [
-  {
-    title: 'Separar los idiomas en ccTLDs',
-    metric: 'Tráfico orgánico por ccTLD',
-    tasks: [
-      { title: 'Mapa de redirecciones por idioma', team: 'seo', start: 1, end: 1, status: 'done' },
-      { title: 'Selector de idioma y aviso de país', team: 'design', start: 1, end: 1, status: 'done' },
-      { title: 'Medición por ccTLD en analítica y Search Console', team: 'data', start: 2, end: 2, status: 'done' },
-      { title: 'Montar los ccTLDs', team: 'tech', start: 3, end: 3, status: 'doing', note: 'Va una semana tarde' },
-      { title: 'Redirecciones a los ccTLDs', team: 'tech', start: 4, end: 4, status: 'doing' },
-      { title: 'Hreflang entre los ccTLDs', team: 'seo', start: 4, end: 4, status: 'hold', note: 'Espera a que estén los ccTLDs' },
-      { title: 'Revisar la indexación de los ccTLDs', team: 'seo', start: 6, end: 6, status: 'todo' },
-    ],
-  },
-  {
-    title: 'Revisar la calidad de las traducciones',
-    metric: 'Páginas indexadas por idioma',
-    tasks: [
-      { title: 'Auditar las traducciones de las fichas', team: 'content', start: 1, end: 1, status: 'done' },
-      { title: 'Auditar las traducciones de las categorías', team: 'content', start: 2, end: 2, status: 'done' },
-      { title: 'Reescribir la plantilla de fichas', team: 'content', start: 5, end: 5, status: 'todo' },
-      { title: 'Reescribir la plantilla de categorías', team: 'content', start: 6, end: 6, status: 'todo' },
-    ],
-  },
+export const initiatives = [
+  { title: 'Separar los idiomas en ccTLDs', metric: 'Tráfico orgánico por ccTLD' },
+  { title: 'Revisar la calidad de las traducciones', metric: 'Páginas indexadas por idioma' },
+];
+
+export const tasks: Task[] = [
+  { id: 'map', title: 'Mapa de redirecciones por idioma', team: 'seo', initiative: 0, planned: 1, start: 1, end: 1 },
+  { id: 'switch', title: 'Selector de idioma y aviso de país', team: 'design', initiative: 0, planned: 1, start: 1, end: 1 },
+  { id: 'audit-1', title: 'Auditar las traducciones de las fichas', team: 'content', initiative: 1, planned: 1, start: 1, end: 1 },
+  { id: 'tracking', title: 'Medición por ccTLD', team: 'data', initiative: 0, planned: 2, start: 2, end: 2 },
+  { id: 'audit-2', title: 'Auditar las traducciones de las categorías', team: 'content', initiative: 1, planned: 2, start: 2, end: 2 },
+  { id: 'domains', title: 'Montar los ccTLDs', team: 'tech', initiative: 0, planned: 3, start: 3, end: 4 },
+  { id: 'redirects', title: 'Redirecciones a los ccTLDs', team: 'tech', initiative: 0, planned: 4, start: 5, end: 5 },
+  { id: 'hreflang', title: 'Hreflang entre los ccTLDs', team: 'seo', initiative: 0, planned: 4, start: 5, end: 5, hold: [4], blockedBy: 'Montar los ccTLDs' },
+  { id: 'rewrite-1', title: 'Reescribir la plantilla de fichas', team: 'content', initiative: 1, planned: 5, start: 5, end: 5 },
+  { id: 'rewrite-2', title: 'Reescribir la plantilla de categorías', team: 'content', initiative: 1, planned: 6, start: 6, end: 6 },
+  { id: 'indexing', title: 'Revisar la indexación de los ccTLDs', team: 'seo', initiative: 0, planned: 6, start: 6, end: 6 },
 ];
 
 export const weeks = 6;
-/** Semana en la que está "parado" el ejemplo del tablero */
-export const currentWeek = 4;
+
+/** Estado de una tarea en una semana dada */
+export function statusAt(task: Task, week: number): Status {
+  if (week > task.end) return 'done';
+  if (task.hold?.includes(week)) return 'hold';
+  if (week >= task.start) return 'doing';
+  return 'todo';
+}

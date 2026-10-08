@@ -9,7 +9,7 @@ export const pricingPage = {
   formats: [
     {
       name: 'Auditoría SEO técnica',
-      duration: 'Unas dos semanas',
+      duration: 'Un mes',
       detail: 'Proyecto cerrado con precio cerrado: diagnóstico por page type, plan de acción priorizado y una sesión con tu equipo.',
       href: '/servicios/auditoria-seo/',
     },

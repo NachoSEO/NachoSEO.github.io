@@ -1,0 +1,91 @@
+---
+import Base from '../../../layouts/Base.astro';
+import Cta from '../../../components/Cta.astro';
+import FaqAccordion from '../../../components/service/FaqAccordion.astro';
+import SessionValueCalculator from '../../../components/tools/SessionValueCalculator.astro';
+
+const path = '/en/tools/organic-session-value-calculator/';
+
+const faq = [
+  {
+    question: 'Why use margin instead of revenue?',
+    answer:
+      'Because two products with the same revenue can leave very different amounts of money. If you prioritize SEO by revenue, you can end up pushing what sells the most and earns the least. Gross margin lets you compare what each session actually contributes.',
+  },
+  {
+    question: 'Which clicks should I enter?',
+    answer:
+      'The non-brand organic clicks from Search Console. Brand traffic comes from the brand, and if you mix it in, the value of SEO comes out inflated.',
+  },
+  {
+    question: 'Do I take the conversion rate from analytics?',
+    answer:
+      'Better from the backend: real orders or leads attributed to the organic channel. Web analytics usually undercounts because of cookie consent, so use it to split between page types and not as a total.',
+  },
+  {
+    question: 'How do I use it to prioritize?',
+    answer:
+      'Calculate the value per session of each page type (categories, product pages, blog...) and multiply it by the clicks you can win in each one. The order you get almost never matches the order of search volume.',
+  },
+];
+
+const webApplication = {
+  '@type': 'WebApplication',
+  name: 'Organic session value calculator',
+  url: `https://nachomascort.com${path}`,
+  applicationCategory: 'BusinessApplication',
+  operatingSystem: 'Any',
+  browserRequirements: 'Requires JavaScript',
+  inLanguage: 'en',
+  isAccessibleForFree: true,
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' },
+  author: { '@id': 'https://nachomascort.com/#person' },
+};
+---
+
+<Base
+  lang="en"
+  title="Organic Session Value Calculator (SEO) — Nacho Mascort"
+  description="Work out what each organic session on your site is worth for your business model (sales, leads or advertising) and how much your SEO earns per month and per year."
+  path={path}
+  alternatePath="/herramientas/calculadora-valor-sesion-seo/"
+  breadcrumbs={[
+    { name: 'Home', path: '/en/' },
+    { name: 'Tools', path: '/en/tools/' },
+    { name: 'Organic session value calculator', path },
+  ]}
+  faq={faq}
+  extraSchemaNodes={[webApplication]}
+>
+  <div class="mx-auto max-w-5xl px-5 pt-16 sm:px-6 sm:pt-20">
+    <p class="meta"><a href="/en/tools/" class="hover:text-ink">Tools</a> · Business</p>
+    <h1 class="display-1 mt-5">Organic session value calculator</h1>
+    <p class="lede mt-6">
+      What each visit from Google is really worth, based on your business model. With that number you can compare page
+      types, prioritize the SEO plan and know what every extra thousand clicks are worth.
+    </p>
+
+    <div class="mt-10">
+      <SessionValueCalculator lang="en" />
+    </div>
+  </div>
+
+  <article class="mx-auto max-w-5xl px-5 pt-16 sm:px-6 md:pt-24">
+    <p class="section-label">How to use it</p>
+    <div class="article-body mt-4">
+      <h2>One number per page type</h2>
+      <p>
+        The value per session changes a lot from one type of page to another. A category page can earn several euros per
+        session and a blog post, a few cents. Calculate a value for each page type and multiply it by its clicks: that
+        shows you which parts of your site pay for the project and which only bring traffic.
+      </p>
+      <p>
+        It is the first step of the methodology I use for SEO projects. I explain all of it, with an example from start to
+        finish, in <a href="/en/blog/seo-project-methodology/">my methodology for SEO projects</a>.
+      </p>
+    </div>
+  </article>
+
+  <FaqAccordion lang="en" faq={faq} />
+  <Cta lang="en" />
+</Base>

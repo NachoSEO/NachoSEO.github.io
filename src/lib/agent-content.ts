@@ -37,7 +37,9 @@ const byDateDesc = (a: CollectionEntry<'blog'>, b: CollectionEntry<'blog'>) =>
 
 /** El componente <Tldr items={[...]} /> pasa a ser una lista en Markdown */
 function tldrToMarkdown(_match: string, rawItems: string): string {
-  const items = [...rawItems.matchAll(/'((?:[^'\\]|\\.)*)'/g)].map((item) => item[1].replace(/<[^>]+>/g, ''));
+  const items = [...rawItems.matchAll(/'((?:[^'\\]|\\.)*)'|"((?:[^"\\]|\\.)*)"/g)].map((item) =>
+    (item[1] ?? item[2]).replace(/\\(['"])/g, '$1').replace(/<[^>]+>/g, '')
+  );
   return `**TL;DR**\n\n${items.map((item) => `- ${item}`).join('\n')}`;
 }
 
@@ -45,7 +47,7 @@ function tldrToMarkdown(_match: string, rawItems: string): string {
 function cleanMdx(body = ''): string {
   return body
     .replace(/^import .*$/gm, '')
-    .replace(/<Tldr\s+items=\{\[([\s\S]*?)\]\}\s*\/>/g, tldrToMarkdown)
+    .replace(/<Tldr\b[^>]*?items=\{\[([\s\S]*?)\]\}[^>]*?\/>/g, tldrToMarkdown)
     .replace(/<[A-Z]\w*(?:\s[^<>]*?)?\/>/g, '')
     .replace(/!\[([^\]]*)\]\(\.\/[^)]+\)/g, (_match, alt: string) => (alt ? `[Imagen: ${alt}]` : ''))
     .replace(/\]\(\//g, `](${SITE_URL}/`)

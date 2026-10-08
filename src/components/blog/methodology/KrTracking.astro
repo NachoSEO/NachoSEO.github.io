@@ -3,6 +3,42 @@
  * Seguimiento semanal del KR1 del ejemplo (fichas indexadas, de 19.700 a 38.400 en 13 semanas).
  * Ilustrativo: el ritmo lineal frente al real, con el retraso típico hasta que Google reacciona.
  */
+interface Props {
+  lang?: 'es' | 'en';
+}
+const { lang = 'es' } = Astro.props;
+const copy = {
+  es: {
+    weekPrefix: 'S',
+    kr: 'Fichas indexadas: de',
+    to: 'a',
+    week: 'Semana',
+    pace: 'ritmo lineal',
+    below: 'por debajo',
+    title: 'Fichas indexadas por semana: casi planas hasta la semana 4 y subiendo desde la 5, por debajo del ritmo lineal en la semana 8 pero con la pendiente necesaria para llegar a 38.400',
+    goal: 'Objetivo:',
+    lag: 'noindex en filtros',
+    actual: 'Real',
+    target: 'Ritmo lineal hasta el objetivo',
+    projection: 'Proyección',
+    caption: 'Ilustrativo. Con el KR en absoluto se ve desde la semana 1 que la línea no se mueve hasta que sale el noindex, y que después la pendiente ya es la que hace falta.',
+  },
+  en: {
+    weekPrefix: 'W',
+    kr: 'Indexed product pages: from',
+    to: 'to',
+    week: 'Week',
+    pace: 'linear pace',
+    below: 'below',
+    title: 'Indexed product pages per week: nearly flat until week 4 and rising from week 5, below the linear pace in week 8 but with the slope needed to reach 38,400',
+    goal: 'Goal:',
+    lag: 'noindex on filters',
+    actual: 'Actual',
+    target: 'Linear pace to the goal',
+    projection: 'Projection',
+    caption: 'Illustrative. With an absolute KR you can see from week 1 that the line does not move until the noindex ships, and that the slope afterwards is the one you need.',
+  },
+}[lang];
 const weeks = 13;
 const start = 19700;
 const goal = 38400;
@@ -22,23 +58,22 @@ const y = (value: number) => pad.top + plotH * (1 - (value - minY) / (maxY - min
 const points = (values: number[], offset = 0) => values.map((value, index) => `${x(index + offset)},${y(value)}`).join(' ');
 const targetAt = (week: number) => start + ((goal - start) * week) / weeks;
 // En español, forzamos el punto de miles también en números de 4 cifras (8.500), como en el resto del post
-const format = (value: number) => value.toLocaleString('es-ES', { useGrouping: 'always' } as Intl.NumberFormatOptions);
+const format = (value: number) =>
+  value.toLocaleString(lang === 'en' ? 'en-US' : 'es-ES', { useGrouping: 'always' } as Intl.NumberFormatOptions);
 const ticks = [20000, 25000, 30000, 35000, 40000];
 const gap = targetAt(currentWeek) - actual[currentWeek];
 ---
 
 <figure class="kr-tracking not-prose my-10">
   <div class="kr-head">
-    <p><span class="kr-tag">KR1</span> Fichas indexadas: de {format(start)} a {format(goal)}</p>
+    <p><span class="kr-tag">KR1</span> {copy.kr} {format(start)} {copy.to} {format(goal)}</p>
     <p class="kr-now">
-      Semana {currentWeek}: <strong>{format(actual[currentWeek])}</strong> · ritmo lineal {format(Math.round(targetAt(currentWeek)))} ·
-      <span>{format(Math.round(gap))} por debajo</span>
+      {copy.week} {currentWeek}: <strong>{format(actual[currentWeek])}</strong> · {copy.pace} {format(Math.round(targetAt(currentWeek)))} ·
+      <span>{format(Math.round(gap))} {copy.below}</span>
     </p>
   </div>
   <svg viewBox={`0 0 ${width} ${height}`} role="img" aria-labelledby="kr-title" class="h-auto w-full">
-    <title id="kr-title">
-      Fichas indexadas por semana: casi planas hasta la semana 4 y subiendo desde la 5, por debajo del ritmo lineal en la semana 8 pero con la pendiente necesaria para llegar a 38.400
-    </title>
+    <title id="kr-title">{copy.title}</title>
     {
       ticks.map((tick) => (
         <g>
@@ -47,24 +82,22 @@ const gap = targetAt(currentWeek) - actual[currentWeek];
         </g>
       ))
     }
-    {[0, 4, 8, 13].map((week) => <text x={x(week)} y={height - 12} text-anchor="middle" class="axis">S{week}</text>)}
+    {[0, 4, 8, 13].map((week) => <text x={x(week)} y={height - 12} text-anchor="middle" class="axis">{copy.weekPrefix}{week}</text>)}
     <line x1={x(0)} y1={y(goal)} x2={x(weeks)} y2={y(goal)} class="goal" />
-    <text x={x(0) + 4} y={y(goal) - 6} class="goal-label">Objetivo: {format(goal)}</text>
+    <text x={x(0) + 4} y={y(goal) - 6} class="goal-label">{copy.goal} {format(goal)}</text>
     <line x1={x(0)} y1={y(start)} x2={x(weeks)} y2={y(goal)} class="target" />
     <rect x={x(3) - 1} y={pad.top} width={x(5) - x(3)} height={plotH} class="lag" />
-    <text x={(x(3) + x(5)) / 2} y={y(36500)} text-anchor="middle" class="lag-label">noindex en filtros</text>
+    <text x={(x(3) + x(5)) / 2} y={y(36500)} text-anchor="middle" class="lag-label">{copy.lag}</text>
     <polyline points={points(projection, currentWeek)} class="projection" />
     <polyline points={points(actual)} class="actual" />
     <circle cx={x(currentWeek)} cy={y(actual[currentWeek])} r="4.5" class="now" />
   </svg>
   <ul class="kr-legend">
-    <li><i class="l-actual" />Real</li>
-    <li><i class="l-target" />Ritmo lineal hasta el objetivo</li>
-    <li><i class="l-projection" />Proyección</li>
+    <li><i class="l-actual" />{copy.actual}</li>
+    <li><i class="l-target" />{copy.target}</li>
+    <li><i class="l-projection" />{copy.projection}</li>
   </ul>
-  <figcaption>
-    Ilustrativo. Con el KR en absoluto se ve desde la semana 1 que la línea no se mueve hasta que sale el noindex, y que después la pendiente ya es la que hace falta.
-  </figcaption>
+  <figcaption>{copy.caption}</figcaption>
 </figure>
 
 <style>

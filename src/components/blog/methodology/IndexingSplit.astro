@@ -3,39 +3,47 @@
  * Las 48.000 fichas del ejemplo, partidas por estado de indexación. La barra es proporcional y,
  * debajo, una columna por estado: qué significa, cómo sale en Search Console y qué acción pide.
  */
+interface Props {
+  lang?: 'es' | 'en';
+}
+const { lang = 'es' } = Astro.props;
+const copy = {
+  es: {
+    parts: [
+      { label: 'Indexadas', meaning: 'Google las tiene en el índice y pueden salir en los resultados.', status: 'Indexada', action: 'Posicionarlas mejor' },
+      { label: 'Descubiertas, sin rastrear', meaning: 'Google sabe que existen, pero todavía no las ha visitado.', status: 'Descubierta: actualmente sin indexar', action: 'Liberar rastreo y enlazarlas' },
+      { label: 'Rastreadas, sin indexar', meaning: 'Google las ha visitado y ha decidido no guardarlas en el índice.', status: 'Rastreada: actualmente sin indexar', action: 'Arreglar la calidad' },
+    ],
+    title: (total: string) => `Las ${total} fichas de producto, según Search Console`,
+    inConsole: 'En Search Console:',
+    quotes: ['«', '»'],
+    caption: 'Datos inventados del ejemplo. Las dos partes sin indexar parecen el mismo problema y piden acciones opuestas.',
+  },
+  en: {
+    parts: [
+      { label: 'Indexed', meaning: 'Google has them in the index and they can show up in results.', status: 'Indexed', action: 'Rank them higher' },
+      { label: 'Discovered, not crawled', meaning: 'Google knows they exist, but has not visited them yet.', status: 'Discovered - currently not indexed', action: 'Free up crawling and link to them' },
+      { label: 'Crawled, not indexed', meaning: 'Google has visited them and decided not to keep them in the index.', status: 'Crawled - currently not indexed', action: 'Fix the quality' },
+    ],
+    title: (total: string) => `The ${total} product pages, according to Search Console`,
+    inConsole: 'In Search Console:',
+    quotes: ['"', '"'],
+    caption: 'Made-up example data. The two unindexed groups look like the same problem and call for opposite actions.',
+  },
+}[lang];
 const parts = [
-  {
-    label: 'Indexadas',
-    value: 19700,
-    tone: 'ok',
-    meaning: 'Google las tiene en el índice y pueden salir en los resultados.',
-    status: 'Indexada',
-    action: 'Posicionarlas mejor',
-  },
-  {
-    label: 'Descubiertas, sin rastrear',
-    value: 19800,
-    tone: 'crawl',
-    meaning: 'Google sabe que existen, pero todavía no las ha visitado.',
-    status: 'Descubierta: actualmente sin indexar',
-    action: 'Liberar rastreo y enlazarlas',
-  },
-  {
-    label: 'Rastreadas, sin indexar',
-    value: 8500,
-    tone: 'quality',
-    meaning: 'Google las ha visitado y ha decidido no guardarlas en el índice.',
-    status: 'Rastreada: actualmente sin indexar',
-    action: 'Arreglar la calidad',
-  },
+  { ...copy.parts[0], value: 19700, tone: 'ok' },
+  { ...copy.parts[1], value: 19800, tone: 'crawl' },
+  { ...copy.parts[2], value: 8500, tone: 'quality' },
 ];
 const total = parts.reduce((sum, part) => sum + part.value, 0);
 // En español, forzamos el punto de miles también en números de 4 cifras (8.500), como en el resto del post
-const format = (value: number) => value.toLocaleString('es-ES', { useGrouping: 'always' } as Intl.NumberFormatOptions);
+const format = (value: number) =>
+  value.toLocaleString(lang === 'en' ? 'en-US' : 'es-ES', { useGrouping: 'always' } as Intl.NumberFormatOptions);
 ---
 
 <figure class="indexing-split not-prose my-10">
-  <p class="is-title">Las {format(total)} fichas de producto, según Search Console</p>
+  <p class="is-title">{copy.title(format(total))}</p>
   <div class="is-bar" role="img" aria-label={parts.map((part) => `${part.label}: ${format(part.value)}`).join('; ')}>
     {parts.map((part) => <span class={`is-seg is-${part.tone}`} style={`flex: ${part.value}`}>{format(part.value)}</span>)}
   </div>
@@ -46,13 +54,13 @@ const format = (value: number) => value.toLocaleString('es-ES', { useGrouping: '
           <p class="is-label">{part.label}</p>
           <p class="is-value">{format(part.value)}</p>
           <p class="is-meaning">{part.meaning}</p>
-          <p class="is-status">En Search Console: «{part.status}»</p>
+          <p class="is-status">{copy.inConsole} {copy.quotes[0]}{part.status}{copy.quotes[1]}</p>
           <p class="is-action">→ {part.action}</p>
         </div>
       ))
     }
   </div>
-  <figcaption>Datos inventados del ejemplo. Las dos partes sin indexar parecen el mismo problema y piden acciones opuestas.</figcaption>
+  <figcaption>{copy.caption}</figcaption>
 </figure>
 
 <style>

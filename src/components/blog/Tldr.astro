@@ -6,16 +6,21 @@
 interface Props {
   items: string[];
   label?: string;
+  lang?: 'es' | 'en';
 }
 
-const { items, label = 'TL;DR' } = Astro.props;
+const { items, label = 'TL;DR', lang = 'es' } = Astro.props;
+const copy = {
+  es: { aria: 'Resumen', cue: (count: number) => `Resumen en ${count} puntos` },
+  en: { aria: 'Summary', cue: (count: number) => `Summary in ${count} points` },
+}[lang];
 ---
 
-<aside class="tldr-compact not-prose" aria-label="Resumen">
+<aside class="tldr-compact not-prose" aria-label={copy.aria}>
   <details>
     <summary>
       <span class="tc-label">{label}</span>
-      <span class="tc-cue">Resumen en {items.length} puntos</span>
+      <span class="tc-cue">{copy.cue(items.length)}</span>
       <span class="tc-icon" aria-hidden="true"></span>
     </summary>
     <ol>

@@ -1,31 +1,57 @@
 ---
 /** Calculadora de capacidad semanal: (horas × ratio productivo) − reuniones. Sin JS muestra el ejemplo de 40 h y 8 h. */
+interface Props {
+  lang?: 'es' | 'en';
+}
+const { lang = 'es' } = Astro.props;
+const copy = {
+  es: {
+    hours: 'Horas a la semana',
+    meetings: 'Horas de reuniones',
+    ratio: 'Ratio productivo',
+    formula: '(40 × 0,75) − 8',
+    total: 'horas de trabajo planificable',
+    work: 'Planificable',
+    meet: 'Reuniones',
+    rest: 'Interrupciones y cambios de contexto',
+  },
+  en: {
+    hours: 'Hours per week',
+    meetings: 'Meeting hours',
+    ratio: 'Productive ratio',
+    formula: '(40 × 0.75) − 8',
+    total: 'plannable work hours',
+    work: 'Plannable',
+    meet: 'Meetings',
+    rest: 'Interruptions and context switching',
+  },
+}[lang];
 ---
 
-<figure class="capacity not-prose my-8" data-capacity>
+<figure class="capacity not-prose my-8" data-capacity data-lang={lang}>
   <div class="cap-inputs">
     <label>
-      <span>Horas a la semana</span>
+      <span>{copy.hours}</span>
       <input type="number" min="1" max="80" value="40" data-hours inputmode="numeric" />
     </label>
     <label>
-      <span>Horas de reuniones</span>
+      <span>{copy.meetings}</span>
       <input type="number" min="0" max="60" value="8" data-meetings inputmode="numeric" />
     </label>
     <label>
-      <span>Ratio productivo</span>
+      <span>{copy.ratio}</span>
       <input type="number" min="0.4" max="1" step="0.05" value="0.75" data-ratio inputmode="decimal" />
     </label>
   </div>
   <div class="cap-result">
-    <p class="cap-formula" data-formula>(40 × 0,75) − 8</p>
-    <p class="cap-total"><strong data-total>22</strong> horas de trabajo planificable</p>
+    <p class="cap-formula" data-formula>{copy.formula}</p>
+    <p class="cap-total"><strong data-total>22</strong> {copy.total}</p>
     <div class="cap-bar" aria-hidden="true">
       <span class="cap-work" data-bar-work style="width: 55%"></span>
       <span class="cap-meet" data-bar-meet style="width: 20%"></span>
       <span class="cap-rest" data-bar-rest style="width: 25%"></span>
     </div>
-    <p class="cap-legend"><span><i class="cap-work"></i>Planificable</span><span><i class="cap-meet"></i>Reuniones</span><span><i class="cap-rest"></i>Interrupciones y cambios de contexto</span></p>
+    <p class="cap-legend"><span><i class="cap-work"></i>{copy.work}</span><span><i class="cap-meet"></i>{copy.meet}</span><span><i class="cap-rest"></i>{copy.rest}</span></p>
   </div>
 </figure>
 
@@ -123,9 +149,9 @@
 </style>
 
 <script>
-  const format = (value: number) => value.toLocaleString('es-ES', { maximumFractionDigits: 2 });
-
   for (const root of document.querySelectorAll<HTMLElement>('[data-capacity]')) {
+    const locale = root.dataset.lang === 'en' ? 'en-US' : 'es-ES';
+    const format = (value: number) => value.toLocaleString(locale, { maximumFractionDigits: 2 });
     const field = (name: string) => root.querySelector<HTMLInputElement>(`[data-${name}]`)!;
     const update = () => {
       const hours = Math.max(1, Number(field('hours').value) || 0);

@@ -1,13 +1,37 @@
 ---
 /** Los tres niveles de la metodología (theme, iniciativa y tarea) con el ejemplo de plan.ts, en formato compacto */
-import { initiatives, tasks, teams, theme } from './plan';
+import { getPlan, type Lang } from './plan';
+
+interface Props {
+  lang?: Lang;
+}
+const { lang = 'es' } = Astro.props;
+const { initiatives, tasks, teams, theme } = getPlan(lang);
+const copy = {
+  es: {
+    theme: 'Theme o milestone',
+    goal: 'Objetivo:',
+    initiative: 'Iniciativa',
+    metric: 'Métrica:',
+    caption:
+      'El problema de las fichas convertido en plan: un theme o milestone con su objetivo y sus resultados clave, dos iniciativas con su métrica y once tareas de cinco equipos.',
+  },
+  en: {
+    theme: 'Theme or milestone',
+    goal: 'Goal:',
+    initiative: 'Initiative',
+    metric: 'Metric:',
+    caption:
+      'The product page problem turned into a plan: a theme or milestone with its goal and key results, two initiatives with their metric and eleven tasks from five teams.',
+  },
+}[lang];
 ---
 
 <figure class="method-levels not-prose my-10">
   <div class="ml-theme">
-    <span class="ml-level">Theme o milestone</span>
+    <span class="ml-level">{copy.theme}</span>
     <div>
-      <p class="ml-title">Objetivo: {theme.title}</p>
+      <p class="ml-title">{copy.goal} {theme.title}</p>
       <ul class="ml-krs">
         {theme.keyResults.map((kr, index) => <li><span>KR{index + 1}</span> {kr}</li>)}
       </ul>
@@ -17,9 +41,9 @@ import { initiatives, tasks, teams, theme } from './plan';
     {
       initiatives.map((initiative, index) => (
         <div class="ml-initiative">
-          <span class="ml-level">Iniciativa</span>
+          <span class="ml-level">{copy.initiative}</span>
           <p class="ml-title">{initiative.title}</p>
-          <p class="ml-sub">Métrica: {initiative.metric}</p>
+          <p class="ml-sub">{copy.metric} {initiative.metric}</p>
           <ul>
             {tasks
               .filter((task) => task.initiative === index)
@@ -35,7 +59,7 @@ import { initiatives, tasks, teams, theme } from './plan';
       ))
     }
   </div>
-  <figcaption>El problema de las fichas convertido en plan: un theme o milestone con su objetivo y sus resultados clave, dos iniciativas con su métrica y once tareas de cinco equipos.</figcaption>
+  <figcaption>{copy.caption}</figcaption>
 </figure>
 
 <style>

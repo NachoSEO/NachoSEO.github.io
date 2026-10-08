@@ -4,7 +4,36 @@
  * Se renderiza en la semana 4; el script mueve las tarjetas y las barras al cambiar de semana o de vista.
  * Sin JS se ve el tablero de la semana 4.
  */
-import { statusAt, statuses, tasks, teams, weeks } from './plan';
+import { getPlan, statusAt, weeks, type Lang } from './plan';
+
+interface Props {
+  lang?: Lang;
+}
+const { lang = 'es' } = Astro.props;
+const { statuses, tasks, teams } = getPlan(lang);
+const copy = {
+  es: {
+    week: 'Semana',
+    view: 'Vista',
+    board: 'Tablero',
+    late: '· tarde',
+    waitsFor: 'Espera a:',
+    planned: (planned: number, start: number, end: number) => `planificada en S${planned}, hecha en S${start}${end > start ? `–S${end}` : ''}`,
+    caption:
+      'Ejemplo simplificado. Cambia de semana: en la 4, el noindex de los filtros va tarde y la revisión de los logs queda en espera. En el Gantt, el recuadro es la semana planificada (en rojo si está en espera) y la barra, la real.',
+  },
+  en: {
+    week: 'Week',
+    view: 'View',
+    board: 'Board',
+    late: '· late',
+    waitsFor: 'Waiting for:',
+    planned: (planned: number, start: number, end: number) => `planned for W${planned}, done in W${start}${end > start ? `–W${end}` : ''}`,
+    caption:
+      'Simplified example. Switch weeks: in week 4, the noindex on the filters is late and the log review is on hold. In the Gantt view, the dashed box is the planned week (red if on hold) and the bar is the actual one.',
+  },
+}[lang];
+const weekPrefix = lang === 'en' ? 'W' : 'S';
 
 const initialWeek = 4;
 const weekList = Array.from({ length: weeks }, (_, index) => index + 1);
@@ -13,8 +42,8 @@ const isLate = (task: (typeof tasks)[number], week: number) => week > task.plann
 
 <figure class="plan-explorer not-prose my-10" data-plan-explorer data-week={initialWeek}>
   <div class="pe-bar">
-    <div class="pe-weeks" role="radiogroup" aria-label="Semana">
-      <span class="pe-bar-label">Semana</span>
+    <div class="pe-weeks" role="radiogroup" aria-label={copy.week}>
+      <span class="pe-bar-label">{copy.week}</span>
       {
         weekList.map((week) => (
           <button type="button" role="radio" aria-checked={String(week === initialWeek)} data-week-button={week}>
@@ -23,8 +52,8 @@ const isLate = (task: (typeof tasks)[number], week: number) => week > task.plann
         ))
       }
     </div>
-    <div class="pe-tabs" role="tablist" aria-label="Vista">
-      <button type="button" role="tab" aria-selected="true" data-view="board">Tablero</button>
+    <div class="pe-tabs" role="tablist" aria-label={copy.view}>
+      <button type="button" role="tab" aria-selected="true" data-view="board">{copy.board}</button>
       <button type="button" role="tab" aria-selected="false" data-view="gantt">Gantt</button>
     </div>
   </div>
@@ -44,11 +73,11 @@ const isLate = (task: (typeof tasks)[number], week: number) => week > task.plann
                   <span class="pe-card-title">{task.title}</span>
                   <span class="pe-card-meta">
                     {teams[task.team].label}
-                    <span class="pe-late" hidden={!isLate(task, initialWeek)}>· tarde</span>
+                    <span class="pe-late" hidden={!isLate(task, initialWeek)}>{copy.late}</span>
                   </span>
                   {task.blockedBy && (
                     <span class="pe-blocked" hidden={statusAt(task, initialWeek) !== 'hold'}>
-                      Espera a: {task.blockedBy}
+                      {copy.waitsFor} {task.blockedBy}
                     </span>
                   )}
                 </li>
@@ -60,7 +89,7 @@ const isLate = (task: (typeof tasks)[number], week: number) => week > task.plann
   </div>
 
   <div class="pe-gantt" data-panel="gantt" hidden style={`--weeks: ${weeks}; --now: ${initialWeek}`}>
-    {weekList.map((week) => <span class="pe-gantt-head" data-head={week} style={`grid-row: 1; grid-column: ${week + 1}`}>S{week}</span>)}
+    {weekList.map((week) => <span class="pe-gantt-head" data-head={week} style={`grid-row: 1; grid-column: ${week + 1}`}>{weekPrefix}{week}</span>)}
     {
       tasks.map((task, index) => (
         <>
@@ -73,7 +102,7 @@ const isLate = (task: (typeof tasks)[number], week: number) => week > task.plann
             class="pe-actual"
             data-bar={task.id}
             style={`--team: ${teams[task.team].color}; grid-row: ${index + 2}; grid-column: ${task.start + 1} / ${task.end + 2}`}
-            title={`${teams[task.team].label}: planificada en S${task.planned}, hecha en S${task.start}${task.end > task.start ? `–S${task.end}` : ''}`}
+            title={`${teams[task.team].label}: ${copy.planned(task.planned, task.start, task.end)}`}
           />
         </>
       ))
@@ -91,7 +120,7 @@ const isLate = (task: (typeof tasks)[number], week: number) => week > task.plann
         ))
       }
     </span>
-    Ejemplo simplificado. Cambia de semana: en la 4, el noindex de los filtros va tarde y la revisión de los logs queda en espera. En el Gantt, el recuadro es la semana planificada (en rojo si está en espera) y la barra, la real.
+    {copy.caption}
   </figcaption>
 </figure>
 
@@ -282,7 +311,7 @@ const isLate = (task: (typeof tasks)[number], week: number) => week > task.plann
 </style>
 
 <script>
-  import { statusAt, tasks } from './plan';
+  import { statusAt, taskStructure as tasks } from './plan';
 
   for (const root of document.querySelectorAll<HTMLElement>('[data-plan-explorer]')) {
     const cards = new Map([...root.querySelectorAll<HTMLElement>('[data-task]')].map((card) => [card.dataset.task!, card]));

@@ -1,0 +1,331 @@
+---
+title: 'My methodology for SEO projects: from the business goal to this week''s task'
+description: 'The methodology I have used for years with companies and clients: goals taken from the P&L, quarterly OKRs, weekly sprints, metrics that take months to move and automating the operational work.'
+lang: en
+translationKey: seo-methodology
+slug: seo-project-methodology
+pubDate: 2026-10-08
+tags: ['methodology', 'project management', 'seo consulting']
+citations:
+  - title: 'Procesos, metodologías y automatizaciones SEO en Softonic (Clinic SEO 2019)'
+    url: 'https://speakerdeck.com/nachomascort/procesos-metodologias-y-automatizaciones-seo-en-softonic-clinic-seo'
+    author: 'Nacho Mascort and Ferran Gavin'
+    date: '2019-12-16'
+  - title: 'How long does it take for Google to crawl, index, and serve a webpage?'
+    url: 'https://www.linkedin.com/feed/update/urn:li:activity:7512112386334642176/'
+    author: 'Estela Franco'
+  - title: 'Page indexing report'
+    url: 'https://support.google.com/webmasters/answer/7440203'
+    publisher: 'Google Search Console Help'
+  - title: 'Managing crawling of faceted navigation URLs'
+    url: 'https://developers.google.com/search/docs/crawling-indexing/crawling-managing-faceted-navigation'
+    publisher: 'Google Search Central'
+  - title: 'Block Search indexing with noindex'
+    url: 'https://developers.google.com/search/docs/crawling-indexing/block-indexing'
+    publisher: 'Google Search Central'
+  - title: 'Set goals with OKRs'
+    url: 'https://rework.withgoogle.com/guides/set-goals-with-okrs/steps/introduction/'
+    publisher: 'Google re:Work'
+  - title: 'The Kanban Guide'
+    url: 'https://prokanban.org/the-kanban-guide/'
+    author: 'Daniel S. Vacanti and ProKanban.org'
+  - title: 'A Proof for the Queuing Formula: L = λW'
+    url: 'https://doi.org/10.1287/opre.9.3.383'
+    author: 'John D. C. Little'
+    publisher: 'Operations Research'
+    date: '1961'
+  - title: 'Why the Fibonacci Sequence Works Well for Estimating'
+    url: 'https://www.mountaingoatsoftware.com/blog/why-the-fibonacci-sequence-works-well-for-estimating'
+    author: 'Mike Cohn'
+---
+
+import LeadMagnet from '../../../../components/blog/LeadMagnet.astro';
+import Tldr from '../../../../components/blog/Tldr.astro';
+import MethodFlow from '../../../../components/blog/methodology/MethodFlow.astro';
+import MethodLevels from '../../../../components/blog/methodology/MethodLevels.astro';
+import IndexingSplit from '../../../../components/blog/methodology/IndexingSplit.astro';
+import KrTracking from '../../../../components/blog/methodology/KrTracking.astro';
+import MetricLadder from '../../../../components/blog/methodology/MetricLadder.astro';
+import PlanExplorer from '../../../../components/blog/methodology/PlanExplorer.astro';
+import CapacityCalculator from '../../../../components/blog/methodology/CapacityCalculator.astro';
+import OpsVsInitiatives from '../../../../components/blog/methodology/OpsVsInitiatives.astro';
+
+<Tldr
+  lang="en"
+  items={[
+    "The client's goal gets broken down to the <strong>P&L</strong> (margin, CAC, customer value), and that gives you the <strong>value of each organic session</strong>.",
+    'A <strong>table by page type</strong> connects SEO and money. The main problem is the step where the most value gets stuck; make sure you separate crawling problems from quality problems.',
+    'The problem becomes a quarterly goal with <strong>absolute KRs</strong>, from the starting point to the target, and initiatives made of one-week tasks.',
+    'Traffic is watched <strong>every day</strong> as a control KPI; the impact of each initiative is judged in its own <strong>time window</strong>.',
+    'Weekly sprints with a <strong>light Kanban</strong>, the tasks of <strong>every team</strong> on the same board, and the operational work automated.',
+  ]}
+/>
+
+When someone hires me, one of the first questions is "so how are you going to work?". This post is the long answer.
+
+It is the methodology I have used and adjusted for years in different companies and with clients, with teams of very different sizes. Ferran Gavin and I presented a first version at [Clinic SEO 2019](https://speakerdeck.com/nachomascort/procesos-metodologias-y-automatizaciones-seo-en-softonic-clinic-seo); what follows is today's version. One part decides what to do and the other decides how:
+
+<MethodFlow lang="en" />
+
+Almost everything you will read about agile methods applies to any team. Three things make it different for SEO, and they take up most of this post: Google takes weeks or months to reflect a change, almost all the work depends on other teams, and operational work eats the roadmap if you don't automate it.
+
+## 1. Translating "I want to sell more" into the P&L
+
+Almost every project starts with an abstract goal. "I want to sell more", "I want more traffic", "I want to show up in ChatGPT". You can't prioritize anything with that. What I do is break the goal down to the P&L, line by line, because SEO touches almost all of them:
+
+| P&L line | What I ask | What changes in the SEO plan |
+|---|---|---|
+| **Revenue** | Which lines or categories bring in the most? What is the average order value and how often do customers buy again? How much of the revenue is seasonal? | Which page types and categories go first, and in which quarter they need to be ranking. |
+| **Gross margin** | What margin does each line leave after product cost, returns and logistics? Are there products that sell a lot and leave nothing? | A high-volume, low-margin product can be worth less than a niche one. I prioritize by margin. |
+| **Acquisition cost** | How much do you pay per customer in each channel? How much of your paid spend goes to searches you could win organically? How much do sales depend on the brand? | Keywords where CPC is expensive and converts are the first candidates. Every organic sale there lowers the blended CAC. |
+| **Customer value** | How much is a customer worth at 12 or 24 months? Which channel brings customers who come back more? | A keyword that brings returning customers is worth more than one with more volume and a single purchase. |
+| **Capacity and fixed costs** | How many development and content hours are really available each sprint? Which vendors are already paid for? | The plan has to fit the real capacity. If an initiative needs three months of development that doesn't exist, it stays in the backlog. |
+| **Cash and inventory** | Is there stock that needs to move? Products about to be discontinued? Launches on the way? | I don't push what can't be served, and I prepare ahead of time for what is about to launch. |
+
+Each business model adds its own questions:
+
+- **Ecommerce:** margin by category, return rate, stockouts, weight of marketplaces.
+- **SaaS:** MRR, churn, ARPA, trial-to-paid conversion and which keywords bring accounts that don't cancel within three months.
+- **B2B with leads:** average contract value, sales cycle, close rate by source. A lead from a transactional keyword isn't worth the same as one from an informational post.
+- **Media and ad-monetized sites:** RPM by page type, pageviews per session, ad density.
+
+With those answers I calculate how much an organic session is worth for each page type:
+
+> Value per session = conversion rate × average order value × gross margin
+
+You can run the numbers for your own site, with sales, leads or advertising, in the [organic session value calculator](/en/tools/organic-session-value-calculator/).
+
+With that I prioritize the plan: the demand I can capture by page type, multiplied by the value of each session. Sometimes the page type with the most traffic turns out to be the one that leaves the least money, and the one nobody was looking at is the one that pays for the project.
+
+Two cases I worked on show how different the plan turns out depending on the business model:
+
+| | Softonic | Reverse Tech |
+|---|---|---|
+| **How it makes money** | Advertising | Subscriptions |
+| **What a visit is worth** | Its RPM: every pageview monetizes | Nothing, until the user subscribes and stays |
+| **Strategy** | Volume: cover all the software people search for | Intent: transactional traffic that converts |
+| **Metric to prioritize** | Pageviews per session, RPM and expected lifetime of each page | Subscriber conversion and LTV by keyword |
+
+At [Softonic](/en/case-studies/softonic-0-to-20-million/), every page was valued by its search potential, and when one started to perform we decided whether to improve it using three data points: its traffic, its RPM and how long we expected it to stay alive. With advertising, more useful pages with demand meant more revenue. But getting the visit wasn't enough: a user who viewed four pages generated twice as much as one who viewed two. That's why pageviews per session was a metric for prioritizing, and the user's path inside the site (alternatives, related programs, next step after the download) was designed with it in mind.
+
+At [Reverse Tech](/en/case-studies/reverse-tech-organic/) the model was subscriptions, and there volume didn't help much. An informational visit that never subscribes pays nothing, no matter how much the traffic chart goes up. We looked for transactional traffic, from people with buying intent, and within that traffic, the kind that ended up as subscribers who stayed more months: the highest LTV.
+
+Same method and two opposite strategies. Neither decision comes out of an SEO tool; both come out of the P&L.
+
+## 2. A table by page type that connects SEO and money
+
+With the answers from point 1 and the access from the first week (Search Console, analytics, logs, a full crawl and whatever business data can be shared), I always build the same table. One row per page type and, in the columns, everything needed to decide:
+
+| Page type | URLs | Indexed | Non-brand clicks / month | Value per session | Organic value / month |
+|---|---|---|---|---|---|
+| Categories | 1,200 | 94% | 38,000 | €1.90 | €72,200 |
+| Product pages | 48,000 | 41% | 52,000 | €0.70 | €36,400 |
+| Indexable filters | 210,000 | 8% | 6,000 | €0.40 | €2,400 |
+| Blog | 900 | 88% | 61,000 | €0.05 | €3,050 |
+
+*Made-up data for the example.*
+
+This table usually contradicts what the team believes. In the example, the blog brings the most clicks and leaves almost no money. Categories leave twice as much as product pages with less traffic. And there are 210,000 filters that barely get indexed or contribute anything, while the product pages, which do bring in revenue, have fewer than half indexed. The table doesn't say why; that's what the next step is for.
+
+Four details make a difference when building it:
+
+- **Non-brand clicks.** Brand traffic comes from the brand. I separate it in Search Console from day one, because otherwise any rise in awareness looks like SEO work.
+- **Indexed, according to the logs and Search Console.** The percentage of indexed URLs by page type, crossed with what Googlebot actually visits in the logs, shows where crawling is spent and where it's missing.
+- **The value comes from the backend.** Real revenue or leads by page type, with their margin. Web analytics usually falls short because of cookie consent and attribution, so I use it to split percentages between page types.
+- **One row per template.** On a big site the problems live in the templates. Looking at individual URLs hides the pattern.
+
+## 3. Finding the main problem: where the money gets lost
+
+With the table in front of me, I walk each page type through the steps between a URL and the money: crawling, indexing, rankings, clicks and conversion. The main problem is the step where the largest value gets stuck. It often doesn't match the most visible error in the audit.
+
+Be careful with "not indexed", because it hides two problems with opposite solutions. The [Search Console indexing report](https://support.google.com/webmasters/answer/7440203) separates them:
+
+- **"Discovered - currently not indexed".** Google knows the URL but hasn't crawled it. It's usually a crawling problem: it doesn't reach it, doesn't give it priority or spends its visits on other URLs.
+- **"Crawled - currently not indexed".** Google has visited it and decided not to index it. The problem there is usually quality: thin or duplicate content, or pages that are too similar to each other.
+
+The logs confirm it: if Googlebot visits the URL and it still doesn't make it into the index, freeing up crawling won't fix anything.
+
+Continuing with the example, the 28,300 unindexed product pages split like this:
+
+<IndexingSplit lang="en" />
+
+In the logs, Googlebot also spends far more visits on the filters than on the product pages:
+
+| Page type | Where it gets stuck | The evidence | What to do first |
+|---|---|---|---|
+| Uncrawled product pages (19,800) | **Crawling** | "Discovered - currently not indexed"; in the logs, Googlebot barely visits them | Free up crawling and strengthen the links to product pages |
+| Crawled, unindexed product pages (8,500) | **Quality** | "Crawled - currently not indexed"; nearly identical color and size variants, product pages with two lines of text | Consolidate variants and improve or remove the thin product pages |
+| Indexable filters | **Crawling** | 210,000 URLs that take a good share of Googlebot's visits and add nothing | Take the filters without demand out of the index and cut crawling of combinations |
+| Categories | **Rankings** | Indexed and high value, but between position 4 and 10 for their main queries | Content and internal linking, after the above |
+| Blog | **Conversion** | Lots of traffic, value per session of €0.05 | Link to categories; don't expand the blog this quarter |
+
+For the 19,800 uncrawled product pages, the filters and the product pages are the same problem seen from two sides: the crawling that goes to the filters is the crawling the product pages lack. That is the main problem, because it's the biggest block and it blocks the rest. The 8,500 crawled and unindexed pages are a different problem, one of [quality](/en/blog/google-quality-core-updates/), and freeing up crawling won't get them into the index. Google also documents how to [manage crawling of faceted navigation](https://developers.google.com/search/docs/crawling-indexing/crawling-managing-faceted-navigation).
+
+To decide the order, I put a number on each problem. If product pages went from 41% to 80% indexed (about 18,700 more, which can come out of the 19,800 uncrawled) and the new ones performed like the ones already indexed, that would be about 49,500 more clicks a month, about €34,600 a month at their value per session. The URLs that get in late are usually the weakest, so I halve it: about €17,000 a month at stake. With that number in hand, the conversation with the development team about the filters is very different.
+
+The main problem also defines the type of goal, which isn't always to grow:
+
+| Situation | Goal |
+|---|---|
+| The site works and you want more | **Grow**: more traffic and more business from the pages that bring in revenue. |
+| A core update took your traffic | **Recover**: find the cause and get back to the previous level, or beat it. |
+| You are about to migrate or redesign | **Prevent**: no drop and, if possible, take the chance to grow. |
+| AI recommends your competition | **Appear**: get into the answers of ChatGPT, Gemini or AI Overviews. |
+
+In a migration, the best result is that nobody notices anything in the traffic and the new site starts to grow. Preventing is also a goal, and often the one that saves the most money.
+
+<LeadMagnet lang="en" source="seo-project-methodology" intro="If your diagnosis also turns up a quality problem, like the 8,500 product pages in the example, this skill reviews your page types against Google's criteria:" />
+
+## 4. From the main problem to the quarterly plan
+
+The diagnosis says what to solve first and how much it's worth. Now it has to become work that fits the calendar and the team's real capacity.
+
+I split it by time. If the project is going to last a year or more, I set an annual goal and divide it into quarters, which is the natural unit of a company. Each quarter has its own sub-goals or milestones, and within each one I work with three levels:
+
+| Level | What it is | How long it lasts |
+|---|---|---|
+| **Theme or milestone** | A broad strategic goal that gives direction to everything under it. | From one quarter to several years |
+| **Initiative** | A concrete project that moves the theme forward, with its own metric. | From several weeks to several months |
+| **Task** | A piece of work with a single owner. | One week at most |
+
+In the example, the main problem was the unindexed product pages, and the €17,000 a month at stake becomes the quarterly goal and its two key results:
+
+<MethodLevels lang="en" />
+
+The blog, which came up in the diagnosis as a conversion problem, goes in as a linking task and not as an initiative of its own: this quarter it isn't the priority.
+
+The 8,500 product pages with a quality problem go to the next quarter as a separate initiative, with its own metric.
+
+Notice also that the noindex goes on the individual filters without demand and the robots.txt block on the combinations of several filters: they are different URLs on purpose, because if Google can't crawl a URL it [can't see its noindex either](https://developers.google.com/search/docs/crawling-indexing/block-indexing).
+
+Tasks also don't come only from the plan. They come in through three routes: **the audit** (what comes out of reviewing the KPIs), **stakeholders** (product, content or business requests) and **alerts** (something broke). All three go to the same backlog and compete for the same capacity.
+
+## 5. Metrics that move this week and metrics that take months
+
+Before defining the initiatives, I decide what I'm going to watch during the quarter:
+
+- **Control KPIs.** Metrics that have to stay healthy while we work on something else: traffic, which is watched every day, indexing and errors.
+- **OKRs.** The quarterly goal and its key results (KRs): what has to have changed by the end of the quarter. Google explains the format well in its [OKR guide](https://rework.withgoogle.com/guides/set-goals-with-okrs/steps/introduction/).
+
+I always write KRs in absolute terms, from the starting point to the target: "indexed product pages, from 19,700 to 38,400". **There are two common ways of writing them that I don't use:**
+
+- **As a percentage** ("+20% traffic"). When I see a KR like that, an alarm goes off: it usually means there wasn't much analysis behind it. 20% over what base, measured when? A percentage is fine for telling other stakeholders, but to track it every week you need the number.
+- **As an increment** ("+€17,000 a month"). If you used to make 50 and want to get to 65, and the first week you make 10 more, you don't know which part is baseline and which is incremental. With the total, you know from the first week whether you're on track, and if we're talking about revenue, you can calculate what the SEO actions should be contributing.
+
+And you have to account for the delay: the SEO action happens one day and the impact arrives weeks later. An absolute KR with its starting line lets you see when it starts to move.
+
+Control KPIs depend on where your business can break. At [word.tips](/en/case-studies/word-tips-2-million-daily-visits/), with peaks of 2 million visits a day, an error in a template reached hundreds of thousands of URLs within hours, so the control KPI was performance by template. On a small site with a few pages that bring in revenue, it's enough to watch those pages one by one.
+
+Here is the first difference with a product team. If you change a button, the next day you know whether it converts better. If you change a template, Google has to crawl it, index it and evaluate it again, and each step has its own timeline. Those are the Google timelines presented in Barcelona that I cover in the [post about quality and core updates](/en/blog/google-quality-core-updates/):
+
+<MetricLadder lang="en" />
+
+Traffic has two different roles:
+
+- **As a control KPI, it's always watched**: every day and, on big sites, almost in real time. Even if the goal is the business, the front door is the site, and traffic is the first metric that warns you when something breaks.
+- **As a measure of an initiative's impact, it's evaluated in a time window** that depends on the initiative and the change.
+
+I set that window when I define each initiative. Until it's over, the weekly review looks at the left side of the ladder: whether it's deployed, whether Googlebot has seen it and whether it's indexed. If you judge the impact too early, you'll stop things that work and keep going with others that don't.
+
+That's what KR1 looks like in the example. The line barely moves until the noindex on the filters ships, and from there it rises at the slope needed, though still below the linear pace:
+
+<KrTracking lang="en" />
+
+Each initiative has its own metric, tied to those KPIs or OKRs. If an initiative doesn't move any of them, I ask myself why we're doing it. And sometimes the good metric is one you invent for your business. On a catalog site, for example, three work very well: **speed** (how long it takes you to publish a new product compared with the competition), **gaps** (what percentage of the competition's top products you don't have) and **freshness** (what percentage of your product pages are out of date).
+
+## 6. Weekly sprints with a light Kanban
+
+> **A clarification before going on.** What I describe from here on are generalizations: how I work by default. There are cases where I do exactly the opposite. Read it as a starting point and not as a rule: every site and every business is its own world, and the methodology adapts to what each one needs.
+
+Tasks are spread across weeks and I manage them with [Kanban](https://prokanban.org/the-kanban-guide/), on a board with four columns: "To do", "In progress", "On hold" and "Done". I call it light because it has few rules: just enough for the work to move forward and for the whole team to see the state of every task. If on a project a rule slows us down instead of helping, we change it.
+
+This is the product page plan, week by week. Move between weeks to see how the board progresses, and switch to the Gantt view to compare what was planned with what happened:
+
+<PlanExplorer lang="en" />
+
+The default rules:
+
+- **Finish what you started before starting something new.** The board is consumed from right to left.
+- **"On hold" is only for external blockers.** Something that depends on another team, a vendor or an access.
+- **Small tasks.** One owner per task; if there are two, they are two tasks. And it has to fit in a week; if it doesn't, split it by deliverable.
+- **At most two tasks in progress per person.** With more work open at once, each task takes longer to get out; it's [Little's law](https://doi.org/10.1287/opre.9.3.383) applied to a board: the average time a task takes is the work in progress divided by what the team finishes per week. With AI it's harder to stick to it: with several agents working in parallel it's very easy to open five fronts at once. But reviewing and deciding is still one person's work, and focus gets lost all the same.
+- **External requests go to the backlog.** They are prioritized in the next week's planning. The exception is fires: if something breaks, it goes first.
+
+I use one-week sprints, while many agile SEO guides [suggest two](https://www.searchenginejournal.com/the-problem-with-always-on-seo-why-you-need-sprints-not-checklists/554236/). With one week, the plan gets corrected four times a month, and since what I look at each week are the fast metrics of the ladder, there is always something to review.
+
+### How much fits in a week
+
+To avoid overfilling a week, I calculate each person's capacity with a simple formula: total hours times a productive ratio, minus meeting hours. By default I use a ratio of 0.75, which leaves room for emails, interruptions and context switching. Try it with your numbers:
+
+<CapacityCalculator lang="en" />
+
+The formula is there to avoid overloading the sprint. I don't track anyone's hours; what matters to me is that the goals get done. That's also why I don't use [story points on a Fibonacci scale](https://www.mountaingoatsoftware.com/blog/why-the-fibonacci-sequence-works-well-for-estimating): with rough hours, anyone on the team understands right away whether the week fits.
+
+## 7. Operational work gets logged and automated
+
+There are two types of tasks:
+
+- **Operational.** The day-to-day that keeps everything running: reports, reviews, checks.
+- **Initiative.** The work that moves the OKRs.
+
+Operational tasks also go on the board, even if they repeat every week. If you log them, you see how much time they take and which ones can be automated.
+
+At Softonic, the log showed us that in ten months we had done fourteen tasks on redirects, many of them touching logic more than ten years old, and with the same checks repeated over and over. The solution was a checker: a sample of URLs covering all those rules that is reviewed every day and warns as soon as a source or a destination fails. These are the automations I set up almost every time:
+
+- **Daily redirect check** on a sample that covers all the rules.
+- **Own crawls** on a representative set of URLs, with thresholds that trigger an alert.
+- **Googlebot alerts** for status codes and crawl drops.
+- **Trend detection**, when the business depends on being first to what's new.
+
+Each automation takes an operational task off the board and leaves that room for initiatives:
+
+<OpsVsInitiatives lang="en" />
+
+In the case we presented at Clinic SEO, that is what made it possible to run more projects and more languages, with daily deployments, without growing the team.
+
+## 8. The weekly review
+
+Once a week we go over the board in a short meeting. It answers three questions:
+
+1. What did we focus on last week?
+2. Is anything blocked?
+3. What's up this week?
+
+The plan gets corrected in that meeting. Something is delayed because it's on hold, something moves up because an opportunity or a fire came up, an initiative stops because its metric doesn't move. Only what matters to the whole team gets discussed; operational tasks are on the board, but there's no need to talk about them.
+
+## What I have seen go wrong: other teams' tasks
+
+The most frequent planning mistake I see is that each team plans its own tasks and not those of the others. At most, Tech's are taken into account.
+
+A typical example: something needs to be built and it's in the development sprint, but nobody has reserved time for the SEO QA before it's published, and the change either ships unreviewed or ends up waiting.
+
+Almost no initiative belongs to just one team. Building a new site involves much more than programming it: first there's design, you have to decide what will be measured and how, there's content to adapt, and then comes the SEO part.
+
+In the product page example, five teams are involved, and you can't review crawling in the logs until Tech applies the noindex to the filters.
+
+If only your tasks are on your board, you don't see that you're waiting on another team until you're already late. That's why I put all of an initiative's tasks on the board, whether I do them, someone on my team does or an external vendor we coordinate with every few weeks does. That way dependencies show up in the Gantt before they block anyone.
+
+The other problem comes when many teams deploy at the same time. With continuous deployment and several projects in parallel, a change from another team can break something of yours, and some tasks get reverted. Without the alerts from the previous section, you find out through traffic, weeks late.
+
+## Tools
+
+Any tool works if it stores the tasks in a database and lets you see them in several ways. What matters is that the same task database has a board view, for the day to day, and a Gantt view, for planning the quarter and seeing dependencies. If you have to maintain the two by hand in different places, they will end up out of sync.
+
+Trello, Wrike or any Kanban board will do, and Linear seems to be starting to gain traction. I've fought with almost all of them, and the one I like best is Notion: it has a flexibility I haven't found in any other. In exchange, it has a steeper learning curve.
+
+If you want to start without building it from scratch, Notion's free [Agile Project Management](https://www.notion.com/templates/agile-project-management-notion) template follows almost everything I describe in this post.
+
+For alerts and automations there is no one tool that does it all. I use third-party tools where they work and my own scripts where they don't. The rule is to adapt the tool to what you need to know, and make sure what it tells you is useful for deciding something.
+
+## How it fits each type of project
+
+The structure is the same; the goal and the pace change. I cover all four in [SEO and GEO consulting](/en/services/seo-geo-consulting/):
+
+- **Audit.** It's parts 1 to 3 of this post in a closed project: goal, data and main problem, with a prioritized plan at the end. The plan already comes out in initiatives and tasks.
+- **Recovering traffic after a core update.** The goal is to recover and the horizon is [3 to 6 months](/en/blog/google-quality-core-updates/). Traffic is watched every day; recovery is judged against the quarter's KRs.
+- **Migration.** The goal is to prevent. Tasks are concentrated before launch and the following weeks are mostly monitoring and alerts.
+- **Monthly consulting.** The whole cycle, with the weekly review alongside your team.
+
+<LeadMagnet lang="en" source="seo-project-methodology-final" intro="And if you'd rather start with a quality diagnosis of your site, I'll send you the skill I use:" />
+
+If you want to see how it would look in your case, [book a 30-minute call](https://cal.com/nacho-mascort/30min) and we'll go through it with your data.

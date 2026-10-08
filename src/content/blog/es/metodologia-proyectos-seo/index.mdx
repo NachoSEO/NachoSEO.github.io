@@ -27,7 +27,7 @@ import OpsVsInitiatives from '../../../../components/blog/methodology/OpsVsIniti
 
 <Tldr
   items={[
-    'Antes de tocar nada, el objetivo del cliente se traduce a algo <strong>medible</strong> y se busca el <strong>problema principal</strong> con datos de negocio.',
+    'Antes de tocar nada, el objetivo del cliente se baja a la <strong>cuenta de resultados</strong>: margen, CAC, valor del cliente. De ahí sale el <strong>valor de cada sesión orgánica</strong>.',
     'Cuatro objetivos posibles: <strong>crecer, recuperar, prevenir o aparecer</strong> en la IA.',
     'Del objetivo anual a <strong>tareas de una semana</strong>. Cada iniciativa tiene su métrica, y cada semana se revisa el tablero.',
     'En SEO el resultado tarda meses, así que la revisión semanal mira <strong>métricas adelantadas</strong>: desplegado, rastreado, indexado.',
@@ -47,25 +47,40 @@ Desde entonces la he usado y ajustado en otras empresas y con clientes, con equi
 
 Casi todo lo que vas a leer sobre metodologías ágiles vale para cualquier equipo. Lo que la hace distinta para SEO son tres cosas, y son las que más espacio ocupan en este post: Google tarda semanas o meses en reflejar un cambio, casi todo el trabajo depende de otros equipos y el trabajo operativo se come la hoja de ruta si no lo automatizas.
 
-## 1. Traducir "quiero vender más" a algo medible
+## 1. Traducir "quiero vender más" a la cuenta de resultados
 
-Casi todos los proyectos empiezan con un objetivo abstracto. "Quiero vender más", "quiero más tráfico", "quiero salir en ChatGPT". Con eso no se puede trabajar, así que lo primero es hacer preguntas:
+Casi todos los proyectos empiezan con un objetivo abstracto. "Quiero vender más", "quiero más tráfico", "quiero salir en ChatGPT". Con eso no se puede priorizar nada. Lo que hago es bajar ese objetivo a la cuenta de resultados, línea a línea, porque el SEO toca casi todas:
 
-- ¿Vender más qué? ¿Qué productos o servicios?
-- ¿Cuáles tienen más margen? ¿Cuáles traen clientes que repiten?
-- ¿En qué tienes ventaja sobre tu competencia? ¿Precio, catálogo, marca, servicio?
-- ¿Qué mercados importan? ¿Qué idioma, qué país?
+| Línea del P&L | Lo que pregunto | Qué cambia en el plan SEO |
+|---|---|---|
+| **Ingresos** | ¿Qué líneas o categorías facturan más? ¿Cuál es el ticket medio y cuánto se repite la compra? ¿Qué parte de la facturación es estacional? | Qué page types y categorías van primero, y en qué quarter hay que tenerlos posicionados. |
+| **Margen bruto** | ¿Qué margen deja cada línea después de coste de producto, devoluciones y logística? ¿Hay productos que se venden mucho y no dejan nada? | Un producto con mucho volumen y poco margen puede valer menos que uno de nicho. Priorizo por margen. |
+| **Coste de adquisición** | ¿Cuánto pagas por cliente en cada canal? ¿Qué parte de tu inversión en paid va a búsquedas que podrías ganar en orgánico? ¿Cuánto pesa la marca en las ventas? | Las keywords donde el CPC es caro y convierte son las primeras candidatas. Cada venta orgánica ahí baja el CAC mezclado. |
+| **Valor del cliente** | ¿Cuánto vale un cliente a 12 o 24 meses? ¿Qué canal trae clientes que repiten más? | Una keyword que trae clientes que repiten vale más que otra con más volumen y una sola compra. |
+| **Capacidad y costes fijos** | ¿Cuántas horas de desarrollo y de contenido hay de verdad cada sprint? ¿Qué proveedores ya están pagados? | El plan tiene que caber en la capacidad real. Si una iniciativa necesita tres meses de desarrollo que no hay, se queda en el backlog. |
+| **Caja e inventario** | ¿Hay stock que hay que rotar? ¿Productos que van a desaparecer? ¿Lanzamientos en camino? | No empujo lo que no se puede servir, y preparo antes de tiempo lo que se va a lanzar. |
 
-Las respuestas cambian el proyecto entero. Si el producto con más margen es el que menos búsquedas tiene, la estrategia no se parece en nada a la de quien vende un producto de volumen con margen pequeño.
+Cada modelo de negocio añade sus propias preguntas:
 
-En Softonic, por ejemplo, "más tráfico" no decía nada. La pregunta útil era qué programas merecía la pena tener y cuánto trabajo meter en cada uno. Cada ficha se valoraba por su potencial de búsqueda, y cuando una empezaba a rendir decidíamos si mejorarla con su tráfico, su RPM y cuánto tiempo esperábamos que siguiera viva. Esos tres datos son negocio puro, y ninguno sale de una herramienta SEO.
+- **Ecommerce:** margen por categoría, tasa de devolución, roturas de stock, peso de los marketplaces.
+- **SaaS:** MRR, churn, ARPA, conversión de prueba a pago y qué keywords traen cuentas que no se dan de baja a los tres meses.
+- **B2B con leads:** valor medio del contrato, ciclo de venta, tasa de cierre por origen. Un lead de una keyword transaccional no vale lo mismo que uno de un post informativo.
+- **Medios y webs que monetizan con publicidad:** RPM por page type, páginas vistas por sesión, densidad de anuncios.
+
+Con esas respuestas calculo cuánto vale una sesión orgánica en cada page type:
+
+> Valor por sesión = tasa de conversión × ticket medio × margen bruto
+
+Con eso priorizo el plan: demanda que puedo captar por page type, multiplicada por el valor de cada sesión. A veces sale que el page type con más tráfico es el que menos dinero deja, y el que nadie miraba es el que paga el proyecto.
+
+En Softonic, el negocio era publicidad, así que la métrica era el RPM. Cada ficha se valoraba por su potencial de búsqueda, y cuando una empezaba a rendir decidíamos si mejorarla con tres datos: su tráfico, su RPM y cuánto tiempo esperábamos que siguiera viva. Ninguno de los tres sale de una herramienta SEO.
 
 ## 2. Datos antes que opiniones
 
 No puedo decirte por dónde empezar sin datos. Al principio de cada proyecto reviso tres capas:
 
 - **Técnica.** Tiempos de carga, hits de Googlebot, uptime, rastreo e indexación por page type.
-- **Producto y negocio.** Ventas o leads por línea, conversión, revenue por página, márgenes.
+- **Producto y negocio.** Las respuestas del punto 1 convertidas en datos: ventas o leads por línea, conversión, revenue por página, márgenes, CAC por canal.
 - **SEO.** Desglose del tráfico, contenido flojo, canibalizaciones, reparto de keywords por page type.
 
 Son las mismas tres capas de KPIs que usábamos en Softonic. La capa de negocio es la que más se olvida y la que decide las prioridades: el porcentaje de rebote de la home importa poco; importa cuánto factura cada tipo de página, cuánto podría facturar y qué lo frena.

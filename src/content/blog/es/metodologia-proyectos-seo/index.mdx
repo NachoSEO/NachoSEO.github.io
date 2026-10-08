@@ -96,7 +96,7 @@ Con las respuestas del punto 1 y los accesos de la primera semana (Search Consol
 
 *Datos inventados para el ejemplo.*
 
-Esta tabla suele contradecir lo que el equipo cree. En el ejemplo, el blog trae más clics que nada y casi no deja dinero. Las categorías dejan el doble que las fichas con menos tráfico. Y hay 210.000 filtros que Google rastrea, apenas indexa y no aportan nada: ahí se está yendo el rastreo que les falta a las fichas, que tienen indexadas menos de la mitad.
+Esta tabla suele contradecir lo que el equipo cree. En el ejemplo, el blog trae más clics que nada y casi no deja dinero. Las categorías dejan el doble que las fichas con menos tráfico. Y hay 210.000 filtros que apenas se indexan ni aportan, mientras las fichas, que sí facturan, tienen indexadas menos de la mitad. La tabla no dice por qué; eso toca averiguarlo en el paso siguiente.
 
 Cuatro detalles que marcan la diferencia al montarla:
 
@@ -109,18 +109,26 @@ Cuatro detalles que marcan la diferencia al montarla:
 
 Con la tabla delante, recorro cada page type por los pasos que hay entre una URL y el dinero: rastreo, indexación, posiciones, clics y conversión. El problema principal es el paso donde se queda atascado el valor más grande. A menudo no coincide con el error más visible de la auditoría.
 
-Siguiendo con el ejemplo:
+Ojo con "no indexada", porque esconde dos problemas con soluciones opuestas. Search Console los separa:
+
+- **"Descubierta: actualmente sin indexar".** Google conoce la URL pero no la ha rastreado. Suele ser un problema de rastreo: no llega, no le da prioridad o se gasta las visitas en otras URLs.
+- **"Rastreada: actualmente sin indexar".** Google la ha visitado y ha decidido no indexarla. Ahí el problema suele ser de calidad: contenido pobre, duplicado o páginas demasiado parecidas entre sí.
+
+Los logs lo confirman: si Googlebot visita la URL y aun así no entra en el índice, liberar rastreo no va a arreglar nada.
+
+Siguiendo con el ejemplo, las 28.300 fichas sin indexar se reparten así: unas 19.800 descubiertas y sin rastrear, y unas 8.500 rastreadas y sin indexar. En los logs, Googlebot dedica a los filtros muchas más visitas que a las fichas:
 
 | Page type | Dónde se atasca | La prueba | Qué se hace primero |
 |---|---|---|---|
-| Fichas de producto | **Indexación** | 59 % sin indexar; en los logs, Googlebot pasa poco por las fichas | Liberar rastreo y reforzar el enlazado a las fichas |
+| Fichas sin rastrear (19.800) | **Rastreo** | "Descubierta: actualmente sin indexar"; en los logs, Googlebot casi no las visita | Liberar rastreo y reforzar el enlazado a las fichas |
+| Fichas rastreadas sin indexar (8.500) | **Calidad** | "Rastreada: actualmente sin indexar"; variantes de color y talla casi idénticas, fichas con dos líneas de texto | Consolidar variantes y mejorar o quitar las fichas pobres |
 | Filtros indexables | **Rastreo** | 210.000 URLs que se llevan buena parte de las visitas de Googlebot y no aportan | Sacar del índice los filtros sin demanda y cortar el rastreo de combinaciones |
 | Categorías | **Posiciones** | Indexadas y con valor alto, pero entre la posición 4 y la 10 en sus consultas principales | Contenido y enlazado interno, después de lo anterior |
 | Blog | **Conversión** | Mucho tráfico, valor por sesión de 0,05 € | Enlazar a categorías; no ampliar el blog este quarter |
 
-Los filtros y las fichas son el mismo problema visto desde dos lados: el rastreo que se va a los filtros es el que les falta a las fichas. Ese es el problema principal, y bloquea todo lo demás. Escribir más contenido para las fichas no sirve de nada si Google no las indexa.
+En las 19.800 fichas sin rastrear, los filtros y las fichas son el mismo problema visto desde dos lados: el rastreo que se va a los filtros es el que les falta a las fichas. Ese es el problema principal, porque es el bloque más grande y bloquea lo demás. Las 8.500 rastreadas y sin indexar son otro problema, de calidad, y liberar rastreo no las va a meter en el índice.
 
-Para decidir el orden pongo un número a cada problema. Si las fichas pasaran del 41 % al 80 % de indexación y las nuevas rindieran como las que ya están, serían unos 49.500 clics más al mes, unos 34.600 € al mes con su valor por sesión. Las URLs que entran tarde suelen ser las más flojas, así que lo divido entre dos: unos 17.000 € al mes en juego. Con ese número en la mano, la conversación con el equipo de desarrollo sobre los filtros es muy distinta.
+Para decidir el orden pongo un número a cada problema. Si las fichas pasaran del 41 % al 80 % de indexación (unas 18.700 más, que pueden salir de las 19.800 sin rastrear) y las nuevas rindieran como las que ya están, serían unos 49.500 clics más al mes, unos 34.600 € al mes con su valor por sesión. Las URLs que entran tarde suelen ser las más flojas, así que lo divido entre dos: unos 17.000 € al mes en juego. Con ese número en la mano, la conversación con el equipo de desarrollo sobre los filtros es muy distinta.
 
 El problema principal también define el tipo de objetivo, que no siempre es crecer:
 
@@ -149,7 +157,7 @@ En el ejemplo, el problema principal eran las fichas sin indexar, y los 17.000 �
 
 <MethodLevels />
 
-El blog, que en el diagnóstico salía como problema de conversión, entra como una tarea de enlazado y no como iniciativa propia: este quarter no es la prioridad. Y las tareas no salen solo del plan. Entran por tres vías: **la auditoría** (lo que sale de revisar los KPIs), **los stakeholders** (peticiones de producto, contenido o negocio) y **las alertas** (algo se ha roto). Las tres van al mismo backlog y compiten por la misma capacidad.
+El blog, que en el diagnóstico salía como problema de conversión, entra como una tarea de enlazado y no como iniciativa propia: este quarter no es la prioridad. Las 8.500 fichas con problema de calidad van al quarter siguiente como una iniciativa aparte, con su propia métrica. Y las tareas no salen solo del plan. Entran por tres vías: **la auditoría** (lo que sale de revisar los KPIs), **los stakeholders** (peticiones de producto, contenido o negocio) y **las alertas** (algo se ha roto). Las tres van al mismo backlog y compiten por la misma capacidad.
 
 ## 5. Métricas que se mueven esta semana y métricas que tardan meses
 

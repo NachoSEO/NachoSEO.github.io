@@ -142,6 +142,8 @@ Antes de definir las iniciativas, decido qué voy a mirar durante el quarter:
 - **KPIs de control.** Métricas que tienen que seguir sanas mientras trabajamos en otra cosa: tráfico de las páginas que facturan, indexación, errores.
 - **OKRs.** Los resultados que el quarter tiene que conseguir.
 
+Los KPIs de control dependen de dónde se te puede romper el negocio. En [word.tips](/casos/word-tips-2-millones-visitas/), con picos de 2 millones de visitas al día, un error en una plantilla llegaba a cientos de miles de URLs en horas, así que el KPI de control era el rendimiento por plantilla. En una web pequeña con pocas páginas que facturan, basta con vigilar esas páginas una a una.
+
 Aquí está la primera diferencia con un equipo de producto. Si cambias un botón, al día siguiente sabes si convierte mejor. Si cambias una plantilla, Google tiene que rastrearla, indexarla y volver a valorarla, y cada paso tiene su plazo:
 
 <MetricLadder />
@@ -185,14 +187,14 @@ Hay dos tipos de tareas:
 
 Las operativas también van al tablero, aunque se repitan cada semana. Si las registras, ves cuánto tiempo se llevan y cuáles se pueden automatizar.
 
-En un proyecto, el registro nos enseñó que en diez meses habíamos hecho catorce tareas sobre redirecciones, muchas para tocar lógicas de hace más de diez años. La solución fue un comprobador: una muestra de URLs con todas esas lógicas que se revisa cada día y avisa en cuanto un origen o un destino falla. Son las automatizaciones que monto casi siempre:
+En Softonic, el registro nos enseñó que en diez meses habíamos hecho catorce tareas sobre redirecciones, muchas para tocar lógicas de hace más de diez años. La solución fue un comprobador: una muestra de URLs con todas esas lógicas que se revisa cada día y avisa en cuanto un origen o un destino falla. Son las automatizaciones que monto casi siempre:
 
 - **Comprobación diaria de redirecciones** sobre una muestra que cubre todas las reglas.
 - **Rastreos propios** sobre un conjunto representativo de URLs, con umbrales que hacen saltar una alerta.
 - **Alertas de Googlebot** por códigos de estado y por caídas de rastreo.
 - **Detección de tendencias**, cuando el negocio depende de llegar el primero a lo nuevo.
 
-Las alertas van a un canal del chat del equipo. Cada automatización saca una tarea operativa del tablero y deja ese hueco para las iniciativas:
+Las alertas van a un canal del chat del equipo. Y no solo se automatiza lo técnico: en Reverse Tech, producir creatividades para anuncios era trabajo operativo puro, y con una [fábrica de anuncios con IA](/casos/fabrica-de-anuncios-ia/) pasamos de 200 a más de 3.000 creatividades por semana. Cada automatización saca una tarea operativa del tablero y deja ese hueco para las iniciativas:
 
 <OpsVsInitiatives />
 

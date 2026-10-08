@@ -35,7 +35,7 @@ const services = defineCollection({
         process: z
           .array(z.object({ when: z.string(), title: z.string(), detail: z.string() }))
           .min(3)
-          .max(4),
+          .max(6),
         /** Casos enlazados como prueba; si está vacío, la página muestra docencia y charlas */
         proofCases: z.array(z.object({ caseKey: z.string(), summary: z.string() })).max(3).default([]),
         formats: z.array(z.object({ name: z.string(), detail: z.string() })).min(1).max(2),

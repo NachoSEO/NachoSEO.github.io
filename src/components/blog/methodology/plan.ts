@@ -39,7 +39,11 @@ export interface Task {
 
 export const theme = {
   title: 'Que Google indexe y posicione las fichas de producto',
-  okr: 'Fichas indexadas del 41 % al 80 % y unos 17.000 € más al mes de valor orgánico',
+  /** Resultados clave en absoluto, del punto de partida al objetivo */
+  keyResults: [
+    'Fichas indexadas: de 19.700 a 38.400',
+    'Margen bruto orgánico de las fichas: de 36.400 € a 53.400 € al mes',
+  ],
 };
 
 export const initiatives = [

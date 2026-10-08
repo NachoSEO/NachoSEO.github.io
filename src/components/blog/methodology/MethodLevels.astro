@@ -7,8 +7,10 @@ import { initiatives, tasks, teams, theme } from './plan';
   <div class="ml-theme">
     <span class="ml-level">Theme o milestone</span>
     <div>
-      <p class="ml-title">{theme.title}</p>
-      <p class="ml-sub">OKR: {theme.okr}</p>
+      <p class="ml-title">Objetivo: {theme.title}</p>
+      <ul class="ml-krs">
+        {theme.keyResults.map((kr, index) => <li><span>KR{index + 1}</span> {kr}</li>)}
+      </ul>
     </div>
   </div>
   <div class="ml-initiatives">
@@ -33,7 +35,7 @@ import { initiatives, tasks, teams, theme } from './plan';
       ))
     }
   </div>
-  <figcaption>El problema de las fichas convertido en plan: un theme o milestone con su OKR, dos iniciativas con su métrica y once tareas de cinco equipos.</figcaption>
+  <figcaption>El problema de las fichas convertido en plan: un theme o milestone con su objetivo y sus resultados clave, dos iniciativas con su métrica y once tareas de cinco equipos.</figcaption>
 </figure>
 
 <style>
@@ -66,8 +68,16 @@ import { initiatives, tasks, teams, theme } from './plan';
   .ml-theme .ml-level {
     color: var(--color-accent-on-dark);
   }
-  .ml-theme .ml-sub {
+  .ml-krs {
+    display: grid;
+    gap: 0.15rem;
+    margin-top: 0.3rem;
     color: var(--color-on-dark-muted);
+  }
+  .ml-krs span {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--color-accent-on-dark);
   }
   .ml-initiatives {
     display: grid;

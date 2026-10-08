@@ -35,11 +35,18 @@ const byOrder = <T extends { data: { order: number } }>(a: T, b: T) => a.data.or
 const byDateDesc = (a: CollectionEntry<'blog'>, b: CollectionEntry<'blog'>) =>
   b.data.pubDate.valueOf() - a.data.pubDate.valueOf();
 
-/** Quita sintaxis de MDX que no aporta fuera de la web: imágenes relativas e imports */
+/** El componente <Tldr items={[...]} /> pasa a ser una lista en Markdown */
+function tldrToMarkdown(_match: string, rawItems: string): string {
+  const items = [...rawItems.matchAll(/'((?:[^'\\]|\\.)*)'/g)].map((item) => item[1].replace(/<[^>]+>/g, ''));
+  return `**TL;DR**\n\n${items.map((item) => `- ${item}`).join('\n')}`;
+}
+
+/** Quita sintaxis de MDX que no aporta fuera de la web: imágenes relativas, imports y componentes */
 function cleanMdx(body = ''): string {
   return body
     .replace(/^import .*$/gm, '')
-    .replace(/^<[A-Z][\w]*[^>]*\/>$/gm, '')
+    .replace(/<Tldr\s+items=\{\[([\s\S]*?)\]\}\s*\/>/g, tldrToMarkdown)
+    .replace(/<[A-Z]\w*(?:\s[^<>]*?)?\/>/g, '')
     .replace(/!\[([^\]]*)\]\(\.\/[^)]+\)/g, (_match, alt: string) => (alt ? `[Imagen: ${alt}]` : ''))
     .replace(/\]\(\//g, `](${SITE_URL}/`)
     .replace(/\n{3,}/g, '\n\n')

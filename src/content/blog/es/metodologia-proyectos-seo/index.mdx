@@ -188,7 +188,13 @@ En el ejemplo, el problema principal eran las fichas sin indexar, y los 17.000 �
 
 <MethodLevels />
 
-El blog, que en el diagnóstico salía como problema de conversión, entra como una tarea de enlazado y no como iniciativa propia: este quarter no es la prioridad. Las 8.500 fichas con problema de calidad van al quarter siguiente como una iniciativa aparte, con su propia métrica. Y fíjate en que el noindex va a los filtros sueltos sin demanda y el bloqueo en robots.txt a las combinaciones de varios filtros: son URLs distintas a propósito, porque si Google no puede rastrear una URL [tampoco ve su noindex](https://developers.google.com/search/docs/crawling-indexing/block-indexing). Y las tareas no salen solo del plan. Entran por tres vías: **la auditoría** (lo que sale de revisar los KPIs), **los stakeholders** (peticiones de producto, contenido o negocio) y **las alertas** (algo se ha roto). Las tres van al mismo backlog y compiten por la misma capacidad.
+El blog, que en el diagnóstico salía como problema de conversión, entra como una tarea de enlazado y no como iniciativa propia: este quarter no es la prioridad.
+
+Las 8.500 fichas con problema de calidad van al quarter siguiente como una iniciativa aparte, con su propia métrica.
+
+Fíjate también en que el noindex va a los filtros sueltos sin demanda y el bloqueo en robots.txt a las combinaciones de varios filtros: son URLs distintas a propósito, porque si Google no puede rastrear una URL [tampoco ve su noindex](https://developers.google.com/search/docs/crawling-indexing/block-indexing).
+
+Las tareas, además, no salen solo del plan. Entran por tres vías: **la auditoría** (lo que sale de revisar los KPIs), **los stakeholders** (peticiones de producto, contenido o negocio) y **las alertas** (algo se ha roto). Las tres van al mismo backlog y compiten por la misma capacidad.
 
 ## 5. Métricas que se mueven esta semana y métricas que tardan meses
 
@@ -204,10 +210,6 @@ Los KR los escribo siempre en absoluto, del punto de partida al objetivo: "ficha
 
 Y hay que contar con el retraso: la acción de SEO se hace un día y el impacto llega semanas después. El KR en absoluto y con su línea de partida permite ver cuándo empieza a moverse.
 
-Así se ve el KR1 del ejemplo semana a semana:
-
-<KrTracking />
-
 Los KPIs de control dependen de dónde se te puede romper el negocio. En [word.tips](/casos/word-tips-2-millones-visitas/), con picos de 2 millones de visitas al día, un error en una plantilla llegaba a cientos de miles de URLs en horas, así que el KPI de control era el rendimiento por plantilla. En una web pequeña con pocas páginas que facturan, basta con vigilar esas páginas una a una.
 
 Aquí está la primera diferencia con un equipo de producto. Si cambias un botón, al día siguiente sabes si convierte mejor. Si cambias una plantilla, Google tiene que rastrearla, indexarla y volver a valorarla, y cada paso tiene su plazo. Los de Google son los que enseñó en Barcelona y que cuento en el [post sobre quality y core updates](/blog/quality-google-core-updates/):
@@ -220,6 +222,10 @@ El tráfico tiene dos papeles distintos:
 - **Como medida del impacto de una iniciativa, se evalúa en una ventana de tiempo** que depende de la iniciativa y del cambio.
 
 Esa ventana la fijo al definir cada iniciativa. Hasta que se cumple, la revisión semanal mira la parte izquierda de la escalera: si está desplegado, si Googlebot ya lo ha visto y si está indexado. Si juzgas el impacto antes de tiempo, vas a parar cosas que funcionan y a seguir con otras que no.
+
+Así se ve en el KR1 del ejemplo. La línea apenas se mueve hasta que sale el noindex de los filtros, y a partir de ahí sube con la pendiente que hace falta, aunque todavía por debajo del ritmo lineal:
+
+<KrTracking />
 
 Cada iniciativa tiene su propia métrica, ligada a esos KPIs u OKRs. Si una iniciativa no mueve ninguna, me pregunto por qué la estamos haciendo. Y a veces la métrica buena es una que te inventas para tu negocio. En una web de catálogo, por ejemplo, funcionan muy bien tres: **velocidad** (cuánto tardas en publicar un producto nuevo frente a la competencia), **huecos** (qué porcentaje de los productos top de la competencia no tienes) y **frescura** (qué porcentaje de tus fichas está desfasado).
 
@@ -241,7 +247,7 @@ Las reglas por defecto:
 - **Dos tareas en curso por persona como máximo.** Con más trabajo abierto a la vez, cada tarea tarda más en salir; es la [ley de Little](https://doi.org/10.1287/opre.9.3.383) aplicada a un tablero: el tiempo medio que tarda una tarea es el trabajo en curso dividido entre lo que el equipo termina por semana. Con la IA cuesta más cumplirla: con varios agentes trabajando en paralelo es muy fácil abrir cinco frentes a la vez. Pero revisar y decidir sigue siendo trabajo de una persona, y el foco se pierde igual.
 - **Las peticiones externas van al backlog.** Se priorizan en la planificación de la semana siguiente. La excepción son los fuegos: si algo se rompe, va primero.
 
-Uso sprints de una semana, cuando muchas guías de SEO ágil proponen dos. Con una semana, el plan se corrige cuatro veces al mes, y como lo que miro cada semana son las métricas rápidas de la escalera, siempre hay algo que revisar.
+Uso sprints de una semana, cuando muchas guías de SEO ágil [proponen dos](https://www.searchenginejournal.com/the-problem-with-always-on-seo-why-you-need-sprints-not-checklists/554236/). Con una semana, el plan se corrige cuatro veces al mes, y como lo que miro cada semana son las métricas rápidas de la escalera, siempre hay algo que revisar.
 
 ### Cuánto cabe en una semana
 

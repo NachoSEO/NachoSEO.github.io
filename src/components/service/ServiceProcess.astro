@@ -19,7 +19,6 @@ const es = lang === 'es';
     {
       process.map((step, index) => (
         <li class="tl-step">
-          <span class="tl-when">{step.when}</span>
           <span class="tl-node" aria-hidden="true">{index + 1}</span>
           <h3 class="tl-title">{step.title}</h3>
           <p class="tl-detail">{step.detail}</p>
@@ -50,7 +49,7 @@ const es = lang === 'es';
   .timeline::before {
     content: '';
     position: absolute;
-    top: 2.35rem;
+    top: 1rem;
     left: 1rem;
     /* Acaba en el centro del último nodo */
     right: calc((100% - (var(--steps) - 1) * 1.25rem) / var(--steps) - 1rem);
@@ -62,14 +61,6 @@ const es = lang === 'es';
     display: grid;
     align-content: start;
     gap: 0.4rem;
-  }
-  .tl-when {
-    min-height: 1.2rem;
-    color: var(--color-muted);
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
   }
   .tl-node {
     display: grid;
@@ -117,9 +108,6 @@ const es = lang === 'es';
       position: absolute;
       top: 0;
       left: -2.75rem;
-    }
-    .tl-when {
-      min-height: 0;
     }
     .tl-title {
       margin-top: 0;

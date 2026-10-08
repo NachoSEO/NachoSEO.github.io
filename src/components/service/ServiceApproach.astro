@@ -1,5 +1,5 @@
 ---
-/** Punto de vista y "Qué miro" en una sola sección: la lista es la prueba de la postura */
+/** Qué hago: la postura a la izquierda y, a la derecha, la lista de lo que reviso como prueba */
 import SectionLabel from '../SectionLabel.astro';
 import type { Lang } from '../../i18n/ui';
 
@@ -14,27 +14,31 @@ const es = lang === 'es';
 ---
 
 <section class="mx-auto max-w-5xl px-5 pt-16 md:pt-24 sm:px-6">
-  <SectionLabel label={es ? 'Mi enfoque' : 'My approach'} />
-  <h2 class="display-2 mt-3 max-w-[24ch]">{pov.title}</h2>
-  <div class="mt-6 max-w-[65ch] space-y-4 text-[1.02rem] leading-relaxed">
-    {pov.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+  <div class:list={['grid gap-10', checks.length > 0 && 'md:grid-cols-[1fr_1.15fr] md:gap-14']}>
+    <div class="md:sticky md:top-28 md:self-start">
+      <SectionLabel label={es ? 'Qué hago' : 'What I do'} />
+      <h2 class="display-2 mt-3">{pov.title}</h2>
+      <div class="mt-6 space-y-4 text-[1.02rem] leading-relaxed">
+        {pov.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+      </div>
+    </div>
+    {
+      checks.length > 0 && (
+        <div>
+          <p class="meta">{es ? 'Lo que reviso y casi nadie mira' : 'What I check that most people skip'}</p>
+          <ol class="mt-4 grid gap-3">
+            {checks.map((check, index) => (
+              <li class="card flex gap-4">
+                <span class="font-display text-2xl font-semibold leading-none text-accent-ink">{String(index + 1).padStart(2, '0')}</span>
+                <span>
+                  <span class="block font-semibold">{check.title}</span>
+                  <span class="mt-1 block text-[0.95rem] text-muted">{check.detail}</span>
+                </span>
+              </li>
+            ))}
+          </ol>
+        </div>
+      )
+    }
   </div>
-  {
-    checks.length > 0 && (
-      <>
-        <h3 class="mt-12 font-semibold">{es ? 'Lo que reviso y casi nadie mira' : 'What I check that most people skip'}</h3>
-        <ol class="mt-4 grid gap-x-10 gap-y-0 md:grid-cols-2">
-          {checks.map((check, index) => (
-            <li class="flex gap-4 border-t border-line py-4">
-              <span class="meta pt-0.5 text-accent-ink">{String(index + 1).padStart(2, '0')}</span>
-              <span>
-                <span class="block font-semibold">{check.title}</span>
-                <span class="mt-1 block text-[0.95rem] text-muted">{check.detail}</span>
-              </span>
-            </li>
-          ))}
-        </ol>
-      </>
-    )
-  }
 </section>

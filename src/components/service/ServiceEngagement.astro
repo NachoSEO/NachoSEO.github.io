@@ -1,0 +1,103 @@
+---
+/** Rango de implicación: de una consultoría guiada a trabajar dentro del equipo del cliente, casi como un implant */
+import SectionLabel from '../SectionLabel.astro';
+import type { Lang } from '../../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const es = lang === 'es';
+
+const levels = es
+  ? [
+      {
+        name: 'Consultoría guiada',
+        detail: 'Sesiones periódicas con tu equipo. Marco las prioridades, reviso lo que se ha hecho y mido los resultados. Tu equipo ejecuta.',
+      },
+      {
+        name: 'Acompañamiento',
+        detail: 'Además, reviso los cambios antes de publicarlos y estoy en vuestro Slack o Teams para las dudas del día a día.',
+      },
+      {
+        name: 'Dentro de tu equipo',
+        detail: 'Casi como un implant: entro en vuestras herramientas, creo y priorizo yo mismo los tickets, participo en las planificaciones y hago el QA de SEO de lo que sale.',
+      },
+    ]
+  : [
+      {
+        name: 'Guided consulting',
+        detail: 'Regular sessions with your team. I set the priorities, review what has been done and measure the results. Your team executes.',
+      },
+      {
+        name: 'Hands-on support',
+        detail: 'On top of that, I review changes before they ship and I am in your Slack or Teams for day-to-day questions.',
+      },
+      {
+        name: 'Inside your team',
+        detail: 'Almost like an implant: I join your tools, write and prioritize the tickets myself, take part in planning and do the SEO QA of what ships.',
+      },
+    ];
+---
+
+<section class="mx-auto max-w-5xl px-5 pt-16 md:pt-24 sm:px-6">
+  <SectionLabel label={es ? 'Cuánto me meto' : 'How involved I get'} />
+  <h2 class="display-2 mt-3 max-w-[26ch]">{es ? 'De una consultoría guiada a trabajar dentro de tu equipo' : 'From guided consulting to working inside your team'}</h2>
+  <div class="engagement mt-10">
+    <div class="eg-scale" aria-hidden="true">
+      <span>{es ? 'Menos implicación' : 'Less involvement'}</span>
+      <span>{es ? 'Más implicación' : 'More involvement'}</span>
+    </div>
+    <ol class="eg-levels">
+      {
+        levels.map((level, index) => (
+          <li style={`--step: ${index}`}>
+            <span class="eg-dot" aria-hidden="true" />
+            <h3 class="font-semibold">{level.name}</h3>
+            <p class="mt-1.5 text-[0.95rem] text-muted">{level.detail}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+  <p class="mt-6 max-w-[65ch] text-[0.95rem] text-muted">
+    {es ? 'Lo ajustamos al proyecto y puede cambiar por el camino: hay proyectos que empiezan guiados y acaban conmigo dentro del equipo, y al revés.' : 'We adjust it to the project and it can change along the way: some projects start guided and end with me inside the team, and the other way round.'}
+  </p>
+</section>
+
+<style>
+  .eg-scale {
+    display: flex;
+    justify-content: space-between;
+    border-radius: 999px;
+    background: linear-gradient(90deg, color-mix(in srgb, var(--color-accent) 12%, transparent), var(--color-accent));
+    padding: 0.35rem 0.9rem;
+    color: var(--color-ink);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .eg-scale span:last-child {
+    color: var(--color-on-dark);
+  }
+  .eg-levels {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.25rem;
+  }
+  .eg-levels li {
+    border-top: 3px solid color-mix(in srgb, var(--color-accent) calc(30% + var(--step) * 35%), transparent);
+    padding-top: 0.9rem;
+  }
+  .eg-dot {
+    display: none;
+  }
+  @media (max-width: 640px) {
+    .eg-levels {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

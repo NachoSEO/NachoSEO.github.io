@@ -15,15 +15,17 @@ interface Props {
   lang: Lang;
   proofCases: { caseKey: string; summary: string }[];
   related?: { title: string; href: string; note: string }[];
+  /** Enlace del ejemplo real: su caso no se repite en la banda */
+  exampleHref?: string;
 }
 
-const { lang, proofCases, related = [] } = Astro.props;
+const { lang, proofCases, related = [], exampleHref } = Astro.props;
 const es = lang === 'es';
 const casesBase = localizedRoute('cases', lang);
 const allCases = await getCollection('caseStudies', (entry) => entry.data.lang === lang);
 const items = proofCases
   .map((proof) => ({ proof, entry: allCases.find((entry) => entry.data.translationKey === proof.caseKey) }))
-  .filter((item) => item.entry);
+  .filter((item) => item.entry && `${casesBase}${item.entry.data.slug}/` !== exampleHref);
 // Las lecturas que son casos ya están arriba: solo se enseñan las demás
 const reading = related.filter((item) => !item.href.startsWith(casesBase));
 ---

@@ -53,6 +53,8 @@ const services = defineCollection({
             link: z.object({ text: z.string(), href: z.string() }).optional(),
           })
           .optional(),
+        /** Enseña el rango de implicación (de consultoría guiada a trabajar dentro del equipo) */
+        engagement: z.boolean().default(true),
         /** Lecturas relacionadas: posts, casos, skills o guías propios */
         related: z.array(z.object({ title: z.string(), href: z.string(), note: z.string() })).max(4).default([]),
       }),

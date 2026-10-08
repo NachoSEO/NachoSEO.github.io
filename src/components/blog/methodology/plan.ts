@@ -1,6 +1,6 @@
 /**
  * Ejemplo del post de metodología: un theme con dos iniciativas y sus tareas, repartidas por equipo y semana.
- * Basado en el caso de Softonic (idiomas a ccTLDs tras un core update), simplificado e ilustrativo.
+ * Una web en varios idiomas que cae en un core update por la calidad de las traducciones; simplificado e ilustrativo.
  * Cada tarea tiene la semana planificada y la real, así el explorador puede enseñar retrasos y bloqueos.
  */
 export type Team = 'seo' | 'tech' | 'design' | 'data' | 'content';

@@ -176,7 +176,7 @@ async function buildAgentDocs(): Promise<AgentDoc[]> {
     // Servicios
     const servicesTitle = es ? 'Consultoría SEO técnica' : 'Growth, AI and SEO services';
     const servicesSummary = es
-      ? 'Consultoría SEO técnica para webs grandes, auditoría, migraciones, SEO internacional, recuperar tráfico tras un core update y GEO. También growth, sistemas de IA y formación.'
+      ? 'Consultoría SEO técnica, auditoría, migraciones, SEO internacional, recuperar tráfico tras un core update y GEO. También growth, sistemas de IA y formación.'
       : 'SEO and GEO consulting, fractional Head of Growth, AI systems and training.';
     docs.push({
       path: servicesBase,

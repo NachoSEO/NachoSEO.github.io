@@ -1,8 +1,12 @@
 ---
 import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
+import CasesBand from '../../components/CasesBand.astro';
+import ClientLogos from '../../components/ClientLogos.astro';
 import Cta from '../../components/Cta.astro';
+import FaqAccordion from '../../components/service/FaqAccordion.astro';
 import SectionLabel from '../../components/SectionLabel.astro';
+import { site } from '../../site';
 
 // Los servicios de SEO técnico y GEO van primero (order < 7); growth, IA y formación, en un bloque aparte
 const services = (await getCollection('services', (entry) => entry.data.lang === 'es')).sort(
@@ -10,40 +14,188 @@ const services = (await getCollection('services', (entry) => entry.data.lang ===
 );
 const seoServices = services.filter((service) => service.data.order < 7);
 const otherServices = services.filter((service) => service.data.order >= 7);
+
+// Una prueba distinta por servicio, para no repetir la misma en todas las tarjetas
+const cardProof: Record<string, string> = {
+  'consultoria-seo-tecnica': 'Ex ingenieros de Google Search me contrataron para dirigir su SEO.',
+  'auditoria-seo': 'La auditoría de quality de mi propia web está publicada, nota a nota.',
+  'migraciones-seo': 'Doy la clase de migraciones en los másters de BigSEO Academy y Asdrubal SEO.',
+  'seo-internacional': 'Separé los idiomas de Softonic en ccTLDs con hreflang y cada uno creció.',
+  'recuperar-trafico': 'En Softonic, el dominio superó su nivel anterior tras una caída por core update.',
+  'consultoria-geo': 'Mido con un tracker propio qué marcas nombra la IA y a quién verifica.',
+};
+
+// "¿Qué te pasa?": del problema al servicio
+const problems = [
+  { problem: 'He perdido tráfico y no sé por qué', slug: 'recuperar-trafico' },
+  { problem: 'Vamos a cambiar de dominio, de CMS o de diseño', slug: 'migraciones-seo' },
+  { problem: 'Estamos en varios idiomas o países', slug: 'seo-internacional' },
+  { problem: 'ChatGPT o los AI Overviews recomiendan a mi competencia', slug: 'consultoria-geo' },
+  { problem: 'No sé qué falla ni por dónde empezar', slug: 'auditoria-seo' },
+  { problem: 'Quiero que alguien dirija el SEO técnico de mi web', slug: 'consultoria-seo-tecnica' },
+];
+const titleBySlug = Object.fromEntries(services.map((service) => [service.data.slug, service.data.title]));
+
+const steps = [
+  {
+    when: 'Día 1',
+    title: 'Una llamada de 30 minutos',
+    detail: 'Me cuentas en qué punto estás y qué quieres conseguir. En menos de 24 horas te digo si puedo ayudarte y por dónde empezaría.',
+  },
+  {
+    when: 'Semanas 1–2',
+    title: 'Diagnóstico',
+    detail: 'Casi todo empieza por una auditoría o un diagnóstico cerrado: qué falla, cuánto te cuesta y en qué orden arreglarlo.',
+  },
+  {
+    when: 'Después',
+    title: 'Ejecución y seguimiento',
+    detail: 'Tu equipo aplica el plan y yo dirijo las prioridades, reviso los cambios y mido los resultados mes a mes.',
+  },
+];
+
+const principles = [
+  { title: 'Trabajas conmigo', detail: 'Sin juniors ni subcontratas. La persona de la primera llamada es la que hace el trabajo.' },
+  { title: 'Propuesta cerrada', detail: 'Alcance, plazos y precio por escrito antes de empezar. Si algo cambia, lo hablamos antes.' },
+  { title: 'Máximo 4 clientes', detail: 'Trabajo con un máximo de 4 clientes de consultoría a la vez, para dedicar a cada uno el tiempo que necesita.' },
+  { title: 'La misma metodología', detail: 'Objetivo de negocio, diagnóstico por page type, resultados clave en absoluto y una revisión cada semana.', href: '/blog/metodologia-proyectos-seo/' },
+];
+
+const faq = [
+  {
+    question: '¿Qué servicio necesito?',
+    answer:
+      'Si tienes un problema concreto (una caída, una migración, varios idiomas), el servicio de ese problema. Si no sabes qué falla, empieza por la auditoría: termina con un plan priorizado y ahí sale qué hace falta después.',
+  },
+  {
+    question: '¿Puedo contratar solo la auditoría?',
+    answer:
+      'Sí. Es un proyecto cerrado de unas dos semanas y el plan está pensado para que tu equipo lo ejecute por su cuenta. Si después quieres que dirija la ejecución, seguimos con la consultoría mensual.',
+  },
+  {
+    question: 'Ya trabajo con una agencia. ¿Tiene sentido contratarte?',
+    answer:
+      'Sí. Puedo marcar la estrategia y las prioridades y revisar lo que entrega la agencia. A veces el diagnóstico sirve precisamente para decidir qué tienes que pedirle.',
+  },
+  {
+    question: '¿Cuánto cuesta?',
+    answer:
+      'Depende del tamaño de la web y de cuánto ejecutamos juntos. No tengo una tarifa publicada, pero en la página de precios explico cómo lo calculo, y después de la primera llamada te mando una propuesta cerrada.',
+  },
+  {
+    question: '¿Trabajas en remoto?',
+    answer:
+      'Sí, casi todo mi trabajo es en remoto, con equipos de toda España y de fuera, en español y en inglés. Vivo en Barcelona, así que allí también podemos vernos.',
+  },
+];
 ---
 
 <Base
   lang="es"
-  title="Servicios de consultoría SEO técnica — Nacho Mascort"
-  description="Consultoría SEO técnica para webs grandes, auditoría, migraciones, SEO internacional, recuperar tráfico tras un core update y consultoría GEO."
+  title="Servicios de SEO técnico y GEO — Nacho Mascort"
+  description="Auditoría, migraciones, SEO internacional, recuperar tráfico tras un core update, GEO y consultoría SEO técnica. Trabajas directamente conmigo."
   path="/servicios/"
   alternatePath="/en/services/"
   breadcrumbs={[
     { name: 'Inicio', path: '/' },
     { name: 'Servicios', path: '/servicios/' },
   ]}
+  faq={faq}
 >
   <div class="mx-auto max-w-5xl px-5 pt-16 sm:px-6 sm:pt-20">
     <p class="meta">Servicios</p>
-    <h1 class="display-1 mt-5">Consultoría SEO técnica</h1>
-    <p class="lede mt-6">Para webs grandes y para los problemas caros: auditorías, migraciones, varios idiomas, caídas tras un core update y visibilidad en la IA. En todos trabajas directamente conmigo.</p>
-    <p class="mt-5 text-[0.95rem]">
-      <a href="/servicios/precios/" class="link-arrow">Cuánto cuesta y cómo calculo el precio</a>
+    <h1 class="display-1 mt-5">Servicios de SEO técnico y GEO</h1>
+    <p class="lede mt-6 max-w-[62ch]">
+      Para webs con tráfico en juego y problemas caros: caídas, migraciones, varios idiomas, una web que crece sin control
+      o una competencia a la que ya recomienda la IA. En todos trabajas directamente conmigo.
     </p>
+    <div class="mt-8 flex flex-wrap items-center gap-3">
+      <a href={site.calUrl} data-umami-event="call-booking-click" data-umami-event-placement="services" class="btn">Reserva una llamada de 30 min →</a>
+      <a href="/servicios/precios/" class="btn btn--ghost">Cuánto cuesta</a>
+    </div>
+  </div>
 
-    <div class="mt-12 grid gap-5 md:grid-cols-2">
+  <ClientLogos lang="es" />
+
+  <section class="mx-auto max-w-5xl px-5 pt-16 md:pt-24 sm:px-6">
+    <SectionLabel label="¿Qué te pasa?" />
+    <h2 class="display-2 mt-3">Empieza por tu problema</h2>
+    <ul class="row-list mt-8">
+      {
+        problems.map((item) => (
+          <li>
+            <a href={`/servicios/${item.slug}/`} class="row-link group grid gap-1 py-4 sm:grid-cols-[1fr_auto] sm:gap-6 sm:px-2">
+              <span class="row-title font-semibold transition-colors">«{item.problem}»</span>
+              <span class="link-arrow text-[0.95rem]">{titleBySlug[item.slug]}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <section class="mx-auto max-w-5xl px-5 pt-16 md:pt-24 sm:px-6">
+    <SectionLabel label="Servicios" />
+    <h2 class="display-2 mt-3">Seis servicios, un mismo método</h2>
+    <div class="mt-10 grid gap-5 md:grid-cols-2">
       {
         seoServices.map((service) => (
           <a href={`/servicios/${service.data.slug}/`} class="card flex flex-col">
-            <h2 class="card-title display-3 transition-colors">{service.data.title}</h2>
-            <p class="mt-3 text-[0.95rem]">{service.data.tagline}</p>
-            <p class="mt-3 flex-1 text-sm text-muted">{service.data.proof}</p>
-            <p class="link-arrow mt-5 text-[0.95rem]">Ver servicio</p>
+            <h3 class="card-title display-3 transition-colors">{service.data.title}</h3>
+            <p class="mt-3 flex-1 text-[0.95rem]">{service.data.tagline}</p>
+            <p class="mt-4 border-t border-line pt-3 text-sm text-muted">{cardProof[service.data.slug] ?? service.data.proof}</p>
+            <p class="link-arrow mt-4 text-[0.95rem]">Ver servicio</p>
           </a>
         ))
       }
     </div>
-  </div>
+  </section>
+
+  <section class="mx-auto max-w-5xl px-5 pt-16 md:pt-24 sm:px-6">
+    <SectionLabel label="Por dónde se empieza" />
+    <h2 class="display-2 mt-3">De la primera llamada al plan</h2>
+    <ol class="mt-10 grid gap-5 md:grid-cols-3">
+      {
+        steps.map((step, index) => (
+          <li class="card">
+            <p class="flex items-baseline justify-between gap-3">
+              <span class="font-display text-3xl font-semibold text-accent-ink">{String(index + 1).padStart(2, '0')}</span>
+              <span class="meta text-right">{step.when}</span>
+            </p>
+            <h3 class="mt-4 font-semibold">{step.title}</h3>
+            <p class="mt-2 text-[0.95rem] text-muted">{step.detail}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  <section class="mx-auto max-w-5xl px-5 pt-16 md:pt-24 sm:px-6">
+    <SectionLabel label="Cómo trabajo" />
+    <h2 class="display-2 mt-3">Lo que no cambia de un proyecto a otro</h2>
+    <ul class="mt-10 grid gap-x-8 gap-y-6 md:grid-cols-2">
+      {
+        principles.map((item) => (
+          <li class="border-t border-line pt-4">
+            <h3 class="font-semibold">{item.title}</h3>
+            <p class="mt-1.5 text-[0.95rem] text-muted">
+              {item.detail}
+              {item.href && (
+                <>
+                  {' '}
+                  <a href={item.href} class="link-arrow text-ink">Ver la metodología</a>
+                </>
+              )}
+            </p>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <CasesBand lang="es" exclude={['ad-factory']} />
+
+  <FaqAccordion lang="es" faq={faq} />
 
   <section id="otros" class="mx-auto max-w-5xl scroll-mt-24 px-5 pt-16 md:pt-24 sm:px-6">
     <SectionLabel label="Otros servicios" />

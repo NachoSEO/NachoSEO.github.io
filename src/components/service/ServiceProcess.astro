@@ -6,9 +6,11 @@ import type { Lang } from '../../i18n/ui';
 interface Props {
   lang: Lang;
   process: { when: string; title: string; detail: string }[];
+  /** Desde este paso el trabajo es un flujo constante que se repite */
+  loopFrom?: number;
 }
 
-const { lang, process } = Astro.props;
+const { lang, process, loopFrom } = Astro.props;
 const es = lang === 'es';
 ---
 
@@ -18,7 +20,8 @@ const es = lang === 'es';
   <ol class="timeline mt-12" style={`--steps: ${process.length}`}>
     {
       process.map((step, index) => (
-        <li class="tl-step">
+        <li class:list={['tl-step', loopFrom !== undefined && index >= loopFrom && 'is-loop']}>
+          <span class="tl-when">{step.when}</span>
           <span class="tl-node" aria-hidden="true">{index + 1}</span>
           <h3 class="tl-title">{step.title}</h3>
           <p class="tl-detail">{step.detail}</p>
@@ -26,6 +29,16 @@ const es = lang === 'es';
       ))
     }
   </ol>
+  {
+    loopFrom !== undefined && (
+      <p class="tl-loop-note mt-8 max-w-[65ch]">
+        <span aria-hidden="true">↻</span>
+        {es
+          ? `Los ${loopFrom} primeros pasos se hacen una vez, al empezar. Del plan del quarter en adelante, el trabajo se convierte en un flujo constante: sprints cada semana y, al cerrar cada quarter, resultados y un plan nuevo.`
+          : `The first ${loopFrom} steps happen once, at the start. From the quarterly plan onwards, the work becomes a steady flow: sprints every week and, at the end of each quarter, results and a new plan.`}
+      </p>
+    )
+  }
   <p class="mt-10 max-w-[65ch] text-[0.95rem] text-muted">
     {
       es
@@ -49,7 +62,7 @@ const es = lang === 'es';
   .timeline::before {
     content: '';
     position: absolute;
-    top: 1rem;
+    top: 2.35rem;
     left: 1rem;
     /* Acaba en el centro del último nodo */
     right: calc((100% - (var(--steps) - 1) * 1.25rem) / var(--steps) - 1rem);
@@ -61,6 +74,35 @@ const es = lang === 'es';
     display: grid;
     align-content: start;
     gap: 0.4rem;
+  }
+  .tl-when {
+    min-height: 1.2rem;
+    color: var(--color-muted);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  /* Pasos que se repiten: fondo suave y etiqueta en frambuesa */
+  .tl-step.is-loop {
+    border-radius: 0.75rem;
+    background: color-mix(in srgb, var(--color-accent) 6%, transparent);
+    margin: -0.5rem -0.4rem;
+    padding: 0.5rem 0.4rem;
+  }
+  .tl-step.is-loop .tl-when {
+    color: var(--color-accent-ink);
+  }
+  .tl-loop-note {
+    display: flex;
+    gap: 0.6rem;
+    border-left: 3px solid var(--color-accent);
+    padding-left: 0.9rem;
+    font-size: 0.95rem;
+  }
+  .tl-loop-note span {
+    color: var(--color-accent-ink);
+    font-weight: 700;
   }
   .tl-node {
     display: grid;
@@ -111,6 +153,9 @@ const es = lang === 'es';
     }
     .tl-title {
       margin-top: 0;
+    }
+    .tl-when {
+      min-height: 0;
     }
   }
 </style>

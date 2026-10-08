@@ -53,6 +53,8 @@ const services = defineCollection({
             link: z.object({ text: z.string(), href: z.string() }).optional(),
           })
           .optional(),
+        /** Paso (índice desde 0) a partir del cual el proceso se repite: se marca como flujo constante */
+        processLoopFrom: z.number().int().min(1).optional(),
         /** Enseña el rango de implicación (de consultoría guiada a trabajar dentro del equipo) */
         engagement: z.boolean().default(true),
         /** Lecturas relacionadas: posts, casos, skills o guías propios */

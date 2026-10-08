@@ -77,7 +77,7 @@ const { page } = entry.data;
   <ClientLogos lang={lang} />
   <ServiceApproach lang={lang} pov={page.pov} checks={page.checks} />
   <ServiceEvidence lang={lang} proofCases={page.proofCases} related={page.related} />
-  <ServiceProcess lang={lang} process={page.process} />
+  <ServiceProcess lang={lang} process={page.process} loopFrom={page.processLoopFrom} />
   {page.engagement && <ServiceEngagement lang={lang} />}
   <ServiceOffer
     lang={lang}

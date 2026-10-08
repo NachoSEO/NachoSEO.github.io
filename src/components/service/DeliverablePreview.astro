@@ -12,6 +12,7 @@ const t = title.toLowerCase();
 
 const kind = (() => {
   if (/fan-out/.test(t)) return 'fanout';
+  if (/medición de partida/.test(t)) return 'presence';
   if (/fuentes|menciones/.test(t)) return 'sources';
   if (/hreflang|estructura internacional/.test(t)) return 'hreflang';
   if (/demanda por mercado|expansión/.test(t)) return 'markets';
@@ -19,7 +20,9 @@ const kind = (() => {
   if (/rastreo e indexación/.test(t)) return 'crawl';
   if (/quality|calidad/.test(t)) return 'scores';
   if (/hoja de ruta|plan/.test(t)) return 'roadmap';
-  if (/revisión de cambios|staging|lanzamiento/.test(t)) return 'ticket';
+  if (/staging/.test(t)) return 'staging';
+  if (/lanzamiento/.test(t)) return 'launch';
+  if (/revisión de cambios/.test(t)) return 'ticket';
   if (/medición|seguimiento/.test(t)) return 'metrics';
   if (/método|documentado/.test(t)) return 'doc';
   if (/sesión/.test(t)) return 'session';
@@ -94,6 +97,38 @@ const tableRows = [
           <p class="dp-check on">Canonical y meta robots</p>
           <p class="dp-check on">Sin bloqueo en robots.txt</p>
           <p class="dp-check">Enlazado interno</p>
+        </div>
+      )
+    }
+    {
+      kind === 'staging' && (
+        <div class="dp-session">
+          <p class="dp-mono">staging.ejemplo.com · revisión</p>
+          <p class="dp-check on">Indexable y sin noindex heredado</p>
+          <p class="dp-check on">Canonicals a las URLs nuevas</p>
+          <p class="dp-check">Contenido visible sin JavaScript</p>
+        </div>
+      )
+    }
+    {
+      kind === 'launch' && (
+        <div class="dp-redirects dp-mono">
+          <p><span>/old/zapatillas</span> → 301 ✓</p>
+          <p><span>robots.txt</span> → 200 ✓</p>
+          <p><span>sitemap.xml</span> → URLs nuevas ✓</p>
+        </div>
+      )
+    }
+    {
+      kind === 'presence' && (
+        <div class="dp-metrics">
+          <div>
+            <p class="dp-mono">Respuestas que te nombran</p>
+            <p class="dp-big">12 %</p>
+          </div>
+          <svg viewBox="0 0 100 36" class="dp-spark">
+            <polyline points="0,30 20,31 35,28 50,29 65,24 80,22 100,17" />
+          </svg>
         </div>
       )
     }

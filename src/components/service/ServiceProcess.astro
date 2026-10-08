@@ -34,8 +34,8 @@ const es = lang === 'es';
       <p class="tl-loop-note mt-8 max-w-[65ch]">
         <span aria-hidden="true">↻</span>
         {es
-          ? `Los ${loopFrom} primeros pasos se hacen una vez, al empezar. Del plan del quarter en adelante, el trabajo se convierte en un flujo constante: sprints cada semana y, al cerrar cada quarter, resultados y un plan nuevo.`
-          : `The first ${loopFrom} steps happen once, at the start. From the quarterly plan onwards, the work becomes a steady flow: sprints every week and, at the end of each quarter, results and a new plan.`}
+          ? `Los ${loopFrom} primeros pasos se hacen una vez, al empezar. A partir de «${process[loopFrom].title}», el trabajo se convierte en un flujo constante que se repite.`
+          : `The first ${loopFrom} steps happen once, at the start. From "${process[loopFrom].title}" onwards, the work becomes a steady flow that repeats.`}
       </p>
     )
   }

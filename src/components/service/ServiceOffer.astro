@@ -31,7 +31,7 @@ const quoteUrl = `${localizedRoute('quote', lang)}${briefService ? `?${es ? 'ser
 <section class="mx-auto max-w-5xl px-5 pt-16 md:pt-24 sm:px-6">
   <SectionLabel label={es ? 'Entregables' : 'Deliverables'} />
   <h2 class="display-2 mt-3">{es ? 'Lo que te llevas' : 'What you take away'}</h2>
-  <ul class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+  <ul class:list={['mt-10 grid gap-5 sm:grid-cols-2', deliverables.length === 4 ? 'lg:grid-cols-2' : 'lg:grid-cols-3']}>
     {
       deliverables.map((deliverable, index) => (
         <li class:list={['card flex flex-col gap-4', deliverables.length % 3 === 2 && index === 0 && 'lg:col-span-2']}>

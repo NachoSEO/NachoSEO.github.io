@@ -45,18 +45,25 @@ page:
       - 'Un caso típico: unas traducciones que no están a la altura del original, dentro del dominio principal. La solución no siempre es borrar. A veces basta con que ese contenido deje de contar en la nota del site: moverlo a otro dominio, mejorarlo o desindexarlo.'
       - 'Lo cuento con todos los datos, incluidos los tiempos de recuperación que enseñó Google, en el post sobre quality en Google.'
   process:
-    - when: 'Semanas 0–2'
-      title: 'Diagnóstico'
-      detail: 'Qué ha caído y dónde, comparado con lo que posiciona ahora por tus consultas, y revisión de quality por page type.'
+    - when: 'Día 1'
+      title: 'Llamada y accesos'
+      detail: 'Cuándo empezó la caída y qué cambió antes. Me das acceso a Search Console, a la analítica y a los logs.'
+    - when: 'Semanas 1–2'
+      title: 'Diagnóstico de la caída'
+      detail: 'Fechas de la caída frente a los despliegues de Google, qué page types caen y cuáles aguantan, y quién se queda ahora tus consultas.'
     - when: 'Semanas 2–3'
-      title: 'Plan'
-      detail: 'Qué mejorar, consolidar o quitar, por orden de impacto, y cómo medir si funciona.'
-    - when: 'Meses 1–6'
-      title: 'Ejecución y seguimiento'
-      detail: 'Tu equipo aplica los cambios y yo sigo la indexación y el tráfico por page type hasta el siguiente core update.'
+      title: 'Quality y plan'
+      detail: 'Revisión de quality por page type y un plan de mejorar, consolidar o quitar, ordenado por impacto.'
+    - when: 'Cada semana'
+      title: 'Sprints semanales'
+      detail: 'Tu equipo aplica los cambios y cada semana revisamos lo que está desplegado, rastreado e indexado.'
+    - when: 'Próximo core update'
+      title: 'Resultados'
+      detail: 'El tráfico se vigila cada día y la recuperación se juzga contra los resultados clave, con el horizonte del siguiente core update.'
   proofCases:
     - caseKey: softonic
       summary: 'Caída de un 20 y pico por ciento en un core update. Con los idiomas separados en ccTLDs, el siguiente core update dejó el dominio principal por encima de su nivel anterior.'
+  processLoopFrom: 3
   formats:
     - name: 'Diagnóstico + plan'
       detail: 'Un proyecto cerrado de unas dos o tres semanas: causa de la caída y plan priorizado.'

@@ -43,7 +43,7 @@ const gap = targetAt(currentWeek) - actual[currentWeek];
       ticks.map((tick) => (
         <g>
           <line x1={pad.left} x2={width - pad.right} y1={y(tick)} y2={y(tick)} class="grid" />
-          <text x={pad.left - 8} y={y(tick) + 4} text-anchor="end" class="axis">{format(tick)}</text>
+          <text x={pad.left - 8} y={y(tick) + 4} text-anchor="end" class="axis">{tick / 1000}k</text>
         </g>
       ))
     }
@@ -177,6 +177,16 @@ const gap = targetAt(currentWeek) - actual[currentWeek];
   }
   .kr-legend .l-projection {
     border-top: 2px dotted var(--color-accent);
+  }
+  /* En móvil el SVG se encoge a la mitad: subimos el texto para que siga legible */
+  @media (max-width: 640px) {
+    .axis {
+      font-size: 20px;
+    }
+    .goal-label,
+    .lag-label {
+      font-size: 18px;
+    }
   }
   .kr-tracking figcaption {
     margin-top: 0.5rem;

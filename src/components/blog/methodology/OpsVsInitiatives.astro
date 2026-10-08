@@ -9,7 +9,7 @@ const operational = [80, 65, 50, 38, 30, 25];
 
 const width = 640;
 const height = 220;
-const pad = { top: 16, right: 16, bottom: 36, left: 44 };
+const pad = { top: 16, right: 16, bottom: 36, left: 70 };
 const plotW = width - pad.left - pad.right;
 const plotH = height - pad.top - pad.bottom;
 const x = (index: number) => pad.left + (plotW * index) / (quarters.length - 1);
@@ -84,5 +84,15 @@ const ticks = [0, 25, 50, 75, 100];
     fill: var(--color-accent-ink);
     font-size: 15px;
     font-weight: 600;
+  }
+  /* En móvil el SVG se encoge a la mitad: subimos el texto para que siga legible */
+  @media (max-width: 640px) {
+    .axis {
+      font-size: 20px;
+    }
+    .label-ops,
+    .label-initiatives {
+      font-size: 24px;
+    }
   }
 </style>

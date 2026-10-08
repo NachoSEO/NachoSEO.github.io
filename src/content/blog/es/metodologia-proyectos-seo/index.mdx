@@ -13,26 +13,22 @@ citations:
     date: '2019'
 ---
 
+import Tldr from '../../../../components/blog/Tldr.astro';
 import MethodFlow from '../../../../components/blog/methodology/MethodFlow.astro';
 import MethodLevels from '../../../../components/blog/methodology/MethodLevels.astro';
 import PlanExplorer from '../../../../components/blog/methodology/PlanExplorer.astro';
 import CapacityCalculator from '../../../../components/blog/methodology/CapacityCalculator.astro';
 import OpsVsInitiatives from '../../../../components/blog/methodology/OpsVsInitiatives.astro';
 
-<aside class="tldr" aria-label="Resumen">
-
-<details>
-<summary><span class="tldr-label">TL;DR</span> <span class="tldr-cue">Ver resumen</span></summary>
-
-- Antes de tocar nada traduzco el objetivo del cliente a algo medible y busco el problema principal con datos de negocio además de los de analítica.
-- El objetivo puede ser crecer, recuperar, prevenir o aparecer en la IA. Cada uno pide un plan distinto.
-- El plan baja del objetivo anual a quarters, themes, iniciativas con su métrica y tareas de una semana como máximo.
-- Cada semana reviso el tablero: qué se hizo, qué está bloqueado y qué toca. Ahí se corrige el plan.
-- En el tablero van las tareas de todos los equipos que tocan la iniciativa. Si solo ves las tuyas, los bloqueos te pillan tarde.
-
-</details>
-
-</aside>
+<Tldr
+  items={[
+    'Antes de tocar nada, el objetivo del cliente se traduce a algo <strong>medible</strong>.',
+    'Con datos de negocio y de analítica busco el <strong>problema principal</strong>.',
+    'Cuatro objetivos posibles: <strong>crecer, recuperar, prevenir o aparecer</strong> en la IA.',
+    'Del objetivo anual a <strong>tareas de una semana</strong>, con una métrica por iniciativa.',
+    'Cada semana reviso un <strong>tablero con las tareas de todos los equipos</strong> que tocan la iniciativa.',
+  ]}
+/>
 
 Cuando alguien me contrata, una de las primeras preguntas es "¿y cómo vas a trabajar?". Este post es la respuesta larga.
 

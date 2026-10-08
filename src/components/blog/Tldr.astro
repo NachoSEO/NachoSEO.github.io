@@ -1,0 +1,92 @@
+---
+/**
+ * Resumen compacto para el inicio de un post: puntos cortos numerados en dos columnas.
+ * Pensado para frases de una línea; el resumen largo va en el propio post.
+ */
+interface Props {
+  items: string[];
+  label?: string;
+}
+
+const { items, label = 'TL;DR' } = Astro.props;
+---
+
+<aside class="tldr-compact not-prose" aria-label="Resumen">
+  <p class="tc-label">{label}</p>
+  <ol>
+    {
+      items.map((item, index) => (
+        <li>
+          <span class="tc-n" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+          <span set:html={item} />
+        </li>
+      ))
+    }
+  </ol>
+</aside>
+
+<style>
+  @layer components {
+    aside.tldr-compact ol {
+      list-style: none;
+      padding-left: 0;
+      margin-top: 0;
+    }
+    aside.tldr-compact li + li {
+      margin-top: 0;
+    }
+    aside.tldr-compact p {
+      margin-top: 0;
+    }
+  }
+  .tldr-compact {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 0.4rem 1rem;
+    margin-block: 0 2.25rem;
+    border: 1px solid var(--color-line);
+    border-left: 3px solid var(--color-accent);
+    border-radius: 0.75rem;
+    background: var(--color-raised);
+    padding: 0.8rem 1rem;
+    font-size: 0.88rem;
+    line-height: 1.4;
+  }
+  .tc-label {
+    padding-top: 0.1rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-accent-ink);
+    white-space: nowrap;
+  }
+  .tldr-compact ol {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.45rem 1.25rem;
+  }
+  .tldr-compact li {
+    display: flex;
+    gap: 0.5rem;
+  }
+  /* Un número impar de puntos: el último ocupa toda la fila */
+  .tldr-compact li:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+  }
+  .tc-n {
+    flex-shrink: 0;
+    padding-top: 0.08rem;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--color-muted);
+  }
+  @media (max-width: 640px) {
+    .tldr-compact {
+      grid-template-columns: 1fr;
+    }
+    .tldr-compact ol {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -83,24 +83,27 @@ En [Reverse Tech](/casos/reverse-tech-area-organica/) el modelo era de suscripci
 
 Mismo método y dos estrategias opuestas. Ninguna de las dos decisiones sale de una herramienta SEO; las dos salen de la cuenta de resultados.
 
-## 2. Datos antes que opiniones
+## 2. Una tabla por page type que cruza SEO y dinero
 
-No puedo decirte por dónde empezar sin datos. Al principio de cada proyecto reviso tres capas:
+Con las respuestas del punto 1 y los accesos de la primera semana (Search Console, analítica, logs, un rastreo completo y los datos de negocio que se puedan compartir), monto siempre la misma tabla. Una fila por page type y, en las columnas, todo lo que hace falta para decidir:
 
-- **Técnica.** Tiempos de carga, hits de Googlebot, uptime, rastreo e indexación por page type.
-- **Producto y negocio.** Las respuestas del punto 1 convertidas en datos: ventas o leads por línea, conversión, revenue por página, márgenes, CAC por canal.
-- **SEO.** Desglose del tráfico, contenido flojo, canibalizaciones, reparto de keywords por page type.
+| Page type | URLs | Indexadas | Clics sin marca / mes | Valor por sesión | Valor orgánico / mes |
+|---|---|---|---|---|---|
+| Categorías | 1.200 | 94 % | 38.000 | 1,90 € | 72.200 € |
+| Fichas de producto | 48.000 | 41 % | 52.000 | 0,70 € | 36.400 € |
+| Filtros indexables | 210.000 | 8 % | 6.000 | 0,40 € | 2.400 € |
+| Blog | 900 | 88 % | 61.000 | 0,05 € | 3.050 € |
 
-La capa de negocio es la que más se olvida y la que decide las prioridades: el porcentaje de rebote de la home importa poco; importa cuánto factura cada tipo de página, cuánto podría facturar y qué lo frena.
+*Datos inventados para el ejemplo.*
 
-### Lo que pido la primera semana
+Esta tabla suele contradecir lo que el equipo cree. En el ejemplo, el blog trae más clics que nada y casi no deja dinero. Las categorías dejan el doble que las fichas con menos tráfico. Y hay 210.000 filtros que Google rastrea, apenas indexa y no aportan nada: ahí se está yendo el rastreo que les falta a las fichas, que tienen indexadas menos de la mitad.
 
-- Una llamada para entender el negocio, la historia de la web y los cambios recientes: migraciones, rediseños, caídas.
-- Acceso a Search Console y a la analítica.
-- Los logs del servidor de las últimas semanas, si se pueden sacar.
-- Los datos de negocio que se puedan compartir: ventas o leads por línea de producto, márgenes, mercados.
+Cuatro detalles que marcan la diferencia al montarla:
 
-Con eso y un rastreo completo tengo casi todo para el paso siguiente.
+- **Clics sin marca.** El tráfico de marca lo trae la marca. Lo separo en Search Console desde el primer día, porque si no, cualquier subida de notoriedad parece trabajo SEO.
+- **Indexadas, según los logs y Search Console.** El porcentaje de URLs indexadas por page type, cruzado con lo que Googlebot visita de verdad en los logs, enseña dónde se gasta el rastreo y dónde falta.
+- **El valor sale del backend.** Ingresos o leads reales por page type, con su margen. La analítica web suele quedarse corta por el consentimiento de cookies y la atribución, así que la uso para repartir porcentajes entre page types.
+- **Una fila por plantilla.** En una web grande los problemas viven en las plantillas. Mirar URLs sueltas esconde el patrón.
 
 ## 3. Encontrar el problema principal
 

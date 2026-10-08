@@ -105,11 +105,24 @@ Cuatro detalles que marcan la diferencia al montarla:
 - **El valor sale del backend.** Ingresos o leads reales por page type, con su margen. La analítica web suele quedarse corta por el consentimiento de cookies y la atribución, así que la uso para repartir porcentajes entre page types.
 - **Una fila por plantilla.** En una web grande los problemas viven en las plantillas. Mirar URLs sueltas esconde el patrón.
 
-## 3. Encontrar el problema principal
+## 3. Encontrar el problema principal: dónde se pierde el dinero
 
-Con los datos delante, busco si hay un problema primario: algo que hay que resolver antes que el resto porque bloquea todo lo demás. Una web que Google no indexa bien no gana nada con contenido nuevo. Una web que acaba de caer en un core update tiene que entender la caída antes de crecer.
+Con la tabla delante, recorro cada page type por los pasos que hay entre una URL y el dinero: rastreo, indexación, posiciones, clics y conversión. El problema principal es el paso donde se queda atascado el valor más grande. A menudo no coincide con el error más visible de la auditoría.
 
-Ese problema define el tipo de objetivo, y no siempre es crecer:
+Siguiendo con el ejemplo:
+
+| Page type | Dónde se atasca | La prueba | Qué se hace primero |
+|---|---|---|---|
+| Fichas de producto | **Indexación** | 59 % sin indexar; en los logs, Googlebot pasa poco por las fichas | Liberar rastreo y reforzar el enlazado a las fichas |
+| Filtros indexables | **Rastreo** | 210.000 URLs que se llevan buena parte de las visitas de Googlebot y no aportan | Sacar del índice los filtros sin demanda y cortar el rastreo de combinaciones |
+| Categorías | **Posiciones** | Indexadas y con valor alto, pero entre la posición 4 y la 10 en sus consultas principales | Contenido y enlazado interno, después de lo anterior |
+| Blog | **Conversión** | Mucho tráfico, valor por sesión de 0,05 € | Enlazar a categorías; no ampliar el blog este quarter |
+
+Los filtros y las fichas son el mismo problema visto desde dos lados: el rastreo que se va a los filtros es el que les falta a las fichas. Ese es el problema principal, y bloquea todo lo demás. Escribir más contenido para las fichas no sirve de nada si Google no las indexa.
+
+Para decidir el orden pongo un número a cada problema. Si las fichas pasaran del 41 % al 80 % de indexación y las nuevas rindieran como las que ya están, serían unos 49.500 clics más al mes, unos 34.600 € al mes con su valor por sesión. Las URLs que entran tarde suelen ser las más flojas, así que lo divido entre dos: unos 17.000 € al mes en juego. Con ese número en la mano, la conversación con el equipo de desarrollo sobre los filtros es muy distinta.
+
+El problema principal también define el tipo de objetivo, que no siempre es crecer:
 
 | Situación | Objetivo |
 |---|---|

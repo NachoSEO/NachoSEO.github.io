@@ -1,0 +1,227 @@
+---
+/**
+ * La misma base de tareas vista como tablero Kanban o como Gantt, como en Notion.
+ * Sin JS se ven las dos vistas; con JS, unas pestañas cambian de una a otra.
+ */
+import { currentWeek, initiatives, statuses, teams, weeks } from './plan';
+
+const tasks = initiatives.flatMap((initiative) => initiative.tasks.map((task) => ({ ...task, initiative: initiative.title })));
+const weekList = Array.from({ length: weeks }, (_, index) => index + 1);
+---
+
+<figure class="plan-views not-prose my-10" data-plan-views>
+  <div class="flex flex-wrap items-center justify-between gap-3">
+    <div class="plan-tabs" role="tablist" aria-label="Vista de las tareas">
+      <button type="button" role="tab" aria-selected="true" data-view="board">Tablero</button>
+      <button type="button" role="tab" aria-selected="false" data-view="gantt">Gantt</button>
+    </div>
+    <ul class="flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted">
+      {
+        Object.values(teams).map((team) => (
+          <li class="flex items-center gap-1.5">
+            <span class="legend-dot" style={`--team: ${team.color}`} aria-hidden="true" />
+            {team.label}
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+
+  <div class="plan-view mt-4" data-panel="board">
+    <p class="meta mb-3">Tablero · semana {currentWeek}</p>
+    <div class="board">
+      {
+        statuses.map((status) => (
+          <div class="board-col">
+            <p class="board-col-title">
+              {status.label}
+              <span>{tasks.filter((task) => task.status === status.id).length}</span>
+            </p>
+            <ul class="space-y-2">
+              {tasks
+                .filter((task) => task.status === status.id)
+                .map((task) => (
+                  <li class="board-card" style={`--team: ${teams[task.team].color}`}>
+                    <p class="text-[0.88rem] font-medium leading-snug">{task.title}</p>
+                    <p class="mt-1 text-xs text-muted">{`${teams[task.team].label} · semana ${task.start}`}</p>
+                    {task.note && <p class="mt-1 text-xs text-accent-ink">{task.note}</p>}
+                  </li>
+                ))}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+
+  <div class="plan-view mt-4" data-panel="gantt">
+    <p class="meta mb-3">Gantt · seis semanas del quarter</p>
+    <div class="gantt-scroll">
+      <div class="gantt" style={`--weeks: ${weeks}`}>
+        <span class="gantt-head" />
+        {weekList.map((week) => <span class:list={['gantt-head', week === currentWeek && 'is-now']}>S{week}</span>)}
+        {
+          initiatives.map((initiative) => (
+            <>
+              <span class="gantt-initiative">{initiative.title}</span>
+              {initiative.tasks.map((task) => (
+                <>
+                  <span class="gantt-label">{task.title}</span>
+                  <span
+                    class:list={['gantt-bar', `is-${task.status}`]}
+                    style={`--team: ${teams[task.team].color}; grid-column: ${task.start + 1} / ${task.end + 2}`}
+                    title={`${teams[task.team].label} · semana ${task.start}`}
+                  >
+                    {teams[task.team].label}
+                  </span>
+                </>
+              ))}
+            </>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+
+  <figcaption class="mt-3 text-sm text-muted">
+    Las mismas tareas en dos vistas. El tablero dice en qué estado está cada una esta semana; el Gantt, cuándo toca cada una y qué depende de qué.
+  </figcaption>
+</figure>
+
+<style>
+  /* El cuerpo del artículo da estilo a listas y párrafos; aquí se anula dentro de la figura */
+  @layer components {
+    figure.plan-views ul {
+      list-style: none;
+      padding-left: 0;
+      margin-top: 0;
+    }
+    figure.plan-views p {
+      margin-top: 0;
+    }
+    figure.plan-views li + li {
+      margin-top: 0;
+    }
+  }
+
+  .plan-tabs {
+    display: inline-flex;
+    border: 1px solid var(--color-line);
+    border-radius: 999px;
+    padding: 0.2rem;
+    background: var(--color-raised);
+  }
+  .plan-tabs button {
+    border-radius: 999px;
+    padding: 0.3rem 0.9rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-muted);
+  }
+  .plan-tabs button[aria-selected='true'] {
+    background: var(--color-ink);
+    color: var(--color-on-dark);
+  }
+  .legend-dot {
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 0.15rem;
+    background: var(--team);
+  }
+  .board {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(9.5rem, 1fr));
+    gap: 0.75rem;
+    overflow-x: auto;
+  }
+  .board-col {
+    min-width: 0;
+    border-radius: 0.75rem;
+    background: color-mix(in srgb, var(--color-line) 45%, transparent);
+    padding: 0.75rem;
+  }
+  .board-col-title {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.6rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+  .board-col-title span {
+    color: var(--color-muted);
+    font-weight: 500;
+  }
+  .board-card {
+    border: 1px solid var(--color-line);
+    border-left: 3px solid var(--team);
+    border-radius: 0.5rem;
+    background: var(--color-raised);
+    padding: 0.55rem 0.65rem;
+  }
+  .gantt-scroll {
+    overflow-x: auto;
+    border: 1px solid var(--color-line);
+    border-radius: 0.75rem;
+    background: var(--color-raised);
+    padding: 0.75rem;
+  }
+  .gantt {
+    display: grid;
+    grid-template-columns: minmax(13rem, 1.6fr) repeat(var(--weeks), minmax(2.6rem, 1fr));
+    row-gap: 0.4rem;
+    min-width: 40rem;
+    align-items: center;
+  }
+  .gantt-head {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--color-muted);
+    text-align: center;
+  }
+  .gantt-head.is-now {
+    color: var(--color-accent-ink);
+  }
+  .gantt-initiative {
+    grid-column: 1 / -1;
+    margin-top: 0.5rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+  }
+  .gantt-label {
+    grid-column: 1;
+    font-size: 0.82rem;
+    padding-right: 0.75rem;
+  }
+  .gantt-bar {
+    height: 1.4rem;
+    border-radius: 0.35rem;
+    background: var(--team);
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: 600;
+    line-height: 1.4rem;
+    padding-inline: 0.4rem;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+  .gantt-bar.is-todo {
+    background: color-mix(in srgb, var(--team) 35%, transparent);
+    color: var(--color-ink);
+  }
+  .gantt-bar.is-hold {
+    background: repeating-linear-gradient(135deg, var(--team) 0 6px, color-mix(in srgb, var(--team) 55%, transparent) 6px 12px);
+  }
+</style>
+
+<script>
+  for (const root of document.querySelectorAll<HTMLElement>('[data-plan-views]')) {
+    const tabs = root.querySelectorAll<HTMLButtonElement>('[data-view]');
+    const panels = root.querySelectorAll<HTMLElement>('[data-panel]');
+    const show = (view: string) => {
+      tabs.forEach((tab) => tab.setAttribute('aria-selected', String(tab.dataset.view === view)));
+      panels.forEach((panel) => (panel.hidden = panel.dataset.panel !== view));
+    };
+    tabs.forEach((tab) => tab.addEventListener('click', () => show(tab.dataset.view!)));
+    show('board');
+  }
+</script>

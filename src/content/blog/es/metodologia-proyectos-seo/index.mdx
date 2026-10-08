@@ -8,6 +8,10 @@ pubDate: 2026-10-08
 tags: ['metodología', 'gestión de proyectos', 'consultoría seo']
 ---
 
+import MethodLevels from '../../../../components/blog/methodology/MethodLevels.astro';
+import PlanViews from '../../../../components/blog/methodology/PlanViews.astro';
+import OpsVsInitiatives from '../../../../components/blog/methodology/OpsVsInitiatives.astro';
+
 Cuando alguien me contrata, una de las primeras preguntas es "¿y cómo vas a trabajar?". Este post es la respuesta larga. Es la metodología con la que dirijo el equipo de marketing orgánico de [Reverse Tech](/casos/reverse-tech-area-organica/), ocho personas entre SEO, YouTube, email, redes y afiliación, y la misma que uso con cada cliente de consultoría.
 
 Tiene dos partes. La primera decide qué hay que hacer: objetivo de negocio, datos y problema principal. La segunda decide cómo se hace: objetivos por quarter, iniciativas, tareas y una revisión cada semana.
@@ -60,14 +64,9 @@ A partir de ahí trabajo con tres niveles:
 | **Iniciativa** | Un proyecto concreto que acerca al theme. | De varias semanas a varios meses |
 | **Tarea** | Una pieza de trabajo con un responsable. | Una semana como máximo |
 
-Un ejemplo de un proyecto de recuperación:
+Un ejemplo basado en lo que vivimos en [Softonic](/casos/softonic-0-a-20-millones/), cuando un core update nos quitó un 20 y pico por ciento de tráfico y la causa resultó estar en las traducciones:
 
-- **Theme:** recuperar el tráfico que se llevó el core update.
-  - **Iniciativa:** consolidar los page types de poca calidad.
-    - Tarea: auditar el page type de fichas por ciudad.
-    - Tarea: redirigir las fichas sin demanda a su categoría.
-  - **Iniciativa:** reforzar la autoría de los artículos.
-    - Tarea: crear las fichas de autor con su trayectoria.
+<MethodLevels />
 
 Si una iniciativa dura más de un quarter, la parto por milestones. Así cada quarter cierra algo que se puede medir.
 
@@ -85,6 +84,10 @@ Lo reviso todo cada semana. Prefiero esa frecuencia porque es la misma unidad de
 ## 6. Sprints semanales con un Kanban ligero
 
 Las tareas se reparten por semanas: en la semana 1 hacemos esto, en la 2 aquello. Para gestionarlas uso un tablero Kanban, con columnas de "Por hacer", "En curso", "En espera" y "Hecho". Lo llamo ligero porque las reglas sirven para ir más rápido y tener todo a la vista. Si alguna nos frena, la cambiamos.
+
+Así se ve el ejemplo de antes en la semana 4, con una tarea de Tecnología que va tarde y bloquea el hreflang. Cambia a la vista Gantt para ver el mismo plan en el tiempo:
+
+<PlanViews />
 
 Las reglas por defecto:
 
@@ -109,7 +112,11 @@ Hay dos tipos de tareas:
 - **Operativas.** El día a día que mantiene todo funcionando: informes, revisiones, publicaciones.
 - **De iniciativa.** El trabajo que mueve los OKRs.
 
-Las operativas también van al tablero, aunque se repitan cada semana. Si las registras, ves cuánto tiempo se llevan y cuáles se pueden automatizar. Al principio de un proyecto lo operativo ocupa casi toda la semana. A medida que se automatiza, deja hueco a las iniciativas. Ese es el objetivo a largo plazo: que lo operativo sea lo mínimo y el equipo dedique casi todo su tiempo a lo que mueve el negocio.
+Las operativas también van al tablero, aunque se repitan cada semana. Si las registras, ves cuánto tiempo se llevan y cuáles se pueden automatizar. Al principio de un proyecto lo operativo ocupa casi toda la semana. A medida que se automatiza, deja hueco a las iniciativas:
+
+<OpsVsInitiatives />
+
+El objetivo a largo plazo es que lo operativo sea lo mínimo y el equipo dedique casi todo su tiempo a lo que mueve el negocio.
 
 ## 7. La revisión semanal
 
@@ -120,6 +127,16 @@ Una vez por semana repasamos el tablero en una reunión corta. Contesta tres pre
 3. ¿Qué toca esta semana?
 
 En esa reunión se corrige el plan. Algo se retrasa porque está en espera, algo se adelanta porque ha surgido una oportunidad o un fuego, una iniciativa se para porque su métrica no se mueve. Solo se comenta lo que importa al equipo entero; las tareas operativas están en el tablero, pero no hace falta hablar de ellas.
+
+## Lo que he visto torcerse: las tareas de los demás
+
+El error que más proyectos me ha retrasado es planificar solo las tareas de SEO. Casi ninguna iniciativa es solo de SEO. Montar una web nueva incluye mucho más que programarla: antes hay diseño, hay que decidir qué se va a medir y cómo, hay contenido que adaptar y luego está la parte de SEO. En el ejemplo de los ccTLDs trabajan cinco equipos, y el hreflang no se puede hacer hasta que Tecnología monta los dominios.
+
+Si en tu tablero solo están tus tareas, no ves que estás esperando a otro equipo hasta que ya llegas tarde. Por eso meto en el tablero todas las tareas de la iniciativa, las haga yo, alguien de mi equipo o un proveedor externo con el que nos coordinamos cada pocas semanas. Así las dependencias se ven en el Gantt antes de que bloqueen a nadie, y en la revisión semanal se habla de ellas a tiempo.
+
+## Herramientas
+
+Uso Notion, pero sirve cualquier herramienta que guarde las tareas en una base de datos y te deje verlas de varias formas. Lo importante es que la misma base de tareas tenga una vista de tablero, para el día a día, y una vista de Gantt, para planificar el quarter y ver las dependencias. Si tienes que mantener las dos a mano en sitios distintos, acabarán sin coincidir.
 
 ## Cómo encaja con cada tipo de proyecto
 

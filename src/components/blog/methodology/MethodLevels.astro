@@ -1,0 +1,65 @@
+---
+/** Los tres niveles de la metodología (theme, iniciativa y tarea) con el ejemplo de plan.ts */
+import { initiatives, teams, theme } from './plan';
+---
+
+<figure class="method-levels not-prose my-10">
+  <div class="rounded-xl bg-dark p-5 text-on-dark">
+    <p class="meta text-on-dark-muted">Theme · un quarter o más</p>
+    <p class="mt-1 font-display text-xl font-semibold">{theme.title}</p>
+    <p class="mt-2 text-sm text-on-dark-muted">OKR: {theme.okr}</p>
+  </div>
+  <div class="mt-4 grid gap-4 md:grid-cols-2">
+    {
+      initiatives.map((initiative) => (
+        <div class="rounded-xl border border-line bg-raised p-5">
+          <p class="meta">Iniciativa · semanas o meses</p>
+          <p class="mt-1 font-semibold">{initiative.title}</p>
+          <p class="mt-1 text-sm text-muted">Métrica: {initiative.metric}</p>
+          <p class="meta mt-4">Tareas · una semana como máximo</p>
+          <ul class="mt-2 space-y-2">
+            {initiative.tasks.map((task) => (
+              <li class="flex items-start gap-2 text-[0.92rem]">
+                <span class="team-chip" style={`--team: ${teams[task.team].color}`}>{teams[task.team].label}</span>
+                <span>{task.title}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))
+    }
+  </div>
+  <figcaption class="mt-3 text-sm text-muted">
+    Un ejemplo simplificado, basado en el caso de Softonic: un theme, dos iniciativas con su métrica y tareas de cinco equipos distintos.
+  </figcaption>
+</figure>
+
+<style>
+  /* El cuerpo del artículo da estilo a listas y párrafos; aquí se anula dentro de la figura */
+  @layer components {
+    figure.method-levels ul {
+      list-style: none;
+      padding-left: 0;
+      margin-top: 0;
+    }
+    figure.method-levels p {
+      margin-top: 0;
+    }
+    figure.method-levels li + li {
+      margin-top: 0;
+    }
+  }
+
+  .team-chip {
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+    border-radius: 0.3rem;
+    padding: 0.05rem 0.4rem;
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--team);
+    background: color-mix(in srgb, var(--team) 12%, transparent);
+  }
+</style>

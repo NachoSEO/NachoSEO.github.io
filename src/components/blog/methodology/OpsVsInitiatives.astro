@@ -1,0 +1,88 @@
+---
+/**
+ * Gráfico ilustrativo: qué parte de la capacidad del equipo se va en tareas operativas y cuánta queda para
+ * iniciativas, quarter a quarter, a medida que se automatiza lo repetitivo. No son datos reales.
+ */
+const quarters = ['Q1', 'Q2', 'Q3', 'Q4', 'Q5', 'Q6'];
+// Porcentaje de la capacidad dedicada a tareas operativas en cada quarter
+const operational = [80, 65, 50, 38, 30, 25];
+
+const width = 640;
+const height = 300;
+const pad = { top: 16, right: 16, bottom: 36, left: 44 };
+const plotW = width - pad.left - pad.right;
+const plotH = height - pad.top - pad.bottom;
+const x = (index: number) => pad.left + (plotW * index) / (quarters.length - 1);
+const y = (percent: number) => pad.top + plotH * (1 - percent / 100);
+
+const opsLine = operational.map((value, index) => `${x(index)},${y(value)}`).join(' ');
+const opsArea = `${x(0)},${y(0)} ${opsLine} ${x(quarters.length - 1)},${y(0)}`;
+const initiativesArea = `${x(0)},${y(100)} ${opsLine} ${x(quarters.length - 1)},${y(100)}`;
+const ticks = [0, 25, 50, 75, 100];
+---
+
+<figure class="ops-chart not-prose my-10">
+  <div class="rounded-xl border border-line bg-raised p-4">
+    <svg viewBox={`0 0 ${width} ${height}`} role="img" aria-labelledby="ops-chart-title" class="h-auto w-full">
+      <title id="ops-chart-title">
+        Las tareas operativas pasan del 80 % al 25 % de la capacidad del equipo en seis quarters, y las iniciativas ocupan el resto
+      </title>
+      {
+        ticks.map((tick) => (
+          <g>
+            <line x1={pad.left} x2={width - pad.right} y1={y(tick)} y2={y(tick)} class="grid-line" />
+            <text x={pad.left - 8} y={y(tick) + 4} text-anchor="end" class="axis">{tick} %</text>
+          </g>
+        ))
+      }
+      <polygon points={initiativesArea} class="area-initiatives" />
+      <polygon points={opsArea} class="area-ops" />
+      <polyline points={opsLine} class="edge" />
+      {quarters.map((quarter, index) => <text x={x(index)} y={height - 12} text-anchor="middle" class="axis">{quarter}</text>)}
+      <text x={x(0) + 12} y={y(40)} class="label-ops">Operativo</text>
+      <text x={x(quarters.length - 1) - 12} y={y(78)} text-anchor="end" class="label-initiatives">Iniciativas</text>
+    </svg>
+  </div>
+  <figcaption class="mt-3 text-sm text-muted">
+    Ilustrativo: cómo cambia el reparto de la semana a medida que se automatiza lo operativo. Las cifras dependen de cada equipo.
+  </figcaption>
+</figure>
+
+<style>
+  @layer components {
+    figure.ops-chart p {
+      margin-top: 0;
+    }
+  }
+
+  .grid-line {
+    stroke: var(--color-line);
+    stroke-width: 1;
+  }
+  .axis {
+    fill: var(--color-muted);
+    font-size: 12px;
+    font-family: var(--font-mono);
+  }
+  .area-ops {
+    fill: color-mix(in srgb, var(--color-ink) 82%, transparent);
+  }
+  .area-initiatives {
+    fill: color-mix(in srgb, var(--color-accent) 18%, transparent);
+  }
+  .edge {
+    fill: none;
+    stroke: var(--color-accent);
+    stroke-width: 2.5;
+  }
+  .label-ops {
+    fill: var(--color-on-dark);
+    font-size: 15px;
+    font-weight: 600;
+  }
+  .label-initiatives {
+    fill: var(--color-accent-ink);
+    font-size: 15px;
+    font-weight: 600;
+  }
+</style>

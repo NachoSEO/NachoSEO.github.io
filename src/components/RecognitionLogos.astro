@@ -1,6 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
+import { localizedRoute } from '../i18n/utils';
 import type { Lang } from '../i18n/ui';
 
 interface Props {
@@ -13,11 +14,13 @@ const es = lang === 'es';
 const logoFiles = import.meta.glob<{ default: ImageMetadata }>('../assets/logos/press/*.png', { eager: true });
 const logo = (key: string) => logoFiles[`../assets/logos/press/${key}.png`].default;
 
-// Cada logo enlaza a la prueba: el programa donde di clase o la pieza que me cita.
+// Cada logo lleva a su sección de Sobre mí (docencia o medios), donde están los enlaces a cada prueba:
+// así quien hace clic sigue en la web y ve todas las pruebas juntas. `url` queda como referencia de la fuente.
 // La altura compensa logos muy anchos o muy finos.
 const groups = [
   {
     label: es ? 'He dado clase en' : "I've taught at",
+    anchor: '#docencia',
     logos: [
       { key: 'upf', name: 'Universitat Pompeu Fabra', height: 38, url: 'https://web.archive.org/web/20230130085546/https://www.bsm.upf.edu/es/master-universitario-online-en-buscadores' },
       { key: 'webpositer', name: 'Webpositer Academy', height: 32, url: 'https://www.webpositeracademy.com/master-seo/' },
@@ -27,6 +30,7 @@ const groups = [
   },
   {
     label: es ? 'Me han mencionado' : 'Mentioned in',
+    anchor: '#medios',
     logos: [
       { key: 'google-search-central', name: 'Google Search Central', height: 22, url: 'https://developers.google.com/search/blog/2023/03/2022-recap-search-central-community' },
       { key: 'search-engine-roundtable', name: 'Search Engine Roundtable', height: 13, url: 'https://www.seroundtable.com/google-search-spam-updates-ai-42226.html' },
@@ -52,7 +56,7 @@ const groups = [
           <ul class="mt-6 flex flex-wrap items-center justify-center gap-x-9 gap-y-6 md:justify-start">
             {group.logos.map((item) => (
               <li>
-                <a href={item.url} rel="noopener" class="recognition-logo block" title={item.name}>
+                <a href={`${localizedRoute('about', lang)}${group.anchor}`} class="recognition-logo block" title={item.name}>
                   <Image
                     src={logo(item.key)}
                     alt={item.name}

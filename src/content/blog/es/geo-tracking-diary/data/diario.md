@@ -154,6 +154,45 @@ Para el análisis:
 - Entidades que debería mover: consultor SEO / consultor SEO técnico, auditoría SEO, migraciones, SEO internacional, recuperar tráfico, GEO. Las de control (SEO ecommerce, SEO WordPress) no tienen página nueva.
 - Incidencia: el 301 de la URL antigua no funcionó en el primer despliegue, porque la build regenera _redirects desde astro.config y pisaba public/_redirects. Arreglado el mismo día.
 
+## Día 4 · 2026-10-09 · A quién invitar a la guía GEO, según el tracker
+
+La guía GEO va a tener capítulos de SEO invitados. Antes de elegirlos miré a quién nombra ya la IA, porque invitar a gente que el modelo tiene "de serie" es lo que más asocia mi nombre al tema (Wil Reynolds).
+
+Datos: unas 640 respuestas del 6 al 8 de octubre (las 40 más recientes de cada una de las 16 entidades). Tres señales:
+- Menciones en las 160 respuestas GEO (qué es GEO, consultor GEO, aparecer en ChatGPT, medir visibilidad en IA).
+- Menciones en las 320 respuestas SEO (consultor SEO, por ciudad, freelance, internacional, auditoría, técnico, precio, core updates).
+- Fan-outs con su nombre: la IA lo busca antes de buscar en la web, la señal más clara de que lo tiene de serie.
+
+| Persona | GEO (de 160) | SEO (de 320) | Fan-outs |
+|---|---|---|---|
+| Lino Uruñuela | 10 | 12 | 2 |
+| Aleyda Solís | 9 | 80 | 5 |
+| Fernando Maciá | 4 | 25 | 11 |
+| Natzir Turrado | 0 | 58 | 1 |
+| MJ Cachón | 0 | 0 | 8 |
+| Luis M. Villanueva | 1 | 30 | 7 |
+| Juan González Villa | 0 | 24 | 0 |
+| Iñaki Huerta | 0 | 21 | 0 |
+| Romuald Fons | 4 | 19 | 0 |
+| Esteve Castells | 1 | 16 | 0 |
+| José Alvargonzález | 4 | 0 | 0 (su web, citada 6 veces en respuestas GEO) |
+| Javier Santos Criado (Javadex) | 5 | 0 | 0 |
+
+Lectura:
+- Solo tres personas aparecen fuertes en GEO y en SEO a la vez: Lino, Aleyda y Fernando Maciá.
+- Natzir y los consultores clásicos (Juan González Villa, Iñaki Huerta, Luis M. Villanueva) están muy asociados a "consultor SEO" y casi nada a GEO.
+- MJ Cachón casi no sale en el texto final, pero la IA la busca por nombre (`site:mjcachon.com`) en 8 fan-outs: está en la lista de candidatos.
+- Hay un nicho GEO emergente (José Alvargonzález, Javadex, Antonio Díaz, Sergio Gómez) que la IA ya relaciona con el tema y que no aparece en SEO.
+- Límites: tres días de datos y respuestas muy variables. El orden de los primeros es sólido; del sexto en adelante son pocas menciones. Casi todas las menciones son en tono de recomendación.
+
+Decisión (mía): invitar a Esteve Castells, Lino Uruñuela, Aleyda Solís y Carlos Sánchez Donate, y dos o tres más por definir.
+- Lino y Aleyda: los dos nombres más asociados a GEO y a SEO en las respuestas.
+- Esteve Castells: muy asociado a "consultor SEO" (16 respuestas) y referente técnico.
+- Carlos Sánchez Donate: casi no sale en el tracker, pero es referente de SEO técnico (su máster, donde doy la clase de migraciones). Es una apuesta por el perfil técnico de la guía más que por la señal de la IA.
+- Para los que faltan, el tracker apunta a Fernando Maciá (el que más tiene de serie) y a MJ Cachón, Natzir o Luis M. Villanueva.
+
+Hipótesis para medir después: si los capítulos invitados se publican y se comparten, mi nombre debería empezar a aparecer en las respuestas GEO junto al de los invitados, y antes en los fan-outs que en el texto final.
+
 ## Referencias para el post
 - Wil Reynolds, Seer Interactive. Re-imagining AI visibility KPIs in a query fan-out world. https://www.seerinteractive.com/insights/ai-visibility-kpis (hardwired, anti-recomendación, KPIs de credibilidad).
 - Dan Petrovic, DEJAN. Why we don't do prompt tracking. https://dejan.ai/blog/prompt-tracking (medir por entidades canónicas con una sonda fija y muchas muestras; es el método del geo-tracker).

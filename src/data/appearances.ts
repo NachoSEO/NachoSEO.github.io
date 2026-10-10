@@ -159,6 +159,13 @@ export const media: { type: MediaType; outlet: string; title: string; url: strin
   },
   {
     type: 'mention',
+    outlet: 'SEOFOMO (Aleyda Solís)',
+    title: 'The top AI Search & SEO Updates of the Week (Oct 11, 2026)',
+    lang: 'en',
+    url: 'https://seofomo.co/posts/the-top-ai-search-seo-updates-of-the-week-seofomo-oct-11-2026',
+  },
+  {
+    type: 'mention',
     outlet: 'LearningSEO.io (Aleyda Solís)',
     title: 'SEO Learning Roadmap: Automate SEO tasks',
     lang: 'en',

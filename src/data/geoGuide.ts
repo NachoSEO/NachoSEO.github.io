@@ -63,7 +63,8 @@ export const guideParts: GuidePart[] = [
             number: 1,
             title: 'Anatomía de una respuesta: AI Overviews, AI Mode y ChatGPT por dentro',
             summary: 'De qué índice tira cada plataforma y cuándo responde de memoria.',
-            status: 'disponible',
+            status: 'reservado',
+            author: { name: 'Nacho Mascort', slug: 'nacho-mascort' },
           },
           {
             number: 2,

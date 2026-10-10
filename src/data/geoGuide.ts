@@ -145,7 +145,8 @@ export const guideParts: GuidePart[] = [
             number: 12,
             title: 'Menciones y digital PR para la IA',
             summary: 'Cómo conseguir que los medios que lee la IA hablen de ti.',
-            status: 'disponible',
+            status: 'reservado',
+            author: { name: 'Andreas Niessen', slug: 'andreas-niessen' },
           },
           {
             number: 13,

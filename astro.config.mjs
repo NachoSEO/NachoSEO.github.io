@@ -4,6 +4,7 @@ import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import { writeFile } from 'node:fs/promises';
 import tailwindcss from '@tailwindcss/vite';
+import ogImages from './src/integrations/og-images.mjs';
 
 /** Rutas antiguas del Hexo de 2023 → destinos nuevos. Fuente única: genera el _redirects de Cloudflare Pages (301 reales)
     y los stubs meta-refresh de respaldo, que quedan fuera del sitemap. */
@@ -56,6 +57,7 @@ export default defineConfig({
       },
     }),
     cloudflareRedirects,
+    ogImages(),
   ],
   // assetsInlineLimit: 0 → los <script> de componentes salen como módulos
   // externos same-origin (la CSP no permite scripts inline)

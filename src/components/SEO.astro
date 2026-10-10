@@ -1,5 +1,6 @@
 ---
 import type { Lang } from '../i18n/ui';
+import { ogImagePathFor } from '../lib/og-path.mjs';
 
 interface Props {
   title: string;
@@ -20,10 +21,11 @@ const {
   path,
   lang,
   alternatePath,
-  ogImage = '/og-fallback.png',
   ogType = 'website',
   noindex = false,
 } = Astro.props;
+// Sin imagen propia, cada página indexable comparte la suya, generada con su H1 al final del build
+const ogImage = Astro.props.ogImage ?? (noindex ? '/og-fallback.png' : ogImagePathFor(path));
 
 const site = Astro.site!.origin;
 const canonical = new URL(path, site).href;

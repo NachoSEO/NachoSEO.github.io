@@ -1,4 +1,5 @@
 ---
+import { getCollection } from 'astro:content';
 import { localizedRoute, useTranslations } from '../i18n/utils';
 import { site } from '../site';
 import type { Lang } from '../i18n/ui';
@@ -8,62 +9,118 @@ interface Props {
 }
 
 const { lang } = Astro.props;
+const es = lang === 'es';
 const t = useTranslations(lang);
 const year = new Date().getFullYear();
 
-const links = [
-  { href: site.social.linkedin, label: 'LinkedIn', rel: 'me' },
-  { href: site.social.twitter, label: 'Twitter/X', rel: 'me' },
-  { href: site.social.github, label: 'GitHub', rel: 'me' },
-  { href: localizedRoute('rss', lang), label: 'RSS', rel: undefined },
+const services = (await getCollection('services', (entry) => entry.data.lang === lang)).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+const servicesBase = localizedRoute('services', lang);
+const serviceLink = (service: (typeof services)[number]) => ({
+  href: `${servicesBase}${service.data.slug}/`,
+  label: service.data.title,
+});
+
+type FooterLink = { href: string; label: string; event?: string };
+const columns: { title: string; href?: string; links: FooterLink[] }[] = [
+  {
+    title: t('nav.services'),
+    href: servicesBase,
+    links: [
+      ...services.filter((service) => service.data.order <= 6).map(serviceLink),
+      { href: es ? '/servicios/precios/' : '/en/services/pricing/', label: es ? 'Cuánto cuesta' : 'Pricing' },
+    ],
+  },
+  {
+    title: es ? 'Más' : 'More',
+    links: [
+      ...services.filter((service) => service.data.order > 6).map(serviceLink),
+      { href: localizedRoute('cases', lang), label: t('nav.cases') },
+      { href: localizedRoute('about', lang), label: t('nav.about') },
+    ],
+  },
+  {
+    title: es ? 'Recursos' : 'Resources',
+    links: [
+      { href: localizedRoute('blog', lang), label: t('nav.blog') },
+      ...(es ? [{ href: '/estudios/', label: 'Estudios' }] : []),
+      { href: localizedRoute('tools', lang), label: t('nav.tools') },
+      { href: localizedRoute('skills', lang), label: t('nav.skills') },
+      { href: 'https://nachomascort.gumroad.com/l/programacion-seo', label: t('nav.course'), event: 'course-click' },
+    ],
+  },
+];
+
+const social = [
+  { href: site.social.linkedin, label: 'LinkedIn' },
+  { href: site.social.twitter, label: 'X' },
+  { href: site.social.github, label: 'GitHub' },
 ];
 ---
 
 <footer class="on-dark mt-20 md:mt-28">
-  <div class="mx-auto grid max-w-5xl gap-8 px-5 py-10 sm:grid-cols-2 lg:grid-cols-4 sm:px-6">
-    <div>
-      <p class="font-display text-lg font-semibold">Nacho Mascort</p>
-      <p class="mt-1 text-sm text-on-dark-muted">{t('footer.role')}</p>
-      <p class="text-sm text-on-dark-muted">{t('footer.location')}</p>
-    </div>
-
-    <ul class="space-y-1 text-sm">
-      {
-        links.map((link) => (
-          <li>
-            <a href={link.href} rel={link.rel} data-umami-event="footer-link-click" data-umami-event-label={link.label} class="text-on-dark-muted hover:text-on-dark">
-              {link.label}
-            </a>
-          </li>
-        ))
-      }
-    </ul>
-
+  <div class="mx-auto grid max-w-5xl gap-10 px-5 py-12 sm:grid-cols-2 sm:px-6 lg:grid-cols-[1.3fr_1fr_1fr_1fr]">
     <div class="text-sm">
-      <a href={localizedRoute('tools', lang)} class="meta hover:text-on-dark">{t('nav.tools')}</a>
-      <ul class="mt-2 space-y-1">
-        <li>
-          <a href={localizedRoute('sitemapGenerator', lang)} class="text-on-dark-muted hover:text-on-dark">
-            {t('tools.sitemapGenerator')}
-          </a>
-        </li>
-        <li>
-          <a href={localizedRoute('botChecker', lang)} class="text-on-dark-muted hover:text-on-dark">
-            {t('tools.botChecker')}
-          </a>
-        </li>
+      <p class="font-display text-lg font-semibold">Nacho Mascort</p>
+      <p class="mt-1 text-on-dark-muted">{t('footer.role')}</p>
+      <p class="text-on-dark-muted">{t('footer.location')}</p>
+      <a
+        href={`mailto:${site.email}`}
+        data-umami-event="email-click"
+        data-umami-event-placement="footer"
+        class="mt-5 inline-block underline decoration-accent-on-dark underline-offset-4 hover:text-accent-on-dark"
+      >
+        {site.email}
+      </a>
+      <ul class="mt-4 flex gap-4">
+        {
+          social.map((link) => (
+            <li>
+              <a href={link.href} rel="me" data-umami-event="footer-link-click" data-umami-event-label={link.label} class="text-on-dark-muted hover:text-on-dark">
+                {link.label}
+              </a>
+            </li>
+          ))
+        }
       </ul>
     </div>
 
-    <div class="text-sm sm:text-right">
-      <a href={`mailto:${site.email}`} data-umami-event="email-click" data-umami-event-placement="footer" class="underline decoration-accent-on-dark underline-offset-4 hover:text-accent-on-dark">
-        {site.email}
-      </a>
-      <p class="meta mt-4">
-        © {year} · <a href={localizedRoute('contact', lang)} class="hover:text-on-dark">{t('nav.contact')}</a> ·{' '}
-        <a href={localizedRoute('privacy', lang)} class="hover:text-on-dark">{lang === 'es' ? 'Privacidad' : 'Privacy'}</a> ·{' '}
-        <a href={localizedRoute('legal', lang)} class="hover:text-on-dark">{lang === 'es' ? 'Aviso legal' : 'Legal notice'}</a>
-      </p>
-    </div>
+    {
+      columns.map((column) => (
+        <div class="text-sm">
+          {column.href ? (
+            <a href={column.href} class="meta block hover:text-on-dark">
+              {column.title}
+            </a>
+          ) : (
+            <p class="meta">{column.title}</p>
+          )}
+          <ul class="mt-3 space-y-1.5">
+            {column.links.map((link) => (
+              <li>
+                <a
+                  href={link.href}
+                  data-umami-event={link.event}
+                  data-umami-event-placement={link.event ? 'footer' : undefined}
+                  class="text-on-dark-muted hover:text-on-dark"
+                >
+                  {link.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))
+    }
+  </div>
+
+  <div class="border-t border-white/10">
+    <p class="meta mx-auto max-w-5xl px-5 py-5 sm:px-6">
+      © {year} Nacho Mascort · <a href={localizedRoute('contact', lang)} class="hover:text-on-dark">{t('nav.contact')}</a> ·{' '}
+      <a href={localizedRoute('privacy', lang)} class="hover:text-on-dark">{es ? 'Privacidad' : 'Privacy'}</a> ·{' '}
+      <a href={localizedRoute('legal', lang)} class="hover:text-on-dark">{es ? 'Aviso legal' : 'Legal notice'}</a> ·{' '}
+      <a href={localizedRoute('rss', lang)} class="hover:text-on-dark">RSS</a>
+    </p>
   </div>
 </footer>

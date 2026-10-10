@@ -26,7 +26,7 @@ const services = allServices.filter((service) => service.data.order < 7);
 
 // Si aún no hay artículos en el idioma de la página, se muestran los del otro idioma.
 // El archivo de SEO Hacks (2015–2017) no cuenta como "lo último".
-const allPosts = (await getCollection('blog', (post) => post.data.category !== 'seohacks')).sort(
+const allPosts = (await getCollection('blog', (post) => post.data.category !== 'seohacks' && !post.data.unlisted)).sort(
   (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
 );
 const localPosts = allPosts.filter((post) => post.data.lang === lang);
@@ -69,9 +69,9 @@ const copy =
         otherServices: { text: 'También hago growth, sistemas de IA y formación', href: '/servicios/#otros' },
         pricing: { text: 'Cuánto cuesta y cómo calculo el precio', href: '/servicios/precios/' },
         whereLabel: 'Dónde trabajo',
-        whereTitle: 'Desde Barcelona, en remoto para toda España',
+        whereTitle: 'Desde Barcelona, en remoto para todo el mundo',
         where: [
-          'Vivo y trabajo en Barcelona. Casi todo mi trabajo es en remoto, con equipos de toda España y de fuera, en español y en inglés.',
+          'Vivo en Barcelona y trabajo en remoto con empresas de todo el mundo, en español y en inglés.',
           'Si tu empresa está en Barcelona, también podemos vernos en persona.',
         ],
         serviceLink: 'Ver el servicio',

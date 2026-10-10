@@ -37,7 +37,7 @@ export const bio: Record<Lang, BioSegment[][]> = {
       { text: "Lo que monto son sistemas: procesos, automatización y equipos que siguen produciendo cuando yo ya no estoy." },
     ],
     [
-      { text: "Vivo y trabajo en Barcelona. Casi todo mi trabajo es en remoto, con equipos de toda España y de fuera, en español y en inglés." },
+      { text: "Vivo en Barcelona y trabajo en remoto con empresas de todo el mundo, en español y en inglés." },
     ],
   ],
   en: [
@@ -63,6 +63,9 @@ export const bio: Record<Lang, BioSegment[][]> = {
     ],
     [
       { text: "What I build are systems: processes, automation and teams that keep producing once I'm gone." },
+    ],
+    [
+      { text: "I live in Barcelona and work remotely with companies all over the world, in Spanish and English." },
     ],
   ],
 };

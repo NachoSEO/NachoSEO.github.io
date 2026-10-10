@@ -1,0 +1,40 @@
+---
+/** Firma del autor con foto, para posts y estudios: "Escrito por Nacho Mascort", puesto y fecha */
+import { Image } from 'astro:assets';
+import portrait from '../assets/img/nacho-hero.webp';
+import { localizedRoute } from '../i18n/utils';
+import type { Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  /** Texto antes del nombre: "Escrito por", "Estudio de"… */
+  lead?: string;
+}
+
+const { lang, lead } = Astro.props;
+const copy =
+  lang === 'es'
+    ? { lead: 'Escrito por', role: 'Consultor SEO técnico · Barcelona, en remoto' }
+    : { lead: 'Written by', role: 'Technical SEO consultant · Barcelona, working remotely' };
+---
+
+<div class="flex items-center gap-4">
+  <Image
+    src={portrait}
+    alt="Nacho Mascort"
+    width={112}
+    height={112}
+    format="webp"
+    quality={70}
+    class="h-14 w-14 shrink-0 rounded-full bg-raised object-cover object-top"
+  />
+  <div class="text-[0.95rem] leading-snug">
+    <p>
+      {lead ?? copy.lead}{' '}
+      <a href={localizedRoute('about', lang)} class="font-semibold underline decoration-accent underline-offset-[0.2em]">Nacho Mascort</a>
+    </p>
+    <p class="text-sm text-muted">
+      {copy.role}{' '}<slot />
+    </p>
+  </div>
+</div>

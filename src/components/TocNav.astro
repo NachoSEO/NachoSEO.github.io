@@ -1,0 +1,33 @@
+---
+/** Índice lateral (escritorio) con la sección activa marcada desde fx.js */
+interface Props {
+  label: string;
+  headings: { slug: string; text: string; depth: number }[];
+}
+
+const { label, headings } = Astro.props;
+---
+
+<nav aria-label={label} class="toc hidden lg:block">
+  <div class="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto pb-4">
+    <p class="meta">{label}</p>
+    <ol class="mt-4 space-y-2 border-l border-line text-sm">
+      {
+        headings.map((heading) => (
+          <li>
+            <a
+              href={`#${heading.slug}`}
+              data-toc-link={heading.slug}
+              class:list={[
+                'toc-link -ml-px block border-l-2 border-transparent py-0.5 text-muted hover:text-ink',
+                heading.depth === 3 ? 'pl-7' : 'pl-4',
+              ]}
+            >
+              {heading.text}
+            </a>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</nav>

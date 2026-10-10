@@ -193,6 +193,22 @@ Decisión (mía): invitar a Esteve Castells, Lino Uruñuela, Aleyda Solís y Car
 
 Hipótesis para medir después: si los capítulos invitados se publican y se comparten, mi nombre debería empezar a aparecer en las respuestas GEO junto al de los invitados, y antes en los fan-outs que en el texto final.
 
+## Día 5 · 2026-10-10 · Guía GEO, estudio y cuatro entidades nuevas en el tracker
+
+Publicado hoy (todo en producción):
+- Estudio /estudios/consultores-seo-ia/ y lista de opinión /blog/mejores-consultores-seo-geo/ (unlisted, solo enlazada desde el estudio).
+- Home con el posicionamiento "SEO, IA y growth", formulario de contacto en todas las páginas de servicio, footer y menú nuevos.
+- /guia-geo/: página principal en construcción, con índice de 17 capítulos, convocatoria abierta para autores y formulario para recibir la guía. Esteve Castells reserva el capítulo 15 (medir la visibilidad en IA).
+- Imagen para compartir propia en cada página (antes todas usaban la misma).
+- Nueva mención: SEOFOMO (Aleyda Solís, 11 oct 2026) enlaza el post de quality en Google.
+
+Entidades nuevas en el tracker (proyecto 1, trabajadas, 7 muestras por semana, 2 queries y 3 prompts cada una), para medir lo publicado que no tenía entidad:
+- #17 Cómo funciona la búsqueda con IA (guía GEO).
+- #18 Bots de IA y acceso técnico (comprobador de bots, capítulo 7 de la guía).
+- #19 Calidad de contenido según Google (post de quality, skill google-quality-audit).
+- #20 Formación y charlas de SEO e IA (/servicios/formacion/).
+Coste estimado: unos 0,71 $/mes por entidad. Su línea base empieza la semana en que se arranquen; las 16 originales no cambian.
+
 ## Referencias para el post
 - Wil Reynolds, Seer Interactive. Re-imagining AI visibility KPIs in a query fan-out world. https://www.seerinteractive.com/insights/ai-visibility-kpis (hardwired, anti-recomendación, KPIs de credibilidad).
 - Dan Petrovic, DEJAN. Why we don't do prompt tracking. https://dejan.ai/blog/prompt-tracking (medir por entidades canónicas con una sonda fija y muchas muestras; es el método del geo-tracker).

@@ -1,0 +1,64 @@
+---
+/** Vista previa de capítulos de la Guía GEO aún sin publicar. Solo existe en `astro dev`: lee guia-geo-borradores/,
+    que está fuera de git, así que en el build de Cloudflare no hay borradores y esta ruta no genera ninguna página. */
+import { Image } from 'astro:assets';
+import Base from '../../../layouts/Base.astro';
+import TocNav from '../../../components/TocNav.astro';
+import { authorPhotos, guideParts } from '../../../data/geoGuide';
+
+export function getStaticPaths() {
+  if (!import.meta.env.DEV) return [];
+  const drafts = import.meta.glob('../../../../guia-geo-borradores/*.md', { eager: true });
+  return Object.entries(drafts).map(([path, mod]) => ({
+    params: { slug: path.split('/').pop()!.replace(/\.md$/, '') },
+    props: { mod },
+  }));
+}
+
+const { mod } = Astro.props as { mod: any };
+const { Content } = mod;
+const headings: { slug: string; text: string; depth: number }[] = mod.getHeadings();
+const title = headings.find((heading) => heading.depth === 1)?.text ?? Astro.params.slug;
+const tocHeadings = headings.filter((heading) => heading.depth === 2);
+const chapterNumber = Number(title.match(/^(\d+)\./)?.[1]);
+const chapter = guideParts.flatMap((part) => part.groups.flatMap((group) => group.chapters)).find((item) => item.number === chapterNumber);
+const photo = chapter?.author?.slug ? authorPhotos[chapter.author.slug] : undefined;
+---
+
+<Base lang="es" title={`Borrador: ${title}`} description="Vista previa privada" path={Astro.url.pathname} noindex>
+  <article class="mx-auto max-w-5xl px-5 pt-16 sm:px-6">
+    <p class="draft-banner">Borrador sin publicar · vista previa solo en local</p>
+    <header class="mt-6">
+      <p class="meta"><a href="/guia-geo/" class="hover:text-ink">Guía GEO</a></p>
+      <h1 class="display-1 mt-5 max-w-none">{title}</h1>
+      {chapter?.author && (
+        <p class="mt-5 flex items-center gap-3 text-sm">
+          {photo && <Image src={photo} alt="" width={44} height={44} format="webp" class="h-11 w-11 rounded-full object-cover" />}
+          <span>Por <strong>{chapter.author.name}</strong> · Editado por Nacho Mascort</span>
+        </p>
+      )}
+    </header>
+    <div class="mt-10 lg:grid lg:grid-cols-[minmax(0,1fr)_15rem] lg:gap-14">
+      <div class="article-body draft-body min-w-0">
+        <Content />
+      </div>
+      <TocNav label="En este capítulo" headings={tocHeadings} />
+    </div>
+  </article>
+</Base>
+
+<style>
+  .draft-banner {
+    display: inline-block;
+    padding: 0.35rem 0.8rem;
+    border-radius: 999px;
+    background: var(--tone-accent);
+    color: #fff;
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+  /* El H1 del Markdown ya va en la cabecera */
+  .draft-body :global(h1:first-child) {
+    display: none;
+  }
+</style>

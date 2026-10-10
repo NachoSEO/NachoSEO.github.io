@@ -4,7 +4,7 @@ import { render } from 'astro:content';
 import Base from './Base.astro';
 import ServiceHero from '../components/service/ServiceHero.astro';
 import FaqAccordion from '../components/service/FaqAccordion.astro';
-import NextStepCta from '../components/service/NextStepCta.astro';
+import Cta from '../components/Cta.astro';
 import ServiceProcess from '../components/service/ServiceProcess.astro';
 import ServiceApproach from '../components/service/ServiceApproach.astro';
 import ServiceEvidence from '../components/service/ServiceEvidence.astro';
@@ -105,5 +105,10 @@ const faq =
     )
   }
   <FaqAccordion lang={lang} faq={faq} />
-  <NextStepCta lang={lang} briefService={briefServiceByKey[entry.data.translationKey]} availability={page.availability} />
+  <Cta
+    lang={lang}
+    title={lang === 'es' ? '¿Hablamos de tu caso?' : 'Shall we talk about your case?'}
+    note={page.availability}
+    quoteHref={`${localizedRoute('quote', lang)}?${lang === 'es' ? 'servicios' : 'services'}=${briefServiceByKey[entry.data.translationKey]}`}
+  />
 </Base>

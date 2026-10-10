@@ -11,9 +11,13 @@ import Turnstile from './Turnstile.astro';
 interface Props {
   lang: Lang;
   title?: string;
+  /** Frase extra bajo la entradilla (p. ej. la disponibilidad de un servicio) */
+  note?: string;
+  /** Enlace al formulario de presupuesto, con el servicio ya marcado */
+  quoteHref?: string;
 }
 
-const { lang, title } = Astro.props;
+const { lang, title, note, quoteHref } = Astro.props;
 const t = useTranslations(lang);
 
 const copy =
@@ -68,7 +72,7 @@ const idPrefix = `contact-${lang}`;
     <div class="contact-intro">
       <p class="section-label">{copy.label}</p>
       <h2 class="display-2 mt-3 max-w-[18ch]">{copy.heading}</h2>
-      <p class="mt-3 text-on-dark-muted">{copy.body}</p>
+      <p class="mt-3 text-on-dark-muted">{copy.body}{note && ` ${note}`}</p>
       <p class="mt-6 text-xs font-semibold uppercase tracking-[0.1em] text-on-dark-muted">{copy.nextLabel}</p>
       <ol class="contact-steps mt-3">
         {copy.next.map((step) => <li>{step}</li>)}
@@ -76,6 +80,17 @@ const idPrefix = `contact-${lang}`;
       <p class="mt-5 text-sm text-on-dark-muted">
         {copy.or} <a href={site.calUrl} data-umami-event="call-booking-click" data-umami-event-placement="contact" class="contact-link">{t('cta.call30')}</a><br />
         {copy.alt} <a href={`mailto:${site.email}`} data-umami-event="email-click" data-umami-event-placement="contact" class="contact-link">{site.email}</a>
+        {
+          quoteHref && (
+            <>
+              <br />
+              {lang === 'es' ? '¿Necesitas un presupuesto?' : 'Need a quote?'}{' '}
+              <a href={quoteHref} data-umami-event="quote-click" data-umami-event-placement="contact" class="contact-link">
+                {lang === 'es' ? 'Pídelo aquí' : 'Request it here'}
+              </a>
+            </>
+          )
+        }
       </p>
     </div>
 

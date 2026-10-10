@@ -151,7 +151,7 @@ const proposeHref = `mailto:${site.email}?subject=${encodeURIComponent('Propuest
                     </>
                   );
                   return (
-                    <li>
+                    <li id={`capitulo-${chapter.number}`}>
                       {chapter.href ? (
                         <a href={chapter.href} class="chapter-row is-link">
                           {inner}
@@ -418,6 +418,14 @@ const proposeHref = `mailto:${site.email}?subject=${encodeURIComponent('Propuest
   }
   .guide-chapters {
     display: grid;
+  }
+  /* Los capítulos enlazan aquí (/guia-geo/#capitulo-N) mientras no estén publicados */
+  .guide-chapters li {
+    scroll-margin-top: 6rem;
+  }
+  .guide-chapters li:target .chapter-row {
+    background: var(--tone-raised);
+    box-shadow: inset 3px 0 0 var(--tone-accent);
   }
   /* El título de subsección va sobre la línea, como una leyenda, para no desplazar los capítulos */
   .guide-group {

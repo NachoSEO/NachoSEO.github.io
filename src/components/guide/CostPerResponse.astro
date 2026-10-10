@@ -1,0 +1,171 @@
+---
+/**
+ * Coste por respuesta de una herramienta de visibilidad en IA, más la prueba de calidad del capítulo 15
+ * (fan-out, shopping y anuncios = lee la interfaz). Sin JS muestra el ejemplo de 49 € y 50 preguntas semanales.
+ */
+---
+
+<figure class="cost not-prose" data-cost>
+  <p class="cost-title">Calcula el coste por respuesta de tu herramienta</p>
+  <div class="cost-grid">
+    <div class="cost-inputs">
+      <label><span>Precio al mes (€)</span><input type="number" min="0" step="1" value="49" data-price inputmode="decimal" /></label>
+      <label><span>Preguntas</span><input type="number" min="1" step="1" value="50" data-prompts inputmode="numeric" /></label>
+      <label><span>Plataformas</span><input type="number" min="1" max="20" step="1" value="5" data-platforms inputmode="numeric" /></label>
+      <label>
+        <span>Frecuencia</span>
+        <select data-runs>
+          <option value="4.33" selected>Semanal</option>
+          <option value="30">Diaria</option>
+          <option value="1">Mensual</option>
+        </select>
+      </label>
+    </div>
+    <div class="cost-out">
+      <p class="cost-label">Coste por respuesta</p>
+      <p class="cost-value"><strong data-value>4,5</strong> <span data-unit>céntimos</span></p>
+      <p class="cost-sub"><span data-responses>1.083</span> respuestas al mes</p>
+      <fieldset class="cost-checks">
+        <legend>¿Te devuelve…?</legend>
+        <label><input type="checkbox" data-check /> Query fan-out por respuesta</label>
+        <label><input type="checkbox" data-check /> Productos de shopping</label>
+        <label><input type="checkbox" data-check /> Anuncios de ChatGPT</label>
+      </fieldset>
+      <p class="cost-verdict" data-verdict>Marca lo que te devuelve para saber si este coste es comparable.</p>
+    </div>
+  </div>
+</figure>
+
+<style>
+  figure.cost p {
+    margin-top: 0;
+  }
+  .cost {
+    margin-block: 2rem;
+    border: 1px solid var(--color-line);
+    border-radius: 0.875rem;
+    background: var(--color-raised);
+    padding: 1rem 1.1rem 1.1rem;
+  }
+  .cost-title {
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+  .cost-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+    gap: 1.25rem;
+    margin-top: 0.8rem;
+  }
+  .cost-inputs {
+    display: grid;
+    gap: 0.55rem;
+    align-content: start;
+  }
+  .cost-inputs label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.6rem;
+    font-size: 0.82rem;
+    color: var(--color-muted);
+  }
+  .cost-inputs input,
+  .cost-inputs select {
+    width: 6.5rem;
+    border: 1px solid var(--color-line);
+    border-radius: 0.45rem;
+    padding: 0.35rem 0.5rem;
+    font-family: var(--font-mono);
+    color: var(--color-ink);
+    background: var(--color-paper);
+    text-align: right;
+  }
+  .cost-out {
+    border-radius: 0.6rem;
+    background: var(--color-paper);
+    padding: 0.85rem 1rem;
+  }
+  .cost-label,
+  .cost-sub {
+    font-size: 0.78rem;
+    color: var(--color-muted);
+  }
+  .cost-value strong {
+    font-family: var(--font-display);
+    font-size: 2.2rem;
+    color: var(--color-accent-ink);
+  }
+  .cost-value span {
+    color: var(--color-muted);
+    font-size: 0.9rem;
+  }
+  .cost-checks {
+    display: grid;
+    gap: 0.3rem;
+    margin-top: 0.75rem;
+    border-top: 1px solid var(--color-line);
+    padding-top: 0.6rem;
+    font-size: 0.83rem;
+  }
+  .cost-checks legend {
+    float: left;
+    width: 100%;
+    margin-bottom: 0.2rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-accent-ink);
+  }
+  .cost-checks label {
+    display: flex;
+    gap: 0.45rem;
+    align-items: center;
+  }
+  .cost-checks input {
+    accent-color: var(--color-accent);
+  }
+  .cost-verdict {
+    margin-top: 0.6rem;
+    font-size: 0.83rem;
+    color: var(--color-muted);
+  }
+  .cost-verdict.is-pass {
+    color: var(--color-ink);
+    font-weight: 600;
+  }
+  @media (max-width: 640px) {
+    .cost-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+  for (const root of document.querySelectorAll<HTMLElement>('[data-cost]')) {
+    const value = (name: string) => Number(root.querySelector<HTMLInputElement>(`[data-${name}]`)!.value) || 0;
+    const update = () => {
+      const responses = Math.max(1, value('prompts') * value('platforms') * value('runs'));
+      const perResponse = value('price') / responses;
+      const cents = perResponse * 100;
+      const inCents = cents < 100;
+      root.querySelector('[data-value]')!.textContent = (inCents ? cents : perResponse).toLocaleString('es-ES', {
+        maximumFractionDigits: cents < 1 ? 2 : 1,
+      });
+      root.querySelector('[data-unit]')!.textContent = inCents ? 'céntimos' : '€';
+      root.querySelector('[data-responses]')!.textContent = Math.round(responses).toLocaleString('es-ES', { useGrouping: 'always' });
+      const checked = root.querySelectorAll<HTMLInputElement>('[data-check]:checked').length;
+      const verdict = root.querySelector<HTMLElement>('[data-verdict]')!;
+      verdict.classList.toggle('is-pass', checked === 3);
+      verdict.textContent =
+        checked === 3
+          ? 'Pasa la prueba: lee la interfaz. Su coste se puede comparar con el de otras que también la pasen.'
+          : checked === 0
+            ? 'Marca lo que te devuelve para saber si este coste es comparable.'
+            : `Te devuelve ${checked} de 3. Pregunta al proveedor qué plataformas lee por API antes de comparar precios.`;
+    };
+    root.querySelectorAll('input, select').forEach((input) => input.addEventListener('input', update));
+    update();
+  }
+</script>

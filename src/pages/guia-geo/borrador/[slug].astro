@@ -8,9 +8,9 @@ import { authorPhotos, guideParts } from '../../../data/geoGuide';
 
 export function getStaticPaths() {
   if (!import.meta.env.DEV) return [];
-  const drafts = import.meta.glob('../../../../guia-geo-borradores/*.md', { eager: true });
+  const drafts = import.meta.glob('../../../../guia-geo-borradores/*.{md,mdx}', { eager: true });
   return Object.entries(drafts).map(([path, mod]) => ({
-    params: { slug: path.split('/').pop()!.replace(/\.md$/, '') },
+    params: { slug: path.split('/').pop()!.replace(/\.mdx?$/, '') },
     props: { mod },
   }));
 }
@@ -56,6 +56,9 @@ const photo = chapter?.author?.slug ? authorPhotos[chapter.author.slug] : undefi
     color: #fff;
     font-size: 0.8rem;
     font-weight: 600;
+  }
+  .draft-body :global(blockquote + .tldr) {
+    margin-top: 2rem;
   }
   /* El H1 del Markdown ya va en la cabecera */
   .draft-body :global(h1:first-child) {

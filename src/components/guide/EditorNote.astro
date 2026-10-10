@@ -1,0 +1,42 @@
+---
+/** Nota del editor de la Guía GEO dentro de un capítulo invitado: contexto o datos propios, separados de la voz del autor */
+---
+
+<aside class="editor-note not-prose">
+  <p class="editor-note-label">Nota del editor</p>
+  <div class="editor-note-body"><slot /></div>
+</aside>
+
+<style>
+  aside.editor-note p {
+    margin-top: 0;
+  }
+  .editor-note {
+    margin-block: 2rem;
+    border-radius: 0.875rem;
+    background: var(--color-dark);
+    color: var(--color-on-dark);
+    padding: 1rem 1.2rem 1.1rem;
+    font-size: 0.93rem;
+    line-height: 1.6;
+  }
+  .editor-note-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-accent-on-dark);
+  }
+  .editor-note-body {
+    margin-top: 0.35rem;
+  }
+  .editor-note-body :global(p + p) {
+    margin-top: 0.6rem;
+  }
+  .editor-note-body :global(a) {
+    color: var(--color-on-dark);
+    text-decoration: underline;
+    text-decoration-color: var(--color-accent-on-dark);
+    text-underline-offset: 3px;
+  }
+</style>

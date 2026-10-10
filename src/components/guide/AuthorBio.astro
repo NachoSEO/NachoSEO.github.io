@@ -1,0 +1,89 @@
+---
+/** Mini bio del autor al final de un capítulo de la Guía GEO */
+import { Image } from 'astro:assets';
+import { authorPhotos } from '../../data/geoGuide';
+
+interface Props {
+  name: string;
+  slug: string;
+  links?: { label: string; href: string }[];
+}
+const { name, slug, links = [] } = Astro.props;
+const photo = authorPhotos[slug];
+---
+
+<aside class="author-bio not-prose" aria-label={`Sobre ${name}`}>
+  {photo && <Image src={photo} alt={name} width={96} height={96} format="webp" class="author-bio-photo" />}
+  <div>
+    <p class="author-bio-label">Sobre el autor</p>
+    <p class="author-bio-name">{name}</p>
+    <div class="author-bio-text"><slot /></div>
+    {
+      links.length > 0 && (
+        <p class="author-bio-links">
+          {links.map((link) => (
+            <a href={link.href} rel="noopener">
+              {link.label}
+            </a>
+          ))}
+        </p>
+      )
+    }
+  </div>
+</aside>
+
+<style>
+  aside.author-bio p {
+    margin-top: 0;
+  }
+  aside.author-bio img {
+    border: 0;
+  }
+  .author-bio {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 1.1rem;
+    align-items: start;
+    margin-block: 3rem 1rem;
+    border-top: 2px solid var(--color-ink);
+    padding-top: 1.4rem;
+  }
+  .author-bio-photo {
+    width: 4.5rem;
+    height: 4.5rem;
+    border-radius: 999px;
+    object-fit: cover;
+  }
+  .author-bio-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-accent-ink);
+  }
+  .author-bio-name {
+    margin-top: 0.15rem;
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    font-weight: 600;
+  }
+  .author-bio-text {
+    margin-top: 0.35rem;
+    font-size: 0.95rem;
+    color: var(--color-muted);
+  }
+  .author-bio-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 0.6rem;
+    font-size: 0.88rem;
+    font-weight: 600;
+  }
+  .author-bio-links a {
+    color: var(--color-ink);
+    text-decoration: underline;
+    text-decoration-color: var(--color-accent);
+    text-underline-offset: 3px;
+  }
+</style>

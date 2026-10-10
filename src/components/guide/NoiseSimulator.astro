@@ -1,0 +1,273 @@
+---
+/**
+ * Simulador de ruido: 12 semanas medidas con una visibilidad real fija del 30 %. Cada punto es lo que marcaría la
+ * herramienta esa semana; la banda es el margen de error al 95 %. Sin JS se ve una simulación fija con 250 respuestas.
+ */
+import { marginOfError, seededRandom, simulateWeeks } from './noise';
+
+const TRUE_P = 0.3;
+const WEEKS = 12;
+const SIZES = [50, 250, 1000];
+const DEFAULT_N = 250;
+
+// Geometría del gráfico (viewBox), compartida con el script por data-attributes
+const width = 640;
+const height = 280;
+const pad = { top: 16, right: 16, bottom: 34, left: 44 };
+const yMax = 0.6;
+const x = (week: number) => pad.left + ((week + 0.5) / WEEKS) * (width - pad.left - pad.right);
+const y = (value: number) => pad.top + (1 - value / yMax) * (height - pad.top - pad.bottom);
+
+const initial = simulateWeeks(TRUE_P, DEFAULT_N, WEEKS, seededRandom(7));
+const margin = marginOfError(TRUE_P, DEFAULT_N);
+const percent = (value: number) => `${Math.round(value * 100)} %`;
+const spread = Math.round((Math.max(...initial) - Math.min(...initial)) * 100);
+const ticks = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6];
+---
+
+<figure class="noise not-prose" data-noise data-p={TRUE_P} data-weeks={WEEKS} data-ymax={yMax}>
+  <div class="noise-head">
+    <p class="noise-title">Tu visibilidad real no cambia. Lo que se mueve es la medición.</p>
+    <div class="noise-controls">
+      <div class="noise-sizes" role="group" aria-label="Respuestas por semana">
+        {
+          SIZES.map((size) => (
+            <button type="button" data-size={size} aria-pressed={size === DEFAULT_N ? 'true' : 'false'}>
+              {size.toLocaleString('es-ES', { useGrouping: 'always' })}
+            </button>
+          ))
+        }
+      </div>
+      <button type="button" class="noise-rerun" data-rerun>Volver a simular</button>
+    </div>
+  </div>
+
+  <div class="noise-scroll">
+  <svg viewBox={`0 0 ${width} ${height}`} role="img" aria-labelledby="noise-caption" data-chart data-geom={JSON.stringify({ width, height, pad })}>
+    {
+      ticks.map((tick) => (
+        <g class="noise-grid">
+          <line x1={pad.left} x2={width - pad.right} y1={y(tick)} y2={y(tick)} />
+          <text x={pad.left - 8} y={y(tick) + 4} text-anchor="end">
+            {tick * 100}
+          </text>
+        </g>
+      ))
+    }
+    <rect class="noise-band" data-band x={pad.left} width={width - pad.left - pad.right} y={y(TRUE_P + margin)} height={y(TRUE_P - margin) - y(TRUE_P + margin)} rx="4" />
+    <line class="noise-true" x1={pad.left} x2={width - pad.right} y1={y(TRUE_P)} y2={y(TRUE_P)} />
+    <text class="noise-true-label" x={width - pad.right - 4} y={y(TRUE_P) - 6} text-anchor="end">Real: 30 %</text>
+    <polyline class="noise-line" data-line points={initial.map((value, week) => `${x(week)},${y(value)}`).join(' ')} />
+    <g data-dots>
+      {
+        initial.map((value, week) => (
+          <circle class="noise-dot" cx={x(week)} cy={y(value)} r="5.5">
+            <title>{`Semana ${week + 1}: ${percent(value)}`}</title>
+          </circle>
+        ))
+      }
+    </g>
+    {
+      Array.from({ length: WEEKS }, (_, week) => (
+        <text class="noise-axis" x={x(week)} y={height - 12} text-anchor="middle">
+          {week + 1}
+        </text>
+      ))
+    }
+  </svg>
+  </div>
+
+  <figcaption id="noise-caption">
+    <span>
+      Con <strong data-n>{DEFAULT_N.toLocaleString('es-ES', { useGrouping: 'always' })}</strong> respuestas por semana, el margen es de
+      <strong data-margin>± {Math.round(margin * 100)} puntos</strong> y entre la mejor y la peor semana hay
+      <strong data-spread>{spread} puntos</strong>, sin que haya cambiado nada.
+    </span>
+    <span class="noise-legend">
+      <i class="is-dot"></i>Lo que mide la herramienta cada semana <i class="is-band"></i>Margen de error al 95 % · Eje: semanas y % de respuestas
+    </span>
+  </figcaption>
+</figure>
+
+<style>
+  figure.noise p {
+    margin-top: 0;
+  }
+  .noise {
+    margin-block: 2rem;
+    border: 1px solid var(--color-line);
+    border-radius: 0.875rem;
+    background: var(--color-raised);
+    padding: 1rem 1rem 0.9rem;
+  }
+  .noise-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+  .noise-title {
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+  .noise-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .noise-sizes {
+    display: inline-flex;
+    border: 1px solid var(--color-line);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .noise-sizes button,
+  .noise-rerun {
+    padding: 0.3rem 0.75rem;
+    font-size: 0.8rem;
+    font-family: var(--font-mono);
+    color: var(--color-muted);
+  }
+  .noise-sizes button[aria-pressed='true'] {
+    background: var(--color-ink);
+    color: var(--color-paper);
+  }
+  .noise-rerun {
+    border: 1px solid var(--color-accent);
+    border-radius: 999px;
+    color: var(--color-accent-ink);
+    font-family: var(--font-sans);
+    font-weight: 600;
+  }
+  .noise-rerun:hover {
+    background: var(--color-accent);
+    color: #fff;
+  }
+  .noise-scroll {
+    margin-top: 0.75rem;
+    overflow-x: auto;
+  }
+  .noise svg {
+    display: block;
+    width: 100%;
+    min-width: 34rem;
+    height: auto;
+  }
+  .noise-grid line {
+    stroke: var(--color-line);
+    stroke-width: 1;
+  }
+  .noise-grid text,
+  .noise-axis {
+    font-size: 11px;
+    fill: var(--color-muted);
+    font-family: var(--font-mono);
+  }
+  .noise-band {
+    fill: var(--color-accent);
+    opacity: 0.1;
+    transition: all 0.4s ease;
+  }
+  .noise-true {
+    stroke: var(--color-ink);
+    stroke-width: 2;
+    stroke-dasharray: 6 5;
+  }
+  .noise-true-label {
+    font-size: 12px;
+    font-weight: 600;
+    fill: var(--color-ink);
+  }
+  .noise-line {
+    fill: none;
+    stroke: var(--color-accent);
+    stroke-width: 2;
+    opacity: 0.45;
+  }
+  .noise-dot {
+    fill: var(--color-accent);
+    stroke: var(--color-raised);
+    stroke-width: 2;
+    transition: cy 0.4s ease;
+  }
+  .noise figcaption {
+    display: grid;
+    gap: 0.4rem;
+    margin-top: 0.4rem;
+    font-size: 0.85rem;
+    color: var(--color-muted);
+  }
+  .noise figcaption strong {
+    color: var(--color-ink);
+  }
+  .noise-legend {
+    font-size: 0.75rem;
+  }
+  .noise-legend i {
+    display: inline-block;
+    width: 0.6rem;
+    height: 0.6rem;
+    margin: 0 0.35rem 0 0.6rem;
+    vertical-align: -1px;
+  }
+  .noise-legend i:first-child {
+    margin-left: 0;
+  }
+  .noise-legend .is-dot {
+    border-radius: 999px;
+    background: var(--color-accent);
+  }
+  .noise-legend .is-band {
+    border-radius: 2px;
+    background: color-mix(in srgb, var(--color-accent) 18%, transparent);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .noise-band,
+    .noise-dot {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  import { marginOfError, simulateWeeks } from './noise';
+
+  for (const root of document.querySelectorAll<HTMLElement>('[data-noise]')) {
+    const truth = Number(root.dataset.p);
+    const weeks = Number(root.dataset.weeks);
+    const yMax = Number(root.dataset.ymax);
+    const chart = root.querySelector<SVGSVGElement>('[data-chart]')!;
+    const { width, height, pad } = JSON.parse(chart.dataset.geom!);
+    const x = (week: number) => pad.left + ((week + 0.5) / weeks) * (width - pad.left - pad.right);
+    const y = (value: number) => pad.top + (1 - Math.min(value, yMax) / yMax) * (height - pad.top - pad.bottom);
+    const dots = [...root.querySelectorAll<SVGCircleElement>('[data-dots] circle')];
+    const buttons = [...root.querySelectorAll<HTMLButtonElement>('[data-size]')];
+    let size = Number(buttons.find((button) => button.getAttribute('aria-pressed') === 'true')?.dataset.size ?? 250);
+
+    const render = () => {
+      const values = simulateWeeks(truth, size, weeks, Math.random);
+      const margin = marginOfError(truth, size);
+      const band = root.querySelector<SVGRectElement>('[data-band]')!;
+      band.setAttribute('y', String(y(truth + margin)));
+      band.setAttribute('height', String(y(truth - margin) - y(truth + margin)));
+      values.forEach((value, week) => {
+        dots[week].setAttribute('cy', String(y(value)));
+        dots[week].querySelector('title')!.textContent = `Semana ${week + 1}: ${Math.round(value * 100)} %`;
+      });
+      root.querySelector('[data-line]')!.setAttribute('points', values.map((value, week) => `${x(week)},${y(value)}`).join(' '));
+      root.querySelector('[data-n]')!.textContent = size.toLocaleString('es-ES', { useGrouping: 'always' });
+      root.querySelector('[data-margin]')!.textContent = `± ${Math.round(margin * 100)} puntos`;
+      root.querySelector('[data-spread]')!.textContent = `${Math.round((Math.max(...values) - Math.min(...values)) * 100)} puntos`;
+    };
+
+    buttons.forEach((button) =>
+      button.addEventListener('click', () => {
+        size = Number(button.dataset.size);
+        buttons.forEach((other) => other.setAttribute('aria-pressed', String(other === button)));
+        render();
+      }),
+    );
+    root.querySelector('[data-rerun]')!.addEventListener('click', render);
+  }
+</script>

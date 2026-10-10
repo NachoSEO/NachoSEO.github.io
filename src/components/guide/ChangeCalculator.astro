@@ -1,0 +1,134 @@
+---
+/**
+ * ¿Es señal o ruido? Compara la visibilidad de dos periodos medidos con n respuestas cada uno y dice si la diferencia
+ * supera el margen de error al 95 %. Sin JS muestra el ejemplo del capítulo: 250 respuestas, del 30 % al 36 %.
+ */
+---
+
+<figure class="change not-prose" data-change>
+  <p class="change-title">¿Señal o ruido? Pon tus cifras</p>
+  <div class="change-inputs">
+    <label><span>Respuestas por periodo</span><input type="number" min="10" max="100000" step="10" value="250" data-n inputmode="numeric" /></label>
+    <label><span>Visibilidad antes (%)</span><input type="number" min="0" max="100" step="1" value="30" data-before inputmode="decimal" /></label>
+    <label><span>Visibilidad después (%)</span><input type="number" min="0" max="100" step="1" value="36" data-after inputmode="decimal" /></label>
+  </div>
+  <div class="change-result" data-result="noise">
+    <p class="change-verdict" data-verdict>Dentro del ruido</p>
+    <p class="change-detail">
+      Diferencia de <strong data-diff>+6 puntos</strong> con un margen de <strong data-margin>± 8 puntos</strong>.
+      <span data-advice>Espera a que se mantenga varias semanas antes de darlo por bueno.</span>
+    </p>
+    <p class="change-need" data-need>Para que 6 puntos fueran señal en una sola comparación harían falta unas 470 respuestas por periodo.</p>
+  </div>
+</figure>
+
+<style>
+  figure.change p {
+    margin-top: 0;
+  }
+  .change {
+    margin-block: 2rem;
+    display: grid;
+    gap: 0.9rem;
+    border: 1px solid var(--color-line);
+    border-radius: 0.875rem;
+    background: var(--color-raised);
+    padding: 1rem 1.1rem 1.1rem;
+  }
+  .change-title {
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+  .change-inputs {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.6rem;
+  }
+  .change-inputs label {
+    display: grid;
+    gap: 0.3rem;
+    font-size: 0.78rem;
+    color: var(--color-muted);
+  }
+  .change-inputs input {
+    border: 1px solid var(--color-line);
+    border-radius: 0.45rem;
+    padding: 0.4rem 0.55rem;
+    font-family: var(--font-mono);
+    font-size: 0.95rem;
+    color: var(--color-ink);
+    background: var(--color-paper);
+  }
+  .change-result {
+    border-radius: 0.6rem;
+    padding: 0.75rem 0.9rem;
+    border-left: 4px solid var(--color-muted);
+    background: var(--color-paper);
+    font-size: 0.88rem;
+  }
+  .change-result[data-result='signal'] {
+    border-left-color: var(--color-accent);
+  }
+  .change-verdict {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+  .change-result[data-result='signal'] .change-verdict {
+    color: var(--color-accent-ink);
+  }
+  .change-detail,
+  .change-need {
+    margin-top: 0.3rem;
+    color: var(--color-muted);
+  }
+  .change-result p + p {
+    margin-top: 0.35rem;
+  }
+  .change-detail strong {
+    color: var(--color-ink);
+    font-family: var(--font-mono);
+    font-weight: 500;
+  }
+  @media (max-width: 640px) {
+    .change-inputs {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+  for (const root of document.querySelectorAll<HTMLElement>('[data-change]')) {
+    const field = (name: string) => root.querySelector<HTMLInputElement>(`[data-${name}]`)!;
+    const text = (name: string, value: string) => (root.querySelector(`[data-${name}]`)!.textContent = value);
+    const points = (value: number) => Math.round(value * 100);
+    const update = () => {
+      const n = Math.max(10, Number(field('n').value) || 10);
+      const before = Math.min(1, Math.max(0, (Number(field('before').value) || 0) / 100));
+      const after = Math.min(1, Math.max(0, (Number(field('after').value) || 0) / 100));
+      const variance = before * (1 - before) + after * (1 - after);
+      const margin = 1.96 * Math.sqrt(variance / n);
+      const diff = after - before;
+      const signal = Math.abs(diff) > margin && diff !== 0;
+      root.querySelector<HTMLElement>('[data-result]')!.dataset.result = signal ? 'signal' : 'noise';
+      text('verdict', signal ? (diff > 0 ? 'Subida probable' : 'Bajada probable') : 'Dentro del ruido');
+      text('diff', `${diff >= 0 ? '+' : '−'}${Math.abs(points(diff))} puntos`);
+      text('margin', `± ${Math.max(1, points(margin))} puntos`);
+      text(
+        'advice',
+        signal
+          ? 'Supera el margen, pero confírmalo unas semanas y busca la causa antes de atribuirlo a un cambio.'
+          : 'Espera a que se mantenga varias semanas antes de darlo por bueno.',
+      );
+      const needed = diff === 0 ? 0 : Math.ceil((1.96 ** 2 * variance) / diff ** 2);
+      text(
+        'need',
+        signal || diff === 0
+          ? 'Recuerda: las respuestas no son del todo independientes, así que el margen real es algo mayor.'
+          : `Para que ${Math.abs(points(diff))} puntos fueran señal en una sola comparación harían falta unas ${needed.toLocaleString('es-ES', { useGrouping: 'always' })} respuestas por periodo.`,
+      );
+    };
+    root.querySelectorAll('input').forEach((input) => input.addEventListener('input', update));
+    update();
+  }
+</script>

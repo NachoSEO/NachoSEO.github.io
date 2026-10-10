@@ -1,0 +1,459 @@
+---
+/**
+ * Gráficas del estudio de consultores: cifras clave, ranking SEO + GEO, ranking por plataforma (con selector)
+ * y dispersión menciones / búsquedas por nombre. Barras en HTML (se adaptan al móvil), dispersión en SVG.
+ * Colores validados con el validador de dataviz: SEO #1574a6, GEO #c8073f sobre fondo claro.
+ */
+import { consultantsStudy as study } from '../../data/studies/consultores-seo-ia';
+
+interface Props {
+  part: 'stats' | 'ranking' | 'platforms' | 'scatter';
+}
+const { part } = Astro.props;
+
+const people = study.people;
+const maxTotal = Math.max(...people.map((person) => person.seo + person.geo));
+const pct = (value: number, max: number) => `${((value / max) * 100).toFixed(2)}%`;
+
+const platforms = [
+  { key: 'chatgpt', label: 'ChatGPT' },
+  { key: 'aiMode', label: 'Modo IA de Google' },
+  { key: 'aio', label: 'AI Overviews' },
+] as const;
+const platformRankings = platforms.map((platform) => {
+  const rows = [...people]
+    .map((person) => ({ name: person.name, value: person[platform.key] }))
+    .filter((row) => row.value > 0)
+    .sort((a, b) => b.value - a.value)
+    .slice(0, 10);
+  return { ...platform, rows, max: Math.max(1, ...rows.map((row) => row.value)) };
+});
+
+// Dispersión: x = menciones SEO + GEO, y = búsquedas por nombre
+const scatter = { width: 640, height: 380, left: 52, right: 24, top: 20, bottom: 48 };
+const xMax = 120;
+const yMax = 16;
+const xScale = (value: number) => scatter.left + (value / xMax) * (scatter.width - scatter.left - scatter.right);
+const yScale = (value: number) => scatter.height - scatter.bottom - (value / yMax) * (scatter.height - scatter.top - scatter.bottom);
+const xTicks = [0, 20, 40, 60, 80, 100, 120];
+const yTicks = [0, 4, 8, 12, 16];
+const labelled = new Set(['Aleyda Solís', 'Natzir Turrado', 'Fernando Maciá', 'MJ Cachón', 'Luis M. Villanueva', 'Lino Uruñuela']);
+const points = people.map((person) => ({
+  name: person.name,
+  total: person.seo + person.geo,
+  fanouts: person.fanouts,
+  x: xScale(person.seo + person.geo),
+  y: yScale(person.fanouts),
+}));
+---
+
+{
+  part === 'stats' && (
+    <dl class="study-stats not-prose">
+      <div>
+        <dt>Respuestas analizadas</dt>
+        <dd>{study.answers.total.toLocaleString('es-ES')}</dd>
+      </div>
+      <div>
+        <dt>Búsquedas lanzadas por la IA</dt>
+        <dd>{study.answers.fanouts}</dd>
+      </div>
+      <div>
+        <dt>Plataformas</dt>
+        <dd>3</dd>
+      </div>
+      <div>
+        <dt>Días de datos</dt>
+        <dd>5</dd>
+      </div>
+    </dl>
+  )
+}
+
+{
+  part === 'ranking' && (
+    <figure class="study-chart">
+      <figcaption>
+        <span class="study-chart-title">Respuestas que nombran a cada persona</span>
+        <span class="study-legend" aria-hidden="true">
+          <span><i style="background: var(--series-seo)" />SEO (de {study.answers.seo})</span>
+          <span><i style="background: var(--series-geo)" />GEO (de {study.answers.geo})</span>
+        </span>
+      </figcaption>
+      <ol class="study-bars">
+        <li class="is-author">
+          <span class="study-bar-name">
+            {study.author.name}{" "}<small>autor</small>
+          </span>
+          <span class="study-bar-track">
+            <span
+              class="study-bar seo"
+              style={`width: ${pct(study.author.seo, maxTotal)}`}
+              tabindex="0"
+              data-tip={`${study.author.name}|SEO|${study.author.seo}`}
+            />
+          </span>
+          <span class="study-bar-value">{study.author.seo + study.author.geo}</span>
+        </li>
+        {people.map((person) => (
+          <li>
+            <span class="study-bar-name">{person.name}</span>
+            <span class="study-bar-track">
+              <span class="study-bar seo" style={`width: ${pct(person.seo, maxTotal)}`} tabindex="0" data-tip={`${person.name}|SEO|${person.seo}`} />
+              {person.geo > 0 && (
+                <span class="study-bar geo" style={`width: ${pct(person.geo, maxTotal)}`} tabindex="0" data-tip={`${person.name}|GEO|${person.geo}`} />
+              )}
+            </span>
+            <span class="study-bar-value">{person.seo + person.geo}</span>
+          </li>
+        ))}
+      </ol>
+    </figure>
+  )
+}
+
+{
+  part === 'platforms' && (
+    <figure class="study-chart" data-platforms>
+      <figcaption>
+        <span class="study-chart-title">Las 10 personas más nombradas en cada plataforma</span>
+        <span class="study-tabs" role="tablist" aria-label="Plataforma">
+          {platformRankings.map((platform, index) => (
+            <button type="button" role="tab" aria-selected={index === 0 ? 'true' : 'false'} data-tab={platform.key}>
+              {platform.label}
+            </button>
+          ))}
+        </span>
+      </figcaption>
+      {platformRankings.map((platform, index) => (
+        <div role="tabpanel" data-panel={platform.key} class:list={['study-panel', index > 0 && 'is-hidden-js']}>
+          <p class="study-panel-title">{platform.label}</p>
+          {platform.rows.length < 3 ? (
+            <p class="study-empty">
+              Casi nunca nombra a personas: {platform.rows.map((row) => `${row.name} (${row.value})`).join(', ')}.
+            </p>
+          ) : (
+            <ol class="study-bars">
+              {platform.rows.map((row) => (
+                <li>
+                  <span class="study-bar-name">{row.name}</span>
+                  <span class="study-bar-track">
+                    <span class="study-bar seo" style={`width: ${pct(row.value, platform.max)}`} tabindex="0" data-tip={`${row.name}|${platform.label}|${row.value}`} />
+                  </span>
+                  <span class="study-bar-value">{row.value}</span>
+                </li>
+              ))}
+            </ol>
+          )}
+        </div>
+      ))}
+    </figure>
+  )
+}
+
+{
+  part === 'scatter' && (
+    <figure class="study-chart">
+      <figcaption>
+        <span class="study-chart-title">Menciones en la respuesta frente a búsquedas por su nombre</span>
+      </figcaption>
+      <div class="study-scatter-wrap">
+        <svg viewBox={`0 0 ${scatter.width} ${scatter.height}`} role="img" aria-label="Dispersión: menciones en respuestas SEO y GEO frente a búsquedas que lanza la IA con el nombre de cada persona">
+          {xTicks.map((tick) => (
+            <g>
+              <line x1={xScale(tick)} x2={xScale(tick)} y1={scatter.top} y2={scatter.height - scatter.bottom} class="grid" />
+              <text x={xScale(tick)} y={scatter.height - scatter.bottom + 18} text-anchor="middle" class="tick">{tick}</text>
+            </g>
+          ))}
+          {yTicks.map((tick) => (
+            <g>
+              <line x1={scatter.left} x2={scatter.width - scatter.right} y1={yScale(tick)} y2={yScale(tick)} class="grid" />
+              <text x={scatter.left - 10} y={yScale(tick) + 4} text-anchor="end" class="tick">{tick}</text>
+            </g>
+          ))}
+          <text x={scatter.width - scatter.right} y={scatter.height - 8} text-anchor="end" class="axis">Respuestas que le nombran (SEO + GEO)</text>
+          <text x={14} y={scatter.top + 4} class="axis" transform={`rotate(-90 14 ${scatter.top + 4})`} text-anchor="end">Búsquedas por su nombre</text>
+          {points.map((point) => (
+            <g class="dot" tabindex="0" data-tip={`${point.name}|${point.total} respuestas · ${point.fanouts} búsquedas|`}>
+              <circle cx={point.x} cy={point.y} r="14" class="hit" />
+              <circle cx={point.x} cy={point.y} r="5" class="mark" />
+              {labelled.has(point.name) && (
+                <text x={point.total > 90 ? point.x - 9 : point.x + 9} y={point.y - 8} text-anchor={point.total > 90 ? 'end' : 'start'} class="label">{point.name}</text>
+              )}
+            </g>
+          ))}
+        </svg>
+      </div>
+    </figure>
+  )
+}
+
+<div class="study-tooltip" role="tooltip" hidden></div>
+
+<style is:global>
+  .study-chart,
+  .study-stats {
+    --series-seo: #1574a6;
+    --series-geo: #c8073f;
+  }
+  .study-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+    gap: 1px;
+    margin-top: 2.5rem;
+    border: 1px solid var(--tone-line);
+    border-radius: 0.75rem;
+    overflow: hidden;
+    background: var(--tone-line);
+  }
+  .study-stats > div {
+    background: var(--tone-raised);
+    padding: 1rem 1.25rem;
+  }
+  .study-stats dt {
+    font-size: 0.8rem;
+    color: var(--tone-muted);
+  }
+  .study-stats dd {
+    margin: 0.25rem 0 0;
+    font-family: var(--font-display);
+    font-size: 2rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em;
+  }
+  .study-chart {
+    margin: 2rem 0 0;
+    padding: 1.25rem;
+    border: 1px solid var(--tone-line);
+    border-radius: 0.75rem;
+    background: var(--tone-raised);
+  }
+  .study-chart figcaption {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+  .study-chart-title {
+    font-weight: 600;
+  }
+  .study-legend {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.8rem;
+    color: var(--tone-muted);
+  }
+  .study-legend span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .study-legend i {
+    width: 0.7rem;
+    height: 0.7rem;
+    border-radius: 2px;
+  }
+  .article-body .study-bars,
+  .study-bars {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 0.35rem;
+  }
+  .article-body .study-bars li + li {
+    margin-top: 0;
+  }
+  .study-bars li {
+    display: grid;
+    grid-template-columns: minmax(7rem, 11rem) 1fr 2.5rem;
+    gap: 0.75rem;
+    align-items: center;
+    font-size: 0.85rem;
+  }
+  .study-bars li.is-author {
+    padding-bottom: 0.4rem;
+    border-bottom: 1px dashed var(--tone-line);
+  }
+  .study-bar-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .study-bar-name small {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--tone-muted);
+  }
+  .study-bar-track {
+    display: flex;
+    gap: 2px;
+    height: 0.9rem;
+  }
+  .study-bar {
+    display: block;
+    min-width: 2px;
+    height: 100%;
+    cursor: default;
+    outline-offset: 2px;
+  }
+  .study-bar:last-child {
+    border-radius: 0 4px 4px 0;
+  }
+  .study-bar.seo {
+    background: var(--series-seo);
+  }
+  .study-bar.geo {
+    background: var(--series-geo);
+  }
+  .study-bar:hover,
+  .study-bar:focus-visible {
+    filter: brightness(1.2);
+  }
+  .study-bar-value {
+    font-variant-numeric: tabular-nums;
+    color: var(--tone-muted);
+    text-align: right;
+  }
+  .study-tabs {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    padding: 0.2rem;
+    border: 1px solid var(--tone-line);
+    border-radius: 999px;
+  }
+  .study-tabs button {
+    padding: 0.3rem 0.8rem;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    color: var(--tone-muted);
+  }
+  .study-tabs button[aria-selected='true'] {
+    background: var(--tone-ink);
+    color: #fff;
+  }
+  .study-panel + .study-panel {
+    margin-top: 1.25rem;
+  }
+  .js .study-panel.is-hidden-js,
+  .study-panel[hidden] {
+    display: none;
+  }
+  .study-panel-title {
+    font-size: 0.8rem;
+    color: var(--tone-muted);
+    margin: 0 0 0.5rem;
+  }
+  .study-empty {
+    font-size: 0.9rem;
+    color: var(--tone-muted);
+  }
+  .study-scatter-wrap {
+    overflow-x: auto;
+  }
+  .study-scatter-wrap svg {
+    display: block;
+    width: 100%;
+    min-width: 32rem;
+    height: auto;
+  }
+  .study-scatter-wrap .grid {
+    stroke: var(--tone-line);
+    stroke-width: 1;
+  }
+  .study-scatter-wrap .tick,
+  .study-scatter-wrap .axis {
+    fill: var(--tone-muted);
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+  }
+  .study-scatter-wrap .label {
+    fill: var(--tone-ink);
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .study-scatter-wrap .hit {
+    fill: transparent;
+  }
+  .study-scatter-wrap .mark {
+    fill: var(--series-seo);
+    stroke: var(--tone-raised);
+    stroke-width: 2;
+  }
+  .study-scatter-wrap .dot:hover .mark,
+  .study-scatter-wrap .dot:focus-visible .mark {
+    fill: var(--series-geo);
+  }
+  .study-scatter-wrap .dot:focus {
+    outline: none;
+  }
+  .study-tooltip {
+    position: fixed;
+    z-index: 60;
+    pointer-events: none;
+    padding: 0.45rem 0.65rem;
+    border-radius: 0.4rem;
+    background: var(--tone-ink);
+    color: #fff;
+    font-size: 0.8rem;
+    line-height: 1.35;
+    box-shadow: 0 6px 18px rgb(0 0 0 / 0.2);
+  }
+  .study-tooltip strong {
+    display: block;
+    font-size: 0.95rem;
+  }
+</style>
+
+<script>
+  // Tooltip compartido y selector de plataforma. Los textos se insertan con textContent.
+  const tooltip = document.querySelector<HTMLElement>('.study-tooltip');
+  const show = (target: Element, x: number, y: number) => {
+    if (!tooltip) return;
+    const [name, label, value] = (target.getAttribute('data-tip') ?? '').split('|');
+    tooltip.replaceChildren();
+    const strong = document.createElement('strong');
+    strong.textContent = value ? `${value} respuestas` : label;
+    const detail = document.createElement('span');
+    detail.textContent = value ? `${name} · ${label}` : name;
+    tooltip.append(strong, detail);
+    tooltip.hidden = false;
+    tooltip.style.left = `${Math.min(x + 12, window.innerWidth - tooltip.offsetWidth - 8)}px`;
+    tooltip.style.top = `${y - tooltip.offsetHeight - 12}px`;
+  };
+  const hide = () => {
+    if (tooltip) tooltip.hidden = true;
+  };
+  for (const target of document.querySelectorAll('[data-tip]')) {
+    target.addEventListener('pointermove', (event) => {
+      const pointer = event as PointerEvent;
+      show(target, pointer.clientX, pointer.clientY);
+    });
+    target.addEventListener('pointerleave', hide);
+    target.addEventListener('focus', () => {
+      const box = target.getBoundingClientRect();
+      show(target, box.left + box.width / 2, box.top);
+    });
+    target.addEventListener('blur', hide);
+  }
+
+  for (const figure of document.querySelectorAll('[data-platforms]')) {
+    const tabs = [...figure.querySelectorAll<HTMLButtonElement>('[data-tab]')];
+    const panels = [...figure.querySelectorAll<HTMLElement>('[data-panel]')];
+    const select = (key: string) => {
+      for (const tab of tabs) tab.setAttribute('aria-selected', String(tab.dataset.tab === key));
+      for (const panel of panels) {
+        panel.classList.remove('is-hidden-js');
+        panel.hidden = panel.dataset.panel !== key;
+      }
+    };
+    for (const tab of tabs) tab.addEventListener('click', () => select(tab.dataset.tab ?? ''));
+    select(tabs[0]?.dataset.tab ?? '');
+  }
+</script>

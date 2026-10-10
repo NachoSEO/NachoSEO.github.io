@@ -1,0 +1,51 @@
+---
+import Base from '../../layouts/Base.astro';
+import Cta from '../../components/Cta.astro';
+import { consultantsStudy } from '../../data/studies/consultores-seo-ia';
+
+const studies = [
+  {
+    href: '/estudios/consultores-seo-ia/',
+    title: 'A quién recomienda la IA como consultor SEO en España',
+    edition: consultantsStudy.edition,
+    tagline: `${consultantsStudy.answers.total} respuestas de ChatGPT, el modo IA de Google y los AI Overviews sobre consultores SEO y GEO.`,
+    detail: 'Quién sale, en qué plataforma, a quién busca la IA por su nombre y qué webs cita. Una edición al mes.',
+  },
+];
+---
+
+<Base
+  lang="es"
+  title="Estudios de SEO y GEO con datos propios — Nacho Mascort"
+  description="Estudios de SEO y GEO con datos propios: qué consultores recomienda la IA en España, qué webs cita y cómo cambia cada mes."
+  path="/estudios/"
+  breadcrumbs={[
+    { name: 'Inicio', path: '/' },
+    { name: 'Estudios', path: '/estudios/' },
+  ]}
+>
+  <div class="mx-auto max-w-5xl px-5 pt-16 sm:px-6 sm:pt-20">
+    <p class="meta">Estudios</p>
+    <h1 class="display-1 mt-5">Estudios con datos propios</h1>
+    <p class="lede mt-6 max-w-[62ch]">
+      Mido cada día qué responden ChatGPT y Google cuando alguien busca ayuda con el SEO y el GEO. Aquí publico lo que sale, con el método
+      y los límites de cada estudio.
+    </p>
+
+    <div class="mt-12 grid gap-5 md:grid-cols-2">
+      {
+        studies.map((study) => (
+          <a href={study.href} class="card flex flex-col">
+            <p class="meta">{study.edition}</p>
+            <h2 class="card-title display-3 mt-2 transition-colors">{study.title}</h2>
+            <p class="mt-3 text-[0.95rem]">{study.tagline}</p>
+            <p class="mt-3 flex-1 text-sm text-muted">{study.detail}</p>
+            <p class="link-arrow mt-5 text-[0.95rem]">Leer el estudio</p>
+          </a>
+        ))
+      }
+    </div>
+  </div>
+
+  <Cta lang="es" />
+</Base>

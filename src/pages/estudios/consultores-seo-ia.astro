@@ -1,0 +1,292 @@
+---
+/** Estudio mensual: a quién nombran ChatGPT, el modo IA de Google y los AI Overviews como consultor SEO y GEO en España */
+import Base from '../../layouts/Base.astro';
+import Cta from '../../components/Cta.astro';
+import ConsultantsCharts from '../../components/studies/ConsultantsCharts.astro';
+import AuthorByline from '../../components/AuthorByline.astro';
+import TocNav from '../../components/TocNav.astro';
+import { authorHistory, consultantsStudy as study } from '../../data/studies/consultores-seo-ia';
+
+const path = '/estudios/consultores-seo-ia/';
+const title = 'A quién recomienda la IA como consultor SEO en España';
+const description = `Estudio con ${study.answers.total} respuestas de ChatGPT, el modo IA de Google y los AI Overviews: qué consultores SEO y GEO nombran en España, en qué plataforma y qué webs citan. Edición de ${study.edition.toLowerCase()}.`;
+const answersSeoGeo = study.answers.seo + study.answers.geo;
+const [first, second] = study.people;
+const geoRanking = [...study.people].filter((person) => person.geo > 0).sort((a, b) => b.geo - a.geo);
+const byFanouts = [...study.people].sort((a, b) => b.fanouts - a.fanouts);
+const tocHeadings = [
+  { slug: 'lo-que-sale', text: 'Lo que sale', depth: 2 },
+  { slug: 'las-20-personas-mas-nombradas', text: 'Las 20 personas más nombradas', depth: 2 },
+  { slug: 'cada-plataforma-tiene-su-lista', text: 'Cada plataforma tiene su lista', depth: 2 },
+  { slug: 'a-quien-busca-la-ia-por-su-nombre', text: 'A quién busca la IA por su nombre', depth: 2 },
+  { slug: 'geo-quien-sale-cuando-se-pregunta-por-seo-para-ia', text: 'GEO: quién sale cuando se pregunta por SEO para IA', depth: 2 },
+  { slug: 'las-webs-que-mas-cita-la-ia', text: 'Las webs que más cita la IA', depth: 2 },
+  { slug: 'y-yo-el-punto-de-partida', text: 'Y yo: el punto de partida', depth: 2 },
+  { slug: 'como-lo-he-medido', text: 'Cómo lo he medido', depth: 2 },
+];
+const formatNumber = (value: number) => value.toLocaleString('es-ES');
+
+const articleSchema = {
+  '@type': 'Article',
+  headline: title,
+  description,
+  datePublished: study.published,
+  dateModified: study.published,
+  inLanguage: 'es',
+  author: { '@id': 'https://nachomascort.com/#person' },
+  mainEntityOfPage: `https://nachomascort.com${path}`,
+};
+---
+
+<Base
+  lang="es"
+  title={`${title} — Nacho Mascort`}
+  description={description}
+  path={path}
+  ogType="article"
+  breadcrumbs={[
+    { name: 'Inicio', path: '/' },
+    { name: 'Estudios', path: '/estudios/' },
+    { name: 'Consultores SEO en la IA', path },
+  ]}
+  extraSchemaNodes={[articleSchema]}
+>
+  <div class="mx-auto max-w-5xl px-5 pt-16 sm:px-6 md:pt-20">
+    <p class="meta">Estudio · edición de {study.edition.toLowerCase()}</p>
+    <h1 class="display-1 mt-5 max-w-[22ch]">{title}</h1>
+    <p class="lede mt-6 max-w-[62ch]">
+      Pregunto cada día a ChatGPT, al modo IA de Google y a los AI Overviews por consultores SEO y GEO en España, y cuento a
+      quién nombran. Esta primera edición recoge {formatNumber(study.answers.total)} respuestas del {study.dateRange.from} al{' '}
+      {study.dateRange.to}.
+    </p>
+    <p class="mt-4 max-w-[62ch] text-[0.95rem] text-muted">
+      Soy consultor SEO técnico desde 2014. He dirigido el SEO de Softonic, con más de 1.000 millones de usuarios al año, y el de
+      word.tips, y mido esto con un tracker propio que lanza las mismas preguntas cada día.
+    </p>
+
+    <div class="mt-8 max-w-[40rem] border-y border-line py-4">
+      <AuthorByline lang="es" lead="Estudio de">· Publicado el 10 de octubre de 2026</AuthorByline>
+    </div>
+
+    <ConsultantsCharts part="stats" />
+  </div>
+
+  <div class="mx-auto max-w-5xl px-5 pb-8 sm:px-6 lg:grid lg:grid-cols-[minmax(0,1fr)_15rem] lg:gap-14">
+  <div class="article-body min-w-0">
+    <h2 id="lo-que-sale">Lo que sale</h2>
+    <ul>
+      <li>
+        <strong>{first.name} aparece en {first.seo + first.geo} de las {answersSeoGeo} respuestas sobre SEO y GEO</strong>, y suele ser
+        la primera persona nombrada. Le sigue {second.name}, con {second.seo + second.geo}. Del tercer puesto en adelante nadie pasa
+        de 40.
+      </li>
+      <li>
+        <strong>En GEO la lista cambia.</strong> Aleyda Solís y Lino Uruñuela empatan con 12 respuestas cada uno y Fernando Maciá
+        tiene 5. Natzir Turrado, segundo en SEO, sale una sola vez. Y las respuestas GEO nombran más agencias que personas: BigSEO
+        en 27 y iSocialWeb en 23.
+      </li>
+      <li>
+        <strong>Cada plataforma tiene su lista.</strong> Cristofer Cruz y Emilio Rodríguez (Emirodgar) solo salen en ChatGPT. Iñaki
+        Huerta y Mònica Cabaní salen casi siempre en el modo IA. Los AI Overviews casi nunca nombran a personas.
+      </li>
+      <li>
+        <strong>La IA busca por su nombre a algunos consultores antes de responder.</strong> Fernando Maciá ({byFanouts[0].fanouts}{' '}
+        búsquedas) y MJ Cachón ({byFanouts[1].fanouts}) son los que más. MJ Cachón casi no aparece en el texto de la respuesta,
+        pero entra en la lista de candidatos.
+      </li>
+      <li>
+        <strong>Los directorios cuentan.</strong> Entre las webs más citadas en las respuestas SEO están Sortlist, Malt y WhitePress,
+        junto a las webs personales de los consultores.
+      </li>
+    </ul>
+
+    <h2 id="las-20-personas-mas-nombradas">Las 20 personas más nombradas</h2>
+    <ConsultantsCharts part="ranking" />
+    <p>
+      Menciones en las {study.answers.seo} respuestas SEO y en las {study.answers.geo} respuestas GEO. Cuento una mención por persona y
+      respuesta como máximo. Las columnas por plataforma suman SEO y GEO.
+    </p>
+    <div class="overflow-x-auto">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Persona</th>
+          <th scope="col">SEO</th>
+          <th scope="col">GEO</th>
+          <th scope="col">ChatGPT</th>
+          <th scope="col">Modo IA</th>
+          <th scope="col">AI Overviews</th>
+          <th scope="col">Búsquedas por nombre</th>
+          <th scope="col">Posición media</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="bg-raised">
+          <td class="text-muted">—</td>
+          <td class="whitespace-nowrap">
+            <span class="font-semibold">{study.author.name}</span>
+            <span class="ml-1 font-mono text-[0.7rem] uppercase tracking-wider text-muted">autor del estudio</span>
+          </td>
+          <td class="tabular-nums">{study.author.seo}</td>
+          <td class="tabular-nums">{study.author.geo}</td>
+          <td class="tabular-nums">{study.author.chatgpt}</td>
+          <td class="tabular-nums">{study.author.aiMode}</td>
+          <td class="tabular-nums">{study.author.aio}</td>
+          <td class="tabular-nums">{study.author.fanouts ?? '—'}</td>
+          <td class="tabular-nums">{study.author.avgPosition}</td>
+        </tr>
+        {
+          study.people.map((person, index) => (
+            <tr>
+              <td class="tabular-nums text-muted">{index + 1}</td>
+              <td class="whitespace-nowrap font-semibold">{person.name}</td>
+              <td class="tabular-nums">{person.seo}</td>
+              <td class="tabular-nums">{person.geo}</td>
+              <td class="tabular-nums">{person.chatgpt}</td>
+              <td class="tabular-nums">{person.aiMode}</td>
+              <td class="tabular-nums">{person.aio}</td>
+              <td class="tabular-nums">{person.fanouts}</td>
+              <td class="tabular-nums">{person.avgPosition.toLocaleString('es-ES', { minimumFractionDigits: 1 })}</td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+    </div>
+    <p class="text-sm text-muted">
+      Posición media: el orden en que se nombra a la persona dentro de la respuesta (1 es la primera). Búsquedas por nombre: consultas
+      que lanza la IA con su nombre o su dominio antes de responder. Mi fila va arriba y fuera del ranking para que se vea desde dónde
+      parto; con estos datos no entro en las 20 primeras.
+    </p>
+
+    <h2 id="cada-plataforma-tiene-su-lista">Cada plataforma tiene su lista</h2>
+    <p>
+      ChatGPT y el modo IA de Google no recomiendan a las mismas personas. Cambia de plataforma para ver el top 10 de cada una.
+    </p>
+    <ConsultantsCharts part="platforms" />
+
+    <h2 id="a-quien-busca-la-ia-por-su-nombre">A quién busca la IA por su nombre</h2>
+    <p>
+      Antes de responder, la IA lanza búsquedas. Algunas llevan el nombre o la web de un consultor: es la señal de que lo tiene en
+      la lista de candidatos aunque luego no lo nombre. Fernando Maciá y MJ Cachón están muy arriba en búsquedas y mucho más abajo en
+      menciones. Aleyda Solís y Natzir Turrado, al revés: salen mucho sin que la IA necesite buscarlos.
+    </p>
+    <ConsultantsCharts part="scatter" />
+
+    <h2 id="geo-quien-sale-cuando-se-pregunta-por-seo-para-ia">GEO: quién sale cuando se pregunta por SEO para IA</h2>
+    <table>
+      <thead>
+        <tr><th scope="col">Persona</th><th scope="col">Respuestas GEO (de {study.answers.geo})</th></tr>
+      </thead>
+      <tbody>
+        {
+          [...geoRanking.map((person) => ({ name: person.name, geo: person.geo })), ...study.geoOnly]
+            .sort((a, b) => b.geo - a.geo)
+            .map((person) => (
+              <tr>
+                <td class="font-semibold">{person.name}</td>
+                <td class="tabular-nums">{person.geo}</td>
+              </tr>
+            ))
+        }
+      </tbody>
+    </table>
+    <p>
+      José Alvargonzález, Javier Santos Criado (Javadex), Sergio Gómez y Antonio Díaz solo aparecen en respuestas GEO. Las agencias
+      pesan más que en SEO: {study.geoBrands.map((brand) => `${brand.name} (${brand.count})`).join(', ')}.
+    </p>
+
+    <h2 id="las-webs-que-mas-cita-la-ia">Las webs que más cita la IA</h2>
+    <div class="grid gap-8 md:grid-cols-2">
+      {
+        [
+          { label: `En respuestas SEO (de ${study.answers.seo})`, rows: study.citedDomains.seo },
+          { label: `En respuestas GEO (de ${study.answers.geo})`, rows: study.citedDomains.geo },
+        ].map((group) => (
+          <table>
+            <thead>
+              <tr><th scope="col">{group.label}</th><th scope="col">Respuestas</th></tr>
+            </thead>
+            <tbody>
+              {group.rows.map((row) => (
+                <tr>
+                  <td>{row.domain}</td>
+                  <td class="tabular-nums">{row.count}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ))
+      }
+    </div>
+    <p>
+      En SEO la IA cita sobre todo las webs personales de los consultores y directorios como Sortlist, Malt o WhitePress. En GEO tira
+      de fuentes oficiales (Google y OpenAI), de vídeos de YouTube y de artículos académicos.
+    </p>
+
+    <h2 id="y-yo-el-punto-de-partida">Y yo: el punto de partida</h2>
+    <p>
+      Salgo en {study.author.mentionsAll} de las {formatNumber(study.answers.total)} respuestas, las dos en ChatGPT: en una pregunta sobre
+      core updates y en otra sobre growth. Solo la primera cuenta para este ranking, porque growth queda fuera de SEO y GEO. Lo cuento
+      porque el estudio sale de mi propio tracker y quiero que se vea desde dónde parto. Cada edición añade una fila a esta tabla.
+    </p>
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">Edición</th>
+          <th scope="col">Respuestas</th>
+          <th scope="col">Menciones SEO y GEO</th>
+          <th scope="col">Menciones en total</th>
+          <th scope="col">Plataformas</th>
+          <th scope="col">Contexto</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          authorHistory.map((row) => (
+            <tr>
+              <td class="whitespace-nowrap font-semibold">{row.edition}</td>
+              <td class="tabular-nums">{formatNumber(row.answers)}</td>
+              <td class="tabular-nums">{row.mentionsSeoGeo}</td>
+              <td class="tabular-nums">{row.mentionsAll}</td>
+              <td>{row.platforms}</td>
+              <td class="text-muted">{row.note}</td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+
+    <h2 id="como-lo-he-medido">Cómo lo he medido</h2>
+    <ul>
+      <li>
+        <strong>Qué pregunto:</strong> {study.entities.seo.length + study.entities.geo.length} temas, con tres preguntas fijas en español
+        para cada uno. SEO: {study.entities.seo.join(', ')}. GEO: {study.entities.geo.join(', ')}.
+      </li>
+      <li>
+        <strong>Dónde:</strong> ChatGPT ({study.surfaces.chatgpt} respuestas), el modo IA de Google ({study.surfaces.aiMode}) y los AI
+        Overviews ({study.surfaces.aio}), una vez al día. Gemini y Perplexity no están medidos.
+      </li>
+      <li>
+        <strong>Qué cuento:</strong> cada persona nombrada, una vez por respuesta, con su posición y su tono. Casi todas las menciones son
+        recomendaciones. Uno las variantes de un mismo nombre (por ejemplo, Luis Villanueva y Luis M. Villanueva). También cuento las{' '}
+        {study.answers.fanouts} búsquedas que lanza la IA antes de responder y las webs que cita.
+      </li>
+      <li>
+        <strong>Límites:</strong> son cinco días de datos y el 6 de octubre tiene doble tanda. Las respuestas de la IA cambian mucho de
+        un día a otro, así que el orden de los primeros puestos es sólido, pero del décimo en adelante hay pocas menciones. {study.answers.empty}{' '}
+        consultas se quedaron sin respuesta, casi todas porque no salió un AI Overview. La lista de personas sale de un filtro de nombres
+        propios: puede faltar alguien con pocas menciones. Las búsquedas por dominio (villanueva, humanlevel) pueden sumar alguna de más a
+        Luis M. Villanueva y a Fernando Maciá.
+      </li>
+      <li>
+        <strong>Cada mes</strong> publico una edición nueva con el mismo método, para ver quién entra y quién sale.
+      </li>
+    </ul>
+  </div>
+  <TocNav label="En este estudio" headings={tocHeadings} />
+  </div>
+
+  <Cta lang="es" />
+</Base>

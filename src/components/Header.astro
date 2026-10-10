@@ -55,6 +55,7 @@ const nav: NavItem[] = [
     href: localizedRoute('tools', lang),
     label: lang === 'es' ? 'Recursos' : 'Resources',
     children: [
+      ...(lang === 'es' ? [{ href: '/guia-geo/', label: 'Guía GEO' }] : []),
       { href: localizedRoute('tools', lang), label: t('nav.tools') },
       { href: localizedRoute('skills', lang), label: t('nav.skills') },
       courseLink,

@@ -44,7 +44,7 @@ const columns: { title: string; href?: string; links: FooterLink[] }[] = [
     title: es ? 'Recursos' : 'Resources',
     links: [
       { href: localizedRoute('blog', lang), label: t('nav.blog') },
-      ...(es ? [{ href: '/estudios/', label: 'Estudios' }] : []),
+      ...(es ? [{ href: '/guia-geo/', label: 'Guía GEO' }, { href: '/estudios/', label: 'Estudios' }] : []),
       { href: localizedRoute('tools', lang), label: t('nav.tools') },
       { href: localizedRoute('skills', lang), label: t('nav.skills') },
       { href: 'https://nachomascort.gumroad.com/l/programacion-seo', label: t('nav.course'), event: 'course-click' },

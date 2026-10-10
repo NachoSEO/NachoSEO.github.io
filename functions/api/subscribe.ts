@@ -6,6 +6,7 @@
  * Variables de entorno (Cloudflare Pages → Settings → Variables):
  *   KIT_API_KEY                     API key v4 de Kit
  *   KIT_FORM_ID_ES, KIT_FORM_ID_EN  Un formulario por idioma: cada uno manda su incentive email
+ *   KIT_FORM_ID_GUIDE               Opcional: formulario de la guía GEO (si no está, usa el de newsletter)
  *   TURNSTILE_SECRET_KEY            Clave secreta de Turnstile (anti-bots)
  *
  * Tags: idioma-es / idioma-en para segmentar envíos, y lm-<lead magnet> para saber de dónde
@@ -15,13 +16,16 @@ interface Env {
   KIT_API_KEY: string;
   KIT_FORM_ID_ES: string;
   KIT_FORM_ID_EN: string;
+  KIT_FORM_ID_GUIDE?: string;
   TURNSTILE_SECRET_KEY: string;
 }
 
 const KIT_API = 'https://api.kit.com/v4';
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 // Lead magnets válidos (valor del campo oculto `magnet` del formulario)
-const LEAD_MAGNETS = new Set(['google-quality-audit']);
+const LEAD_MAGNETS = new Set(['google-quality-audit', 'guia-geo']);
+// Formulario "Newsletter site" de Kit: confirma el alta sin mandar la skill
+const NEWSLETTER_FORM_ID = '9998261';
 
 const redirectTo = (request: Request, path: string) => Response.redirect(new URL(path, request.url).href, 303);
 
@@ -45,7 +49,9 @@ export const onRequestPost = async ({ request, env }: { request: Request; env: E
     return redirectTo(request, '/gracias/error/?code=body');
   }
   const lang = form.get('lang') === 'en' ? 'en' : 'es';
-  const thanksPath = lang === 'en' ? '/en/thanks/' : '/gracias/';
+  const magnet = String(form.get('magnet') ?? '');
+  const isGuide = magnet === 'guia-geo';
+  const thanksPath = isGuide ? '/gracias/guia-geo/' : lang === 'en' ? '/en/thanks/' : '/gracias/';
   const errorPath = `${thanksPath}error/`;
 
   // Honeypot: los bots rellenan el campo oculto; les respondemos como si nada
@@ -63,8 +69,7 @@ export const onRequestPost = async ({ request, env }: { request: Request; env: E
   if (!human) return redirectTo(request, `${errorPath}?code=captcha`);
 
   const headers = { 'Content-Type': 'application/json', 'X-Kit-Api-Key': env.KIT_API_KEY.trim() };
-  const formId = lang === 'en' ? env.KIT_FORM_ID_EN : env.KIT_FORM_ID_ES;
-  const magnet = String(form.get('magnet') ?? '');
+  const formId = isGuide ? env.KIT_FORM_ID_GUIDE || NEWSLETTER_FORM_ID : lang === 'en' ? env.KIT_FORM_ID_EN : env.KIT_FORM_ID_ES;
   const tagNames = [`idioma-${lang}`, ...(LEAD_MAGNETS.has(magnet) ? [`lm-${magnet}`] : [])];
 
   const tagSubscriber = async (tagName: string) => {

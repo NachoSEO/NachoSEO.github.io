@@ -1,0 +1,602 @@
+---
+/**
+ * Guía GEO: página principal (contenido generalista) + índice vivo de capítulos con su estado y autor
+ * + convocatoria abierta a autores. Capítulos y estados en src/data/geoGuide.ts.
+ */
+import { Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import Cta from '../../components/Cta.astro';
+import AuthorByline from '../../components/AuthorByline.astro';
+import GuideSignup from '../../components/GuideSignup.astro';
+import FaqAccordion from '../../components/service/FaqAccordion.astro';
+import { authorPhotos, guideMeta, guideParts, statusLabels } from '../../data/geoGuide';
+import { site } from '../../site';
+
+const chapters = guideParts.flatMap((part) => part.groups.flatMap((group) => group.chapters));
+const published = chapters.filter((chapter) => chapter.status === 'publicado').length;
+const taken = chapters.filter((chapter) => chapter.status !== 'disponible').length;
+
+const faq = [
+  {
+    question: '¿El GEO sustituye al SEO?',
+    answer:
+      'No. AI Overviews y AI Mode tiran del índice de Google y ChatGPT busca en la web antes de responder, así que una web que no se rastrea, no se indexa o no posiciona tampoco llega a las respuestas de la IA. El GEO añade capas encima: cómo se seleccionan los pasajes, qué fuentes externas te nombran y cómo se mide.',
+  },
+  {
+    question: '¿Hace falta un llms.txt?',
+    answer:
+      'Para Google, no: su guía de optimización para funciones de IA dice que no lo usa. Otras plataformas no lo han convertido en un estándar. Es barato de hacer, pero no es lo que te va a meter en las respuestas.',
+  },
+  {
+    question: '¿Cuánto tarda en notarse?',
+    answer:
+      'Lo que la IA saca de la búsqueda en vivo puede moverse en semanas, al ritmo al que Google y Bing rastrean tus cambios. Lo que el modelo trae de memoria cambia mucho más despacio: depende de menciones en otras webs y de nuevas versiones del modelo.',
+  },
+  {
+    question: '¿Sirve para SEO local?',
+    answer:
+      'Las respuestas locales de la IA suelen apoyarse en fichas de Google Business Profile, reseñas y directorios. Esta guía se centra en webs y marcas que compiten fuera del mapa, así que el SEO local queda fuera.',
+  },
+  {
+    question: '¿Hace falta una herramienta para medir la visibilidad en IA?',
+    answer:
+      'Ayuda, pero no sustituye al método. Las respuestas cambian de una vez a otra, así que hay que repetir cada pregunta muchas veces, en varias plataformas y durante semanas, antes de sacar conclusiones. Es lo que trata el capítulo 15.',
+  },
+];
+
+const articleSchema = {
+  '@type': 'Article',
+  headline: guideMeta.title,
+  description: guideMeta.description,
+  datePublished: guideMeta.started,
+  dateModified: guideMeta.updated,
+  inLanguage: 'es',
+  author: { '@id': 'https://nachomascort.com/#person' },
+  editor: { '@id': 'https://nachomascort.com/#person' },
+  mainEntityOfPage: `https://nachomascort.com${guideMeta.path}`,
+};
+
+const pipeline = [
+  { step: 'Pregunta', detail: 'La IA interpreta qué se pide y cuántas cosas a la vez.' },
+  { step: 'Fan-out', detail: 'La convierte en varias búsquedas, a veces en otro idioma.' },
+  { step: 'Recuperación', detail: 'Busca en un índice (Google, Bing) o tira de memoria.' },
+  { step: 'Selección', detail: 'Elige pasajes concretos de unas pocas páginas.' },
+  { step: 'Respuesta y cita', detail: 'Redacta y enlaza fuentes, no siempre las que usó.' },
+];
+
+const proposeHref = `mailto:${site.email}?subject=${encodeURIComponent('Propuesta de capítulo para la Guía GEO')}`;
+---
+
+<Base
+  lang="es"
+  title={`${guideMeta.shortTitle}: qué es el SEO para IA y cómo aparecer en ChatGPT — Nacho Mascort`}
+  description={guideMeta.description}
+  path={guideMeta.path}
+  ogType="article"
+  breadcrumbs={[
+    { name: 'Inicio', path: '/' },
+    { name: guideMeta.shortTitle, path: guideMeta.path },
+  ]}
+  faq={faq}
+  extraSchemaNodes={[articleSchema]}
+>
+  <section class="on-dark">
+    <div class="mx-auto grid max-w-5xl gap-10 px-5 pb-14 pt-14 sm:px-6 md:pb-20 md:pt-20 lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-end">
+      <div>
+        <span class="building-badge">Guía en construcción</span>
+        <h1 class="display-1 mt-5 max-w-[18ch]">
+          Qué es el <span class="accent">SEO para IA</span> y cómo aparecer en ChatGPT, AI Overviews y AI Mode
+        </h1>
+        <p class="lede mt-6 max-w-[60ch]">
+          Cómo eligen sus fuentes las respuestas de la IA, qué puede hacer una web dentro y fuera de ella, y cómo medir si funciona.
+          Cada capítulo lo escribe un profesional distinto, con datos y casos propios.
+        </p>
+        <p class="mt-5 text-sm text-on-dark-muted">
+          {chapters.length} capítulos{taken > 0 && ` · ${taken} con autor`}{published > 0 && ` · ${published} publicados`} · Empezada el 10 de octubre de 2026
+        </p>
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a href="#indice" class="btn">Ver el índice</a>
+          <a href="#convocatoria" class="btn btn--ghost">Proponer un capítulo</a>
+        </div>
+      </div>
+      <GuideSignup source="hero" tone="dark" />
+    </div>
+  </section>
+
+  <section id="indice" class="mx-auto max-w-5xl px-5 pt-16 sm:px-6 md:pt-24">
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <h2 class="display-2">Índice</h2>
+      <p class="max-w-[46ch] text-[0.95rem] text-muted">
+        {chapters.length} capítulos en {guideParts.length} partes. Se publican según los entregan sus autores; los que aún no tienen autor
+        están abiertos a <a href="#convocatoria" class="underline decoration-accent underline-offset-4">propuestas</a>.
+      </p>
+    </div>
+    <div class="guide-parts mt-10">
+      {
+        guideParts.map((part, partIndex) => {
+          const partChapters = part.groups.flatMap((group) => group.chapters);
+          const withAuthor = partChapters.filter((chapter) => chapter.status !== 'disponible').length;
+          return (
+            <section class="guide-part" aria-labelledby={`parte-${partIndex + 1}`}>
+              <div class="guide-part-head">
+                <span class="guide-part-n" aria-hidden="true">{partIndex + 1}</span>
+                <div>
+                  <h3 id={`parte-${partIndex + 1}`} class="guide-part-title">{part.title}</h3>
+                  <p class="mt-1 text-sm text-muted">{part.question}</p>
+                </div>
+              </div>
+              <div class="guide-part-body">
+              {part.groups.map((group) => (
+              <div class="guide-group">
+              {group.title && <h4 class="guide-group-title">{group.title}</h4>}
+              <ol class="guide-chapters">
+                {group.chapters.map((chapter) => {
+                  const photo = chapter.author?.slug ? authorPhotos[chapter.author.slug] : undefined;
+                  const inner = (
+                    <>
+                      <span class="chapter-n">{String(chapter.number).padStart(2, '0')}</span>
+                      <span class="min-w-0">
+                        <span class="chapter-title">{chapter.title}</span>
+                        <span class="chapter-summary">{chapter.summary}</span>
+                        <span class="chapter-meta">
+                          {chapter.author ? (
+                            <span class="author-chip">
+                              {photo && <Image src={photo} alt="" width={40} height={40} format="webp" class="author-chip-photo" />}
+                              {chapter.author.name}
+                            </span>
+                          ) : null}
+                          <span class:list={['status', `is-${chapter.status}`]}>{statusLabels[chapter.status]}</span>
+                        </span>
+                      </span>
+                    </>
+                  );
+                  return (
+                    <li>
+                      {chapter.href ? (
+                        <a href={chapter.href} class="chapter-row is-link">
+                          {inner}
+                        </a>
+                      ) : (
+                        <div class="chapter-row">{inner}</div>
+                      )}
+                    </li>
+                  );
+                })}
+              </ol>
+              </div>
+              ))}
+              <p class="guide-part-foot">{withAuthor} de {partChapters.length} con autor</p>
+              </div>
+            </section>
+          );
+        })
+      }
+    </div>
+  </section>
+
+  <div class="mx-auto max-w-5xl px-5 pt-16 sm:px-6 md:pt-24">
+    <div class="max-w-[46rem]">
+      <AuthorByline lang="es" lead="Guía editada por">· Primera versión: 10 de octubre de 2026</AuthorByline>
+    </div>
+
+    <div class="article-body mt-10 max-w-[46rem]">
+      <h2 id="que-es-geo">Qué es el GEO</h2>
+      <p>
+        El GEO (<em>generative engine optimization</em>) es el trabajo para que las respuestas de la IA te citen y te recomienden:
+        ChatGPT, Gemini, Perplexity, Copilot y, sobre todo por volumen, los AI Overviews y el modo IA de Google. El objetivo no es
+        solo salir en una lista de enlaces, sino ser la fuente de la que la IA saca la respuesta o la marca que nombra cuando alguien
+        le pide una recomendación.
+      </p>
+
+      <h2 id="nombres">GEO, AEO, LLMO: cómo se llama esto</h2>
+      <p>
+        Hay varios nombres para lo mismo, y por eso mucha gente busca directamente "cómo se llama el SEO para IA". GEO es el más
+        extendido y viene de un artículo académico de Princeton de 2023. AEO (<em>answer engine optimization</em>) se usaba antes
+        para los fragmentos destacados y las respuestas de voz. LLMO pone el foco en los modelos de lenguaje. "SEO para IA" es la
+        forma en que se busca en español. En esta guía usamos GEO.
+      </p>
+
+      <h2 id="geo-y-seo">En qué se parece al SEO y en qué no</h2>
+      <p>
+        La base es la misma. AI Overviews y AI Mode tiran del índice de Google, y ChatGPT busca en la web antes de responder. Si tu web no
+        se rastrea, no se indexa o no tiene autoridad, tampoco llega a la IA. Google lo dice así en su guía de optimización para
+        funciones de IA: las prácticas de SEO siguen siendo la base.
+      </p>
+      <p>Lo que cambia son tres cosas:</p>
+      <ul>
+        <li>
+          <strong>No hay una búsqueda, hay muchas.</strong> La IA convierte una pregunta en varias búsquedas (el <em>query fan-out</em>)
+          y combina lo que encuentra. Compites por las subconsultas, no solo por la keyword.
+        </li>
+        <li>
+          <strong>No se elige la página, se elige el pasaje.</strong> La respuesta se construye con frases concretas de unas pocas
+          fuentes. Una página buena puede quedarse fuera si nada en ella se puede extraer y citar.
+        </li>
+        <li>
+          <strong>La IA trae nombres de memoria.</strong> Cuando alguien pide una recomendación, el modelo ya tiene candidatos antes
+          de buscar, y luego los verifica. Esa lista solo cambia con menciones en otras webs.
+        </li>
+      </ul>
+
+      <h2 id="como-funciona">Cómo se construye una respuesta</h2>
+      <p>
+        Cada plataforma lo hace a su manera, pero el recorrido se parece. La parte 1 de la guía entra en cada paso.
+      </p>
+    </div>
+
+    <ol class="pipeline mt-8">
+      {
+        pipeline.map((item, index) => (
+          <li>
+            <span class="pipeline-n">{index + 1}</span>
+            <span class="font-semibold">{item.step}</span>
+            <span class="mt-1 block text-[0.85rem] text-muted">{item.detail}</span>
+          </li>
+        ))
+      }
+    </ol>
+
+    <div class="article-body mt-10 max-w-[46rem]">
+      <h2 id="plataformas">Las plataformas</h2>
+      <table>
+        <thead>
+          <tr><th scope="col">Plataforma</th><th scope="col">De dónde saca las fuentes</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>AI Overviews</td><td>El índice de Google. Sale encima de los resultados en parte de las búsquedas.</td></tr>
+          <tr><td>Modo IA de Google</td><td>El índice de Google, con muchas búsquedas en paralelo por cada pregunta. Cita a menudo páginas que no están en el top 10.</td></tr>
+          <tr><td>ChatGPT</td><td>Su propio rastreador (OAI-SearchBot), resultados de búsqueda de terceros y lo que el modelo trae de memoria.</td></tr>
+          <tr><td>Gemini</td><td>El índice de Google y lo que el modelo trae de memoria.</td></tr>
+          <tr><td>Perplexity y Copilot</td><td>Su propio índice (Perplexity) o el de Bing (Copilot), siempre con fuentes visibles.</td></tr>
+        </tbody>
+      </table>
+      <p>
+        Cada una cita cosas distintas. En nuestro <a href="/estudios/consultores-seo-ia/">estudio sobre consultores SEO</a>, varias
+        personas que ChatGPT nombra a menudo no aparecen nunca en el modo IA de Google, y al revés.
+      </p>
+
+      <h2 id="que-puedes-hacer">Qué puedes hacer</h2>
+      <ul>
+        <li>
+          <strong>En tu web:</strong> que los bots de IA puedan entrar y leerla (sin bloqueos ni contenido que solo carga con
+          JavaScript), que tus páginas tengan frases que se puedan citar y datos que nadie más tiene, y que las plantillas lo hagan a
+          escala. Es el bloque «En tu web» de la parte 2.
+        </li>
+        <li>
+          <strong>Fuera de tu web:</strong> menciones en medios y webs que la IA lee, presencia en directorios y listas de tu sector y
+          una identidad coherente en todas partes. Es lo que más mueve las recomendaciones, y es el bloque «Fuera de tu web» de la parte 2.
+        </li>
+        <li>
+          <strong>Medir:</strong> repetir las mismas preguntas muchas veces y en varias plataformas, separar cita, mención y clic, y
+          probar los cambios con un grupo de control. Es la parte 3.
+        </li>
+      </ul>
+
+      <h2 id="mitos">Mitos</h2>
+      <ul>
+        <li>
+          <strong>"Necesitas un llms.txt."</strong> Google dice que no lo usa. Puede ayudar a algún agente, pero no te mete en las
+          respuestas.
+        </li>
+        <li>
+          <strong>"Hay que trocear el contenido para la IA."</strong> Google dice que no hace falta, ni reescribir pensando en la IA.
+          Lo que importa es que lo que escribes se pueda extraer y aporte algo propio.
+        </li>
+        <li>
+          <strong>"Hay un schema especial para la IA."</strong> No lo hay. Los datos estructurados ayudan a entender la página, igual
+          que en SEO.
+        </li>
+        <li>
+          <strong>"Las citas y estadísticas suben la visibilidad un 40 %."</strong> La cifra sale del artículo de Princeton y se midió
+          en su propio banco de pruebas, no en Google ni en ChatGPT. La idea de fondo vale (datos y fuentes ayudan), el número no.
+        </li>
+      </ul>
+
+      <h2 id="por-donde-empezar">Por dónde empezar según tu caso</h2>
+      <ul>
+        <li><strong>Web grande:</strong> acceso técnico y plantillas antes que contenido nuevo.</li>
+        <li><strong>Ecommerce:</strong> datos de producto, reseñas y las fichas que la IA usa para comparar.</li>
+        <li><strong>Medio de comunicación:</strong> autoría, actualidad y datos exclusivos que la IA quiera citar.</li>
+        <li><strong>Marca personal o de servicios:</strong> menciones fuera de tu web y una página "Sobre mí" que aguante la verificación.</li>
+        <li><strong>No sabes cómo estás:</strong> mide primero. Sin una línea base no sabrás qué ha funcionado.</li>
+      </ul>
+
+      <h2 id="fuentes">Fuentes</h2>
+      <ul>
+        <li>
+          <a href="https://developers.google.com/search/docs/fundamentals/ai-optimization-guide" rel="noopener">Optimizing your website for generative AI features on Google Search</a>, Google Search Central.
+        </li>
+        <li><a href="https://developers.google.com/search/docs/appearance/ai-features" rel="noopener">AI features and your website</a>, Google Search Central.</li>
+        <li><a href="https://developers.openai.com/api/docs/bots" rel="noopener">Overview of OpenAI crawlers</a>, OpenAI.</li>
+        <li><a href="https://arxiv.org/abs/2311.09735" rel="noopener">GEO: Generative Engine Optimization</a>, Aggarwal et al. (Princeton), KDD 2024.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="mx-auto max-w-5xl px-5 pt-16 sm:px-6 md:pt-20">
+    <div class="max-w-[46rem]">
+      <GuideSignup source="contenido" title="¿Te aviso cuando salga cada capítulo?" />
+    </div>
+  </div>
+
+  <FaqAccordion lang="es" faq={faq} />
+
+  <section id="convocatoria" class="mx-auto max-w-5xl px-5 pt-16 sm:px-6 md:pt-24">
+    <div class="open-call">
+      <h2 class="display-2 max-w-[22ch]">¿Quieres escribir un capítulo?</h2>
+      <p class="mt-4 max-w-[62ch] text-muted">
+        La guía se escribe con profesionales que tienen algo propio que contar. Puedes elegir un capítulo disponible del índice o
+        proponer un tema que creas que falta.
+      </p>
+      <ol class="open-call-steps mt-8">
+        <li><span class="font-semibold">Propones el tema</span><span class="text-muted">Uno del índice o uno nuevo, con dos líneas sobre qué aportarías.</span></li>
+        <li><span class="font-semibold">Envías tu índice</span><span class="text-muted">En unas dos semanas, para cruzarlo con los demás y no repetirnos.</span></li>
+        <li><span class="font-semibold">Escribes el capítulo</span><span class="text-muted">Unas cinco semanas después, con la profundidad que necesite el tema.</span></li>
+        <li><span class="font-semibold">Lo publicamos</span><span class="text-muted">Firmado por ti, con tu ficha de autor y tus enlaces.</span></li>
+      </ol>
+      <p class="mt-8 max-w-[62ch] text-[0.95rem]">
+        <strong>Lo que pido:</strong> el nivel de mis posts sobre
+        <a href="/blog/quality-google-core-updates/" class="underline decoration-accent underline-offset-4">quality en Google</a> y
+        <a href="/blog/metodologia-proyectos-seo/" class="underline decoration-accent underline-offset-4">metodología de proyectos SEO</a>:
+        técnico, con algo de primera mano (datos, un caso o un experimento), fuentes enlazadas y separando lo confirmado de la opinión.
+        Nada de contenido que ya esté en todas partes.
+      </p>
+      <a href={proposeHref} data-umami-event="guide-propose-click" class="btn mt-8">Proponer un capítulo</a>
+    </div>
+  </section>
+
+  <Cta lang="es" title="¿Quieres que lo hagamos en tu web?" />
+</Base>
+
+<style>
+  .building-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.15rem 0.6rem;
+    border: 1px solid var(--tone-accent-on-dark);
+    border-radius: 999px;
+    color: var(--tone-accent-on-dark);
+    font-size: 0.7rem;
+  }
+  .building-badge::before {
+    content: '';
+    width: 0.4rem;
+    height: 0.4rem;
+    border-radius: 999px;
+    background: var(--tone-accent-on-dark);
+  }
+  .guide-parts {
+    display: grid;
+    gap: 2.5rem 2rem;
+  }
+  @media (min-width: 64rem) {
+    .guide-parts {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 2.5rem 2rem;
+    }
+  }
+  .guide-part {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+  /* Las cabeceras comparten fila: la línea de las tres partes queda a la misma altura */
+  @media (min-width: 64rem) {
+    .guide-parts {
+      grid-template-rows: auto auto;
+    }
+    .guide-part {
+      display: grid;
+      grid-row: span 2;
+      grid-template-rows: subgrid;
+      row-gap: 0;
+    }
+  }
+  .guide-part-head {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 0.75rem;
+    align-items: start;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--tone-ink);
+  }
+  .guide-part-n {
+    font-family: var(--font-display);
+    font-size: 2.75rem;
+    font-weight: 600;
+    line-height: 0.85;
+    color: var(--tone-accent);
+    font-variant-numeric: tabular-nums;
+  }
+  .guide-part-title {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.15;
+  }
+  .guide-chapters {
+    display: grid;
+  }
+  /* El título de subsección va sobre la línea, como una leyenda, para no desplazar los capítulos */
+  .guide-group {
+    position: relative;
+  }
+  .guide-group-title {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translateY(-50%);
+    padding-right: 0.6rem;
+    background: var(--tone-paper);
+    font-size: 0.7rem;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--tone-accent-ink);
+  }
+  .guide-group + .guide-group > .guide-chapters > li:first-child > .chapter-row {
+    padding-top: 1.25rem;
+  }
+  .chapter-row {
+    display: grid;
+    grid-template-columns: 1.6rem minmax(0, 1fr);
+    gap: 0.4rem;
+    padding: 0.9rem 0;
+    border-bottom: 1px solid var(--tone-line);
+  }
+  .chapter-row.is-link {
+    transition: background-color 0.2s ease;
+  }
+  .chapter-row.is-link:hover {
+    background: var(--tone-raised);
+  }
+  .chapter-row.is-link:hover .chapter-title {
+    color: var(--tone-accent-ink);
+  }
+  .chapter-n {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--tone-muted);
+    font-variant-numeric: tabular-nums;
+    padding-top: 0.15rem;
+  }
+  .chapter-title {
+    display: block;
+    font-weight: 600;
+    font-size: 0.95rem;
+    line-height: 1.3;
+    text-wrap: balance;
+  }
+  .chapter-summary {
+    display: block;
+    margin-top: 0.25rem;
+    font-size: 0.85rem;
+    line-height: 1.45;
+    color: var(--tone-muted);
+  }
+  @media (max-width: 47.99rem) {
+    .chapter-summary {
+      display: none;
+    }
+  }
+  .chapter-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+  }
+  .status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.75rem;
+    color: var(--tone-muted);
+  }
+  .status::before {
+    content: '';
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 999px;
+    border: 1.5px solid currentColor;
+  }
+  .status.is-reservado {
+    color: #1574a6;
+  }
+  .status.is-reservado::before {
+    background: currentColor;
+  }
+  .status.is-edicion {
+    color: var(--tone-accent-ink);
+  }
+  .status.is-edicion::before {
+    background: currentColor;
+  }
+  .status.is-publicado {
+    color: #2f7a4f;
+    font-weight: 600;
+  }
+  .status.is-publicado::before {
+    background: currentColor;
+  }
+  .guide-part-foot {
+    margin-top: 0.75rem;
+    font-size: 0.75rem;
+    color: var(--tone-muted);
+  }
+  .author-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.1rem 0.55rem 0.1rem 0.15rem;
+    border-radius: 999px;
+    background: var(--tone-raised);
+    border: 1px solid var(--tone-line);
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+  .author-chip-photo {
+    width: 1.25rem;
+    height: 1.25rem;
+    border-radius: 999px;
+    object-fit: cover;
+  }
+  .pipeline {
+    display: grid;
+    gap: 0.6rem;
+    counter-reset: none;
+  }
+  @media (min-width: 48rem) {
+    .pipeline {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+  }
+  .pipeline li {
+    position: relative;
+    padding: 0.9rem 1rem;
+    border-radius: 0.6rem;
+    background: var(--tone-dark);
+    color: var(--tone-on-dark);
+    font-size: 0.95rem;
+  }
+  .pipeline li .text-muted {
+    color: var(--tone-on-dark-muted);
+  }
+  .pipeline-n {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--tone-accent-on-dark);
+    margin-bottom: 0.25rem;
+  }
+  .open-call {
+    padding: 2rem 1.5rem;
+    border: 1px solid var(--tone-line);
+    border-radius: 1rem;
+    background: var(--tone-raised);
+  }
+  @media (min-width: 48rem) {
+    .open-call {
+      padding: 2.5rem;
+    }
+  }
+  .open-call-steps {
+    display: grid;
+    gap: 1rem;
+  }
+  @media (min-width: 48rem) {
+    .open-call-steps {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+  .open-call-steps li {
+    display: grid;
+    gap: 0.3rem;
+    padding-top: 0.75rem;
+    border-top: 2px solid var(--tone-accent);
+    font-size: 0.92rem;
+  }
+</style>

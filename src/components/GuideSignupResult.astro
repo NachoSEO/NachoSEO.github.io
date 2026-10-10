@@ -1,0 +1,43 @@
+---
+/** Destino del alta de la guía GEO (functions/api/subscribe.ts, magnet guia-geo) */
+import Base from '../layouts/Base.astro';
+import { site } from '../site';
+
+interface Props {
+  variant: 'ok' | 'error';
+}
+
+const { variant } = Astro.props;
+const ok = variant === 'ok';
+---
+
+<Base
+  lang="es"
+  title={ok ? 'Revisa tu email — Guía GEO' : 'No he podido apuntarte — Guía GEO'}
+  description="Alta en los avisos de la Guía GEO."
+  path={ok ? '/gracias/guia-geo/' : '/gracias/guia-geo/error/'}
+  noindex
+>
+  <div class="mx-auto max-w-3xl px-5 py-20 sm:px-6 md:py-28">
+    <h1 class="display-1">{ok ? 'Revisa tu email' : 'No he podido apuntarte'}</h1>
+    {
+      ok ? (
+        <div class="mt-6 max-w-[60ch] space-y-4 text-[1.05rem] leading-relaxed">
+          <p>
+            Te acabo de enviar un email desde newsletter@nachomascort.com para confirmar el alta. Si no está en la bandeja principal,
+            mira en Promociones o en spam.
+          </p>
+          <p>
+            Cuando lo confirmes, te aviso de cada capítulo nuevo de la Guía GEO y te mando el ebook cuando la guía esté completa.
+          </p>
+        </div>
+      ) : (
+        <p class="mt-6 max-w-[60ch] text-[1.05rem] leading-relaxed">
+          Revisa que el email esté bien escrito y vuelve a intentarlo desde la guía. Si sigue fallando, escríbeme a{' '}
+          <a href={`mailto:${site.email}`} class="underline decoration-accent underline-offset-4">{site.email}</a>.
+        </p>
+      )
+    }
+    <a href="/guia-geo/" class="btn mt-10">Volver a la Guía GEO</a>
+  </div>
+</Base>

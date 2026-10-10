@@ -1,0 +1,103 @@
+---
+/** Alta para recibir la Guía GEO: POST nativo a /api/subscribe (magnet guia-geo), con Turnstile */
+import Turnstile from './Turnstile.astro';
+
+interface Props {
+  /** Dónde está el formulario, para saber de dónde vienen las altas */
+  source: string;
+  tone?: 'dark' | 'light';
+  title?: string;
+  body?: string;
+}
+
+const {
+  source,
+  tone = 'light',
+  title = 'Recibe la guía',
+  body = 'Te aviso de cada capítulo nuevo y te mando el ebook cuando esté completa. Un email por capítulo, nada más.',
+} = Astro.props;
+const inputId = `guide-email-${source}`;
+---
+
+<div class:list={['guide-signup', `is-${tone}`]}>
+  <p class="guide-signup-title">{title}</p>
+  <p class="guide-signup-body">{body}</p>
+  <form action="/api/subscribe" method="post" class="mt-4 grid gap-3">
+    <input type="hidden" name="lang" value="es" />
+    <input type="hidden" name="source" value={`/guia-geo/#${source}`} />
+    <input type="hidden" name="magnet" value="guia-geo" />
+    <div class="guide-honeypot" aria-hidden="true">
+      <label for={`${inputId}-website`}>Website</label>
+      <input type="text" id={`${inputId}-website`} name="website" tabindex="-1" autocomplete="off" />
+    </div>
+    <label for={inputId} class="sr-only">Tu email</label>
+    <div class="guide-signup-row">
+      <input type="email" id={inputId} name="email" required autocomplete="email" placeholder="tu@email.com" />
+      <button type="submit" class="btn" data-umami-event="guide-signup" data-umami-event-placement={source}>Quiero recibirla</button>
+    </div>
+    <Turnstile lang="es" theme={tone} />
+  </form>
+  <p class="guide-signup-fine">Sin spam. Te das de baja con un clic.</p>
+</div>
+
+<style>
+  .guide-signup {
+    container-type: inline-size;
+    border-radius: 1rem;
+    padding: 1.5rem;
+  }
+  .guide-signup.is-dark {
+    background: var(--tone-dark-2);
+    color: var(--tone-on-dark);
+    box-shadow: 0 18px 40px -16px rgb(0 0 0 / 0.5);
+  }
+  .guide-signup.is-light {
+    background: var(--tone-raised);
+    border: 1px solid var(--tone-line);
+  }
+  .guide-signup-title {
+    font-family: var(--font-display);
+    font-size: 1.35rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  .guide-signup-body,
+  .guide-signup-fine {
+    margin-top: 0.4rem;
+    font-size: 0.92rem;
+    color: var(--tone-muted);
+  }
+  .is-dark .guide-signup-body,
+  .is-dark .guide-signup-fine {
+    color: var(--tone-on-dark-muted);
+  }
+  .guide-signup-fine {
+    font-size: 0.8rem;
+  }
+  .guide-signup-row {
+    display: grid;
+    gap: 0.6rem;
+  }
+  @container (min-width: 26rem) {
+    .guide-signup-row {
+      grid-template-columns: minmax(0, 1fr) auto;
+    }
+  }
+  .guide-signup-row input {
+    width: 100%;
+    padding: 0.7rem 0.9rem;
+    border-radius: 999px;
+    border: 1px solid var(--tone-line);
+    background: var(--tone-raised);
+    color: var(--tone-ink);
+    font: inherit;
+  }
+  .guide-signup-row input:focus-visible {
+    outline: 2px solid var(--tone-accent);
+    outline-offset: 2px;
+  }
+  .guide-honeypot {
+    position: absolute;
+    left: -9999px;
+  }
+</style>

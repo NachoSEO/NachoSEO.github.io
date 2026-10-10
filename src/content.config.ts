@@ -77,6 +77,8 @@ const blog = defineCollection({
       tags: z.array(z.string()).default([]),
       /** 'seohacks': post recuperado del antiguo blog seohacks.es (2015–2017) */
       category: z.enum(['seohacks']).optional(),
+      /** Indexable pero fuera de los listados del blog, la home, el RSS y los relacionados; solo se llega por enlace */
+      unlisted: z.boolean().default(false),
       /** Portada 1200x630 (scripts/blog-covers.mjs): solo para compartir (og:image) y como image del JSON-LD */
       cover: image().optional(),
       /** Fuentes del post: se pintan en "Referencias" y van como `citation` en el JSON-LD */

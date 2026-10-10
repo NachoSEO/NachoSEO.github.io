@@ -3,7 +3,7 @@ import { getCollection } from 'astro:content';
 import type { APIContext } from 'astro';
 
 export async function GET(context: APIContext) {
-  const posts = await getCollection('blog', (entry) => entry.data.lang === 'en');
+  const posts = await getCollection('blog', (entry) => entry.data.lang === 'en' && !entry.data.unlisted);
   return rss({
     title: 'Nacho Mascort — Growth, AI & SEO',
     description:

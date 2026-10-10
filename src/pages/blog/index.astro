@@ -6,7 +6,7 @@ import SectionLabel from '../../components/SectionLabel.astro';
 import { Image } from 'astro:assets';
 import seohacksLogo from '../../assets/img/seohacks-logo.png';
 
-const esPosts = await getCollection('blog', (entry) => entry.data.lang === 'es');
+const esPosts = await getCollection('blog', (entry) => entry.data.lang === 'es' && !entry.data.unlisted);
 const posts = esPosts.filter((post) => post.data.category !== 'seohacks');
 const archive = esPosts
   .filter((post) => post.data.category === 'seohacks')

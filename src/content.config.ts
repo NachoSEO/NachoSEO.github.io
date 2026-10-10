@@ -79,6 +79,8 @@ const blog = defineCollection({
       category: z.enum(['seohacks']).optional(),
       /** Indexable pero fuera de los listados del blog, la home, el RSS y los relacionados; solo se llega por enlace */
       unlisted: z.boolean().default(false),
+      /** Preguntas frecuentes: se pintan al final del post y van como FAQPage en el JSON-LD */
+      faq: faqSchema.optional(),
       /** Portada 1200x630 (scripts/blog-covers.mjs): solo para compartir (og:image) y como image del JSON-LD */
       cover: image().optional(),
       /** Fuentes del post: se pintan en "Referencias" y van como `citation` en el JSON-LD */

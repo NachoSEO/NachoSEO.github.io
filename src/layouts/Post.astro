@@ -7,6 +7,7 @@ import Cta from '../components/Cta.astro';
 import PostDate from '../components/PostDate.astro';
 import AuthorByline from '../components/AuthorByline.astro';
 import TocNav from '../components/TocNav.astro';
+import FaqAccordion from '../components/service/FaqAccordion.astro';
 import avatar from '../assets/img/nacho-avatar.jpg';
 import { localizedRoute, otherLang as getOtherLang } from '../i18n/utils';
 import type { Lang } from '../i18n/ui';
@@ -130,6 +131,7 @@ const breadcrumbs = [
   ogImage={cover?.src}
   breadcrumbs={breadcrumbs}
   extraSchemaNodes={[articleNode]}
+  faq={entry.data.faq}
 >
   <article class="mx-auto max-w-5xl px-5 pt-16 sm:px-6">
     <header>
@@ -293,6 +295,8 @@ const breadcrumbs = [
       }
     </div>
   </article>
+
+  {entry.data.faq && <FaqAccordion lang={lang} faq={entry.data.faq} />}
 
   {
     related.length > 0 && (

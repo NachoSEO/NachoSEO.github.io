@@ -63,3 +63,31 @@ if (menuToggle && mobileMenu) {
     }
   });
 }
+
+// Desplegables del menú de escritorio: se abren al pasar el ratón (CSS) o con el botón; Escape y clic fuera los cierran
+const dropToggles = [...document.querySelectorAll('[data-drop-toggle]')];
+if (dropToggles.length) {
+  const closeAll = (except) => {
+    for (const toggle of dropToggles) {
+      if (toggle !== except) toggle.setAttribute('aria-expanded', 'false');
+    }
+  };
+  for (const toggle of dropToggles) {
+    toggle.addEventListener('click', () => {
+      const open = toggle.getAttribute('aria-expanded') !== 'true';
+      closeAll(toggle);
+      toggle.setAttribute('aria-expanded', String(open));
+    });
+  }
+  document.addEventListener('click', (event) => {
+    if (!event.target.closest('.nav-drop')) closeAll();
+  });
+  document.addEventListener('keydown', (event) => {
+    if (event.key !== 'Escape') return;
+    const open = dropToggles.find((toggle) => toggle.getAttribute('aria-expanded') === 'true');
+    if (open) {
+      closeAll();
+      open.focus();
+    }
+  });
+}

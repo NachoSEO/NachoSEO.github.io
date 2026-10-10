@@ -1,4 +1,5 @@
 ---
+import { getCollection } from 'astro:content';
 import LogoMark from './LogoMark.astro';
 import { localizedRoute, otherLang, useTranslations } from '../i18n/utils';
 import type { Lang } from '../i18n/ui';
@@ -16,14 +17,56 @@ const switchUrl = alternatePath ?? localizedRoute('home', other);
 const currentPath = Astro.url.pathname;
 
 const navLabel = lang === 'es' ? 'Principal' : 'Main';
-const nav = [
-  { href: localizedRoute('services', lang), label: t('nav.services') },
+
+type NavLink = { href: string; label: string; event?: string; muted?: boolean };
+type NavItem = NavLink & { children?: NavLink[] };
+
+const services = (await getCollection('services', (entry) => entry.data.lang === lang && entry.data.order <= 6)).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+const servicesBase = localizedRoute('services', lang);
+const courseLink: NavLink = {
+  href: 'https://nachomascort.gumroad.com/l/programacion-seo',
+  label: t('nav.course'),
+  event: 'course-click',
+};
+
+const nav: NavItem[] = [
+  {
+    href: servicesBase,
+    label: t('nav.services'),
+    children: [
+      ...services.map((service) => ({ href: `${servicesBase}${service.data.slug}/`, label: service.data.title })),
+      { href: lang === 'es' ? '/servicios/precios/' : '/en/services/pricing/', label: lang === 'es' ? 'Cuánto cuesta' : 'Pricing', muted: true },
+      { href: servicesBase, label: lang === 'es' ? 'Todos los servicios' : 'All services', muted: true },
+    ],
+  },
   { href: localizedRoute('cases', lang), label: t('nav.cases') },
-  { href: localizedRoute('blog', lang), label: t('nav.blog') },
-  { href: localizedRoute('skills', lang), label: t('nav.skills') },
-  { href: 'https://nachomascort.gumroad.com/l/programacion-seo', label: t('nav.course'), event: 'course-click' },
+  {
+    href: localizedRoute('blog', lang),
+    label: t('nav.blog'),
+    children: [
+      { href: localizedRoute('blog', lang), label: lang === 'es' ? 'Todo el blog' : 'All posts' },
+      ...(lang === 'es' ? [{ href: '/blog/seo-hacks/', label: 'SEO Hacks (archivo)', muted: true }] : []),
+    ],
+  },
+  ...(lang === 'es' ? [{ href: '/estudios/', label: 'Estudios' }] : []),
+  {
+    href: localizedRoute('tools', lang),
+    label: lang === 'es' ? 'Recursos' : 'Resources',
+    children: [
+      { href: localizedRoute('tools', lang), label: t('nav.tools') },
+      { href: localizedRoute('skills', lang), label: t('nav.skills') },
+      courseLink,
+    ],
+  },
   { href: localizedRoute('about', lang), label: t('nav.about') },
-].map((item) => ({ ...item, isCurrent: currentPath.startsWith(item.href) }));
+];
+
+const isCurrent = (item: NavItem) =>
+  item.children
+    ? item.children.some((child) => !child.href.startsWith('http') && currentPath.startsWith(child.href))
+    : currentPath.startsWith(item.href);
 ---
 
 <header class="on-dark sticky top-0 z-50">
@@ -38,23 +81,57 @@ const nav = [
       </span>
     </a>
 
-    <nav aria-label={navLabel} class="ml-auto hidden gap-6 text-[0.9rem] md:flex">
-      {
-        nav.map((item) => (
-          <a
-            href={item.href}
-            data-umami-event={item.event}
-            data-umami-event-placement={item.event ? 'header' : undefined}
-            aria-current={item.isCurrent ? 'page' : undefined}
-            class:list={[
-              'whitespace-nowrap hover:text-on-dark',
-              item.isCurrent ? 'text-on-dark underline decoration-accent-on-dark underline-offset-[0.4em]' : 'text-on-dark-muted',
-            ]}
-          >
-            {item.label}
-          </a>
-        ))
-      }
+    <nav aria-label={navLabel} class="ml-auto hidden md:block">
+      <ul class="flex items-center gap-6 text-[0.9rem]">
+        {
+          nav.map((item) => (
+            <li class:list={['relative', item.children && 'nav-drop']}>
+              {item.children ? (
+                <>
+                  <button
+                    type="button"
+                    aria-expanded="false"
+                    data-drop-toggle
+                    class:list={[
+                      'nav-drop-toggle flex items-center gap-1 whitespace-nowrap hover:text-on-dark',
+                      isCurrent(item) ? 'text-on-dark underline decoration-accent-on-dark underline-offset-[0.4em]' : 'text-on-dark-muted',
+                    ]}
+                  >
+                    {item.label}
+                    <span aria-hidden="true" class="nav-caret" />
+                  </button>
+                  <ul class="nav-drop-panel">
+                    {item.children.map((child) => (
+                      <li>
+                        <a
+                          href={child.href}
+                          data-umami-event={child.event}
+                          data-umami-event-placement={child.event ? 'header' : undefined}
+                          aria-current={currentPath === child.href ? 'page' : undefined}
+                          class:list={['nav-drop-link', child.muted && 'is-muted']}
+                        >
+                          {child.label}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              ) : (
+                <a
+                  href={item.href}
+                  aria-current={isCurrent(item) ? 'page' : undefined}
+                  class:list={[
+                    'whitespace-nowrap hover:text-on-dark',
+                    isCurrent(item) ? 'text-on-dark underline decoration-accent-on-dark underline-offset-[0.4em]' : 'text-on-dark-muted',
+                  ]}
+                >
+                  {item.label}
+                </a>
+              )}
+            </li>
+          ))
+        }
+      </ul>
     </nav>
 
     <div class="flex items-center gap-4 md:gap-5">
@@ -85,17 +162,32 @@ const nav = [
             <li class="border-b border-white/10">
               <a
                 href={item.href}
-                data-umami-event={item.event}
-                data-umami-event-placement={item.event ? 'mobile-menu' : undefined}
-                aria-current={item.isCurrent ? 'page' : undefined}
+                aria-current={isCurrent(item) ? 'page' : undefined}
                 class:list={[
                   'font-display flex items-center justify-between py-4 text-2xl',
-                  item.isCurrent ? 'text-accent-on-dark' : 'text-on-dark',
+                  isCurrent(item) ? 'text-accent-on-dark' : 'text-on-dark',
                 ]}
               >
                 {item.label}
                 <span aria-hidden="true" class="text-base text-on-dark-muted">→</span>
               </a>
+              {item.children && (
+                <ul class="-mt-1 grid gap-1 pb-4 pl-4">
+                  {item.children.map((child) => (
+                    <li>
+                      <a
+                        href={child.href}
+                        data-umami-event={child.event}
+                        data-umami-event-placement={child.event ? 'mobile-menu' : undefined}
+                        aria-current={currentPath === child.href ? 'page' : undefined}
+                        class="block py-1.5 text-[1.05rem] text-on-dark-muted hover:text-on-dark"
+                      >
+                        {child.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </li>
           ))
         }

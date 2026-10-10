@@ -63,6 +63,8 @@
   --tone-on-dark: #ffffff;
   --tone-on-dark-muted: #b9c6cb;
   --tone-accent-on-dark: #ff6b8e;
+  /* Frambuesa de las palabras destacadas sobre petróleo (y del logo) */
+  --tone-highlight-on-dark: #f0154f;
   color-scheme: light;
   interpolate-size: allow-keywords;
 }
@@ -250,6 +252,71 @@ body {
     color: var(--tone-accent-ink);
   }
 
+  /* Desplegables del menú principal (escritorio) */
+  .nav-caret {
+    width: 0.4em;
+    height: 0.4em;
+    margin-top: -0.15em;
+    border-right: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
+    transform: rotate(45deg);
+    transition: transform 0.15s ease;
+  }
+  .nav-drop-panel {
+    position: absolute;
+    top: 100%;
+    left: -1rem;
+    min-width: 15rem;
+    margin-top: 0.6rem;
+    padding: 0.5rem;
+    border: 1px solid rgb(255 255 255 / 0.12);
+    border-radius: 0.6rem;
+    background: var(--tone-dark);
+    box-shadow: 0 12px 32px rgb(0 0 0 / 0.25);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-4px);
+    transition: opacity 0.15s ease, transform 0.15s ease, visibility 0.15s;
+  }
+  /* Puente invisible para que el ratón no pierda el hover al bajar al panel */
+  .nav-drop-panel::before {
+    content: '';
+    position: absolute;
+    inset: -0.75rem 0 auto;
+    height: 0.75rem;
+  }
+  .nav-drop:hover .nav-drop-panel,
+  .nav-drop:focus-within .nav-drop-panel,
+  .nav-drop:has([aria-expanded='true']) .nav-drop-panel {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+  }
+  .nav-drop:hover .nav-caret,
+  .nav-drop:has([aria-expanded='true']) .nav-caret {
+    transform: rotate(225deg) translate(-0.1em, -0.1em);
+  }
+  .nav-drop-link {
+    display: block;
+    padding: 0.45rem 0.75rem;
+    border-radius: 0.4rem;
+    color: var(--tone-on-dark);
+    white-space: nowrap;
+  }
+  .nav-drop-link.is-muted {
+    color: var(--tone-on-dark-muted);
+  }
+  .nav-drop-link:hover,
+  .nav-drop-link[aria-current='page'] {
+    background: rgb(255 255 255 / 0.08);
+    color: var(--tone-on-dark);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .nav-drop-panel,
+    .nav-caret {
+      transition: none;
+    }
+  }
   /* Menú móvil: oculto hasta que se pulsa el botón (sin JS lo muestra un <noscript> en Base.astro) */
   .mobile-menu:not(.is-open) {
     display: none;
@@ -425,7 +492,7 @@ body {
   /* Palabras destacadas en titulares grandes sobre petróleo: el mismo frambuesa
      que los botones, aclarado lo justo para el 3:1 que exige el texto grande */
   .on-dark .accent {
-    color: #f0154f;
+    color: var(--tone-highlight-on-dark);
   }
   .accent {
     color: var(--tone-accent-ink);

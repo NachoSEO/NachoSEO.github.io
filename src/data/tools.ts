@@ -29,6 +29,22 @@ export const tools: Record<Lang, ToolCopy>[] = [
   },
   {
     es: {
+      href: '/herramientas/forecast-seo/',
+      title: 'Forecast SEO con Search Console',
+      tagline: 'Cuántos clics ganas si tus consultas suben de posición y cuántos tendrás en 3, 6 o 12 meses.',
+      detail: 'Con tu propia curva de CTR, estacionalidad del último año y todo en tu navegador.',
+      summary: 'previsión de tráfico SEO a partir del export de Search Console: escenarios por posición con la curva de CTR propia y proyección con estacionalidad.',
+    },
+    en: {
+      href: '/en/tools/seo-forecast/',
+      title: 'SEO forecast from Search Console',
+      tagline: 'How many clicks you gain if your queries move up, and how many you will get in 3, 6 or 12 months.',
+      detail: "With your own CTR curve, last year's seasonality and everything in your browser.",
+      summary: 'SEO traffic forecast from the Search Console export: position scenarios with your own CTR curve and a seasonal projection.',
+    },
+  },
+  {
+    es: {
       href: '/herramientas/generador-sitemap/',
       title: 'Generador de sitemap XML',
       tagline: 'Convierte una lista de URLs o un CSV en un sitemap.xml listo para Search Console.',

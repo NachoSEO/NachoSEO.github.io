@@ -62,6 +62,8 @@ export const onRequestGet = async ({ request, env, waitUntil }: { request: Reque
         if (response.status >= 300 && response.status < 400 && location) {
           response.body?.cancel().catch(() => {});
           currentUrl = new URL(location, currentUrl).href;
+          // Una redirección a otra web no se sigue: su cuota por web no se ha reservado
+          if (siteOf(new URL(currentUrl).hostname) !== site) return json({ error: 'cross-site-redirect', url: currentUrl }, 502);
           continue;
         }
         break;

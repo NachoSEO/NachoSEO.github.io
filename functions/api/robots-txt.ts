@@ -23,7 +23,7 @@ export const onRequestGet = async ({ request, env, waitUntil }: { request: Reque
   const site = siteOf(target.hostname);
   return withQuota({ request, env, waitUntil }, GOOGLE_MAX_REDIRECTS + 1, async (meter) => {
     const robotsUrl = new URL('/robots.txt', target).href;
-    const result = await fetchAs(robotsUrl, BROWSER_UA, GOOGLE_MAX_BYTES, GOOGLE_MAX_REDIRECTS);
+    const result = await fetchAs(robotsUrl, BROWSER_UA, GOOGLE_MAX_BYTES, GOOGLE_MAX_REDIRECTS, site);
     meter.used = result.redirects.length + 1;
     meter.sites.set(site, meter.used);
     // Solo se devuelve un robots.txt: si una redirección lleva a otra cosa (HTML, JSON…), el cuerpo no sale.

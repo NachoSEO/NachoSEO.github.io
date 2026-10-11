@@ -50,6 +50,7 @@ const messages = es
       notFound: 'HTTP {status}: no hay robots.txt. Google entiende que puede rastrearlo todo.',
       serverError: 'HTTP {status}: con un error de servidor Google deja de rastrear la web mientras dure.',
       unreachable: 'No he podido descargarlo ({error}). Si a Google le pasa lo mismo, deja de rastrear la web.',
+      crossSite: 'El robots.txt redirige a otro dominio y no lo sigo por seguridad. Cárgalo desde ese dominio o pégalo a mano.',
       truncated: 'Pasa de 500 KiB: Google ignora todo lo que va detrás.',
       notRobots: 'HTTP {status}, pero la respuesta no es un robots.txt (parece HTML u otro formato). Google no entendería reglas en ella.',
       invalidUrl: 'Escribe la URL de una web pública, como https://example.com.',
@@ -79,6 +80,7 @@ const messages = es
       notFound: 'HTTP {status}: there is no robots.txt. Google takes it as permission to crawl everything.',
       serverError: 'HTTP {status}: on a server error Google stops crawling the site while it lasts.',
       unreachable: "I couldn't download it ({error}). If Google can't either, it stops crawling the site.",
+      crossSite: "The robots.txt redirects to another domain and I don't follow it for security reasons. Load it from that domain or paste it in.",
       truncated: 'It is over 500 KiB: Google ignores everything after that.',
       notRobots: "HTTP {status}, but the response isn't a robots.txt (it looks like HTML or another format). Google wouldn't find rules in it.",
       invalidUrl: 'Enter the URL of a public website, like https://example.com.',
@@ -215,7 +217,10 @@ const sampleRobots = 'User-agent: *\nDisallow: /search\nAllow: /search/about\n\n
         if (data.error === 'invalid-url') return showError(messages.invalidUrl);
         if (!response.ok) return showError(messages.errorGeneric);
         baseUrl = new URL('/', data.finalUrl).href;
-        if (data.status === null) {
+        if (data.error === 'cross-site-redirect') {
+          loadStatus.textContent = messages.crossSite;
+          robotsInput.value = '';
+        } else if (data.status === null) {
           loadStatus.textContent = format('unreachable', { error: data.error ?? '?' });
           robotsInput.value = '';
         } else if (data.status >= 500 || data.status === 429) {

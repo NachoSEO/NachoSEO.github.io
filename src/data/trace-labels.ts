@@ -10,6 +10,7 @@ export const traceLabels: Record<Lang, TraceTableLabels> = {
     issues: 'Avisos',
     noIssues: 'Sin avisos',
     issueText: {
+      'cross-site': 'Redirige a otro dominio. No lo sigo por seguridad: compruébalo aparte.',
       error: 'No responde.',
       'client-error': 'Termina en un error 4xx.',
       'server-error': 'Termina en un error 5xx.',
@@ -37,6 +38,7 @@ export const traceLabels: Record<Lang, TraceTableLabels> = {
     issues: 'Issues',
     noIssues: 'No issues',
     issueText: {
+      'cross-site': "Redirects to another domain. I don't follow it for security reasons: check it separately.",
       error: 'No response.',
       'client-error': 'Ends in a 4xx error.',
       'server-error': 'Ends in a 5xx error.',

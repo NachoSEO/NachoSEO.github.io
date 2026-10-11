@@ -64,12 +64,13 @@ export const checkUrls = async (
 
 // ---------- Problemas de cada URL ----------
 
-export type TraceIssue = 'error' | 'client-error' | 'server-error' | 'chain' | 'temporary' | 'loop' | 'meta-refresh' | 'noindex' | 'canonical' | 'downgrade';
+export type TraceIssue = 'cross-site' | 'error' | 'client-error' | 'server-error' | 'chain' | 'temporary' | 'loop' | 'meta-refresh' | 'noindex' | 'canonical' | 'downgrade';
 
 export const traceIssues = (trace: Trace): TraceIssue[] => {
   const issues: TraceIssue[] = [];
   const redirects = trace.hops.filter((hop) => hop.status >= 300 && hop.status < 400);
   if (trace.error === 'loop') issues.push('loop');
+  else if (trace.error === 'cross-site-redirect') issues.push('cross-site');
   else if (trace.error) issues.push('error');
   if (trace.status !== null && trace.status >= 400 && trace.status < 500) issues.push('client-error');
   if (trace.status !== null && trace.status >= 500) issues.push('server-error');

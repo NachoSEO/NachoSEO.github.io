@@ -82,14 +82,19 @@ export const onRequestGet = async ({ request, env, waitUntil }: { request: Reque
     };
     // Primero el navegador de referencia: si la URL redirige, los bots piden ya la URL final.
     // Así el total de subpeticiones no pasa de 50 (límite de Cloudflare)
-    const browser = await fetchAs(target.href, BROWSER_UA);
+    const browser = await fetchAs(target.href, BROWSER_UA, MAX_BODY_BYTES, 3, site);
+    // Si la URL acaba en otra web, no se comprueba aquí: el navegador repite la comprobación con el destino,
+    // que paga su propia cuota por web
+    if (browser.error === 'cross-site-redirect') {
+      return json({ error: 'cross-site-redirect', location: browser.redirects.at(-1)?.split(' → ')[1] ?? null }, 409);
+    }
     const checkedUrl = new URL(browser.status !== null ? browser.finalUrl : target.href);
     const robotsUrl = new URL('/robots.txt', checkedUrl).href;
     const fetchingBots = BOTS.filter((bot) => bot.userAgent);
 
     const [robots, ...botResults] = await Promise.all([
-      fetchAs(robotsUrl, BROWSER_UA, MAX_ROBOTS_BYTES),
-      ...fetchingBots.map((bot) => fetchAs(checkedUrl.href, bot.userAgent!, MAX_BODY_BYTES, 1)),
+      fetchAs(robotsUrl, BROWSER_UA, MAX_ROBOTS_BYTES, 3, site),
+      ...fetchingBots.map((bot) => fetchAs(checkedUrl.href, bot.userAgent!, MAX_BODY_BYTES, 1, site)),
     ]);
 
     // robots.txt: 4xx = sin restricciones; 5xx o sin respuesta = Google deja de rastrear
@@ -159,7 +164,9 @@ export const onRequestGet = async ({ request, env, waitUntil }: { request: Reque
     // Sitemaps: los del robots.txt (hasta 3) o /sitemap.xml si no declara ninguno
     const declaredSitemaps = sitemapsFrom(engine, robotsBody).filter((sitemapUrl) => {
       try {
-        return isFetchable(new URL(sitemapUrl));
+        const parsed = new URL(sitemapUrl);
+        // Solo sitemaps de la misma web: un robots.txt no puede mandar las peticiones a otra
+        return isFetchable(parsed) && siteOf(parsed.hostname) === site;
       } catch {
         return false;
       }
@@ -167,7 +174,7 @@ export const onRequestGet = async ({ request, env, waitUntil }: { request: Reque
     const sitemapUrls = (declaredSitemaps.length > 0 ? declaredSitemaps : [new URL('/sitemap.xml', checkedUrl).href]).slice(0, 3);
     const sitemaps = await Promise.all(
       sitemapUrls.map(async (sitemapUrl) => {
-        const result = await fetchAs(sitemapUrl, BOTS[0].userAgent!, 256 * 1024, 1);
+        const result = await fetchAs(sitemapUrl, BOTS[0].userAgent!, 256 * 1024, 1, site);
         const head = result.body.slice(0, 2048);
         const isXml = /<(urlset|sitemapindex)[\s>]/i.test(result.body);
         return {

@@ -48,7 +48,7 @@ const messages = es
       disallowed: 'Prohibido',
       noRules: 'sin reglas',
       onlyToken: 'Solo token de robots.txt',
-      error: { timeout: 'Sin respuesta (8 s)', network: 'Error de conexión', 'too-many-redirects': 'Demasiadas redirecciones', 'blocked-url': 'Redirige a una dirección no pública' },
+      error: { timeout: 'Sin respuesta (8 s)', network: 'Error de conexión', 'too-many-redirects': 'Demasiadas redirecciones', 'blocked-url': 'Redirige a una dirección no pública', 'cross-site-redirect': 'Redirige a otro dominio' },
       notes: {
         robotsBlocked: 'robots.txt le impide rastrear esta URL.',
         robotsUnreachable: 'Con el robots.txt caído, Google no rastrea.',
@@ -86,7 +86,7 @@ const messages = es
       disallowed: 'Disallowed',
       noRules: 'no rules',
       onlyToken: 'robots.txt token only',
-      error: { timeout: 'No response (8 s)', network: 'Connection error', 'too-many-redirects': 'Too many redirects', 'blocked-url': 'Redirects to a non-public address' },
+      error: { timeout: 'No response (8 s)', network: 'Connection error', 'too-many-redirects': 'Too many redirects', 'blocked-url': 'Redirects to a non-public address', 'cross-site-redirect': 'Redirects to another domain' },
       notes: {
         robotsBlocked: 'robots.txt stops it from crawling this URL.',
         robotsUnreachable: "With robots.txt down, Google doesn't crawl.",
@@ -322,14 +322,20 @@ const messages = es
       submit.disabled = true;
       submit.textContent = messages.checking;
       try {
-        const response = await toolFetch(`/api/bot-check?url=${encodeURIComponent(raw)}`);
-        const data: CheckResponse = await response.json();
+        let response = await toolFetch(`/api/bot-check?url=${encodeURIComponent(raw)}`);
+        let data: CheckResponse & { location?: string | null } = await response.json();
+        // La URL redirige a otra web: se comprueba el destino, que paga su propia cuota (una sola vez)
+        if (response.status === 409 && data.error === 'cross-site-redirect' && data.location) {
+          urlInput.value = data.location;
+          response = await toolFetch(`/api/bot-check?url=${encodeURIComponent(data.location)}`);
+          data = await response.json();
+        }
         if (!response.ok || data.error) {
           showError(data.error === 'invalid-url' ? messages.invalidUrl : messages.failed);
           return;
         }
         render(data);
-        const params = new URLSearchParams({ url: raw });
+        const params = new URLSearchParams({ url: urlInput.value.trim() });
         history.replaceState(null, '', `?${params}`);
       } catch (error) {
         showError(error instanceof ToolLimitError ? error.message : messages.failed);

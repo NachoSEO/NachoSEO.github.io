@@ -46,7 +46,12 @@ const readCapped = async (response: Response, maxBytes: number) => {
 
 const KEPT_HEADERS = ['content-type', 'x-robots-tag', 'server', 'cf-mitigated', 'location', 'retry-after'];
 
-export const fetchAs = async (url: string, userAgent: string, maxBytes = MAX_BODY_BYTES, maxRedirects = MAX_REDIRECTS): Promise<FetchResult> => {
+/**
+ * Pide una URL siguiendo hasta `maxRedirects` redirecciones. Con `site`, no sigue las que salen de esa web
+ * (devuelve error 'cross-site-redirect' y el destino en `redirects`): la cuota por web de destino se cobra a la
+ * web que se pide, y una redirección a otra permitiría cargar las peticiones a una víctima sin pagar su cuota
+ */
+export const fetchAs = async (url: string, userAgent: string, maxBytes = MAX_BODY_BYTES, maxRedirects = MAX_REDIRECTS, site?: string): Promise<FetchResult> => {
   const started = Date.now();
   const redirects: string[] = [];
   let currentUrl = url;
@@ -64,8 +69,12 @@ export const fetchAs = async (url: string, userAgent: string, maxBytes = MAX_BOD
       const location = response.headers.get('location');
       if (response.status >= 300 && response.status < 400 && location && hop < maxRedirects) {
         response.body?.cancel().catch(() => {});
-        redirects.push(`${response.status} → ${new URL(location, currentUrl).href}`);
-        currentUrl = new URL(location, currentUrl).href;
+        const next = new URL(location, currentUrl);
+        redirects.push(`${response.status} → ${next.href}`);
+        if (site && siteOf(next.hostname) !== site) {
+          return { status: response.status, finalUrl: currentUrl, redirects, headers, body: '', bytes: 0, ms: Date.now() - started, error: 'cross-site-redirect' };
+        }
+        currentUrl = next.href;
         continue;
       }
       const { text, bytes } = await readCapped(response, maxBytes);
@@ -174,6 +183,7 @@ export const traceUrl = async (url: string, userAgent: string, budget: FetchBudg
   const trace: Trace = { url, hops: [], finalUrl: url, status: null, error: null, pending: false, xRobotsTag: null, contentType: null, canonical: null, metaRobots: null, metaRefresh: null };
   const seen = new Set<string>();
   let currentUrl = url;
+  const startSite = siteOf(new URL(url).hostname);
   for (let hop = 0; hop < MAX_TRACE_HOPS; hop++) {
     if (budget.remaining <= 0) return { ...trace, pending: true };
     if (seen.has(currentUrl)) return { ...trace, error: 'loop' };
@@ -203,6 +213,10 @@ export const traceUrl = async (url: string, userAgent: string, budget: FetchBudg
       trace.hops.push({ url: currentUrl, status: response.status, location: next });
       if (response.status >= 300 && response.status < 400 && next) {
         response.body?.cancel().catch(() => {});
+        // A otra web no se sigue: su cuota no se ha reservado y serviría para cargar peticiones a una víctima
+        if (siteOf(new URL(next).hostname) !== startSite) {
+          return { ...trace, finalUrl: next, status: response.status, error: 'cross-site-redirect' };
+        }
         currentUrl = next;
         continue;
       }

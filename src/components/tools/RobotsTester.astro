@@ -51,6 +51,7 @@ const messages = es
       serverError: 'HTTP {status}: con un error de servidor Google deja de rastrear la web mientras dure.',
       unreachable: 'No he podido descargarlo ({error}). Si a Google le pasa lo mismo, deja de rastrear la web.',
       truncated: 'Pasa de 500 KiB: Google ignora todo lo que va detrás.',
+      notRobots: 'HTTP {status}, pero la respuesta no es un robots.txt (parece HTML u otro formato). Google no entendería reglas en ella.',
       invalidUrl: 'Escribe la URL de una web pública, como https://example.com.',
       errorGeneric: 'No he podido cargar el robots.txt. Prueba otra vez en un momento.',
       errorEngine: 'No se ha podido cargar el parser en tu navegador. Prueba a recargar la página.',
@@ -79,6 +80,7 @@ const messages = es
       serverError: 'HTTP {status}: on a server error Google stops crawling the site while it lasts.',
       unreachable: "I couldn't download it ({error}). If Google can't either, it stops crawling the site.",
       truncated: 'It is over 500 KiB: Google ignores everything after that.',
+      notRobots: "HTTP {status}, but the response isn't a robots.txt (it looks like HTML or another format). Google wouldn't find rules in it.",
       invalidUrl: 'Enter the URL of a public website, like https://example.com.',
       errorGeneric: "I couldn't load the robots.txt. Try again in a moment.",
       errorEngine: "The parser couldn't load in your browser. Try reloading the page.",
@@ -224,6 +226,9 @@ const sampleRobots = 'User-agent: *\nDisallow: /search\nAllow: /search/about\n\n
           robotsInput.value = '';
         } else if (data.status >= 400) {
           loadStatus.textContent = format('notFound', { status: data.status });
+          robotsInput.value = '';
+        } else if (data.notRobots) {
+          loadStatus.textContent = format('notRobots', { status: data.status });
           robotsInput.value = '';
         } else {
           const size = new TextEncoder().encode(data.body).length;

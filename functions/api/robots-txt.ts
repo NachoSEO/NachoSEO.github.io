@@ -17,14 +17,20 @@ export const onRequestGet = async ({ request }: { request: Request }) => {
 
   const robotsUrl = new URL('/robots.txt', target).href;
   const result = await fetchAs(robotsUrl, BROWSER_UA, GOOGLE_MAX_BYTES, GOOGLE_MAX_REDIRECTS);
+  // Solo se devuelve un robots.txt: si una redirección lleva a otra cosa (HTML, JSON…), el cuerpo no sale.
+  // Sin esto, un robots.txt que redirija a cualquier URL convertiría el endpoint en un proxy abierto
+  const contentType = result.headers['content-type'] ?? '';
+  const isRobots = new URL(result.finalUrl).pathname.endsWith('/robots.txt') || /^text\/plain\b/i.test(contentType);
+  const ok = result.status !== null && result.status >= 200 && result.status < 300;
   return json({
     url: robotsUrl,
     finalUrl: result.finalUrl,
     status: result.status,
     error: result.error ?? null,
     redirects: result.redirects,
-    contentType: result.headers['content-type'] ?? null,
-    body: result.status !== null && result.status >= 200 && result.status < 300 ? result.body : '',
+    contentType: contentType || null,
+    body: ok && isRobots && !/^\s*</.test(result.body) ? result.body : '',
+    notRobots: ok && (!isRobots || /^\s*</.test(result.body)),
     truncated: result.bytes > GOOGLE_MAX_BYTES,
   });
 };

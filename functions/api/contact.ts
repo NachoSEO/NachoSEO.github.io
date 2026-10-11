@@ -6,27 +6,16 @@
  *   CONTACT_MAILER        service binding al Worker contact-mailer (wrangler.toml)
  *   TURNSTILE_SECRET_KEY  clave secreta del widget de Turnstile
  */
+import { EMAIL_PATTERN, isForeignOrigin, redirectTo, verifyTurnstile } from '../../src/lib/form-guard';
+
 interface Env {
   CONTACT_MAILER: { fetch: (input: string, init?: RequestInit) => Promise<Response> };
   TURNSTILE_SECRET_KEY: string;
 }
 
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-const redirectTo = (request: Request, path: string) => Response.redirect(new URL(path, request.url).href, 303);
-
-const verifyTurnstile = async (secret: string, token: string, ip: string | null) => {
-  const body = new URLSearchParams({ secret, response: token });
-  if (ip) body.set('remoteip', ip);
-  const response = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', { method: 'POST', body });
-  const result = (await response.json().catch(() => ({}))) as { success?: boolean };
-  return result.success === true;
-};
-
 export const onRequestPost = async ({ request, env }: { request: Request; env: Env }) => {
   // Solo envíos desde la propia web
-  const origin = request.headers.get('Origin');
-  if (origin && origin !== 'null' && new URL(origin).host !== new URL(request.url).host) {
+  if (isForeignOrigin(request)) {
     return redirectTo(request, '/contacto/error/?code=origin');
   }
 

@@ -7,26 +7,16 @@
  *   TURNSTILE_SECRET_KEY  clave secreta del widget de Turnstile
  */
 import { briefSections, briefServices, detailFieldName, isFieldActive, type BriefField, type ServiceId } from '../../src/lib/brief';
+import { EMAIL_PATTERN, isForeignOrigin, redirectTo, verifyTurnstile } from '../../src/lib/form-guard';
 
 interface Env {
   CONTACT_MAILER: { fetch: (input: string, init?: RequestInit) => Promise<Response> };
   TURNSTILE_SECRET_KEY: string;
 }
 
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const RESULT_PATHS = {
   es: { ok: '/presupuesto/gracias/', error: '/presupuesto/error/', form: '/presupuesto/' },
   en: { ok: '/en/quote/thanks/', error: '/en/quote/error/', form: '/en/quote/' },
-};
-
-const redirectTo = (request: Request, path: string) => Response.redirect(new URL(path, request.url).href, 303);
-
-const verifyTurnstile = async (secret: string, token: string, ip: string | null) => {
-  const body = new URLSearchParams({ secret, response: token });
-  if (ip) body.set('remoteip', ip);
-  const response = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', { method: 'POST', body });
-  const result = (await response.json().catch(() => ({}))) as { success?: boolean };
-  return result.success === true;
 };
 
 const text = (form: FormData, name: string, max: number) => String(form.get(name) ?? '').trim().slice(0, max);
@@ -70,8 +60,7 @@ const formatBrief = (form: FormData, selected: Set<ServiceId>, company: string) 
 
 export const onRequestPost = async ({ request, env }: { request: Request; env: Env }) => {
   // Solo envíos desde la propia web
-  const origin = request.headers.get('Origin');
-  if (origin && origin !== 'null' && new URL(origin).host !== new URL(request.url).host) {
+  if (isForeignOrigin(request)) {
     return redirectTo(request, `${RESULT_PATHS.es.error}?code=origin`);
   }
 

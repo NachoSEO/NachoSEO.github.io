@@ -9,6 +9,7 @@
  * Límite honesto: las peticiones salen de Cloudflare, no de las IPs de Google u OpenAI. Si la web
  * verifica bots por IP (lo hacen Cloudflare, Akamai, etc.), un bloqueo aquí puede no afectar al bot real.
  */
+import { isForeignOrigin } from '../../src/lib/form-guard';
 
 type BotKind = 'search' | 'ai-search' | 'ai-assistant' | 'ai-training';
 
@@ -332,6 +333,9 @@ const xRobotsFor = (header: string | undefined, token: string) =>
 
 // ---------- Seguridad: solo webs públicas ----------
 
+// Filtra por el nombre, no por la IP resuelta: un dominio que apunte a una IP privada pasaría.
+// Hoy no hay riesgo real (los Workers no llegan a redes privadas ni hay servicios internos), pero
+// si algún día esta función tiene acceso a algo interno, hay que resolver el DNS antes de pedir.
 const isPublicHost = (hostname: string) => {
   const host = hostname.toLowerCase().replace(/^\[|\]$/g, '').replace(/\.+$/, '');
   if (host === 'localhost' || host.endsWith('.localhost') || host.endsWith('.local') || host.endsWith('.internal') || !host.includes('.')) return false;
@@ -360,8 +364,7 @@ const json = (data: unknown, status = 200) =>
 export const onRequestGet = async ({ request }: { request: Request }) => {
   if (request.headers.has(LOOP_HEADER)) return json({ error: 'loop' }, 508);
   // Solo desde la propia web: sin esto, cualquier sitio podría usar el endpoint desde el navegador de sus visitas
-  const origin = request.headers.get('Origin');
-  if (origin && new URL(origin).host !== new URL(request.url).host) return json({ error: 'forbidden' }, 403);
+  if (isForeignOrigin(request)) return json({ error: 'forbidden' }, 403);
   const rawUrl = (new URL(request.url).searchParams.get('url') ?? '').trim();
   let target: URL;
   try {

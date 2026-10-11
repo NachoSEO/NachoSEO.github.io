@@ -12,6 +12,8 @@
  * Tags: idioma-es / idioma-en para segmentar envíos, y lm-<lead magnet> para saber de dónde
  * viene cada suscriptor. Se crean solos en Kit la primera vez (POST /tags es idempotente).
  */
+import { EMAIL_PATTERN, isForeignOrigin, redirectTo, verifyTurnstile } from '../../src/lib/form-guard';
+
 interface Env {
   KIT_API_KEY: string;
   KIT_FORM_ID_ES: string;
@@ -21,26 +23,14 @@ interface Env {
 }
 
 const KIT_API = 'https://api.kit.com/v4';
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 // Lead magnets válidos (valor del campo oculto `magnet` del formulario)
 const LEAD_MAGNETS = new Set(['google-quality-audit', 'guia-geo']);
 // Formulario "Newsletter site" de Kit: confirma el alta sin mandar la skill
 const NEWSLETTER_FORM_ID = '9998261';
 
-const redirectTo = (request: Request, path: string) => Response.redirect(new URL(path, request.url).href, 303);
-
-const verifyTurnstile = async (secret: string, token: string, ip: string | null) => {
-  const body = new URLSearchParams({ secret, response: token });
-  if (ip) body.set('remoteip', ip);
-  const response = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', { method: 'POST', body });
-  const result = (await response.json().catch(() => ({}))) as { success?: boolean };
-  return result.success === true;
-};
-
 export const onRequestPost = async ({ request, env }: { request: Request; env: Env }) => {
   // Solo altas desde la propia web: otra página no puede apuntar a alguien sin que lo sepa
-  const origin = request.headers.get('Origin');
-  if (origin && origin !== 'null' && new URL(origin).host !== new URL(request.url).host) return redirectTo(request, '/gracias/error/?code=origin');
+  if (isForeignOrigin(request)) return redirectTo(request, '/gracias/error/?code=origin');
 
   let form: FormData;
   try {

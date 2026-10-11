@@ -3,6 +3,8 @@ import softonicMono from '../assets/logos/mono/softonic.png';
 import softonicColor from '../assets/logos/color/softonic.png';
 import wordTipsMono from '../assets/logos/mono/word-tips.png';
 import wordTipsColor from '../assets/logos/color/word-tips.png';
+import reverseTechMono from '../assets/logos/mono/reverse-tech.png';
+import reverseTechColor from '../assets/logos/color/reverse-tech.png';
 
 export type CaseBrand =
   | { kind: 'image'; mono: ImageMetadata; color: ImageMetadata; alt: string; height: number }
@@ -11,11 +13,11 @@ export type CaseBrand =
 /** Marca y resumen corto de cada caso, por translationKey */
 export const caseBrands: Record<string, { brand: CaseBrand; summary: { es: string; en: string } }> = {
   'organic-growth': {
-    brand: { kind: 'text', text: 'Reverse Tech' },
+    brand: { kind: 'image', mono: reverseTechMono, color: reverseTechColor, alt: 'Reverse Tech', height: 28 },
     summary: { es: 'El área orgánica, montada desde cero', en: 'Organic area built from scratch' },
   },
   'ad-factory': {
-    brand: { kind: 'text', text: 'Reverse Tech' },
+    brand: { kind: 'image', mono: reverseTechMono, color: reverseTechColor, alt: 'Reverse Tech', height: 28 },
     summary: { es: 'Fábrica de anuncios con IA', en: 'AI ad factory' },
   },
   softonic: {

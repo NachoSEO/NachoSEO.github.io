@@ -111,7 +111,8 @@ export const guideParts: GuidePart[] = [
             number: 7,
             title: 'Acceso técnico y logs de bots de IA',
             summary: 'Que la IA pueda llegar, leer y entender tu web, y saber cuándo lo hace.',
-            status: 'disponible',
+            status: 'reservado',
+            author: { name: 'Carlos Sánchez Donate', slug: 'carlos-sanchez-donate' },
           },
           {
             number: 8,

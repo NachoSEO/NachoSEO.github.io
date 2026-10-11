@@ -136,7 +136,7 @@ const inputClass =
     <div class="sm:w-48">
       <label for="sitemap-audit-sample" class="text-sm font-semibold">{copy.sampleLabel}</label>
       <select id="sitemap-audit-sample" class:list={[inputClass, 'mt-2']} data-sample>
-        {[50, 100, 250, 500].map((size) => <option value={size} selected={size === 100}>{size}</option>)}
+        {[50, 100].map((size) => <option value={size} selected={size === 50}>{size}</option>)}
       </select>
     </div>
     <button type="button" class="btn" data-check-status data-umami-event="sitemap-auditor-status">{copy.checkStatus}</button>

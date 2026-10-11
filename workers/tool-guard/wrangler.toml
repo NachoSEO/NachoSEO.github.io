@@ -14,3 +14,8 @@ class_name = "ToolQuota"
 [[migrations]]
 tag = "v1"
 new_sqlite_classes = ["ToolQuota"]
+
+# Avisos por email cuando el uso global llega al 80 % y al 100 % (mismo Worker que el formulario de contacto)
+[[services]]
+binding = "CONTACT_MAILER"
+service = "contact-mailer"

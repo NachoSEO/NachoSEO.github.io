@@ -1,0 +1,281 @@
+---
+import type { Lang } from '../../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const es = lang === 'es';
+
+const MARKETS = [
+  { value: 'es-es', label: es ? 'Español · España' : 'Spanish · Spain' },
+  { value: 'es-mx', label: es ? 'Español · México' : 'Spanish · Mexico' },
+  { value: 'es-ar', label: es ? 'Español · Argentina' : 'Spanish · Argentina' },
+  { value: 'es-co', label: es ? 'Español · Colombia' : 'Spanish · Colombia' },
+  { value: 'es-cl', label: es ? 'Español · Chile' : 'Spanish · Chile' },
+  { value: 'es-pe', label: es ? 'Español · Perú' : 'Spanish · Peru' },
+  { value: 'es-us', label: es ? 'Español · EE. UU.' : 'Spanish · US' },
+  { value: 'en-us', label: es ? 'Inglés · EE. UU.' : 'English · US' },
+  { value: 'en-gb', label: es ? 'Inglés · Reino Unido' : 'English · UK' },
+  { value: 'en-au', label: es ? 'Inglés · Australia' : 'English · Australia' },
+  { value: 'ca-es', label: es ? 'Catalán · España' : 'Catalan · Spain' },
+  { value: 'pt-br', label: es ? 'Portugués · Brasil' : 'Portuguese · Brazil' },
+  { value: 'pt-pt', label: es ? 'Portugués · Portugal' : 'Portuguese · Portugal' },
+  { value: 'fr-fr', label: es ? 'Francés · Francia' : 'French · France' },
+  { value: 'it-it', label: es ? 'Italiano · Italia' : 'Italian · Italy' },
+  { value: 'de-de', label: es ? 'Alemán · Alemania' : 'German · Germany' },
+];
+
+const copy = es
+  ? {
+      seedLabel: 'Palabra clave semilla',
+      seedPlaceholder: 'consultor seo',
+      marketLabel: 'Idioma y país',
+      modesLegend: 'Qué combinar con la semilla',
+      modes: { alphabet: 'Letras y números (a-z, 0-9)', questions: 'Preguntas (qué, cómo, por qué…)', prepositions: 'Modificadores (para, con, vs, precio…)' },
+      run: 'Buscar sugerencias',
+      copyAll: 'Copiar todas',
+      cluster: 'Agrupar estas keywords',
+      exportCsv: 'Descargar CSV',
+      filterLabel: 'Filtrar resultados',
+      noscript: 'El expansor funciona con JavaScript. Actívalo para buscar sugerencias.',
+    }
+  : {
+      seedLabel: 'Seed keyword',
+      seedPlaceholder: 'seo consultant',
+      marketLabel: 'Language and country',
+      modesLegend: 'What to combine with the seed',
+      modes: { alphabet: 'Letters and numbers (a-z, 0-9)', questions: 'Questions (what, how, why…)', prepositions: 'Modifiers (for, with, vs, price…)' },
+      run: 'Get suggestions',
+      copyAll: 'Copy all',
+      cluster: 'Group these keywords',
+      exportCsv: 'Download CSV',
+      filterLabel: 'Filter results',
+      noscript: 'The expander runs on JavaScript. Enable it to get suggestions.',
+    };
+
+const messages = es
+  ? {
+      loading: 'Buscando: {done} de {total} grupos',
+      count: '{n} sugerencias únicas',
+      noSeed: 'Escribe una palabra clave.',
+      noModes: 'Elige al menos una combinación.',
+      throttled: 'Google está limitando las peticiones ahora mismo. Prueba en unos minutos.',
+      apiError: 'No he podido obtener sugerencias. Prueba otra vez en un momento.',
+      partial: 'Algunas combinaciones no han respondido; el resultado puede estar incompleto.',
+      empty: 'Google no devuelve sugerencias para esta semilla.',
+      colKeyword: 'Sugerencia',
+      colModifier: 'Combinación',
+      seedOnly: 'semilla',
+      copied: 'Copiado',
+      useAsSeed: 'Usar como semilla',
+    }
+  : {
+      loading: 'Searching: {done} of {total} groups',
+      count: '{n} unique suggestions',
+      noSeed: 'Enter a keyword.',
+      noModes: 'Pick at least one combination.',
+      throttled: 'Google is rate-limiting requests right now. Try again in a few minutes.',
+      apiError: "I couldn't get suggestions. Try again in a moment.",
+      partial: "Some combinations didn't respond, so the result may be incomplete.",
+      empty: "Google doesn't return suggestions for this seed.",
+      colKeyword: 'Suggestion',
+      colModifier: 'Combination',
+      seedOnly: 'seed',
+      copied: 'Copied',
+      useAsSeed: 'Use as seed',
+    };
+
+const inputClass =
+  'w-full rounded-lg border border-line bg-paper px-4 py-3 text-[0.95rem] text-ink transition-colors focus:border-ink';
+---
+
+<div class="card sm:p-8" data-autocomplete-tool data-lang={lang} data-messages={JSON.stringify(messages)}>
+  <form class="grid gap-5 md:grid-cols-[1fr_16rem]" data-form novalidate>
+    <div>
+      <label for="autocomplete-seed" class="text-sm font-semibold">{copy.seedLabel}</label>
+      <input id="autocomplete-seed" type="text" autocomplete="off" maxlength="80" placeholder={copy.seedPlaceholder} class:list={[inputClass, 'mt-2']} data-seed />
+    </div>
+    <div>
+      <label for="autocomplete-market" class="text-sm font-semibold">{copy.marketLabel}</label>
+      <select id="autocomplete-market" class:list={[inputClass, 'mt-2']} data-market>
+        {MARKETS.map((market) => <option value={market.value} selected={market.value === (es ? 'es-es' : 'en-us')}>{market.label}</option>)}
+      </select>
+    </div>
+    <fieldset class="md:col-span-2">
+      <legend class="text-sm font-semibold">{copy.modesLegend}</legend>
+      <div class="mt-3 flex flex-wrap gap-x-6 gap-y-2 text-[0.95rem]">
+        {
+          Object.entries(copy.modes).map(([value, label]) => (
+            <label class="flex cursor-pointer items-center gap-2">
+              <input type="checkbox" value={value} checked class="h-4 w-4 accent-[var(--tone-accent)]" data-mode />
+              {label}
+            </label>
+          ))
+        }
+      </div>
+    </fieldset>
+    <div class="md:col-span-2">
+      <button type="submit" class="btn" data-run data-umami-event="autocomplete-run">{copy.run}</button>
+    </div>
+  </form>
+  <p class="meta mt-4" aria-live="polite" data-progress></p>
+  <p role="alert" class="mt-2 text-sm font-semibold text-accent-ink" data-error hidden></p>
+  <noscript><p class="mt-4 text-sm font-semibold text-accent-ink">{copy.noscript}</p></noscript>
+</div>
+
+<section class="card mt-5 sm:p-8" data-result hidden>
+  <div class="flex flex-wrap items-center justify-between gap-3">
+    <p class="text-[0.95rem] font-semibold" data-count></p>
+    <div class="flex flex-wrap gap-3">
+      <a href={es ? '/herramientas/clusterizador-keywords/' : '/en/tools/keyword-clusterer/'} class="btn btn--ghost" data-cluster>{copy.cluster}</a>
+      <button type="button" class="btn btn--ghost" data-copy>{copy.copyAll}</button>
+      <button type="button" class="btn btn--ghost" data-export>{copy.exportCsv}</button>
+    </div>
+  </div>
+  <label for="autocomplete-filter" class="sr-only">{copy.filterLabel}</label>
+  <input id="autocomplete-filter" type="search" placeholder={copy.filterLabel} class:list={[inputClass, 'mt-5']} data-filter />
+  <div class="mt-5 overflow-x-auto"><table class="w-full text-left text-sm" data-table></table></div>
+</section>
+
+<script>
+  import { toCsv } from '../../lib/csv';
+  import { CLUSTER_HANDOFF_KEY } from '../../lib/keyword-clusters';
+
+  interface Suggestion {
+    text: string;
+    modifier: string;
+    mode: string;
+  }
+
+  const tool = document.querySelector<HTMLElement>('[data-autocomplete-tool]');
+  const result = document.querySelector<HTMLElement>('[data-result]');
+
+  if (tool && result) {
+    const messages = JSON.parse(tool.dataset.messages ?? '{}');
+    const numberFormat = new Intl.NumberFormat(tool.dataset.lang === 'es' ? 'es-ES' : 'en-US');
+    const format = (template: string, values: Record<string, number>) => template.replace(/\{(\w+)\}/g, (_, name) => numberFormat.format(values[name]));
+    const element = <K extends keyof HTMLElementTagNameMap>(tag: K, className = '', text = '') =>
+      Object.assign(document.createElement(tag), { className, textContent: text });
+
+    const seedInput = tool.querySelector<HTMLInputElement>('[data-seed]')!;
+    const marketInput = tool.querySelector<HTMLSelectElement>('[data-market]')!;
+    const runButton = tool.querySelector<HTMLButtonElement>('[data-run]')!;
+    const progress = tool.querySelector<HTMLElement>('[data-progress]')!;
+    const errorBox = tool.querySelector<HTMLElement>('[data-error]')!;
+    const filterInput = result.querySelector<HTMLInputElement>('[data-filter]')!;
+    const copyButton = result.querySelector<HTMLButtonElement>('[data-copy]')!;
+    const copyLabel = copyButton.textContent ?? '';
+    let suggestions: Suggestion[] = [];
+
+    const showError = (message: string) => {
+      errorBox.textContent = message;
+      errorBox.hidden = !message;
+    };
+
+    const visible = () => {
+      const filter = filterInput.value.trim().toLowerCase();
+      return filter ? suggestions.filter((item) => item.text.toLowerCase().includes(filter)) : suggestions;
+    };
+
+    function render() {
+      const rows = visible();
+      result!.querySelector<HTMLElement>('[data-count]')!.textContent = format(messages.count, { n: rows.length });
+      const head = element('thead');
+      const headRow = element('tr');
+      headRow.append(element('th', 'py-2 pr-4 font-semibold', messages.colKeyword), element('th', 'py-2 font-semibold', messages.colModifier));
+      head.append(headRow);
+      const body = element('tbody');
+      body.append(
+        ...rows.map((item) => {
+          const row = element('tr', 'border-t border-line');
+          const keywordCell = element('td', 'py-2 pr-4');
+          const button = element('button', 'text-left hover:text-accent-ink', item.text);
+          button.type = 'button';
+          button.title = messages.useAsSeed;
+          button.addEventListener('click', () => {
+            seedInput.value = item.text;
+            seedInput.focus();
+            window.scrollTo({ top: tool!.getBoundingClientRect().top + window.scrollY - 120, behavior: 'smooth' });
+          });
+          keywordCell.append(button);
+          row.append(keywordCell, element('td', 'py-2 font-mono text-[0.8rem] text-muted', item.modifier || messages.seedOnly));
+          return row;
+        })
+      );
+      result!.querySelector<HTMLTableElement>('[data-table]')!.replaceChildren(head, body);
+      result!.hidden = false;
+    }
+
+    tool.querySelector<HTMLFormElement>('[data-form]')!.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      showError('');
+      const seed = seedInput.value.trim();
+      const modes = [...tool.querySelectorAll<HTMLInputElement>('[data-mode]')].filter((input) => input.checked).map((input) => input.value);
+      if (!seed) return showError(messages.noSeed);
+      if (modes.length === 0) return showError(messages.noModes);
+      const [hl, gl] = marketInput.value.split('-');
+      runButton.disabled = true;
+      suggestions = [];
+      const seen = new Set<string>();
+      let partial = false;
+      try {
+        for (const [index, mode] of modes.entries()) {
+          progress.textContent = format(messages.loading, { done: index, total: modes.length });
+          const response = await fetch(`/api/autocomplete?q=${encodeURIComponent(seed)}&hl=${hl}&gl=${gl}&mode=${mode}`);
+          const data = await response.json().catch(() => ({}));
+          if (!response.ok) {
+            if (data.error === 'throttled') throw new Error('throttled');
+            partial = true;
+            continue;
+          }
+          if (data.failed) partial = true;
+          for (const item of data.suggestions as { text: string; modifier: string }[]) {
+            const key = item.text.toLowerCase();
+            if (seen.has(key)) continue;
+            seen.add(key);
+            suggestions.push({ ...item, mode });
+          }
+          render();
+        }
+        progress.textContent = '';
+        if (suggestions.length === 0) showError(messages.empty);
+        else if (partial) showError(messages.partial);
+        render();
+      } catch (error) {
+        progress.textContent = '';
+        showError(error instanceof Error && error.message === 'throttled' ? messages.throttled : messages.apiError);
+      } finally {
+        runButton.disabled = false;
+      }
+    });
+
+    filterInput.addEventListener('input', render);
+    result.querySelector<HTMLAnchorElement>('[data-cluster]')!.addEventListener('click', () => {
+      try {
+        sessionStorage.setItem(CLUSTER_HANDOFF_KEY, visible().map((item) => item.text).join('\n'));
+      } catch {
+        // Sin sessionStorage el clusterizador se abre vacío
+      }
+    });
+    copyButton.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(visible().map((item) => item.text).join('\n'));
+        copyButton.textContent = messages.copied;
+      } catch {
+        copyButton.textContent = copyLabel;
+      }
+      setTimeout(() => (copyButton.textContent = copyLabel), 2000);
+    });
+    result.querySelector<HTMLButtonElement>('[data-export]')!.addEventListener('click', () => {
+      const csv = toCsv(['keyword', 'combination', 'mode'], visible().map((item) => [item.text, item.modifier, item.mode]));
+      const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+      const link = Object.assign(document.createElement('a'), { href: url, download: 'autocomplete.csv' });
+      document.body.append(link);
+      link.click();
+      link.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    });
+  }
+</script>

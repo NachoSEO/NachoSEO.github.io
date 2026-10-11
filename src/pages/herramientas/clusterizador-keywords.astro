@@ -1,0 +1,90 @@
+---
+import Base from '../../layouts/Base.astro';
+import Cta from '../../components/Cta.astro';
+import FaqAccordion from '../../components/service/FaqAccordion.astro';
+import KeywordClusterer from '../../components/tools/KeywordClusterer.astro';
+
+const path = '/herramientas/clusterizador-keywords/';
+
+const faq = [
+  {
+    question: '¿Cómo agrupa las keywords?',
+    answer:
+      'Por las palabras que comparten. Quita tildes, stopwords («de», «para», «the»…) y plurales, de modo que «zapatillas de running para mujer» y «zapatilla running mujer» quedan iguales. Después junta cada keyword con el primer grupo que se le parezca lo suficiente. El control de similitud decide cuánto.',
+  },
+  {
+    question: '¿Agrupa por intención o por SERP?',
+    answer:
+      'No. Agrupar por SERP (keywords que comparten resultados en Google) necesita consultar cada SERP, y eso tiene coste. Esta agrupación es léxica: sirve para ordenar listas largas en temas y detectar variantes. Antes de decidir si dos grupos van en la misma página, mira sus SERPs.',
+  },
+  {
+    question: '¿Se envían mis keywords a algún sitio?',
+    answer: 'No. Todo se calcula en tu navegador.',
+  },
+  {
+    question: '¿De dónde saco las keywords?',
+    answer:
+      'De Search Console, de tu herramienta de keywords o del expansor de Google Autocomplete de esta misma web, que tiene un botón para mandar sus sugerencias directamente aquí.',
+  },
+];
+
+const webApplication = {
+  '@type': 'WebApplication',
+  name: 'Clusterizador de keywords',
+  url: `https://nachomascort.com${path}`,
+  applicationCategory: 'BusinessApplication',
+  operatingSystem: 'Any',
+  browserRequirements: 'Requires JavaScript',
+  inLanguage: 'es',
+  isAccessibleForFree: true,
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' },
+  author: { '@id': 'https://nachomascort.com/#person' },
+};
+---
+
+<Base
+  lang="es"
+  title="Clusterizador de keywords gratis — Nacho Mascort"
+  description="Agrupa miles de keywords por tema en tu navegador: une plurales, variantes y órdenes distintos, suma el volumen de cada grupo y descarga el resultado en CSV."
+  path={path}
+  alternatePath="/en/tools/keyword-clusterer/"
+  breadcrumbs={[
+    { name: 'Inicio', path: '/' },
+    { name: 'Herramientas', path: '/herramientas/' },
+    { name: 'Clusterizador de keywords', path },
+  ]}
+  faq={faq}
+  extraSchemaNodes={[webApplication]}
+>
+  <div class="mx-auto max-w-5xl px-5 pt-16 sm:px-6 sm:pt-20">
+    <p class="meta"><a href="/herramientas/" class="hover:text-ink">Herramientas</a> · Keywords</p>
+    <h1 class="display-1 mt-5">Clusterizador de keywords</h1>
+    <p class="lede mt-6">
+      Pega una lista de keywords (con su volumen, si lo tienes) y agrúpalas por tema. Junta plurales, variantes y palabras
+      en otro orden, suma el volumen de cada grupo y te deja el CSV listo para planificar páginas.
+    </p>
+
+    <div class="mt-10">
+      <KeywordClusterer lang="es" />
+    </div>
+  </div>
+
+  <article class="mx-auto max-w-5xl px-5 pt-16 sm:px-6 md:pt-24">
+    <p class="section-label">Cómo usarla</p>
+    <div class="article-body mt-4">
+      <h2>De una lista de keywords a un mapa de páginas</h2>
+      <p>
+        Cada grupo es un candidato a página: la keyword con más volumen le da nombre y el resto son variantes que esa página
+        debería cubrir. Empieza con la similitud por defecto y muévela si los grupos salen demasiado amplios o demasiado
+        partidos. Los grupos de una sola keyword quedan al final.
+      </p>
+      <p>
+        Para sacar la lista, usa las <a href="/herramientas/keywords-autocomplete/">keywords de Google Autocomplete</a>: tienen
+        un botón que manda las sugerencias directamente a esta herramienta.
+      </p>
+    </div>
+  </article>
+
+  <FaqAccordion lang="es" faq={faq} />
+  <Cta lang="es" />
+</Base>

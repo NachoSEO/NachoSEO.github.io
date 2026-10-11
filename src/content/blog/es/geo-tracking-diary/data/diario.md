@@ -209,6 +209,23 @@ Entidades nuevas en el tracker (proyecto 1, trabajadas, 7 muestras por semana, 2
 - #20 Formación y charlas de SEO e IA (/servicios/formacion/).
 Coste estimado: unos 0,71 $/mes por entidad. Su línea base empieza la semana en que se arranquen; las 16 originales no cambian.
 
+## Día 6 · 2026-10-11 · Autores de la guía, revisión técnica y lo que leen los LLM
+
+Guía GEO:
+- Capítulos con autor: 1 (yo), 7 (Carlos Sánchez Donate), 9 (Daria Miroshnichenko), 12 (Andreas Niessen), 15 (Esteve Castells) y 17 (Álvaro Peña). Los de Andreas, Álvaro y el mío se cerraron la noche del 10; Carlos y Daria, hoy.
+- El índice tiene ancla por capítulo (/guia-geo/#capitulo-N) para enlazar entre capítulos, y componentes interactivos (calculadoras, simulador, checklist) para los capítulos que los necesiten.
+- Los borradores de los autores se quedan fuera del repo público y solo se ven en local hasta publicarse.
+- Plazos para los autores: índice hacia el 25-26 de octubre y capítulo hacia el 29-30 de noviembre.
+
+Revisión técnica del sitio (en producción el 11 por la tarde), con lo que afecta a buscadores y LLM:
+- Sitemap sin hreflang. Declaraba es-ES (el HTML dice es) y solo emparejaba 4 URLs con el mismo slug en los dos idiomas. Ahora el hreflang sale solo del HTML, que sí empareja los slugs traducidos (/servicios/ con /en/services/).
+- Las versiones .md de los servicios (las que leen los agentes y llms-full.txt) ya no incluyen secciones que la página HTML no muestra ("Para quién es" y el "ejemplo real"). Criterio: el .md tiene que decir lo mismo que la página.
+- Decisión: la lista de consultores (/blog/mejores-consultores-seo-geo/, unlisted) sigue en llms.txt, blog.md y llms-full.txt. Fuera del blog, la home y el RSS, pero visible para los LLM a propósito.
+- Fechas de los posts en UTC: el día que se muestra ya no depende de dónde se haga el build.
+- Firma de autor unificada con el título del sitio (SEO, IA y growth).
+
+Pendiente de publicar: logo de Reverse Tech en los casos (antes salía como texto), sacado de reverse.tech.
+
 ## Referencias para el post
 - Wil Reynolds, Seer Interactive. Re-imagining AI visibility KPIs in a query fan-out world. https://www.seerinteractive.com/insights/ai-visibility-kpis (hardwired, anti-recomendación, KPIs de credibilidad).
 - Dan Petrovic, DEJAN. Why we don't do prompt tracking. https://dejan.ai/blog/prompt-tracking (medir por entidades canónicas con una sonda fija y muchas muestras; es el método del geo-tracker).

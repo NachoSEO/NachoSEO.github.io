@@ -95,7 +95,82 @@ const scrapingCover = ({ title, subtitle }) => {
 </svg>`;
 };
 
+/** Metodología: tablero Kanban de cuatro columnas con el KR del quarter encima, con los colores del blog */
+const methodologyCover = ({ title, subtitle, kr, columns }) => {
+  const cardColors = ['#ffe1e9', '#ffffff', '#ffe1e9', '#ffffff'];
+  const columnWidth = 118;
+  const board = columns
+    .map(({ name, cards }, columnIndex) => {
+      const x = 20 + columnIndex * (columnWidth + 10);
+      const cardRects = cards
+        .map(
+          (card, cardIndex) => `
+        <rect x="${x + 8}" y="${118 + cardIndex * 66}" width="${columnWidth - 16}" height="56" rx="6" fill="${cardColors[(columnIndex + cardIndex) % 4]}" stroke="#dde2e3"/>
+        ${textLines(card, { x: x + 16, y: 141 + cardIndex * 66, size: 13, lineHeight: 17, fill: '#14333f', fontFamily: 'Avenir Next', fontWeight: 600 })}`,
+        )
+        .join('');
+      return `
+        <rect x="${x}" y="82" width="${columnWidth}" height="270" rx="8" fill="#f4f5f5"/>
+        ${textLines([name], { x: x + 10, y: 104, size: 13, lineHeight: 0, fill: '#14333f', fontFamily: 'Avenir Next', fontWeight: 700 })}
+        ${cardRects}`;
+    })
+    .join('');
+  return `
+<svg xmlns="http://www.w3.org/2000/svg" width="${WIDTH}" height="${HEIGHT}" viewBox="0 0 ${WIDTH} ${HEIGHT}">
+  <rect width="${WIDTH}" height="${HEIGHT}" fill="#f4f5f5"/>
+  <circle cx="90" cy="560" r="170" fill="#dde2e3"/>
+  <circle cx="1150" cy="40" r="120" fill="#dde2e3"/>
+  <path d="M0 600 C300 570 700 610 1200 580 V630 H0 Z" fill="#14333f"/>
+  ${textLines([title], { x: 70, y: 215, size: 56, lineHeight: 0, fill: '#14333f', fontFamily: 'Arial Black', fontWeight: 900, letterSpacing: 1 })}
+  ${textLines(subtitle, { x: 72, y: 290, size: 36, lineHeight: 48, fill: '#c8073f', fontFamily: 'Georgia', fontStyle: 'italic', fontWeight: 700 })}
+  <g transform="translate(625 120)">
+    <rect x="8" y="12" width="540" height="372" rx="14" fill="#14333f" fill-opacity="0.18"/>
+    <rect width="540" height="372" rx="14" fill="#ffffff" stroke="#14333f" stroke-width="4"/>
+    <text x="20" y="34" font-family="Menlo" font-size="15" font-weight="700" fill="#14333f">${escapeXml(kr.label)}</text>
+    <rect x="20" y="48" width="500" height="14" rx="7" fill="#f4f5f5"/>
+    <rect x="20" y="48" width="${500 * kr.progress}" height="14" rx="7" fill="#14333f"/>
+    ${board}
+  </g>
+</svg>`;
+};
+
+const methodologyColumns = (names, cards) => names.map((name, index) => ({ name, cards: cards[index] }));
+
 const covers = [
+  {
+    file: 'src/content/blog/es/metodologia-proyectos-seo/cover.png',
+    svg: methodologyCover({
+      title: 'METODOLOGÍA',
+      subtitle: ['del objetivo de', 'negocio a la tarea', 'de la semana'],
+      kr: { label: 'KR1 · Fichas indexadas: 19.700 → 38.400', progress: 0.42 },
+      columns: methodologyColumns(
+        ['Por hacer', 'En curso', 'En espera', 'Hecho'],
+        [
+          [['Enlazado', 'a fichas'], ['Consolidar', 'variantes'], ['Sitemap', 'de fichas']],
+          [['Revisar logs', 'Googlebot'], ['QA de SEO', 'plantilla']],
+          [['Noindex', 'filtros (Tech)']],
+          [['Tabla por', 'page type'], ['Valor por', 'sesión'], ['Alerta de', 'redirecciones']],
+        ],
+      ),
+    }),
+  },
+  {
+    file: 'src/content/blog/en/seo-project-methodology/cover.png',
+    svg: methodologyCover({
+      title: 'METHODOLOGY',
+      subtitle: ['from business goal', "to this week's task"],
+      kr: { label: 'KR1 · Indexed products: 19,700 → 38,400', progress: 0.42 },
+      columns: methodologyColumns(
+        ['To do', 'Doing', 'Waiting', 'Done'],
+        [
+          [['Link to', 'products'], ['Merge', 'variants'], ['Product', 'sitemap']],
+          [['Googlebot', 'log review'], ['SEO QA on', 'template']],
+          [['Noindex', 'filters (Tech)']],
+          [['Table by', 'page type'], ['Value per', 'session'], ['Redirect', 'alert']],
+        ],
+      ),
+    }),
+  },
   {
     file: 'src/content/blog/es/quality-google-core-updates/cover.png',
     svg: qualityCover({ title: 'QUALITY', subtitle: ['Qué es, cómo la mide Google', 'y cuánto tarda en recuperarse'] }),

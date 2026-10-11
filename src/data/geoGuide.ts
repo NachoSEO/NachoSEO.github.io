@@ -124,7 +124,8 @@ export const guideParts: GuidePart[] = [
             number: 9,
             title: 'Qué contenido elige citar la IA',
             summary: 'Qué crear y cómo producirlo sin caer en contenido commodity.',
-            status: 'disponible',
+            status: 'reservado',
+            author: { name: 'Daria Miroshnichenko', slug: 'daria-miroshnichenko' },
           },
           {
             number: 10,

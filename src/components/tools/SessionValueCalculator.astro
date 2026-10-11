@@ -105,14 +105,28 @@ const { models } = copy;
 
 <div class="svc not-prose" data-session-calc data-lang={lang}>
   <div class="svc-tabs" role="tablist" aria-label={copy.modelsAria}>
-    {models.map((model, index) => <button type="button" role="tab" aria-selected={String(index === 0)} data-model={model.id}>{model.label}</button>)}
+    {
+      models.map((model, index) => (
+        <button
+          type="button"
+          role="tab"
+          id={`svc-tab-${model.id}`}
+          aria-selected={index === 0 ? 'true' : 'false'}
+          aria-controls={`svc-panel-${model.id}`}
+          tabindex={index === 0 ? undefined : '-1'}
+          data-model={model.id}
+        >
+          {model.label}
+        </button>
+      ))
+    }
   </div>
 
   <div class="svc-grid">
     <div class="svc-inputs">
       {
         models.map((model, index) => (
-          <fieldset data-fields={model.id} hidden={index !== 0}>
+          <fieldset id={`svc-panel-${model.id}`} role="tabpanel" aria-labelledby={`svc-tab-${model.id}`} data-fields={model.id} hidden={index !== 0}>
             <legend class="svc-formula">{copy.formulaPrefix} {model.formula}</legend>
             {model.fields.map((field) => (
               <label>
@@ -296,14 +310,27 @@ const { models } = copy;
       out('thousand').textContent = euro(perSession * 1000);
     };
 
-    root.querySelectorAll<HTMLButtonElement>('[data-model]').forEach((tab) =>
-      tab.addEventListener('click', () => {
-        model = tab.dataset.model!;
-        root.querySelectorAll('[data-model]').forEach((other) => other.setAttribute('aria-selected', String(other === tab)));
-        root.querySelectorAll<HTMLElement>('[data-fields]').forEach((set) => (set.hidden = set.dataset.fields !== model));
-        update();
-      })
-    );
+    const tabs = [...root.querySelectorAll<HTMLButtonElement>('[data-model]')];
+    const selectTab = (tab: HTMLButtonElement) => {
+      model = tab.dataset.model!;
+      tabs.forEach((other) => {
+        other.setAttribute('aria-selected', String(other === tab));
+        other.tabIndex = other === tab ? 0 : -1;
+      });
+      root.querySelectorAll<HTMLElement>('[data-fields]').forEach((set) => (set.hidden = set.dataset.fields !== model));
+      update();
+    };
+    tabs.forEach((tab, index) => {
+      tab.addEventListener('click', () => selectTab(tab));
+      tab.addEventListener('keydown', (event) => {
+        const target = ({ ArrowRight: index + 1, ArrowLeft: index - 1, Home: 0, End: tabs.length - 1 } as Record<string, number | undefined>)[event.key];
+        if (target === undefined) return;
+        event.preventDefault();
+        const next = tabs[(target + tabs.length) % tabs.length];
+        selectTab(next);
+        next.focus();
+      });
+    });
     root.querySelectorAll('input').forEach((input) => input.addEventListener('input', update));
     update();
   }

@@ -17,5 +17,5 @@ export function otherLang(lang: Lang): Lang {
 const dateLocales: Record<Lang, string> = { es: 'es-ES', en: 'en-US' };
 
 export function formatDate(date: Date, lang: Lang, month: 'long' | 'short' = 'long'): string {
-  return new Intl.DateTimeFormat(dateLocales[lang], { year: 'numeric', month, day: 'numeric' }).format(date);
+  return new Intl.DateTimeFormat(dateLocales[lang], { year: 'numeric', month, day: 'numeric', timeZone: 'UTC' }).format(date);
 }

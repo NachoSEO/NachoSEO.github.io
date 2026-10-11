@@ -46,11 +46,8 @@ export default defineConfig({
   },
   integrations: [
     mdx(),
+    // Sin i18n: el hreflang vive solo en el HTML (SEO.astro), que empareja también slugs traducidos
     sitemap({
-      i18n: {
-        defaultLocale: 'es',
-        locales: { es: 'es-ES', en: 'en' },
-      },
       filter: (page) => {
         const path = new URL(page).pathname;
         return !redirectTargetsBySource.has(path) && !/^\/(en\/thanks|gracias|contacto\/(gracias|error)|en\/contact\/(thanks|error)|presupuesto\/(gracias|error)|en\/quote\/(thanks|error))\//.test(path);

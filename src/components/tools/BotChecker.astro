@@ -311,6 +311,7 @@ const messages = es
     form.addEventListener('submit', async (event) => {
       event.preventDefault();
       errorBox.hidden = true;
+      resultBox.hidden = true;
       const raw = urlInput.value.trim();
       if (!raw) return showError(messages.invalidUrl);
       submit.disabled = true;

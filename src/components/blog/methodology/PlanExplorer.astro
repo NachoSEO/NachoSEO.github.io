@@ -46,19 +46,27 @@ const isLate = (task: (typeof tasks)[number], week: number) => week > task.plann
       <span class="pe-bar-label">{copy.week}</span>
       {
         weekList.map((week) => (
-          <button type="button" role="radio" aria-checked={String(week === initialWeek)} data-week-button={week}>
+          <button
+            type="button"
+            role="radio"
+            aria-checked={week === initialWeek ? 'true' : 'false'}
+            tabindex={week === initialWeek ? undefined : '-1'}
+            data-week-button={week}
+          >
             {week}
           </button>
         ))
       }
     </div>
     <div class="pe-tabs" role="tablist" aria-label={copy.view}>
-      <button type="button" role="tab" aria-selected="true" data-view="board">{copy.board}</button>
-      <button type="button" role="tab" aria-selected="false" data-view="gantt">Gantt</button>
+      <button type="button" role="tab" id="pe-tab-board" aria-selected="true" aria-controls="pe-panel-board" data-view="board">{copy.board}</button>
+      <button type="button" role="tab" id="pe-tab-gantt" aria-selected="false" aria-controls="pe-panel-gantt" tabindex="-1" data-view="gantt">
+        Gantt
+      </button>
     </div>
   </div>
 
-  <div class="pe-board" data-panel="board">
+  <div class="pe-board" id="pe-panel-board" role="tabpanel" aria-labelledby="pe-tab-board" data-panel="board">
     {
       statuses.map((status) => (
         <div class="pe-col" data-status={status.id}>
@@ -88,7 +96,7 @@ const isLate = (task: (typeof tasks)[number], week: number) => week > task.plann
     }
   </div>
 
-  <div class="pe-gantt" data-panel="gantt" hidden style={`--weeks: ${weeks}; --now: ${initialWeek}`}>
+  <div class="pe-gantt" id="pe-panel-gantt" role="tabpanel" aria-labelledby="pe-tab-gantt" data-panel="gantt" hidden style={`--weeks: ${weeks}; --now: ${initialWeek}`}>
     {weekList.map((week) => <span class="pe-gantt-head" data-head={week} style={`grid-row: 1; grid-column: ${week + 1}`}>{weekPrefix}{week}</span>)}
     {
       tasks.map((task, index) => (
@@ -317,11 +325,15 @@ const isLate = (task: (typeof tasks)[number], week: number) => week > task.plann
     const cards = new Map([...root.querySelectorAll<HTMLElement>('[data-task]')].map((card) => [card.dataset.task!, card]));
     const bars = new Map([...root.querySelectorAll<HTMLElement>('[data-bar]')].map((bar) => [bar.dataset.bar!, bar]));
     const columns = new Map([...root.querySelectorAll<HTMLElement>('[data-status]')].map((col) => [col.dataset.status!, col]));
+    const weekButtons = [...root.querySelectorAll<HTMLButtonElement>('[data-week-button]')];
+    const viewTabs = [...root.querySelectorAll<HTMLButtonElement>('[data-view]')];
 
     const setWeek = (week: number) => {
-      root.querySelectorAll<HTMLButtonElement>('[data-week-button]').forEach((button) =>
-        button.setAttribute('aria-checked', String(Number(button.dataset.weekButton) === week))
-      );
+      weekButtons.forEach((button) => {
+        const checked = Number(button.dataset.weekButton) === week;
+        button.setAttribute('aria-checked', String(checked));
+        button.tabIndex = checked ? 0 : -1;
+      });
       root.querySelectorAll<HTMLElement>('[data-head]').forEach((head) => head.classList.toggle('is-now', Number(head.dataset.head) === week));
       for (const task of tasks) {
         const status = statusAt(task, week);
@@ -341,14 +353,31 @@ const isLate = (task: (typeof tasks)[number], week: number) => week > task.plann
     };
 
     const setView = (view: string) => {
-      root.querySelectorAll<HTMLButtonElement>('[data-view]').forEach((tab) => tab.setAttribute('aria-selected', String(tab.dataset.view === view)));
+      viewTabs.forEach((tab) => {
+        const selected = tab.dataset.view === view;
+        tab.setAttribute('aria-selected', String(selected));
+        tab.tabIndex = selected ? 0 : -1;
+      });
       root.querySelectorAll<HTMLElement>('[data-panel]').forEach((panel) => (panel.hidden = panel.dataset.panel !== view));
     };
 
-    root.querySelectorAll<HTMLButtonElement>('[data-week-button]').forEach((button) =>
-      button.addEventListener('click', () => setWeek(Number(button.dataset.weekButton)))
-    );
-    root.querySelectorAll<HTMLButtonElement>('[data-view]').forEach((tab) => tab.addEventListener('click', () => setView(tab.dataset.view!)));
+    // Flechas, Inicio y Fin mueven la selección y el foco, con vuelta al principio
+    const onArrows = (items: HTMLButtonElement[], select: (item: HTMLButtonElement) => void) =>
+      items.forEach((item, index) =>
+        item.addEventListener('keydown', (event) => {
+          const target = ({ ArrowRight: index + 1, ArrowLeft: index - 1, Home: 0, End: items.length - 1 } as Record<string, number | undefined>)[event.key];
+          if (target === undefined) return;
+          event.preventDefault();
+          const next = items[(target + items.length) % items.length];
+          select(next);
+          next.focus();
+        })
+      );
+
+    weekButtons.forEach((button) => button.addEventListener('click', () => setWeek(Number(button.dataset.weekButton))));
+    viewTabs.forEach((tab) => tab.addEventListener('click', () => setView(tab.dataset.view!)));
+    onArrows(weekButtons, (button) => setWeek(Number(button.dataset.weekButton)));
+    onArrows(viewTabs, (tab) => setView(tab.dataset.view!));
     setWeek(Number(root.dataset.week));
   }
 </script>

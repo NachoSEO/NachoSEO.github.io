@@ -119,14 +119,22 @@ const points = people.map((person) => ({
         <span class="study-chart-title">Las 10 personas más nombradas en cada plataforma</span>
         <span class="study-tabs" role="tablist" aria-label="Plataforma">
           {platformRankings.map((platform, index) => (
-            <button type="button" role="tab" aria-selected={index === 0 ? 'true' : 'false'} data-tab={platform.key}>
+            <button
+              type="button"
+              role="tab"
+              id={`study-tab-${platform.key}`}
+              aria-selected={index === 0 ? 'true' : 'false'}
+              aria-controls={`study-panel-${platform.key}`}
+              tabindex={index === 0 ? undefined : '-1'}
+              data-tab={platform.key}
+            >
               {platform.label}
             </button>
           ))}
         </span>
       </figcaption>
       {platformRankings.map((platform, index) => (
-        <div role="tabpanel" data-panel={platform.key} class:list={['study-panel', index > 0 && 'is-hidden-js']}>
+        <div role="tabpanel" id={`study-panel-${platform.key}`} aria-labelledby={`study-tab-${platform.key}`} data-panel={platform.key} class:list={['study-panel', index > 0 && 'is-hidden-js']}>
           <p class="study-panel-title">{platform.label}</p>
           {platform.rows.length < 3 ? (
             <p class="study-empty">
@@ -457,13 +465,27 @@ const points = people.map((person) => ({
     const tabs = [...figure.querySelectorAll<HTMLButtonElement>('[data-tab]')];
     const panels = [...figure.querySelectorAll<HTMLElement>('[data-panel]')];
     const select = (key: string) => {
-      for (const tab of tabs) tab.setAttribute('aria-selected', String(tab.dataset.tab === key));
+      for (const tab of tabs) {
+        const selected = tab.dataset.tab === key;
+        tab.setAttribute('aria-selected', String(selected));
+        tab.tabIndex = selected ? 0 : -1;
+      }
       for (const panel of panels) {
         panel.classList.remove('is-hidden-js');
         panel.hidden = panel.dataset.panel !== key;
       }
     };
-    for (const tab of tabs) tab.addEventListener('click', () => select(tab.dataset.tab ?? ''));
+    tabs.forEach((tab, index) => {
+      tab.addEventListener('click', () => select(tab.dataset.tab ?? ''));
+      tab.addEventListener('keydown', (event) => {
+        const target = ({ ArrowRight: index + 1, ArrowLeft: index - 1, Home: 0, End: tabs.length - 1 } as Record<string, number | undefined>)[event.key];
+        if (target === undefined) return;
+        event.preventDefault();
+        const next = tabs[(target + tabs.length) % tabs.length];
+        select(next.dataset.tab ?? '');
+        next.focus();
+      });
+    });
     select(tabs[0]?.dataset.tab ?? '');
   }
 </script>

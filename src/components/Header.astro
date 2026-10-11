@@ -3,6 +3,8 @@ import { getCollection } from 'astro:content';
 import LogoMark from './LogoMark.astro';
 import { localizedRoute, otherLang, useTranslations } from '../i18n/utils';
 import type { Lang } from '../i18n/ui';
+import { byOrder, isCoreService } from '../lib/collections';
+import { site } from '../site';
 
 interface Props {
   lang: Lang;
@@ -21,12 +23,10 @@ const navLabel = lang === 'es' ? 'Principal' : 'Main';
 type NavLink = { href: string; label: string; event?: string; muted?: boolean };
 type NavItem = NavLink & { children?: NavLink[] };
 
-const services = (await getCollection('services', (entry) => entry.data.lang === lang && entry.data.order <= 6)).sort(
-  (a, b) => a.data.order - b.data.order,
-);
+const services = (await getCollection('services', (entry) => entry.data.lang === lang && isCoreService(entry))).sort(byOrder);
 const servicesBase = localizedRoute('services', lang);
 const courseLink: NavLink = {
-  href: 'https://nachomascort.gumroad.com/l/programacion-seo',
+  href: site.courseUrl,
   label: t('nav.course'),
   event: 'course-click',
 };
@@ -37,7 +37,7 @@ const nav: NavItem[] = [
     label: t('nav.services'),
     children: [
       ...services.map((service) => ({ href: `${servicesBase}${service.data.slug}/`, label: service.data.title })),
-      { href: lang === 'es' ? '/servicios/precios/' : '/en/services/pricing/', label: lang === 'es' ? 'Cuánto cuesta' : 'Pricing', muted: true },
+      { href: localizedRoute('pricing', lang), label: lang === 'es' ? 'Cuánto cuesta' : 'Pricing', muted: true },
       { href: servicesBase, label: lang === 'es' ? 'Todos los servicios' : 'All services', muted: true },
     ],
   },
@@ -136,8 +136,8 @@ const isCurrent = (item: NavItem) =>
     </nav>
 
     <div class="flex items-center gap-4 md:gap-5">
-      <a href={switchUrl} hreflang={other} lang={other} aria-label={t('a11y.switchLang')} class="meta hover:text-on-dark">
-        {other}
+      <a href={switchUrl} hreflang={other} lang={other} class="meta hover:text-on-dark">
+        {other}<span class="sr-only"> · {t('a11y.switchLang')}</span>
       </a>
       <a href={localizedRoute('contact', lang)} class="btn btn--small hidden md:inline-flex">
         {t('cta.book')}

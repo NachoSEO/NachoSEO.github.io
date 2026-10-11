@@ -114,5 +114,8 @@ const { title, items } = Astro.props;
       root.querySelector<HTMLElement>('[data-bar]')!.style.width = `${(done / boxes.length) * 100}%`;
     };
     boxes.forEach((box) => box.addEventListener('change', update));
+    // El navegador puede restaurar casillas marcadas (atrás/adelante): el contador arranca desde ellas
+    update();
+    window.addEventListener('pageshow', update);
   }
 </script>

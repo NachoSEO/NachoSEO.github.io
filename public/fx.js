@@ -1,5 +1,15 @@
 document.documentElement.classList.add('js');
 
+// Animación de entrada del logo (LogoMark) solo en la primera página de la sesión
+try {
+  if (!sessionStorage.getItem('logo-intro')) {
+    sessionStorage.setItem('logo-intro', '1');
+    document.documentElement.classList.add('logo-intro');
+  }
+} catch {
+  // Sin sessionStorage el logo se queda estático
+}
+
 // Aparición discreta de bloques al entrar en pantalla (solo en páginas que la usan)
 const revealTargets = document.querySelectorAll('.reveal');
 if (revealTargets.length > 0) {
@@ -82,6 +92,12 @@ if (dropToggles.length) {
   document.addEventListener('click', (event) => {
     if (!event.target.closest('.nav-drop')) closeAll();
   });
+  // Con teclado, el panel se cierra al salir el foco del desplegable
+  for (const drop of document.querySelectorAll('.nav-drop')) {
+    drop.addEventListener('focusout', (event) => {
+      if (!drop.contains(event.relatedTarget)) closeAll();
+    });
+  }
   document.addEventListener('keydown', (event) => {
     if (event.key !== 'Escape') return;
     const open = dropToggles.find((toggle) => toggle.getAttribute('aria-expanded') === 'true');

@@ -286,7 +286,6 @@ body {
     height: 0.75rem;
   }
   .nav-drop:hover .nav-drop-panel,
-  .nav-drop:focus-within .nav-drop-panel,
   .nav-drop:has([aria-expanded='true']) .nav-drop-panel {
     opacity: 1;
     visibility: visible;

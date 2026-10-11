@@ -72,6 +72,7 @@ const messages = es
       downloadXml: 'Descargar {name}',
       downloadZip: 'Descargar ZIP ({n} ficheros)',
       copied: 'Copiado',
+      copyFailed: 'No se pudo copiar',
       urlCount: '{n} URLs',
       urlCountOne: '1 URL',
       indexFile: 'índice',
@@ -88,6 +89,7 @@ const messages = es
       downloadXml: 'Download {name}',
       downloadZip: 'Download ZIP ({n} files)',
       copied: 'Copied',
+      copyFailed: 'Copy failed',
       urlCount: '{n} URLs',
       urlCountOne: '1 URL',
       indexFile: 'index',
@@ -431,8 +433,12 @@ const inputClass =
     generateButton.addEventListener('click', generate);
     downloadButton.addEventListener('click', download);
     copyButton.addEventListener('click', async () => {
-      await navigator.clipboard.writeText(allFiles()[0].content);
-      copyButton.textContent = messages.copied;
+      try {
+        await navigator.clipboard.writeText(allFiles()[0].content);
+        copyButton.textContent = messages.copied;
+      } catch {
+        copyButton.textContent = messages.copyFailed;
+      }
       setTimeout(() => (copyButton.textContent = copyLabel), 2000);
     });
     clearButton.addEventListener('click', () => {

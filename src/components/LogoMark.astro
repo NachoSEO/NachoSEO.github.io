@@ -76,15 +76,3 @@ const { class: className } = Astro.props;
     }
   }
 </style>
-
-<script>
-  // Animación de entrada solo en la primera página de la sesión
-  try {
-    if (!sessionStorage.getItem('logo-intro')) {
-      sessionStorage.setItem('logo-intro', '1');
-      document.documentElement.classList.add('logo-intro');
-    }
-  } catch {
-    // Sin sessionStorage el logo se queda estático
-  }
-</script>

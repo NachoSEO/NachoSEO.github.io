@@ -1,20 +1,9 @@
 ---
-import { getCollection } from 'astro:content';
+import { translatedPaths } from '../../../lib/translations';
 import Post from '../../../layouts/Post.astro';
 
-export async function getStaticPaths() {
-  const enPosts = await getCollection('blog', (entry) => entry.data.lang === 'en');
-  const esPosts = await getCollection('blog', (entry) => entry.data.lang === 'es');
-
-  return enPosts.map((entry) => {
-    const translation = esPosts.find(
-      (candidate) => candidate.data.translationKey === entry.data.translationKey
-    );
-    return {
-      params: { slug: entry.data.slug },
-      props: { entry, translationSlug: translation?.data.slug },
-    };
-  });
+export function getStaticPaths() {
+  return translatedPaths('blog', 'en');
 }
 
 const { entry, translationSlug } = Astro.props;

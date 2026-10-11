@@ -1,15 +1,15 @@
 ---
 import { getCollection } from 'astro:content';
+import { byOrder, isCoreService } from '../../../lib/collections';
+import { localizedRoute } from '../../../i18n/utils';
 import Base from '../../../layouts/Base.astro';
 import Cta from '../../../components/Cta.astro';
 import SectionLabel from '../../../components/SectionLabel.astro';
 
-// Technical SEO and GEO services come first (order < 7); growth, AI and training go in a separate block
-const services = (await getCollection('services', (entry) => entry.data.lang === 'en')).sort(
-  (a, b) => a.data.order - b.data.order
-);
-const seoServices = services.filter((service) => service.data.order < 7);
-const otherServices = services.filter((service) => service.data.order >= 7);
+// Technical SEO and GEO services come first (isCoreService); growth, AI and training go in a separate block
+const services = (await getCollection('services', (entry) => entry.data.lang === 'en')).sort(byOrder);
+const seoServices = services.filter(isCoreService);
+const otherServices = services.filter((service) => !isCoreService(service));
 ---
 
 <Base
@@ -28,7 +28,7 @@ const otherServices = services.filter((service) => service.data.order >= 7);
     <h1 class="display-1 mt-5">Technical SEO and GEO services</h1>
     <p class="lede mt-6 max-w-[62ch]">For sites with traffic at stake and expensive problems: drops, migrations, several languages, a site growing out of control or a competitor the AI already recommends. In every case you work with me directly.</p>
     <p class="mt-5 text-[0.95rem]">
-      <a href="/en/services/pricing/" class="link-arrow">How much it costs and how I price it</a>
+      <a href={localizedRoute('pricing', 'en')} class="link-arrow">How much it costs and how I price it</a>
     </p>
 
     <div class="mt-12 grid gap-5 md:grid-cols-2">

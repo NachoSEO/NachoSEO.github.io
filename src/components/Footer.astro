@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import { localizedRoute, useTranslations } from '../i18n/utils';
 import { site } from '../site';
 import type { Lang } from '../i18n/ui';
+import { byOrder, isCoreService } from '../lib/collections';
 
 interface Props {
   lang: Lang;
@@ -13,9 +14,7 @@ const es = lang === 'es';
 const t = useTranslations(lang);
 const year = new Date().getFullYear();
 
-const services = (await getCollection('services', (entry) => entry.data.lang === lang)).sort(
-  (a, b) => a.data.order - b.data.order,
-);
+const services = (await getCollection('services', (entry) => entry.data.lang === lang)).sort(byOrder);
 const servicesBase = localizedRoute('services', lang);
 const serviceLink = (service: (typeof services)[number]) => ({
   href: `${servicesBase}${service.data.slug}/`,
@@ -28,14 +27,14 @@ const columns: { title: string; href?: string; links: FooterLink[] }[] = [
     title: t('nav.services'),
     href: servicesBase,
     links: [
-      ...services.filter((service) => service.data.order <= 6).map(serviceLink),
-      { href: es ? '/servicios/precios/' : '/en/services/pricing/', label: es ? 'Cuánto cuesta' : 'Pricing' },
+      ...services.filter(isCoreService).map(serviceLink),
+      { href: localizedRoute('pricing', lang), label: es ? 'Cuánto cuesta' : 'Pricing' },
     ],
   },
   {
     title: es ? 'Más' : 'More',
     links: [
-      ...services.filter((service) => service.data.order > 6).map(serviceLink),
+      ...services.filter((service) => !isCoreService(service)).map(serviceLink),
       { href: localizedRoute('cases', lang), label: t('nav.cases') },
       { href: localizedRoute('about', lang), label: t('nav.about') },
     ],
@@ -47,7 +46,7 @@ const columns: { title: string; href?: string; links: FooterLink[] }[] = [
       ...(es ? [{ href: '/guia-geo/', label: 'Guía GEO' }, { href: '/estudios/', label: 'Estudios' }] : []),
       { href: localizedRoute('tools', lang), label: t('nav.tools') },
       { href: localizedRoute('skills', lang), label: t('nav.skills') },
-      { href: 'https://nachomascort.gumroad.com/l/programacion-seo', label: t('nav.course'), event: 'course-click' },
+      { href: site.courseUrl, label: t('nav.course'), event: 'course-click' },
     ],
   },
 ];

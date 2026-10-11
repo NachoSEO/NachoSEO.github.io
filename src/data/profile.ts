@@ -1,5 +1,6 @@
 /** Perfil: fuente única para "Sobre mí", sus versiones en Markdown, llms.txt y los datos estructurados */
 import type { Lang } from '../i18n/ui';
+import { site } from '../site';
 
 export type BioSegment = { text: string; strong?: boolean };
 export type TimelineItem = { period: string; role: string; detail: string; results?: string[] };
@@ -198,7 +199,7 @@ export const projects: Record<Lang, Project[]> = {
   },
   {
     name: 'Programación práctica para SEO',
-    url: 'https://nachomascort.gumroad.com/l/programacion-seo',
+    url: site.courseUrl,
     detail: 'Mi curso para aprender a programar aplicado al día a día del SEO.',
   },
 ],
@@ -237,7 +238,7 @@ export const projects: Record<Lang, Project[]> = {
   },
   {
     name: 'Programación práctica para SEO',
-    url: 'https://nachomascort.gumroad.com/l/programacion-seo',
+    url: site.courseUrl,
     detail: 'My course (in Spanish) on practical programming for SEO work.',
   },
 ],

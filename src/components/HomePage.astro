@@ -12,6 +12,7 @@ import ServiceIcon from './ServiceIcon.astro';
 import { localizedRoute, useTranslations } from '../i18n/utils';
 import { site } from '../site';
 import type { Lang } from '../i18n/ui';
+import { byDateDesc, byOrder, isCoreService } from '../lib/collections';
 
 interface Props {
   lang: Lang;
@@ -20,16 +21,13 @@ interface Props {
 const { lang } = Astro.props;
 const t = useTranslations(lang);
 
-const byOrder = <T extends { data: { order: number } }>(a: T, b: T) => a.data.order - b.data.order;
 const allServices = (await getCollection('services', (entry) => entry.data.lang === lang)).sort(byOrder);
-// La home enseña solo los servicios de SEO técnico y GEO (order < 7); growth, IA y formación van en la página de servicios
-const services = allServices.filter((service) => service.data.order < 7);
+// La home enseña solo los servicios de SEO técnico y GEO (isCoreService); growth, IA y formación van en la página de servicios
+const services = allServices.filter(isCoreService);
 
 // Si aún no hay artículos en el idioma de la página, se muestran los del otro idioma.
 // El archivo de SEO Hacks (2015–2017) no cuenta como "lo último".
-const allPosts = (await getCollection('blog', (post) => post.data.category !== 'seohacks' && !post.data.unlisted)).sort(
-  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
-);
+const allPosts = (await getCollection('blog', (post) => post.data.category !== 'seohacks' && !post.data.unlisted)).sort(byDateDesc);
 const localPosts = allPosts.filter((post) => post.data.lang === lang);
 const posts = (localPosts.length > 0 ? localPosts : allPosts).slice(0, 3);
 
@@ -68,7 +66,7 @@ const copy =
         servicesTitle: 'Los problemas en los que te puedo ayudar',
         servicesIntro: 'Trabajas directamente conmigo, sin juniors ni subcontratas. Y si otra opción te conviene más, te lo digo en la primera llamada.',
         otherServices: { text: 'También hago growth, sistemas de IA y formación', href: '/servicios/#otros' },
-        pricing: { text: 'Cuánto cuesta y cómo calculo el precio', href: '/servicios/precios/' },
+        pricing: { text: 'Cuánto cuesta y cómo calculo el precio', href: localizedRoute('pricing', 'es') },
         talksLabel: 'Docencia y charlas',
         talksTitle: 'Más de diez años enseñando lo que hago',
         talks: [
@@ -115,7 +113,7 @@ const copy =
         servicesTitle: 'The problems I can help with',
         servicesIntro: "You work with me directly, with no juniors or subcontractors. And if another option suits you better, I'll tell you on the first call.",
         otherServices: { text: 'I also do growth, AI systems and training', href: '/en/services/#other' },
-        pricing: { text: 'How much it costs and how I price it', href: '/en/services/pricing/' },
+        pricing: { text: 'How much it costs and how I price it', href: localizedRoute('pricing', 'en') },
         talksLabel: 'Teaching and talks',
         talksTitle: 'Over ten years teaching what I do',
         talks: [

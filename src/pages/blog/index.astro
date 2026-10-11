@@ -1,5 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
+import { byDateDesc } from '../../lib/collections';
 import Base from '../../layouts/Base.astro';
 import PostList from '../../components/PostList.astro';
 import SectionLabel from '../../components/SectionLabel.astro';
@@ -10,7 +11,7 @@ const esPosts = await getCollection('blog', (entry) => entry.data.lang === 'es' 
 const posts = esPosts.filter((post) => post.data.category !== 'seohacks');
 const archive = esPosts
   .filter((post) => post.data.category === 'seohacks')
-  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+  .sort(byDateDesc);
 ---
 
 <Base

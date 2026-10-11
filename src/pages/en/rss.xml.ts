@@ -1,5 +1,6 @@
 import rss from '@astrojs/rss';
 import { getCollection } from 'astro:content';
+import { byDateDesc } from '../../lib/collections';
 import type { APIContext } from 'astro';
 
 export async function GET(context: APIContext) {
@@ -10,7 +11,7 @@ export async function GET(context: APIContext) {
       'Articles on growth, AI applied to marketing, SEO and automation, written from real execution.',
     site: context.site!,
     items: posts
-      .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+      .sort(byDateDesc)
       .map((post) => ({
         title: post.data.title,
         description: post.data.description,

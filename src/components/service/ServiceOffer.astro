@@ -68,7 +68,7 @@ const quoteUrl = `${localizedRoute('quote', lang)}${briefService ? `?${es ? 'ser
     <div class="flex flex-wrap items-center gap-3 md:justify-end">
       <a href={site.calUrl} data-umami-event="call-booking-click" data-umami-event-placement="service-offer" class="btn">{t('cta.call30')}</a>
       <a href={quoteUrl} data-umami-event="quote-click" data-umami-event-placement="service-offer" class="btn btn--ghost">{es ? 'Pide presupuesto' : 'Get a quote'}</a>
-      <a href={es ? '/servicios/precios/' : '/en/services/pricing/'} class="w-full text-sm text-on-dark-muted underline decoration-accent-on-dark underline-offset-4 hover:text-on-dark md:text-right">{es ? 'Cuánto cuesta y cómo calculo el precio' : 'How much it costs and how I price it'}</a>
+      <a href={localizedRoute('pricing', lang)} class="w-full text-sm text-on-dark-muted underline decoration-accent-on-dark underline-offset-4 hover:text-on-dark md:text-right">{es ? 'Cuánto cuesta y cómo calculo el precio' : 'How much it costs and how I price it'}</a>
     </div>
   </div>
 </section>

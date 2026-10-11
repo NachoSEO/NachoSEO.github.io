@@ -5,6 +5,7 @@ import SectionLabel from './SectionLabel.astro';
 import { caseBrands } from '../data/case-brands';
 import { localizedRoute } from '../i18n/utils';
 import type { Lang } from '../i18n/ui';
+import { byOrder } from '../lib/collections';
 
 interface Props {
   lang: Lang;
@@ -21,7 +22,7 @@ const SummaryTag = page ? 'h2' : 'span';
 const casesBase = localizedRoute('cases', lang);
 const cases = (await getCollection('caseStudies', (entry) => entry.data.lang === lang))
   .filter((entry) => !exclude.includes(entry.data.translationKey))
-  .sort((a, b) => a.data.order - b.data.order);
+  .sort(byOrder);
 
 
 const copy =

@@ -2,6 +2,7 @@
 export const site = {
   calUrl: 'https://cal.com/nacho-mascort/30min?overlayCalendar=true',
   email: 'hola@nachomascort.com',
+  courseUrl: 'https://nachomascort.gumroad.com/l/programacion-seo',
   social: {
     linkedin: 'https://www.linkedin.com/in/nachomascort',
     twitter: 'https://twitter.com/NachoMascort',

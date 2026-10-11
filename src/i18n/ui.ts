@@ -1,11 +1,11 @@
 export const languages = { es: 'Español', en: 'English' } as const;
 export type Lang = keyof typeof languages;
-export const defaultLang: Lang = 'es';
 
 /* Rutas canónicas por idioma para cada sección del sitio */
 export const routes = {
   home: { es: '/', en: '/en/' },
   services: { es: '/servicios/', en: '/en/services/' },
+  pricing: { es: '/servicios/precios/', en: '/en/services/pricing/' },
   about: { es: '/sobre-mi/', en: '/en/about/' },
   cases: { es: '/casos/', en: '/en/case-studies/' },
   blog: { es: '/blog/', en: '/en/blog/' },
@@ -13,9 +13,6 @@ export const routes = {
   quote: { es: '/presupuesto/', en: '/en/quote/' },
   tools: { es: '/herramientas/', en: '/en/tools/' },
   skills: { es: '/skills/', en: '/en/skills/' },
-  qualitySkill: { es: '/skills/google-quality-audit/', en: '/en/skills/google-quality-audit/' },
-  sitemapGenerator: { es: '/herramientas/generador-sitemap/', en: '/en/tools/sitemap-generator/' },
-  botChecker: { es: '/herramientas/comprobador-bots/', en: '/en/tools/bot-access-checker/' },
   rss: { es: '/rss.xml', en: '/en/rss.xml' },
   privacy: { es: '/privacidad/', en: '/en/privacy/' },
   legal: { es: '/aviso-legal/', en: '/en/legal-notice/' },
@@ -25,7 +22,6 @@ export type RouteKey = keyof typeof routes;
 
 export const ui = {
   es: {
-    'site.name': 'Nacho Mascort',
     'site.tagline': 'SEO · IA · Growth',
     'nav.services': 'Servicios',
     'nav.about': 'Sobre mí',
@@ -35,8 +31,6 @@ export const ui = {
     'nav.skills': 'Skills',
     'nav.contact': 'Contacto',
     'nav.tools': 'Herramientas',
-    'tools.sitemapGenerator': 'Generador de sitemap XML',
-    'tools.botChecker': 'Comprobador de bots',
     'cta.book': 'Reserva una llamada',
     'cta.call30': 'Reserva una llamada de 30 min',
     'a11y.skip': 'Saltar al contenido',
@@ -49,7 +43,6 @@ export const ui = {
     'notFound.cta': 'Ir al inicio',
   },
   en: {
-    'site.name': 'Nacho Mascort',
     'site.tagline': 'SEO · AI · Growth',
     'nav.services': 'Services',
     'nav.about': 'About',
@@ -59,8 +52,6 @@ export const ui = {
     'nav.skills': 'Skills',
     'nav.contact': 'Contact',
     'nav.tools': 'Tools',
-    'tools.sitemapGenerator': 'XML Sitemap Generator',
-    'tools.botChecker': 'Bot access checker',
     'cta.book': 'Book a call',
     'cta.call30': 'Book a 30-min call',
     'a11y.skip': 'Skip to content',

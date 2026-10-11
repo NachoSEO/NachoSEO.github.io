@@ -11,6 +11,7 @@ import FaqAccordion from '../components/service/FaqAccordion.astro';
 import avatar from '../assets/img/nacho-avatar.jpg';
 import { localizedRoute, otherLang as getOtherLang } from '../i18n/utils';
 import type { Lang } from '../i18n/ui';
+import { byDateDesc } from '../lib/collections';
 
 interface Props {
   entry: CollectionEntry<'blog'>;
@@ -45,7 +46,7 @@ const related = (
       (post.data.category === 'seohacks') === isSeoHacks
   )
 )
-  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .sort(byDateDesc)
   .slice(0, 3);
 
 const copy =

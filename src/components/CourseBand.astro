@@ -1,6 +1,7 @@
 ---
 import SectionLabel from './SectionLabel.astro';
 import type { Lang } from '../i18n/ui';
+import { site } from '../site';
 
 interface Props {
   lang: Lang;
@@ -8,7 +9,7 @@ interface Props {
 
 const { lang } = Astro.props;
 
-const courseUrl = 'https://nachomascort.gumroad.com/l/programacion-seo';
+const courseUrl = site.courseUrl;
 
 const languages = ['JavaScript', 'Python', 'SQL', 'Git', 'Scraping', 'Apps Script'];
 

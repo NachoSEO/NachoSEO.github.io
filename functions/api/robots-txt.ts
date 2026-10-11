@@ -5,7 +5,7 @@
 import { isForeignOrigin } from '../../src/lib/form-guard';
 import { hasValidSession, type ToolEnv } from '../../src/lib/tool-session';
 import { withQuota, type QuotaEnv } from '../../src/lib/tool-quota';
-import { BROWSER_UA, fetchAs, json, LOOP_HEADER, parseTarget } from '../../src/lib/safe-fetch';
+import { BROWSER_UA, fetchAs, json, LOOP_HEADER, parseTarget, siteOf } from '../../src/lib/safe-fetch';
 
 // Google lee los primeros 500 KiB y sigue hasta 5 redirecciones
 const GOOGLE_MAX_BYTES = 500 * 1024;
@@ -20,14 +20,17 @@ export const onRequestGet = async ({ request, env, waitUntil }: { request: Reque
   if (!target) return json({ error: 'invalid-url' }, 400);
 
   // Una petición por salto de redirección
+  const site = siteOf(target.hostname);
   return withQuota({ request, env, waitUntil }, GOOGLE_MAX_REDIRECTS + 1, async (meter) => {
     const robotsUrl = new URL('/robots.txt', target).href;
     const result = await fetchAs(robotsUrl, BROWSER_UA, GOOGLE_MAX_BYTES, GOOGLE_MAX_REDIRECTS);
     meter.used = result.redirects.length + 1;
+    meter.sites.set(site, meter.used);
     // Solo se devuelve un robots.txt: si una redirección lleva a otra cosa (HTML, JSON…), el cuerpo no sale.
     // Sin esto, un robots.txt que redirija a cualquier URL convertiría el endpoint en un proxy abierto
     const contentType = result.headers['content-type'] ?? '';
-    const isRobots = new URL(result.finalUrl).pathname.endsWith('/robots.txt') || /^text\/plain\b/i.test(contentType);
+    // Solo un /robots.txt de verdad: ni otra ruta que acabe igual ni cualquier text/plain al que lleve una redirección
+    const isRobots = new URL(result.finalUrl).pathname === '/robots.txt';
     const ok = result.status !== null && result.status >= 200 && result.status < 300;
     return json({
       url: robotsUrl,
@@ -40,5 +43,5 @@ export const onRequestGet = async ({ request, env, waitUntil }: { request: Reque
       notRobots: ok && (!isRobots || /^\s*</.test(result.body)),
       truncated: result.bytes > GOOGLE_MAX_BYTES,
     });
-  });
+  }, new Map([[site, GOOGLE_MAX_REDIRECTS + 1]]));
 };

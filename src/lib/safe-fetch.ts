@@ -158,7 +158,7 @@ const MAX_TRACE_HOPS = 10;
  * Así a.victima.com, www.victima.com y victima.com. cuentan juntas. Con dominios como .co.uk agrupa de más,
  * y eso solo hace el tope más estricto
  */
-const siteOf = (hostname: string) => hostname.toLowerCase().replace(/\.+$/, '').split('.').slice(-2).join('.');
+export const siteOf = (hostname: string) => hostname.toLowerCase().replace(/\.+$/, '').split('.').slice(-2).join('.');
 const HEAD_BYTES = 32 * 1024;
 
 const headOf = (html: string) => {

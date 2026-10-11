@@ -84,10 +84,12 @@ const LIMIT_TEXT = {
   es: {
     'daily-quota': 'Has llegado al límite diario de las herramientas. Se reinicia a medianoche (hora UTC).',
     'global-quota': 'Las herramientas han llegado a su límite de uso de hoy. Vuelve mañana.',
+    'target-quota': 'Esa web ya ha recibido hoy el máximo de peticiones de estas herramientas. Prueba mañana.',
   },
   en: {
     'daily-quota': "You've reached the daily limit for the tools. It resets at midnight (UTC).",
     'global-quota': 'The tools have hit their usage limit for today. Come back tomorrow.',
+    'target-quota': 'That site has already received the maximum requests from these tools today. Try again tomorrow.',
   },
 };
 
@@ -118,7 +120,7 @@ export const toolFetch = async (input: string, init: RequestInit = {}) => {
       await new Promise((resolve) => setTimeout(resolve, BUSY_WAIT_MS));
       continue;
     }
-    if (data?.error === 'daily-quota' || data?.error === 'global-quota') {
+    if (data?.error === 'daily-quota' || data?.error === 'global-quota' || data?.error === 'target-quota') {
       const lang = document.documentElement.lang === 'en' ? 'en' : 'es';
       throw new ToolLimitError(LIMIT_TEXT[lang][data.error]);
     }

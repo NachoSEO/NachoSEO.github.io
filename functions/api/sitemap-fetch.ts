@@ -7,7 +7,7 @@ import { isForeignOrigin } from '../../src/lib/form-guard';
 import { hasValidSession, type ToolEnv } from '../../src/lib/tool-session';
 import { withQuota, type QuotaEnv } from '../../src/lib/tool-quota';
 import { BOTS } from '../../src/data/bots';
-import { FETCH_TIMEOUT_MS, isFetchable, json, LOOP_HEADER, parseTarget } from '../../src/lib/safe-fetch';
+import { FETCH_TIMEOUT_MS, isFetchable, json, LOOP_HEADER, parseTarget, siteOf } from '../../src/lib/safe-fetch';
 
 // Google acepta 50 MB sin comprimir; comprimido, 20 MB es de sobra
 const MAX_BYTES = 20 * 1024 * 1024;
@@ -44,6 +44,7 @@ export const onRequestGet = async ({ request, env, waitUntil }: { request: Reque
   if (!target) return json({ error: 'invalid-url' }, 400);
 
   // Una petición por salto de redirección
+  const site = siteOf(target.hostname);
   return withQuota({ request, env, waitUntil }, MAX_REDIRECTS + 1, async (meter) => {
     let currentUrl = target.href;
     let response: Response | null = null;
@@ -51,6 +52,7 @@ export const onRequestGet = async ({ request, env, waitUntil }: { request: Reque
       for (let hop = 0; hop <= MAX_REDIRECTS; hop++) {
         if (!isFetchable(new URL(currentUrl))) return json({ error: 'invalid-url' }, 400);
         meter.used = hop + 1;
+        meter.sites.set(site, meter.used);
         response = await fetch(currentUrl, {
           headers: { [LOOP_HEADER]: '1', 'User-Agent': GOOGLEBOT_UA, Accept: 'application/xml,text/xml;q=0.9,*/*;q=0.8' },
           redirect: 'manual',
@@ -125,5 +127,5 @@ export const onRequestGet = async ({ request, env, waitUntil }: { request: Reque
         'X-Content-Type-Options': 'nosniff',
       },
     });
-  });
+  }, new Map([[site, MAX_REDIRECTS + 1]]));
 };

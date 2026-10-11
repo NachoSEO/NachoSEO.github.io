@@ -7,7 +7,7 @@ import { isForeignOrigin } from '../../src/lib/form-guard';
 import { hasValidSession, type ToolEnv } from '../../src/lib/tool-session';
 import { withQuota, type QuotaEnv } from '../../src/lib/tool-quota';
 import { BOTS } from '../../src/data/bots';
-import { BROWSER_UA, json, LOOP_HEADER, parseTarget, traceUrl, type FetchBudget, type Trace } from '../../src/lib/safe-fetch';
+import { BROWSER_UA, json, LOOP_HEADER, parseTarget, siteOf, traceUrl, type FetchBudget, type Trace } from '../../src/lib/safe-fetch';
 
 const MAX_URLS = 20;
 // 50 subpeticiones en el plan gratis, con margen
@@ -32,9 +32,16 @@ export const onRequestPost = async ({ request, env, waitUntil }: { request: Requ
   const bot = payload.agent === 'Googlebot' ? BOTS.find((candidate) => candidate.name === 'Googlebot') : undefined;
   const userAgent = bot?.userAgent ?? BROWSER_UA;
 
+  const inputs = payload.urls.map((raw) => (typeof raw === 'string' ? raw.slice(0, 2048) : ''));
+  // Cada web de destino del lote reserva su tope por llamada en la cuota compartida por web
+  const sites = new Map(
+    inputs.flatMap((raw) => {
+      const target = parseTarget(raw);
+      return target ? [[siteOf(target.hostname), MAX_PER_HOST] as [string, number]] : [];
+    })
+  );
   return withQuota({ request, env, waitUntil }, SUBREQUEST_BUDGET, async (meter) => {
     const budget: FetchBudget = { remaining: SUBREQUEST_BUDGET, maxPerHost: MAX_PER_HOST, perHost: new Map() };
-    const inputs = payload.urls.map((raw) => (typeof raw === 'string' ? raw.slice(0, 2048) : ''));
     const results: Trace[] = new Array(inputs.length);
     let next = 0;
     const worker = async () => {
@@ -48,6 +55,7 @@ export const onRequestPost = async ({ request, env, waitUntil }: { request: Requ
     };
     await Promise.all(Array.from({ length: CONCURRENCY }, worker));
     meter.used = SUBREQUEST_BUDGET - budget.remaining;
+    meter.sites = new Map([...sites.keys()].map((site) => [site, budget.perHost!.get(site) ?? 0]));
     return json({ agent: bot?.name ?? 'browser', results });
-  });
+  }, sites);
 };

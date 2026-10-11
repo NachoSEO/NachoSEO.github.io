@@ -1,12 +1,16 @@
 /**
  * Cuotas de las herramientas que hacen peticiones a otras webs. Una instancia del Durable Object por IP
- * ("ip:<ip>") y otra global ("global"). La unidad es una petición a una web externa.
+ * ("ip:<ip>"), otra por web de destino ("site:<dominio>") y otra global ("global"). La unidad es una petición
+ * a una web externa.
  * Cada instancia procesa sus llamadas de una en una, así que los contadores no tienen carreras.
  */
 import { DurableObject } from 'cloudflare:workers';
 
 const LIMITS = {
-  ip: { daily: 1000, concurrent: 2 },
+  // Una persona auditando su web tiene de sobra; 20.000 / 600 obliga a más de 30 IPs con Turnstile para agotar el global
+  ip: { daily: 600, concurrent: 2 },
+  // Por web de destino, sumando todas las IPs: nadie puede concentrar el tráfico de las herramientas en una víctima
+  site: { daily: 1000, concurrent: Infinity },
   global: { daily: 20000, concurrent: Infinity },
 };
 // Si una llamada muere sin liberar su hueco, se da por terminada pasado este tiempo (más que la llamada más lenta)

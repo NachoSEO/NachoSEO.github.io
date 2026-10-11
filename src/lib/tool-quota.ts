@@ -6,7 +6,7 @@
 import { json } from './safe-fetch';
 
 interface QuotaStub {
-  acquire(cost: number, scope: 'ip' | 'global'): Promise<{ ok: true; lease: string; remaining: number } | { ok: false; reason: string }>;
+  acquire(cost: number, scope: 'ip' | 'site' | 'global'): Promise<{ ok: true; lease: string; remaining: number } | { ok: false; reason: string }>;
   release(lease: string, refund: number): Promise<void>;
 }
 
@@ -35,39 +35,58 @@ export const quotaKey = (ip: string) => {
 /** Lo que la Function apunta mientras trabaja: cuántas peticiones externas ha hecho de verdad */
 export interface QuotaMeter {
   used: number;
+  /** Peticiones hechas a cada web de destino reservada (si falta una, se da por gastado lo reservado) */
+  sites: Map<string, number>;
 }
 
 /**
  * Reserva `cost` peticiones externas antes de ejecutar `run` y, cuando termina de enviarse la respuesta, libera el hueco y devuelve
- * lo que no se gastó. Errores: 429 busy (otra llamada en curso), 429 daily-quota, 429 global-quota.
+ * lo que no se gastó. Errores: 429 busy (otra llamada en curso), 429 daily-quota, 429 target-quota, 429 global-quota.
  */
 export const withQuota = async (
   context: { request: Request; env: QuotaEnv; waitUntil: (promise: Promise<unknown>) => void },
   cost: number,
-  run: (meter: QuotaMeter) => Promise<Response>
+  run: (meter: QuotaMeter) => Promise<Response>,
+  /** Webs de destino (siteOf) con lo que se reserva para cada una */
+  sites: Map<string, number> = new Map()
 ) => {
   const { request, env, waitUntil } = context;
   if (!env.TOOL_QUOTA) return json({ error: 'unavailable' }, 503);
   const namespace = env.TOOL_QUOTA;
   const ip = quotaKey(request.headers.get('CF-Connecting-IP') ?? 'unknown');
-  const perIp = namespace.get(namespace.idFromName(`ip:${ip}`));
-  const global = namespace.get(namespace.idFromName('global'));
+  const leases: { stub: QuotaStub; lease: string; reserved: number; site?: string }[] = [];
+  const releaseAll = (refundOf: (entry: (typeof leases)[number]) => number) =>
+    Promise.all(leases.map((entry) => entry.stub.release(entry.lease, refundOf(entry))));
 
-  const ipLease = await perIp.acquire(cost, 'ip');
+  const take = async (name: string, scope: 'ip' | 'site' | 'global', reserved: number, site?: string) => {
+    const stub = namespace.get(namespace.idFromName(name));
+    const result = await stub.acquire(reserved, scope);
+    if (result.ok) leases.push({ stub, lease: result.lease, reserved, site });
+    return result;
+  };
+
+  const ipLease = await take(`ip:${ip}`, 'ip', cost);
   if (!ipLease.ok) return json({ error: ipLease.reason === 'busy' ? 'busy' : 'daily-quota' }, 429);
-  const globalLease = await global.acquire(cost, 'global');
-  if (!globalLease.ok) {
-    await perIp.release(ipLease.lease, cost);
+  for (const [site, reserved] of sites) {
+    if (!(await take(`site:${site}`, 'site', reserved, site)).ok) {
+      await releaseAll((entry) => entry.reserved);
+      return json({ error: 'target-quota' }, 429);
+    }
+  }
+  if (!(await take('global', 'global', cost)).ok) {
+    await releaseAll((entry) => entry.reserved);
     return json({ error: 'global-quota' }, 429);
   }
 
-  const meter: QuotaMeter = { used: cost };
+  const meter: QuotaMeter = { used: cost, sites: new Map() };
   let released = false;
   const release = async () => {
     if (released) return;
     released = true;
-    const refund = Math.max(0, cost - Math.max(0, Math.round(meter.used)));
-    await Promise.all([perIp.release(ipLease.lease, refund), global.release(globalLease.lease, refund)]);
+    const used = Math.max(0, Math.round(meter.used));
+    await releaseAll((entry) =>
+      Math.max(0, entry.reserved - (entry.site ? Math.round(meter.sites.get(entry.site) ?? entry.reserved) : used))
+    );
   };
 
   let response: Response;

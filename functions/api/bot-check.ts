@@ -15,10 +15,11 @@ import { withQuota, type QuotaEnv } from '../../src/lib/tool-quota';
 import { BOTS } from '../../src/data/bots';
 import robotsWasm from '../../src/lib/robotstxt/robotstxt.wasm';
 import { loadRobotsEngine, RobotsTag, ruleText, sitemapsFrom, type RobotsEngine } from '../../src/lib/robotstxt';
-import { BROWSER_UA, fetchAs, isFetchable, json, LOOP_HEADER, MAX_BODY_BYTES, parseTarget, type FetchResult } from '../../src/lib/safe-fetch';
+import { BROWSER_UA, fetchAs as rawFetchAs, isFetchable, siteOf, json, LOOP_HEADER, MAX_BODY_BYTES, parseTarget, type FetchResult } from '../../src/lib/safe-fetch';
 
 const MAX_ROBOTS_BYTES = 500 * 1024;
-const BOT_CHECK_COST = 30;
+// Peor caso: navegador 4 + robots.txt 4 + 15 bots × 2 + 3 sitemaps × 2 = 44. Se devuelve lo que no se usa
+const BOT_CHECK_COST = 45;
 let robotsEngine: Promise<RobotsEngine> | undefined;
 
 /** Páginas de reto o bloqueo de los WAF más comunes */
@@ -68,8 +69,17 @@ export const onRequestGet = async ({ request, env, waitUntil }: { request: Reque
   const target = parseTarget(new URL(request.url).searchParams.get('url') ?? '');
   if (!target) return json({ error: 'invalid-url' }, 400);
 
-  // Una comprobación hace entre 20 y 45 peticiones (redirecciones incluidas): se cobra una media fija
-  return withQuota({ request, env, waitUntil }, BOT_CHECK_COST, async () => {
+  const site = siteOf(target.hostname);
+  return withQuota({ request, env, waitUntil }, BOT_CHECK_COST, async (meter) => {
+    // Cada fetchAs cuenta sus saltos: la cuota refleja las peticiones reales, no una media
+    meter.used = 0;
+    meter.sites.set(site, 0);
+    const fetchAs = async (...args: Parameters<typeof rawFetchAs>) => {
+      const result = await rawFetchAs(...args);
+      meter.used += result.redirects.length + 1;
+      meter.sites.set(site, meter.used);
+      return result;
+    };
     // Primero el navegador de referencia: si la URL redirige, los bots piden ya la URL final.
     // Así el total de subpeticiones no pasa de 50 (límite de Cloudflare)
     const browser = await fetchAs(target.href, BROWSER_UA);
@@ -194,5 +204,5 @@ export const onRequestGet = async ({ request, env, waitUntil }: { request: Reque
       sitemaps,
       bots,
     });
-  });
+  }, new Map([[site, BOT_CHECK_COST]]));
 };

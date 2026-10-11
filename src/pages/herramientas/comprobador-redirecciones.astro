@@ -1,0 +1,93 @@
+---
+import Base from '../../layouts/Base.astro';
+import Cta from '../../components/Cta.astro';
+import FaqAccordion from '../../components/service/FaqAccordion.astro';
+import RedirectChecker from '../../components/tools/RedirectChecker.astro';
+
+const path = '/herramientas/comprobador-redirecciones/';
+
+const faq = [
+  {
+    question: '¿Qué diferencia hay entre una redirección 301 y una 302?',
+    answer:
+      'La 301 (y la 308) dice que el cambio es permanente, y Google pasa las señales a la URL nueva y acaba indexando esa. La 302 (y la 307) dice que es temporal, y Google puede seguir mostrando la antigua. Si el cambio es definitivo, usa 301 o 308.',
+  },
+  {
+    question: '¿Por qué es un problema una cadena de redirecciones?',
+    answer:
+      'Cada salto es una petición más para el usuario y para Googlebot, que deja de seguir una cadena a partir de 10 saltos. Además, los enlaces internos que pasan por redirecciones gastan rastreo. Lo correcto es enlazar y redirigir directamente a la URL final.',
+  },
+  {
+    question: '¿Para qué sirve pedir las URLs como Googlebot o GPTBot?',
+    answer:
+      'Algunas webs responden distinto según el user-agent: redirigen a los bots a otra versión, o los bloquean. Las peticiones salen de Cloudflare, no de las IPs de Google u OpenAI, así que si la web verifica bots por IP, puede bloquear aquí y dejar pasar al bot real.',
+  },
+  {
+    question: '¿Qué más revisa además del código HTTP?',
+    answer:
+      'En la URL final mira si lleva noindex (en la cabecera X-Robots-Tag o en la meta robots), si su canonical apunta a otra URL y si redirige con meta refresh. También avisa si alguna redirección pasa de https a http.',
+  },
+];
+
+const webApplication = {
+  '@type': 'WebApplication',
+  name: 'Comprobador de redirecciones y códigos HTTP',
+  url: `https://nachomascort.com${path}`,
+  applicationCategory: 'DeveloperApplication',
+  operatingSystem: 'Any',
+  browserRequirements: 'Requires JavaScript',
+  inLanguage: 'es',
+  isAccessibleForFree: true,
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' },
+  author: { '@id': 'https://nachomascort.com/#person' },
+};
+---
+
+<Base
+  lang="es"
+  title="Comprobador de redirecciones y códigos HTTP en bloque — Nacho Mascort"
+  description="Comprueba hasta 500 URLs a la vez: código HTTP, cadenas de redirecciones 301 y 302, bucles, noindex y canonical. Como navegador, Googlebot o los bots de IA."
+  path={path}
+  alternatePath="/en/tools/redirect-checker/"
+  breadcrumbs={[
+    { name: 'Inicio', path: '/' },
+    { name: 'Herramientas', path: '/herramientas/' },
+    { name: 'Comprobador de redirecciones', path },
+  ]}
+  faq={faq}
+  extraSchemaNodes={[webApplication]}
+>
+  <div class="mx-auto max-w-5xl px-5 pt-16 sm:px-6 sm:pt-20">
+    <p class="meta"><a href="/herramientas/" class="hover:text-ink">Herramientas</a> · SEO técnico</p>
+    <h1 class="display-1 mt-5">Comprobador de redirecciones y códigos HTTP</h1>
+    <p class="lede mt-6">
+      Pega una lista de URLs y mira qué responde cada una: el código HTTP, cada salto de sus redirecciones y si la URL final
+      lleva noindex o canoniza a otra. Hasta 500 URLs de una vez, como navegador, Googlebot o un bot de IA.
+    </p>
+
+    <div class="mt-10">
+      <RedirectChecker lang="es" />
+    </div>
+  </div>
+
+  <article class="mx-auto max-w-5xl px-5 pt-16 sm:px-6 md:pt-24">
+    <p class="section-label">Cómo usarla</p>
+    <div class="article-body mt-4">
+      <h2>Después de una migración</h2>
+      <p>
+        Pega las URLs antiguas y comprueba que cada una llega en un solo salto 301 a su nueva URL, que esa URL responde 200 y
+        que no lleva noindex. Es la revisión que hago el día del lanzamiento en las
+        <a href="/servicios/migraciones-seo/">migraciones SEO</a>, y conviene repetirla unas semanas después.
+      </p>
+      <h2>Para auditar enlaces internos</h2>
+      <p>
+        Exporta los enlaces internos de un crawl y pásalos por aquí: los que pasan por una redirección hay que cambiarlos por
+        la URL final. Si lo que quieres revisar son las URLs de tu sitemap, usa el
+        <a href="/herramientas/auditor-sitemap/">auditor de sitemap</a>, que hace lo mismo con una muestra de todas ellas.
+      </p>
+    </div>
+  </article>
+
+  <FaqAccordion lang="es" faq={faq} />
+  <Cta lang="es" />
+</Base>

@@ -163,8 +163,8 @@ const sampleRobots = 'User-agent: *\nDisallow: /search\nAllow: /search/about\n\n
 </section>
 
 <script>
-  import wasmUrl from '../../lib/robotstxt/robotstxt.wasm?url';
-  import { loadRobotsEngine, robotsLines, RobotsTag, ruleText, type RobotsEngine } from '../../lib/robotstxt';
+  import { robotsLines, RobotsTag, ruleText, type RobotsEngine } from '../../lib/robotstxt';
+  import { getBrowserRobotsEngine } from '../../lib/robotstxt/browser';
 
   const tool = document.querySelector<HTMLElement>('[data-robots-tester]');
   const result = document.querySelector<HTMLElement>('[data-result]');
@@ -193,11 +193,6 @@ const sampleRobots = 'User-agent: *\nDisallow: /search\nAllow: /search/about\n\n
 
     // Base para las rutas relativas: la web cargada o, si no hay, un dominio de ejemplo
     let baseUrl = 'https://example.com/';
-    let engine: Promise<RobotsEngine> | undefined;
-    const getEngine = () =>
-      (engine ??= WebAssembly.compileStreaming(fetch(wasmUrl))
-        .catch(() => fetch(wasmUrl).then((response) => response.arrayBuffer()).then((bytes) => WebAssembly.compile(bytes)))
-        .then(loadRobotsEngine));
 
     function showError(message: string) {
       errorBox.textContent = message;
@@ -263,9 +258,8 @@ const sampleRobots = 'User-agent: *\nDisallow: /search\nAllow: /search/about\n\n
 
       let robots: RobotsEngine;
       try {
-        robots = await getEngine();
+        robots = await getBrowserRobotsEngine();
       } catch {
-        engine = undefined;
         return showError(messages.errorEngine);
       }
       if (customAgent && !robots.isValidUserAgent(customAgent)) return showError(format('invalidAgent', { agent: customAgent }));

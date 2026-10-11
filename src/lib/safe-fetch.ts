@@ -119,3 +119,97 @@ export const parseTarget = (raw: string) => {
     return null;
   }
 };
+
+// ---------- Cadenas de redirección, salto a salto ----------
+
+/** Subpeticiones que quedan en esta invocación (el plan gratis permite 50) */
+export interface FetchBudget {
+  remaining: number;
+}
+
+export interface Hop {
+  url: string;
+  status: number;
+  location: string | null;
+}
+
+export interface Trace {
+  url: string;
+  hops: Hop[];
+  finalUrl: string;
+  status: number | null;
+  error: string | null;
+  /** Sin presupuesto para terminar: el cliente tiene que volver a pedirla */
+  pending: boolean;
+  xRobotsTag: string | null;
+  contentType: string | null;
+  canonical: string | null;
+  metaRobots: string | null;
+  metaRefresh: string | null;
+}
+
+const MAX_TRACE_HOPS = 10;
+const HEAD_BYTES = 32 * 1024;
+
+const headOf = (html: string) => {
+  const end = html.search(/<\/head>/i);
+  return html.slice(0, end > 0 ? end : html.length);
+};
+// [^>]{0,2000} acotado: con [^>]* una etiqueta sin cerrar dispara backtracking
+const tagsIn = (html: string, tag: string) => headOf(html).match(new RegExp(`<${tag}\\b[^>]{0,2000}>`, 'gi')) ?? [];
+const attribute = (tag: string, name: string) => tag.match(new RegExp(`\\b${name}\\s*=\\s*(["'])(.*?)\\1`, 'i'))?.[2] ?? tag.match(new RegExp(`\\b${name}\\s*=\\s*([^\\s>]+)`, 'i'))?.[1] ?? null;
+
+/** Sigue las redirecciones de una URL pidiendo cada salto por separado, con el user-agent indicado */
+export const traceUrl = async (url: string, userAgent: string, budget: FetchBudget): Promise<Trace> => {
+  const trace: Trace = { url, hops: [], finalUrl: url, status: null, error: null, pending: false, xRobotsTag: null, contentType: null, canonical: null, metaRobots: null, metaRefresh: null };
+  const seen = new Set<string>();
+  let currentUrl = url;
+  for (let hop = 0; hop < MAX_TRACE_HOPS; hop++) {
+    if (budget.remaining <= 0) return { ...trace, pending: true };
+    if (seen.has(currentUrl)) return { ...trace, error: 'loop' };
+    seen.add(currentUrl);
+    let parsed: URL;
+    try {
+      parsed = new URL(currentUrl);
+    } catch {
+      return { ...trace, error: 'invalid-url' };
+    }
+    if (!isFetchable(parsed)) return { ...trace, error: 'blocked-url' };
+    budget.remaining--;
+    try {
+      const response = await fetch(currentUrl, {
+        headers: { [LOOP_HEADER]: '1', 'User-Agent': userAgent, Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Language': 'en,es;q=0.8' },
+        redirect: 'manual',
+        signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+      });
+      const location = response.headers.get('location');
+      const next = location ? new URL(location, currentUrl).href : null;
+      trace.hops.push({ url: currentUrl, status: response.status, location: next });
+      if (response.status >= 300 && response.status < 400 && next) {
+        response.body?.cancel().catch(() => {});
+        currentUrl = next;
+        continue;
+      }
+      const contentType = response.headers.get('content-type');
+      const { text } = /html/i.test(contentType ?? '') ? await readCapped(response, HEAD_BYTES) : (response.body?.cancel().catch(() => {}), { text: '' });
+      const metaRobots = tagsIn(text, 'meta').filter((tag) => /^(robots|googlebot)$/i.test(attribute(tag, 'name') ?? '')).map((tag) => attribute(tag, 'content')).filter(Boolean);
+      const refresh = tagsIn(text, 'meta').find((tag) => /^refresh$/i.test(attribute(tag, 'http-equiv') ?? ''));
+      const canonical = tagsIn(text, 'link').find((tag) => /(^|\s)canonical(\s|$)/i.test(attribute(tag, 'rel') ?? ''));
+      const canonicalHref = canonical ? attribute(canonical, 'href') : null;
+      return {
+        ...trace,
+        finalUrl: currentUrl,
+        status: response.status,
+        xRobotsTag: response.headers.get('x-robots-tag'),
+        contentType,
+        canonical: canonicalHref ? new URL(canonicalHref, currentUrl).href : null,
+        metaRobots: metaRobots.length ? metaRobots.join(', ') : null,
+        metaRefresh: refresh ? attribute(refresh, 'content') : null,
+      };
+    } catch (error) {
+      const timedOut = error instanceof Error && (error.name === 'TimeoutError' || error.name === 'AbortError');
+      return { ...trace, finalUrl: currentUrl, error: timedOut ? 'timeout' : 'network' };
+    }
+  }
+  return { ...trace, finalUrl: currentUrl, error: 'too-many-redirects' };
+};

@@ -93,6 +93,38 @@ export const tools: Record<Lang, ToolCopy>[] = [
   },
   {
     es: {
+      href: '/herramientas/comprobador-redirecciones/',
+      title: 'Comprobador de redirecciones y códigos HTTP',
+      tagline: 'Hasta 500 URLs a la vez: código HTTP, cada salto de sus redirecciones, noindex y canonical.',
+      detail: 'Como navegador, Googlebot o un bot de IA. Para migraciones y para limpiar enlaces internos.',
+      summary: 'comprueba en bloque el código HTTP y las cadenas de redirecciones de hasta 500 URLs, con noindex y canonical, como navegador, Googlebot o bots de IA.',
+    },
+    en: {
+      href: '/en/tools/redirect-checker/',
+      title: 'Redirect and HTTP status checker',
+      tagline: 'Up to 500 URLs at once: HTTP status, every redirect hop, noindex and canonical.',
+      detail: 'As a browser, Googlebot or an AI bot. For migrations and for cleaning up internal links.',
+      summary: 'bulk-checks the HTTP status and redirect chains of up to 500 URLs, with noindex and canonical, as a browser, Googlebot or AI bots.',
+    },
+  },
+  {
+    es: {
+      href: '/herramientas/auditor-sitemap/',
+      title: 'Auditor de sitemap XML',
+      tagline: 'Duplicadas, URLs de otro dominio o bloqueadas por robots.txt, y el estado de una muestra como Googlebot.',
+      detail: 'Lee índices y archivos .gz, y encuentra los sitemaps a partir del robots.txt.',
+      summary: 'audita un sitemap XML (también índices y .gz): duplicadas, otro dominio, bloqueadas por robots.txt y código HTTP, noindex y canonical de una muestra.',
+    },
+    en: {
+      href: '/en/tools/sitemap-auditor/',
+      title: 'XML sitemap auditor',
+      tagline: 'Duplicates, URLs on another domain or blocked by robots.txt, and the status of a sample as Googlebot.',
+      detail: 'Reads indexes and .gz files, and finds the sitemaps from robots.txt.',
+      summary: 'audits an XML sitemap (indexes and .gz too): duplicates, other domains, robots.txt blocks, and HTTP status, noindex and canonical for a sample.',
+    },
+  },
+  {
+    es: {
       href: '/herramientas/canal-trafico-ia-ga4/',
       title: 'Canal de tráfico de IA en GA4',
       tagline: 'La regex y el grupo de canales para ver juntas las visitas de ChatGPT, Perplexity, Gemini o Claude.',

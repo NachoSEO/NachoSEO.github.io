@@ -185,7 +185,7 @@ export const guideParts: GuidePart[] = [
             title: 'Del tráfico de IA al negocio',
             summary: 'Atribución, tráfico oscuro y el CTR con AI Overviews.',
             status: 'reservado',
-            author: { name: 'Toni Villaro', slug: 'toni-villaro' },
+            author: { name: 'Toni Villaró', slug: 'toni-villaro' },
           },
           {
             number: 17,

@@ -1,0 +1,80 @@
+/** Herramientas gratis: fuente única para /herramientas/, /en/tools/ y llms.txt */
+import type { Lang } from '../i18n/ui';
+
+interface ToolCopy {
+  href: string;
+  title: string;
+  tagline: string;
+  detail: string;
+  /** Línea para llms.txt: qué hace, en una frase */
+  summary: string;
+}
+
+export const tools: Record<Lang, ToolCopy>[] = [
+  {
+    es: {
+      href: '/herramientas/calculadora-valor-sesion-seo/',
+      title: 'Calculadora del valor de una sesión orgánica',
+      tagline: 'Cuánto deja cada visita de Google según tu modelo de negocio: ventas, leads o publicidad.',
+      detail: 'Valor por sesión, al mes, al año y por cada 1.000 clics más. Para priorizar page types con números.',
+      summary: 'calcula cuánto vale cada sesión orgánica según el modelo de negocio (ventas, leads o publicidad).',
+    },
+    en: {
+      href: '/en/tools/organic-session-value-calculator/',
+      title: 'Organic session value calculator',
+      tagline: 'What each Google visit is worth for your business model: sales, leads or advertising.',
+      detail: 'Value per session, per month, per year and per 1,000 extra clicks. Prioritize page types with numbers.',
+      summary: 'works out what each organic session is worth for a sales, leads or advertising business model.',
+    },
+  },
+  {
+    es: {
+      href: '/herramientas/generador-sitemap/',
+      title: 'Generador de sitemap XML',
+      tagline: 'Convierte una lista de URLs o un CSV en un sitemap.xml listo para Search Console.',
+      detail: 'Índices automáticos a partir de 50.000 URLs, un sitemap por dominio y todo en tu navegador.',
+      summary: 'crea un sitemap.xml gratis a partir de una lista de URLs o un CSV, sin enviar los datos a ningún servidor.',
+    },
+    en: {
+      href: '/en/tools/sitemap-generator/',
+      title: 'XML Sitemap Generator',
+      tagline: 'Turn a list of URLs or a CSV into a sitemap.xml ready for Search Console.',
+      detail: 'Automatic indexes past 50,000 URLs, one sitemap per domain, and everything runs in your browser.',
+      summary: 'build a sitemap.xml for free from a list of URLs or a CSV; your data never leaves the browser.',
+    },
+  },
+  {
+    es: {
+      href: '/herramientas/comprobador-bots/',
+      title: 'Comprobador de acceso de bots',
+      tagline: 'Mira si Googlebot y los bots de ChatGPT, Claude o Perplexity pueden entrar en tu web.',
+      detail: 'robots.txt, respuesta HTTP, bloqueos del firewall, noindex y sitemap de 15 bots en una sola pasada.',
+      summary: 'comprueba si Googlebot y los bots de IA (ChatGPT, Claude, Perplexity) pueden rastrear una URL: robots.txt, respuesta HTTP, firewall y noindex.',
+    },
+    en: {
+      href: '/en/tools/bot-access-checker/',
+      title: 'Bot access checker',
+      tagline: 'See whether Googlebot and the ChatGPT, Claude or Perplexity bots can reach your site.',
+      detail: 'robots.txt, HTTP response, firewall blocks, noindex and sitemap for 15 bots in one pass.',
+      summary: 'checks whether Googlebot and AI bots (ChatGPT, Claude, Perplexity) can crawl a URL: robots.txt, HTTP response, firewall and noindex.',
+    },
+  },
+  {
+    es: {
+      href: '/herramientas/canal-trafico-ia-ga4/',
+      title: 'Canal de tráfico de IA en GA4',
+      tagline: 'La regex y el grupo de canales para ver juntas las visitas de ChatGPT, Perplexity, Gemini o Claude.',
+      detail: 'También el campo calculado de Looker Studio y la consulta para el export de GA4 en BigQuery.',
+      summary: 'genera la regex, el grupo de canales de GA4, el campo de Looker Studio y la consulta de BigQuery para medir el tráfico de asistentes de IA.',
+    },
+    en: {
+      href: '/en/tools/ga4-ai-traffic-channel/',
+      title: 'AI traffic channel in GA4',
+      tagline: 'The regex and channel group to see ChatGPT, Perplexity, Gemini or Claude visits together.',
+      detail: 'Plus the Looker Studio calculated field and the query for the GA4 BigQuery export.',
+      summary: 'generates the regex, GA4 channel group, Looker Studio field and BigQuery query to measure traffic from AI assistants.',
+    },
+  },
+];
+
+export const toolsFor = (lang: Lang) => tools.map((tool) => tool[lang]);

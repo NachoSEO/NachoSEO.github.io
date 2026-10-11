@@ -1,0 +1,234 @@
+---
+import type { Lang } from '../../i18n/ui';
+import { AI_REFERRERS } from '../../data/ai-referrers';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const es = lang === 'es';
+
+const copy = es
+  ? {
+      enginesLegend: 'Asistentes de IA que quieres agrupar',
+      extraLabel: 'Dominios extra (uno por línea)',
+      extraHelp: 'Por ejemplo, un asistente que no está en la lista. Puedes pegar la URL entera.',
+      channelLabel: 'Nombre del canal',
+      channelDefault: 'Asistentes de IA',
+      regexTitle: '1. Expresión regular',
+      regexHelp: 'Sirve para la fuente de la sesión en GA4, filtros, segmentos y cualquier herramienta con RE2.',
+      splitHelp: 'Si GA4 te dice que la expresión es demasiado larga, añade estas condiciones unidas con «O» en lugar de la de arriba:',
+      ga4Title: '2. Grupo de canales personalizado en GA4',
+      ga4Steps: [
+        'En <strong>Administrar → Visualización de datos → Grupos de canales</strong>, copia el grupo predeterminado (o crea uno nuevo).',
+        'Pulsa <strong>Añadir canal nuevo</strong> y ponle el nombre de arriba.',
+        'Condición: <strong>Fuente</strong> · <strong>coincide con la expresión regular</strong> · pega la regex del paso 1.',
+        'Guarda y <strong>reordena</strong>: el canal tiene que quedar por encima de <strong>Referral</strong> y de <strong>Organic Search</strong>. GA4 asigna cada sesión al primer canal que cumple la condición.',
+        'Los grupos de canales personalizados se aplican también a los datos antiguos, así que verás el histórico.',
+      ],
+      exploreTitle: '3. Segmento o filtro rápido',
+      exploreText:
+        'En una exploración, crea un <strong>segmento de sesiones</strong> con <strong>Origen de la sesión</strong> · <strong>coincide con la expresión regular</strong> · la regex. En los informes estándar vale el mismo filtro.',
+      lookerTitle: '4. Campo calculado en Looker Studio',
+      lookerHelp: 'Sustituye a «Grupo de canales predeterminado de la sesión» en tus gráficos. Si tienes Looker Studio en inglés, cambia los nombres de los campos por Session source y Session default channel group.',
+      bigqueryTitle: '5. Consulta para el export de GA4 en BigQuery',
+      bigqueryHelp: 'Cambia el proyecto y el ID del dataset. Cuenta sesiones por fuente en los últimos 28 días.',
+      copy: 'Copiar',
+      noscript: 'El constructor funciona con JavaScript. Actívalo para generar la regex.',
+    }
+  : {
+      enginesLegend: 'AI assistants to group together',
+      extraLabel: 'Extra domains (one per line)',
+      extraHelp: "For example, an assistant that isn't on the list. You can paste the full URL.",
+      channelLabel: 'Channel name',
+      channelDefault: 'AI assistants',
+      regexTitle: '1. Regular expression',
+      regexHelp: 'Use it on session source in GA4, filters, segments and any tool that speaks RE2.',
+      splitHelp: 'If GA4 says the expression is too long, add these conditions joined with "OR" instead of the one above:',
+      ga4Title: '2. Custom channel group in GA4',
+      ga4Steps: [
+        'In <strong>Admin → Data display → Channel groups</strong>, copy the default group (or create a new one).',
+        'Click <strong>Add new channel</strong> and give it the name above.',
+        'Condition: <strong>Source</strong> · <strong>matches regex</strong> · paste the regex from step 1.',
+        'Save and <strong>reorder</strong>: the channel must sit above <strong>Referral</strong> and <strong>Organic Search</strong>. GA4 assigns each session to the first channel whose condition matches.',
+        'Custom channel groups also apply to past data, so you get the history too.',
+      ],
+      exploreTitle: '3. Quick segment or filter',
+      exploreText:
+        'In an exploration, build a <strong>session segment</strong> with <strong>Session source</strong> · <strong>matches regex</strong> · the regex. The same filter works in standard reports.',
+      lookerTitle: '4. Calculated field in Looker Studio',
+      lookerHelp: 'Use it instead of "Session default channel group" in your charts.',
+      bigqueryTitle: '5. Query for the GA4 BigQuery export',
+      bigqueryHelp: 'Change the project and dataset ID. It counts sessions by source over the last 28 days.',
+      copy: 'Copy',
+      noscript: 'The builder runs on JavaScript. Enable it to generate the regex.',
+    };
+
+/** Textos que necesita el script del cliente */
+const messages = es
+  ? {
+      chars: '{n} caracteres · {hosts} dominios',
+      empty: 'Elige al menos un asistente.',
+      invalidHosts: 'Ignorados por no ser un dominio: {list}',
+      copied: 'Copiado',
+      copyFailed: 'No se pudo copiar',
+      sourceField: 'Origen de la sesión',
+      channelField: 'Grupo de canales predeterminado de la sesión',
+      bqTitle: 'Sesiones que llegan desde asistentes de IA (nachomascort.com/herramientas/canal-trafico-ia-ga4/)',
+      bqDataset: 'Cambia your-project y analytics_123456789 por tu proyecto y tu dataset',
+      bqWindow: 'Últimos 28 días completos',
+    }
+  : {
+      chars: '{n} characters · {hosts} domains',
+      empty: 'Pick at least one assistant.',
+      invalidHosts: 'Ignored because they are not domains: {list}',
+      copied: 'Copied',
+      copyFailed: 'Copy failed',
+      sourceField: 'Session source',
+      channelField: 'Session default channel group',
+      bqTitle: 'Sessions coming from AI assistants (nachomascort.com/en/tools/ga4-ai-traffic-channel/)',
+      bqDataset: 'Replace your-project and analytics_123456789 with your project and dataset',
+      bqWindow: 'Last 28 full days',
+    };
+
+const inputClass =
+  'w-full rounded-lg border border-line bg-paper px-4 py-3 text-[0.95rem] text-ink transition-colors focus:border-ink';
+const preClass = 'mt-3 max-h-80 overflow-auto rounded-lg bg-dark px-5 py-4 font-mono text-[0.78rem] leading-relaxed text-on-dark whitespace-pre-wrap break-all';
+---
+
+<div class="card sm:p-8" data-ai-channel-tool data-messages={JSON.stringify(messages)}>
+  <fieldset>
+    <legend class="text-sm font-semibold">{copy.enginesLegend}</legend>
+    <div class="mt-3 grid gap-x-6 gap-y-3 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        AI_REFERRERS.map((referrer) => (
+          <label class="flex cursor-pointer items-start gap-3 text-[0.95rem]">
+            <input type="checkbox" checked class="mt-1 h-4 w-4 shrink-0 accent-[var(--tone-accent)]" value={referrer.id} data-engine />
+            <span>
+              {referrer.name}
+              <span class="block font-mono text-[0.75rem] text-muted">{referrer.hosts.join(' · ')}</span>
+            </span>
+          </label>
+        ))
+      }
+    </div>
+  </fieldset>
+
+  <div class="mt-6 grid gap-5 md:grid-cols-2">
+    <div>
+      <label for="ai-channel-extra" class="text-sm font-semibold">{copy.extraLabel}</label>
+      <textarea id="ai-channel-extra" rows="3" spellcheck="false" autocomplete="off" class:list={[inputClass, 'mt-2 font-mono text-[0.85rem]']} aria-describedby="ai-channel-extra-help" data-extra></textarea>
+      <p id="ai-channel-extra-help" class="mt-2 text-sm text-muted">{copy.extraHelp}</p>
+    </div>
+    <div>
+      <label for="ai-channel-name" class="text-sm font-semibold">{copy.channelLabel}</label>
+      <input id="ai-channel-name" type="text" value={copy.channelDefault} autocomplete="off" class:list={[inputClass, 'mt-2']} data-channel />
+    </div>
+  </div>
+  <p role="alert" class="mt-4 text-sm font-semibold text-accent-ink" data-error hidden></p>
+  <noscript><p class="mt-4 text-sm font-semibold text-accent-ink">{copy.noscript}</p></noscript>
+</div>
+
+<section class="card mt-5 sm:p-8" aria-labelledby="ai-channel-regex-title">
+  <div class="flex flex-wrap items-baseline justify-between gap-3">
+    <h2 id="ai-channel-regex-title" class="display-3">{copy.regexTitle}</h2>
+    <button type="button" class="btn btn--ghost" data-copy="regex">{copy.copy}</button>
+  </div>
+  <p class="mt-2 text-sm text-muted">{copy.regexHelp}</p>
+  <pre class={preClass} tabindex="0"><code data-output="regex"></code></pre>
+  <p class="meta mt-2" data-regex-stats></p>
+  <p class="mt-2 text-sm text-muted" data-invalid hidden></p>
+  <div class="mt-5" data-split hidden>
+    <p class="text-sm">{copy.splitHelp}</p>
+    <pre class={preClass} tabindex="0"><code data-output="split"></code></pre>
+  </div>
+
+  <h2 class="display-3 mt-10">{copy.ga4Title}</h2>
+  <ol class="mt-4 list-decimal space-y-2 pl-5 text-[0.95rem]">
+    {copy.ga4Steps.map((step) => <li set:html={step} />)}
+  </ol>
+
+  <h2 class="display-3 mt-10">{copy.exploreTitle}</h2>
+  <p class="mt-3 text-[0.95rem]" set:html={copy.exploreText} />
+
+  <div class="mt-10 flex flex-wrap items-baseline justify-between gap-3">
+    <h2 class="display-3">{copy.lookerTitle}</h2>
+    <button type="button" class="btn btn--ghost" data-copy="looker">{copy.copy}</button>
+  </div>
+  <p class="mt-2 text-sm text-muted">{copy.lookerHelp}</p>
+  <pre class={preClass} tabindex="0"><code data-output="looker"></code></pre>
+
+  <div class="mt-10 flex flex-wrap items-baseline justify-between gap-3">
+    <h2 class="display-3">{copy.bigqueryTitle}</h2>
+    <button type="button" class="btn btn--ghost" data-copy="bigquery">{copy.copy}</button>
+  </div>
+  <p class="mt-2 text-sm text-muted">{copy.bigqueryHelp}</p>
+  <pre class={preClass} tabindex="0"><code data-output="bigquery"></code></pre>
+</section>
+
+<script>
+  import { AI_REFERRERS } from '../../data/ai-referrers';
+  import { buildBigQuery, buildLookerField, buildSourceRegex, normalizeHost, splitSourceRegex } from '../../lib/ai-traffic';
+
+  const tool = document.querySelector<HTMLElement>('[data-ai-channel-tool]');
+
+  if (tool) {
+    const messages: Record<string, string> = JSON.parse(tool.dataset.messages ?? '{}');
+    const format = (key: string, values: Record<string, string | number>) =>
+      messages[key].replace(/\{(\w+)\}/g, (_, name) => String(values[name]));
+
+    const engines = [...tool.querySelectorAll<HTMLInputElement>('[data-engine]')];
+    const extraInput = tool.querySelector<HTMLTextAreaElement>('[data-extra]')!;
+    const channelInput = tool.querySelector<HTMLInputElement>('[data-channel]')!;
+    const errorBox = tool.querySelector<HTMLElement>('[data-error]')!;
+    const output = (name: string) => document.querySelector<HTMLElement>(`[data-output="${name}"]`)!;
+    const stats = document.querySelector<HTMLElement>('[data-regex-stats]')!;
+    const invalidBox = document.querySelector<HTMLElement>('[data-invalid]')!;
+    const splitBox = document.querySelector<HTMLElement>('[data-split]')!;
+
+    function render() {
+      const selected = new Set(engines.filter((engine) => engine.checked).map((engine) => engine.value));
+      const extraLines = extraInput.value.split('\n').map((line) => line.trim()).filter(Boolean);
+      const extraHosts = extraLines.map(normalizeHost);
+      const invalid = extraLines.filter((_, index) => !extraHosts[index]);
+      const hosts = [
+        ...AI_REFERRERS.filter((referrer) => selected.has(referrer.id)).flatMap((referrer) => referrer.hosts),
+        ...extraHosts.filter((host): host is string => Boolean(host)),
+      ];
+      const regex = buildSourceRegex(hosts);
+      const channelName = channelInput.value.trim() || channelInput.defaultValue;
+
+      errorBox.textContent = regex ? '' : messages.empty;
+      errorBox.hidden = Boolean(regex);
+      invalidBox.hidden = invalid.length === 0;
+      invalidBox.textContent = invalid.length ? format('invalidHosts', { list: invalid.join(', ') }) : '';
+      stats.textContent = regex ? format('chars', { n: regex.length, hosts: new Set(hosts).size }) : '';
+
+      output('regex').textContent = regex;
+      const parts = regex.length > 256 ? splitSourceRegex(hosts) : [];
+      splitBox.hidden = parts.length === 0;
+      output('split').textContent = parts.join('\n\n');
+      output('looker').textContent = regex ? buildLookerField(regex, channelName, messages.sourceField, messages.channelField) : '';
+      output('bigquery').textContent = regex
+        ? buildBigQuery(regex, { title: messages.bqTitle, dataset: messages.bqDataset, window: messages.bqWindow })
+        : '';
+    }
+
+    for (const button of document.querySelectorAll<HTMLButtonElement>('[data-copy]')) {
+      const label = button.textContent ?? '';
+      button.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(output(button.dataset.copy!).textContent ?? '');
+          button.textContent = messages.copied;
+        } catch {
+          button.textContent = messages.copyFailed;
+        }
+        setTimeout(() => (button.textContent = label), 2000);
+      });
+    }
+
+    tool.addEventListener('input', render);
+    render();
+  }
+</script>

@@ -130,6 +130,8 @@ const messages = es
 <section class="card mt-5 sm:p-8" aria-live="polite" data-result hidden></section>
 
 <script>
+  import { setChallengeSlot, toolFetch } from '../../lib/tool-session-client';
+
   type Verdict = 'ok' | 'warning' | 'blocked';
   interface BotRow {
     name: string;
@@ -166,6 +168,7 @@ const messages = es
   document.querySelectorAll<HTMLElement>('[data-bot-checker]').forEach((root) => {
     const lang = root.dataset.lang;
     const messages = JSON.parse(root.dataset.messages ?? '{}');
+    setChallengeSlot(root);
     const form = root.querySelector<HTMLFormElement>('[data-form]')!;
     const urlInput = root.querySelector<HTMLInputElement>('[data-url]')!;
     const submit = root.querySelector<HTMLButtonElement>('[data-submit]')!;
@@ -319,7 +322,7 @@ const messages = es
       submit.disabled = true;
       submit.textContent = messages.checking;
       try {
-        const response = await fetch(`/api/bot-check?url=${encodeURIComponent(raw)}`);
+        const response = await toolFetch(`/api/bot-check?url=${encodeURIComponent(raw)}`);
         const data: CheckResponse = await response.json();
         if (!response.ok || data.error) {
           showError(data.error === 'invalid-url' ? messages.invalidUrl : messages.failed);

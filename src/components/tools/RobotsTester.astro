@@ -165,11 +165,13 @@ const sampleRobots = 'User-agent: *\nDisallow: /search\nAllow: /search/about\n\n
 <script>
   import { robotsLines, RobotsTag, ruleText, type RobotsEngine } from '../../lib/robotstxt';
   import { getBrowserRobotsEngine } from '../../lib/robotstxt/browser';
+  import { setChallengeSlot, toolFetch } from '../../lib/tool-session-client';
 
   const tool = document.querySelector<HTMLElement>('[data-robots-tester]');
   const result = document.querySelector<HTMLElement>('[data-result]');
 
   if (tool && result) {
+    setChallengeSlot(tool);
     const messages: Record<string, string> = JSON.parse(tool.dataset.messages ?? '{}');
     const numberFormat = new Intl.NumberFormat(tool.dataset.lang === 'es' ? 'es-ES' : 'en-US');
     const format = (key: string, values: Record<string, string | number> = {}) =>
@@ -208,7 +210,7 @@ const sampleRobots = 'User-agent: *\nDisallow: /search\nAllow: /search/about\n\n
       loadButton.textContent = messages.loading;
       loadStatus.textContent = '';
       try {
-        const response = await fetch(`/api/robots-txt?url=${encodeURIComponent(urlInput.value.trim())}`);
+        const response = await toolFetch(`/api/robots-txt?url=${encodeURIComponent(urlInput.value.trim())}`);
         const data = await response.json();
         if (data.error === 'invalid-url') return showError(messages.invalidUrl);
         if (!response.ok) return showError(messages.errorGeneric);

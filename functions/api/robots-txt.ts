@@ -3,15 +3,18 @@
  * El análisis lo hace el navegador con el parser oficial de Google; aquí solo se pide el archivo.
  */
 import { isForeignOrigin } from '../../src/lib/form-guard';
+import { hasValidSession, type ToolEnv } from '../../src/lib/tool-session';
 import { BROWSER_UA, fetchAs, json, LOOP_HEADER, parseTarget } from '../../src/lib/safe-fetch';
 
 // Google lee los primeros 500 KiB y sigue hasta 5 redirecciones
 const GOOGLE_MAX_BYTES = 500 * 1024;
 const GOOGLE_MAX_REDIRECTS = 5;
 
-export const onRequestGet = async ({ request }: { request: Request }) => {
+export const onRequestGet = async ({ request, env }: { request: Request; env: ToolEnv }) => {
   if (request.headers.has(LOOP_HEADER)) return json({ error: 'loop' }, 508);
   if (isForeignOrigin(request)) return json({ error: 'forbidden' }, 403);
+  // Sin sesión de Turnstile no se hacen peticiones a otras webs: corta el uso automatizado desde scripts
+  if (!(await hasValidSession(request, env))) return json({ error: 'session' }, 401);
   const target = parseTarget(new URL(request.url).searchParams.get('url') ?? '');
   if (!target) return json({ error: 'invalid-url' }, 400);
 

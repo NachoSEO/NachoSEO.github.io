@@ -18,9 +18,9 @@ const faq = [
       'Every hop is one more request for the user and for Googlebot, which stops following a chain after 10 hops. Internal links that go through redirects also waste crawl budget. The right fix is to link and redirect straight to the final URL.',
   },
   {
-    question: 'What is the point of requesting URLs as Googlebot or GPTBot?',
+    question: 'What is the point of requesting URLs as Googlebot?',
     answer:
-      "Some sites respond differently depending on the user-agent: they redirect bots to another version, or block them. The requests leave from Cloudflare, not from Google's or OpenAI's IPs, so if a site verifies bots by IP, it may block here and let the real bot through.",
+      "Some sites respond differently depending on the user-agent: they redirect bots to another version, or block them. The requests leave from Cloudflare, not from Google's IPs, so if a site verifies Googlebot by IP, it may block here and let the real bot through. To see how a URL responds to AI bots, use the bot access checker.",
   },
   {
     question: 'What else does it check besides the HTTP status code?',
@@ -46,7 +46,7 @@ const webApplication = {
 <Base
   lang="en"
   title="Bulk Redirect and HTTP Status Checker — Nacho Mascort"
-  description="Check up to 500 URLs at once: HTTP status code, 301 and 302 redirect chains, loops, noindex and canonical. As a browser, Googlebot or the AI bots."
+  description="Check up to 200 URLs at once: HTTP status code, 301 and 302 redirect chains, loops, noindex and canonical. As a browser or as Googlebot."
   path={path}
   alternatePath="/herramientas/comprobador-redirecciones/"
   breadcrumbs={[
@@ -62,7 +62,7 @@ const webApplication = {
     <h1 class="display-1 mt-5">Redirect and HTTP status checker</h1>
     <p class="lede mt-6">
       Paste a list of URLs and see what each one returns: the HTTP status code, every hop in its redirects, and whether the
-      final URL has a noindex or canonicalizes to another. Up to 500 URLs at once, as a browser, Googlebot or an AI bot.
+      final URL has a noindex or canonicalizes to another. Up to 200 URLs at once, as a browser or as Googlebot.
     </p>
 
     <div class="mt-10">

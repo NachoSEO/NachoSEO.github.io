@@ -4,6 +4,7 @@
  * Solo deja pasar sitemaps de verdad (<urlset> o <sitemapindex> al principio), para no servir de proxy de cualquier cosa.
  */
 import { isForeignOrigin } from '../../src/lib/form-guard';
+import { hasValidSession, type ToolEnv } from '../../src/lib/tool-session';
 import { BOTS } from '../../src/data/bots';
 import { FETCH_TIMEOUT_MS, isFetchable, json, LOOP_HEADER, parseTarget } from '../../src/lib/safe-fetch';
 
@@ -33,9 +34,11 @@ const gunzipStart = async (bytes: Uint8Array) => {
   return text;
 };
 
-export const onRequestGet = async ({ request }: { request: Request }) => {
+export const onRequestGet = async ({ request, env }: { request: Request; env: ToolEnv }) => {
   if (request.headers.has(LOOP_HEADER)) return json({ error: 'loop' }, 508);
   if (isForeignOrigin(request)) return json({ error: 'forbidden' }, 403);
+  // Sin sesión de Turnstile no se hacen peticiones a otras webs: corta el uso automatizado desde scripts
+  if (!(await hasValidSession(request, env))) return json({ error: 'session' }, 401);
   const target = parseTarget(new URL(request.url).searchParams.get('url') ?? '');
   if (!target) return json({ error: 'invalid-url' }, 400);
 

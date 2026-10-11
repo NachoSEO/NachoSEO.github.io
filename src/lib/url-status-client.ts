@@ -4,6 +4,7 @@
  */
 import type { Trace } from './safe-fetch';
 import { toCsv } from './csv';
+import { toolFetch } from './tool-session-client';
 
 export type { Trace };
 
@@ -45,7 +46,7 @@ export const checkUrls = async (
   while (queue.length && !isCancelled()) {
     const batch = queue.slice(0, BATCH_SIZE);
     const data = await paced(
-      () => fetch('/api/url-status', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ urls: batch, agent }) }),
+      () => toolFetch('/api/url-status', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ urls: batch, agent }) }),
       async (response) => (response.ok ? ((await response.json()) as { results: Trace[] }) : null)
     );
     if (!data) throw new Error('api');
@@ -123,7 +124,7 @@ const MAX_SITEMAP_URLS = 200_000;
 
 const fetchSitemapText = async (url: string) => {
   const response = await paced(
-    () => fetch(`/api/sitemap-fetch?url=${encodeURIComponent(url)}`),
+    () => toolFetch(`/api/sitemap-fetch?url=${encodeURIComponent(url)}`),
     async (response) => response
   );
   if (!response.ok) {

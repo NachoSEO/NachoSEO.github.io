@@ -95,16 +95,16 @@ export const tools: Record<Lang, ToolCopy>[] = [
     es: {
       href: '/herramientas/comprobador-redirecciones/',
       title: 'Comprobador de redirecciones y códigos HTTP',
-      tagline: 'Hasta 500 URLs a la vez: código HTTP, cada salto de sus redirecciones, noindex y canonical.',
-      detail: 'Como navegador, Googlebot o un bot de IA. Para migraciones y para limpiar enlaces internos.',
-      summary: 'comprueba en bloque el código HTTP y las cadenas de redirecciones de hasta 500 URLs, con noindex y canonical, como navegador, Googlebot o bots de IA.',
+      tagline: 'Hasta 200 URLs a la vez: código HTTP, cada salto de sus redirecciones, noindex y canonical.',
+      detail: 'Como navegador o como Googlebot. Para migraciones y para limpiar enlaces internos.',
+      summary: 'comprueba en bloque el código HTTP y las cadenas de redirecciones de hasta 200 URLs, con noindex y canonical, como navegador o como Googlebot.',
     },
     en: {
       href: '/en/tools/redirect-checker/',
       title: 'Redirect and HTTP status checker',
-      tagline: 'Up to 500 URLs at once: HTTP status, every redirect hop, noindex and canonical.',
-      detail: 'As a browser, Googlebot or an AI bot. For migrations and for cleaning up internal links.',
-      summary: 'bulk-checks the HTTP status and redirect chains of up to 500 URLs, with noindex and canonical, as a browser, Googlebot or AI bots.',
+      tagline: 'Up to 200 URLs at once: HTTP status, every redirect hop, noindex and canonical.',
+      detail: 'As a browser or as Googlebot. For migrations and for cleaning up internal links.',
+      summary: 'bulk-checks the HTTP status and redirect chains of up to 200 URLs, with noindex and canonical, as a browser or as Googlebot.',
     },
   },
   {

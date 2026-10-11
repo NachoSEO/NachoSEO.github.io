@@ -1,6 +1,5 @@
 ---
 import type { Lang } from '../../i18n/ui';
-import { BOTS } from '../../data/bots';
 import { traceLabels } from '../../data/trace-labels';
 
 interface Props {
@@ -9,7 +8,7 @@ interface Props {
 
 const { lang } = Astro.props;
 const es = lang === 'es';
-const MAX_URLS = 500;
+const MAX_URLS = 200;
 
 const copy = es
   ? {
@@ -64,7 +63,7 @@ const inputClass =
       <label for="redirect-agent" class="text-sm font-semibold">{copy.agentLabel}</label>
       <select id="redirect-agent" class:list={[inputClass, 'mt-2']} data-agent>
         <option value="browser">{copy.browser}</option>
-        {BOTS.filter((bot) => bot.userAgent).map((bot) => <option value={bot.name}>{bot.name}</option>)}
+        <option value="Googlebot">Googlebot</option>
       </select>
     </div>
     <button type="button" class="btn" data-run data-umami-event="redirect-checker-run">{copy.run}</button>
@@ -87,11 +86,13 @@ const inputClass =
 <script>
   import { checkUrls, traceTone, tracesToCsv, type Trace } from '../../lib/url-status-client';
   import { renderTraceTable } from '../../lib/trace-table';
+  import { setChallengeSlot } from '../../lib/tool-session-client';
 
   const tool = document.querySelector<HTMLElement>('[data-redirect-tool]');
   const result = document.querySelector<HTMLElement>('[data-result]');
 
   if (tool && result) {
+    setChallengeSlot(tool);
     const messages = JSON.parse(tool.dataset.messages ?? '{}');
     const maxUrls = Number(tool.dataset.max);
     const format = (template: string, values: Record<string, number>) => template.replace(/\{(\w+)\}/g, (_, name) => String(values[name]));

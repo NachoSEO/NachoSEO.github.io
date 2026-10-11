@@ -10,6 +10,7 @@
  * verifica bots por IP (lo hacen Cloudflare, Akamai, etc.), un bloqueo aquí puede no afectar al bot real.
  */
 import { isForeignOrigin } from '../../src/lib/form-guard';
+import { hasValidSession, type ToolEnv } from '../../src/lib/tool-session';
 import { BOTS } from '../../src/data/bots';
 import robotsWasm from '../../src/lib/robotstxt/robotstxt.wasm';
 import { loadRobotsEngine, RobotsTag, ruleText, sitemapsFrom, type RobotsEngine } from '../../src/lib/robotstxt';
@@ -56,10 +57,12 @@ const xRobotsFor = (header: string | undefined, token: string) =>
     .filter((part) => !/^[a-z-]+\s*:/i.test(part) || part.toLowerCase().startsWith(`${token}:`))
     .map((part) => part.replace(/^[a-z-]+\s*:\s*/i, ''));
 
-export const onRequestGet = async ({ request }: { request: Request }) => {
+export const onRequestGet = async ({ request, env }: { request: Request; env: ToolEnv }) => {
   if (request.headers.has(LOOP_HEADER)) return json({ error: 'loop' }, 508);
   // Solo desde la propia web: sin esto, cualquier sitio podría usar el endpoint desde el navegador de sus visitas
   if (isForeignOrigin(request)) return json({ error: 'forbidden' }, 403);
+  // Sin sesión de Turnstile no se hacen peticiones a otras webs: corta el uso automatizado desde scripts
+  if (!(await hasValidSession(request, env))) return json({ error: 'session' }, 401);
   const target = parseTarget(new URL(request.url).searchParams.get('url') ?? '');
   if (!target) return json({ error: 'invalid-url' }, 400);
 

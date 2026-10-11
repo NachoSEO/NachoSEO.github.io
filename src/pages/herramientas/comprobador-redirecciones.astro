@@ -18,9 +18,9 @@ const faq = [
       'Cada salto es una petición más para el usuario y para Googlebot, que deja de seguir una cadena a partir de 10 saltos. Además, los enlaces internos que pasan por redirecciones gastan rastreo. Lo correcto es enlazar y redirigir directamente a la URL final.',
   },
   {
-    question: '¿Para qué sirve pedir las URLs como Googlebot o GPTBot?',
+    question: '¿Para qué sirve pedir las URLs como Googlebot?',
     answer:
-      'Algunas webs responden distinto según el user-agent: redirigen a los bots a otra versión, o los bloquean. Las peticiones salen de Cloudflare, no de las IPs de Google u OpenAI, así que si la web verifica bots por IP, puede bloquear aquí y dejar pasar al bot real.',
+      'Algunas webs responden distinto según el user-agent: redirigen a los bots a otra versión, o los bloquean. Las peticiones salen de Cloudflare, no de las IPs de Google, así que si la web verifica a Googlebot por IP, puede bloquear aquí y dejar pasar al bot real. Para ver cómo responde una URL a los bots de IA, usa el comprobador de acceso de bots.',
   },
   {
     question: '¿Qué más revisa además del código HTTP?',
@@ -46,7 +46,7 @@ const webApplication = {
 <Base
   lang="es"
   title="Comprobador de redirecciones y códigos HTTP en bloque — Nacho Mascort"
-  description="Comprueba hasta 500 URLs a la vez: código HTTP, cadenas de redirecciones 301 y 302, bucles, noindex y canonical. Como navegador, Googlebot o los bots de IA."
+  description="Comprueba hasta 200 URLs a la vez: código HTTP, cadenas de redirecciones 301 y 302, bucles, noindex y canonical. Como navegador o como Googlebot."
   path={path}
   alternatePath="/en/tools/redirect-checker/"
   breadcrumbs={[
@@ -62,7 +62,7 @@ const webApplication = {
     <h1 class="display-1 mt-5">Comprobador de redirecciones y códigos HTTP</h1>
     <p class="lede mt-6">
       Pega una lista de URLs y mira qué responde cada una: el código HTTP, cada salto de sus redirecciones y si la URL final
-      lleva noindex o canoniza a otra. Hasta 500 URLs de una vez, como navegador, Googlebot o un bot de IA.
+      lleva noindex o canoniza a otra. Hasta 200 URLs de una vez, como navegador o como Googlebot.
     </p>
 
     <div class="mt-10">

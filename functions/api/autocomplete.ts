@@ -4,6 +4,7 @@
  * invocación. El endpoint no es oficial: se cachea un día por semilla para no repetir peticiones a Google.
  */
 import { isForeignOrigin } from '../../src/lib/form-guard';
+import { hasValidSession, type ToolEnv } from '../../src/lib/tool-session';
 import { FETCH_TIMEOUT_MS, json, LOOP_HEADER } from '../../src/lib/safe-fetch';
 
 type Mode = 'alphabet' | 'questions' | 'prepositions';
@@ -40,9 +41,11 @@ const suggest = async (query: string, hl: string, gl: string) => {
   return Array.isArray(data?.[1]) ? (data[1] as unknown[]).filter((item): item is string => typeof item === 'string') : [];
 };
 
-export const onRequestGet = async ({ request, waitUntil }: { request: Request; waitUntil: (promise: Promise<unknown>) => void }) => {
+export const onRequestGet = async ({ request, env, waitUntil }: { request: Request; env: ToolEnv; waitUntil: (promise: Promise<unknown>) => void }) => {
   if (request.headers.has(LOOP_HEADER)) return json({ error: 'loop' }, 508);
   if (isForeignOrigin(request)) return json({ error: 'forbidden' }, 403);
+  // Sin sesión de Turnstile no se hacen peticiones a otras webs: corta el uso automatizado desde scripts
+  if (!(await hasValidSession(request, env))) return json({ error: 'session' }, 401);
   const params = new URL(request.url).searchParams;
   const seed = (params.get('q') ?? '').trim().toLowerCase().replace(/\s+/g, ' ').slice(0, 80);
   const hl = (params.get('hl') ?? 'es').toLowerCase();

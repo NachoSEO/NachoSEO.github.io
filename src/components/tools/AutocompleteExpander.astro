@@ -141,6 +141,7 @@ const inputClass =
 
 <script>
   import { toCsv } from '../../lib/csv';
+  import { setChallengeSlot, toolFetch } from '../../lib/tool-session-client';
   import { CLUSTER_HANDOFF_KEY } from '../../lib/keyword-clusters';
 
   interface Suggestion {
@@ -153,6 +154,7 @@ const inputClass =
   const result = document.querySelector<HTMLElement>('[data-result]');
 
   if (tool && result) {
+    setChallengeSlot(tool);
     const messages = JSON.parse(tool.dataset.messages ?? '{}');
     const numberFormat = new Intl.NumberFormat(tool.dataset.lang === 'es' ? 'es-ES' : 'en-US');
     const format = (template: string, values: Record<string, number>) => template.replace(/\{(\w+)\}/g, (_, name) => numberFormat.format(values[name]));
@@ -223,7 +225,7 @@ const inputClass =
       try {
         for (const [index, mode] of modes.entries()) {
           progress.textContent = format(messages.loading, { done: index, total: modes.length });
-          const response = await fetch(`/api/autocomplete?q=${encodeURIComponent(seed)}&hl=${hl}&gl=${gl}&mode=${mode}`);
+          const response = await toolFetch(`/api/autocomplete?q=${encodeURIComponent(seed)}&hl=${hl}&gl=${gl}&mode=${mode}`);
           const data = await response.json().catch(() => ({}));
           if (!response.ok) {
             if (data.error === 'throttled') throw new Error('throttled');

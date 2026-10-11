@@ -153,6 +153,7 @@ const inputClass =
   import { renderTraceTable } from '../../lib/trace-table';
   import { sitemapsFrom } from '../../lib/robotstxt';
   import { getBrowserRobotsEngine } from '../../lib/robotstxt/browser';
+  import { setChallengeSlot, toolFetch } from '../../lib/tool-session-client';
 
   const GOOGLEBOT = 'Googlebot';
   const MAX_URLS_PER_FILE = 50_000;
@@ -162,6 +163,7 @@ const inputClass =
   const result = document.querySelector<HTMLElement>('[data-result]');
 
   if (tool && result) {
+    setChallengeSlot(tool);
     const messages = JSON.parse(tool.dataset.messages ?? '{}');
     const numberFormat = new Intl.NumberFormat(tool.dataset.lang === 'es' ? 'es-ES' : 'en-US');
     const percent = new Intl.NumberFormat(tool.dataset.lang === 'es' ? 'es-ES' : 'en-US', { style: 'percent', maximumFractionDigits: 0 });
@@ -190,7 +192,7 @@ const inputClass =
 
     /** robots.txt de la web: para descubrir sitemaps y ver qué URLs bloquea */
     async function loadRobots(origin: string) {
-      const response = await fetch(`/api/robots-txt?url=${encodeURIComponent(origin)}`);
+      const response = await toolFetch(`/api/robots-txt?url=${encodeURIComponent(origin)}`);
       if (!response.ok) return '';
       const data = await response.json();
       return typeof data.body === 'string' ? data.body : '';

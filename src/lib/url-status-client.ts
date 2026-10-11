@@ -4,7 +4,7 @@
  */
 import type { Trace } from './safe-fetch';
 import { toCsv } from './csv';
-import { toolFetch } from './tool-session-client';
+import { ToolLimitError, toolFetch } from './tool-session-client';
 
 export type { Trace };
 
@@ -167,6 +167,7 @@ export const readSitemapTree = async (rootUrl: string, onProgress: (files: Sitem
         }
       } else throw new Error('not-sitemap');
     } catch (error) {
+      if (error instanceof ToolLimitError) throw error;
       file.error = error instanceof Error ? error.message : 'api';
     }
     onProgress(files, urls.length);

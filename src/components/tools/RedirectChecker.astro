@@ -86,7 +86,7 @@ const inputClass =
 <script>
   import { checkUrls, traceTone, tracesToCsv, type Trace } from '../../lib/url-status-client';
   import { renderTraceTable } from '../../lib/trace-table';
-  import { setChallengeSlot } from '../../lib/tool-session-client';
+  import { setChallengeSlot, ToolLimitError } from '../../lib/tool-session-client';
 
   const tool = document.querySelector<HTMLElement>('[data-redirect-tool]');
   const result = document.querySelector<HTMLElement>('[data-result]');
@@ -142,8 +142,8 @@ const inputClass =
           render();
         }, () => cancelled);
         render();
-      } catch {
-        showError(messages.apiError);
+      } catch (error) {
+        showError(error instanceof ToolLimitError ? error.message : messages.apiError);
       } finally {
         runButton.disabled = false;
         stopButton.hidden = true;

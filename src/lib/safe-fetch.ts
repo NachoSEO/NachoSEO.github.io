@@ -122,9 +122,12 @@ export const parseTarget = (raw: string) => {
 
 // ---------- Cadenas de redirección, salto a salto ----------
 
-/** Subpeticiones que quedan en esta invocación (el plan gratis permite 50) */
+/** Subpeticiones que quedan en esta invocación (el plan gratis permite 50) y cuántas lleva cada host */
 export interface FetchBudget {
   remaining: number;
+  /** Tope de peticiones a un mismo host por invocación: la herramienta no puede usarse para cargar una web */
+  maxPerHost?: number;
+  perHost?: Map<string, number>;
 }
 
 export interface Hop {
@@ -175,6 +178,11 @@ export const traceUrl = async (url: string, userAgent: string, budget: FetchBudg
       return { ...trace, error: 'invalid-url' };
     }
     if (!isFetchable(parsed)) return { ...trace, error: 'blocked-url' };
+    if (budget.maxPerHost && budget.perHost) {
+      const sent = budget.perHost.get(parsed.host) ?? 0;
+      if (sent >= budget.maxPerHost) return { ...trace, pending: true };
+      budget.perHost.set(parsed.host, sent + 1);
+    }
     budget.remaining--;
     try {
       const response = await fetch(currentUrl, {

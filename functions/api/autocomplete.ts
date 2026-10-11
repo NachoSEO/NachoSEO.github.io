@@ -5,6 +5,7 @@
  */
 import { isForeignOrigin } from '../../src/lib/form-guard';
 import { hasValidSession, type ToolEnv } from '../../src/lib/tool-session';
+import { withQuota, type QuotaEnv } from '../../src/lib/tool-quota';
 import { FETCH_TIMEOUT_MS, json, LOOP_HEADER } from '../../src/lib/safe-fetch';
 
 type Mode = 'alphabet' | 'questions' | 'prepositions';
@@ -41,7 +42,7 @@ const suggest = async (query: string, hl: string, gl: string) => {
   return Array.isArray(data?.[1]) ? (data[1] as unknown[]).filter((item): item is string => typeof item === 'string') : [];
 };
 
-export const onRequestGet = async ({ request, env, waitUntil }: { request: Request; env: ToolEnv; waitUntil: (promise: Promise<unknown>) => void }) => {
+export const onRequestGet = async ({ request, env, waitUntil }: { request: Request; env: ToolEnv & QuotaEnv; waitUntil: (promise: Promise<unknown>) => void }) => {
   if (request.headers.has(LOOP_HEADER)) return json({ error: 'loop' }, 508);
   if (isForeignOrigin(request)) return json({ error: 'forbidden' }, 403);
   // Sin sesión de Turnstile no se hacen peticiones a otras webs: corta el uso automatizado desde scripts
@@ -59,38 +60,41 @@ export const onRequestGet = async ({ request, env, waitUntil }: { request: Reque
   const cached = await cache.match(cacheKey);
   if (cached) return cached;
 
-  const { words, before } = MODIFIERS[mode][hl === 'es' ? 'es' : 'en'];
-  const queries = [{ query: seed, modifier: '' }, ...words.map((word) => ({ query: before ? `${word} ${seed}` : `${seed} ${word}`, modifier: word }))];
-  const seen = new Set<string>();
-  const suggestions: Suggestion[] = [];
-  let failed = 0;
-  let throttled = false;
-  let next = 0;
-  const worker = async () => {
-    while (next < queries.length) {
-      const { query, modifier } = queries[next++];
-      try {
-        for (const text of await suggest(query, hl, gl)) {
-          const key = text.toLowerCase();
-          if (seen.has(key)) continue;
-          seen.add(key);
-          suggestions.push({ text, modifier });
+  // Solo cuesta cuota lo que no está en caché: una petición a Google por combinación
+  return withQuota(request, env, MODIFIERS[mode][hl === 'es' ? 'es' : 'en'].words.length + 1, async () => {
+    const { words, before } = MODIFIERS[mode][hl === 'es' ? 'es' : 'en'];
+    const queries = [{ query: seed, modifier: '' }, ...words.map((word) => ({ query: before ? `${word} ${seed}` : `${seed} ${word}`, modifier: word }))];
+    const seen = new Set<string>();
+    const suggestions: Suggestion[] = [];
+    let failed = 0;
+    let throttled = false;
+    let next = 0;
+    const worker = async () => {
+      while (next < queries.length) {
+        const { query, modifier } = queries[next++];
+        try {
+          for (const text of await suggest(query, hl, gl)) {
+            const key = text.toLowerCase();
+            if (seen.has(key)) continue;
+            seen.add(key);
+            suggestions.push({ text, modifier });
+          }
+        } catch (error) {
+          failed++;
+          if (error instanceof Error && error.message === 'throttled') throttled = true;
         }
-      } catch (error) {
-        failed++;
-        if (error instanceof Error && error.message === 'throttled') throttled = true;
       }
-    }
-  };
-  await Promise.all(Array.from({ length: CONCURRENCY }, worker));
+    };
+    await Promise.all(Array.from({ length: CONCURRENCY }, worker));
 
-  if (suggestions.length === 0 && (throttled || failed === queries.length)) return json({ error: throttled ? 'throttled' : 'upstream' }, 503);
-  const response = json({ seed, hl, gl, mode, queries: queries.length, failed, suggestions });
-  // Solo se cachea si salió entero
-  if (failed === 0) {
-    const toCache = new Response(response.clone().body, response);
-    toCache.headers.set('Cache-Control', `public, max-age=${CACHE_SECONDS}`);
-    waitUntil(cache.put(cacheKey, toCache));
-  }
-  return response;
+    if (suggestions.length === 0 && (throttled || failed === queries.length)) return json({ error: throttled ? 'throttled' : 'upstream' }, 503);
+    const response = json({ seed, hl, gl, mode, queries: queries.length, failed, suggestions });
+    // Solo se cachea si salió entero
+    if (failed === 0) {
+      const toCache = new Response(response.clone().body, response);
+      toCache.headers.set('Cache-Control', `public, max-age=${CACHE_SECONDS}`);
+      waitUntil(cache.put(cacheKey, toCache));
+    }
+    return response;
+  });
 };

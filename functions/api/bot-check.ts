@@ -11,12 +11,14 @@
  */
 import { isForeignOrigin } from '../../src/lib/form-guard';
 import { hasValidSession, type ToolEnv } from '../../src/lib/tool-session';
+import { withQuota, type QuotaEnv } from '../../src/lib/tool-quota';
 import { BOTS } from '../../src/data/bots';
 import robotsWasm from '../../src/lib/robotstxt/robotstxt.wasm';
 import { loadRobotsEngine, RobotsTag, ruleText, sitemapsFrom, type RobotsEngine } from '../../src/lib/robotstxt';
 import { BROWSER_UA, fetchAs, isFetchable, json, LOOP_HEADER, MAX_BODY_BYTES, parseTarget, type FetchResult } from '../../src/lib/safe-fetch';
 
 const MAX_ROBOTS_BYTES = 500 * 1024;
+const BOT_CHECK_COST = 30;
 let robotsEngine: Promise<RobotsEngine> | undefined;
 
 /** Páginas de reto o bloqueo de los WAF más comunes */
@@ -57,7 +59,7 @@ const xRobotsFor = (header: string | undefined, token: string) =>
     .filter((part) => !/^[a-z-]+\s*:/i.test(part) || part.toLowerCase().startsWith(`${token}:`))
     .map((part) => part.replace(/^[a-z-]+\s*:\s*/i, ''));
 
-export const onRequestGet = async ({ request, env }: { request: Request; env: ToolEnv }) => {
+export const onRequestGet = async ({ request, env }: { request: Request; env: ToolEnv & QuotaEnv }) => {
   if (request.headers.has(LOOP_HEADER)) return json({ error: 'loop' }, 508);
   // Solo desde la propia web: sin esto, cualquier sitio podría usar el endpoint desde el navegador de sus visitas
   if (isForeignOrigin(request)) return json({ error: 'forbidden' }, 403);
@@ -66,128 +68,131 @@ export const onRequestGet = async ({ request, env }: { request: Request; env: To
   const target = parseTarget(new URL(request.url).searchParams.get('url') ?? '');
   if (!target) return json({ error: 'invalid-url' }, 400);
 
-  // Primero el navegador de referencia: si la URL redirige, los bots piden ya la URL final.
-  // Así el total de subpeticiones no pasa de 50 (límite de Cloudflare)
-  const browser = await fetchAs(target.href, BROWSER_UA);
-  const checkedUrl = new URL(browser.status !== null ? browser.finalUrl : target.href);
-  const robotsUrl = new URL('/robots.txt', checkedUrl).href;
-  const fetchingBots = BOTS.filter((bot) => bot.userAgent);
+  // Una comprobación hace entre 20 y 45 peticiones (redirecciones incluidas): se cobra una media fija
+  return withQuota(request, env, BOT_CHECK_COST, async () => {
+    // Primero el navegador de referencia: si la URL redirige, los bots piden ya la URL final.
+    // Así el total de subpeticiones no pasa de 50 (límite de Cloudflare)
+    const browser = await fetchAs(target.href, BROWSER_UA);
+    const checkedUrl = new URL(browser.status !== null ? browser.finalUrl : target.href);
+    const robotsUrl = new URL('/robots.txt', checkedUrl).href;
+    const fetchingBots = BOTS.filter((bot) => bot.userAgent);
 
-  const [robots, ...botResults] = await Promise.all([
-    fetchAs(robotsUrl, BROWSER_UA, MAX_ROBOTS_BYTES),
-    ...fetchingBots.map((bot) => fetchAs(checkedUrl.href, bot.userAgent!, MAX_BODY_BYTES, 1)),
-  ]);
+    const [robots, ...botResults] = await Promise.all([
+      fetchAs(robotsUrl, BROWSER_UA, MAX_ROBOTS_BYTES),
+      ...fetchingBots.map((bot) => fetchAs(checkedUrl.href, bot.userAgent!, MAX_BODY_BYTES, 1)),
+    ]);
 
-  // robots.txt: 4xx = sin restricciones; 5xx o sin respuesta = Google deja de rastrear
-  const robotsStatus = robots.status;
-  const robotsUsable = robotsStatus !== null && robotsStatus >= 200 && robotsStatus < 300;
-  const robotsUnreachable = robotsStatus === null || robotsStatus >= 500 || robotsStatus === 429;
-  const robotsBody = robotsUsable ? robots.body : '';
-  const engine = await (robotsEngine ??= loadRobotsEngine(robotsWasm));
-  const robotsReport = engine.report(robotsBody);
-  const robotsCounts = {
-    rules: robotsReport.lines.filter((parsed) => parsed.tag === RobotsTag.Allow || parsed.tag === RobotsTag.Disallow).length,
-    unused: robotsReport.unusedDirectives,
-  };
-
-  const browserChallenge = detectChallenge(browser);
-  const browserOk = browser.status !== null && browser.status >= 200 && browser.status < 300 && !browserChallenge;
-
-  const bots = BOTS.map((bot) => {
-    const robotsResult = robotsUnreachable
-      ? { allowed: false, rule: null, matchedAgent: null, unreachable: true }
-      : (() => {
-          const verdict = engine.check(robotsBody, bot.token, checkedUrl.href);
-          return {
-            allowed: verdict.allowed,
-            rule: ruleText(robotsBody, verdict.line),
-            matchedAgent: verdict.specificAgent ? bot.token : verdict.line ? '*' : null,
-            unreachable: false,
-          };
-        })();
-    const fetchIndex = fetchingBots.indexOf(bot);
-    const result = fetchIndex >= 0 ? botResults[fetchIndex] : null;
-    const challenge = result ? detectChallenge(result) : null;
-    const metaValues = result ? metaRobots(result.body, bot.token) : [];
-    const xRobotsValues = result ? xRobotsFor(result.headers['x-robots-tag'], bot.token) : [];
-    const httpOk = result ? result.status !== null && result.status >= 200 && result.status < 300 && !challenge : null;
-    // Mismo código que el navegador pero mucho menos contenido: posible página distinta para bots
-    const thinResponse = Boolean(result && httpOk && browserOk && browser.bytes > 5000 && result.bytes < browser.bytes * 0.3);
-
-    let verdict: 'ok' | 'warning' | 'blocked';
-    if (!robotsResult.allowed) verdict = 'blocked';
-    else if (result && !httpOk) verdict = browserOk ? 'blocked' : 'warning';
-    else if (hasNoindex(metaValues) || hasNoindex(xRobotsValues) || thinResponse) verdict = 'warning';
-    else verdict = 'ok';
-
-    return {
-      name: bot.name,
-      company: bot.company,
-      kind: bot.kind,
-      robots: robotsResult,
-      http: result
-        ? {
-            status: result.status,
-            error: result.error ?? null,
-            redirects: result.redirects,
-            finalUrl: result.finalUrl,
-            bytes: result.bytes,
-            ms: result.ms,
-            challenge,
-            noindex: hasNoindex(metaValues) || hasNoindex(xRobotsValues),
-            thinResponse,
-          }
-        : null,
-      verdict,
+    // robots.txt: 4xx = sin restricciones; 5xx o sin respuesta = Google deja de rastrear
+    const robotsStatus = robots.status;
+    const robotsUsable = robotsStatus !== null && robotsStatus >= 200 && robotsStatus < 300;
+    const robotsUnreachable = robotsStatus === null || robotsStatus >= 500 || robotsStatus === 429;
+    const robotsBody = robotsUsable ? robots.body : '';
+    const engine = await (robotsEngine ??= loadRobotsEngine(robotsWasm));
+    const robotsReport = engine.report(robotsBody);
+    const robotsCounts = {
+      rules: robotsReport.lines.filter((parsed) => parsed.tag === RobotsTag.Allow || parsed.tag === RobotsTag.Disallow).length,
+      unused: robotsReport.unusedDirectives,
     };
-  });
 
-  // Sitemaps: los del robots.txt (hasta 3) o /sitemap.xml si no declara ninguno
-  const declaredSitemaps = sitemapsFrom(engine, robotsBody).filter((sitemapUrl) => {
-    try {
-      return isFetchable(new URL(sitemapUrl));
-    } catch {
-      return false;
-    }
-  });
-  const sitemapUrls = (declaredSitemaps.length > 0 ? declaredSitemaps : [new URL('/sitemap.xml', checkedUrl).href]).slice(0, 3);
-  const sitemaps = await Promise.all(
-    sitemapUrls.map(async (sitemapUrl) => {
-      const result = await fetchAs(sitemapUrl, BOTS[0].userAgent!, 256 * 1024, 1);
-      const head = result.body.slice(0, 2048);
-      const isXml = /<(urlset|sitemapindex)[\s>]/i.test(result.body);
+    const browserChallenge = detectChallenge(browser);
+    const browserOk = browser.status !== null && browser.status >= 200 && browser.status < 300 && !browserChallenge;
+
+    const bots = BOTS.map((bot) => {
+      const robotsResult = robotsUnreachable
+        ? { allowed: false, rule: null, matchedAgent: null, unreachable: true }
+        : (() => {
+            const verdict = engine.check(robotsBody, bot.token, checkedUrl.href);
+            return {
+              allowed: verdict.allowed,
+              rule: ruleText(robotsBody, verdict.line),
+              matchedAgent: verdict.specificAgent ? bot.token : verdict.line ? '*' : null,
+              unreachable: false,
+            };
+          })();
+      const fetchIndex = fetchingBots.indexOf(bot);
+      const result = fetchIndex >= 0 ? botResults[fetchIndex] : null;
+      const challenge = result ? detectChallenge(result) : null;
+      const metaValues = result ? metaRobots(result.body, bot.token) : [];
+      const xRobotsValues = result ? xRobotsFor(result.headers['x-robots-tag'], bot.token) : [];
+      const httpOk = result ? result.status !== null && result.status >= 200 && result.status < 300 && !challenge : null;
+      // Mismo código que el navegador pero mucho menos contenido: posible página distinta para bots
+      const thinResponse = Boolean(result && httpOk && browserOk && browser.bytes > 5000 && result.bytes < browser.bytes * 0.3);
+
+      let verdict: 'ok' | 'warning' | 'blocked';
+      if (!robotsResult.allowed) verdict = 'blocked';
+      else if (result && !httpOk) verdict = browserOk ? 'blocked' : 'warning';
+      else if (hasNoindex(metaValues) || hasNoindex(xRobotsValues) || thinResponse) verdict = 'warning';
+      else verdict = 'ok';
+
       return {
-        url: sitemapUrl,
-        declared: declaredSitemaps.length > 0,
-        status: result.status,
-        error: result.error ?? null,
-        contentType: result.headers['content-type'] ?? null,
-        type: /<sitemapindex[\s>]/i.test(result.body) ? 'index' : isXml ? 'urlset' : null,
-        valid: result.status === 200 && isXml && !/^\s*<!doctype html|<html[\s>]/i.test(head),
-        urls: (result.body.match(/<loc>/gi) ?? []).length,
-        truncated: result.bytes > 256 * 1024,
+        name: bot.name,
+        company: bot.company,
+        kind: bot.kind,
+        robots: robotsResult,
+        http: result
+          ? {
+              status: result.status,
+              error: result.error ?? null,
+              redirects: result.redirects,
+              finalUrl: result.finalUrl,
+              bytes: result.bytes,
+              ms: result.ms,
+              challenge,
+              noindex: hasNoindex(metaValues) || hasNoindex(xRobotsValues),
+              thinResponse,
+            }
+          : null,
+        verdict,
       };
-    }),
-  );
+    });
 
-  return json({
-    url: target.href,
-    checkedUrl: checkedUrl.href,
-    checkedAt: new Date().toISOString(),
-    browser: {
-      status: browser.status,
-      error: browser.error ?? null,
-      redirects: browser.redirects,
-      finalUrl: browser.finalUrl,
-      bytes: browser.bytes,
-      ms: browser.ms,
-      challenge: browserChallenge,
-      server: browser.headers.server ?? null,
-      metaRobots: metaRobots(browser.body, 'robots'),
-      xRobotsTag: browser.headers['x-robots-tag'] ?? null,
-    },
-    robotsTxt: { url: robotsUrl, status: robotsStatus, error: robots.error ?? null, unreachable: robotsUnreachable, ...robotsCounts },
-    sitemaps,
-    bots,
+    // Sitemaps: los del robots.txt (hasta 3) o /sitemap.xml si no declara ninguno
+    const declaredSitemaps = sitemapsFrom(engine, robotsBody).filter((sitemapUrl) => {
+      try {
+        return isFetchable(new URL(sitemapUrl));
+      } catch {
+        return false;
+      }
+    });
+    const sitemapUrls = (declaredSitemaps.length > 0 ? declaredSitemaps : [new URL('/sitemap.xml', checkedUrl).href]).slice(0, 3);
+    const sitemaps = await Promise.all(
+      sitemapUrls.map(async (sitemapUrl) => {
+        const result = await fetchAs(sitemapUrl, BOTS[0].userAgent!, 256 * 1024, 1);
+        const head = result.body.slice(0, 2048);
+        const isXml = /<(urlset|sitemapindex)[\s>]/i.test(result.body);
+        return {
+          url: sitemapUrl,
+          declared: declaredSitemaps.length > 0,
+          status: result.status,
+          error: result.error ?? null,
+          contentType: result.headers['content-type'] ?? null,
+          type: /<sitemapindex[\s>]/i.test(result.body) ? 'index' : isXml ? 'urlset' : null,
+          valid: result.status === 200 && isXml && !/^\s*<!doctype html|<html[\s>]/i.test(head),
+          urls: (result.body.match(/<loc>/gi) ?? []).length,
+          truncated: result.bytes > 256 * 1024,
+        };
+      }),
+    );
+
+    return json({
+      url: target.href,
+      checkedUrl: checkedUrl.href,
+      checkedAt: new Date().toISOString(),
+      browser: {
+        status: browser.status,
+        error: browser.error ?? null,
+        redirects: browser.redirects,
+        finalUrl: browser.finalUrl,
+        bytes: browser.bytes,
+        ms: browser.ms,
+        challenge: browserChallenge,
+        server: browser.headers.server ?? null,
+        metaRobots: metaRobots(browser.body, 'robots'),
+        xRobotsTag: browser.headers['x-robots-tag'] ?? null,
+      },
+      robotsTxt: { url: robotsUrl, status: robotsStatus, error: robots.error ?? null, unreachable: robotsUnreachable, ...robotsCounts },
+      sitemaps,
+      bots,
+    });
   });
 };

@@ -141,7 +141,7 @@ const inputClass =
 
 <script>
   import { toCsv } from '../../lib/csv';
-  import { setChallengeSlot, toolFetch } from '../../lib/tool-session-client';
+  import { setChallengeSlot, ToolLimitError, toolFetch } from '../../lib/tool-session-client';
   import { CLUSTER_HANDOFF_KEY } from '../../lib/keyword-clusters';
 
   interface Suggestion {
@@ -247,7 +247,7 @@ const inputClass =
         render();
       } catch (error) {
         progress.textContent = '';
-        showError(error instanceof Error && error.message === 'throttled' ? messages.throttled : messages.apiError);
+        showError(error instanceof ToolLimitError ? error.message : error instanceof Error && error.message === 'throttled' ? messages.throttled : messages.apiError);
       } finally {
         runButton.disabled = false;
       }

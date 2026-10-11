@@ -130,7 +130,7 @@ const messages = es
 <section class="card mt-5 sm:p-8" aria-live="polite" data-result hidden></section>
 
 <script>
-  import { setChallengeSlot, toolFetch } from '../../lib/tool-session-client';
+  import { setChallengeSlot, ToolLimitError, toolFetch } from '../../lib/tool-session-client';
 
   type Verdict = 'ok' | 'warning' | 'blocked';
   interface BotRow {
@@ -331,8 +331,8 @@ const messages = es
         render(data);
         const params = new URLSearchParams({ url: raw });
         history.replaceState(null, '', `?${params}`);
-      } catch {
-        showError(messages.failed);
+      } catch (error) {
+        showError(error instanceof ToolLimitError ? error.message : messages.failed);
       } finally {
         submit.disabled = false;
         submit.textContent = messages.check;

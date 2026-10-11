@@ -77,15 +77,51 @@ const currentSession = () => {
   return (pending ??= openSession().finally(() => (pending = null)));
 };
 
-/** fetch con la sesión de herramientas. Si el servidor la rechaza (caducada o cambio de IP), se pide otra una vez */
+const BUSY_RETRIES = 5;
+const BUSY_WAIT_MS = 1500;
+
+const LIMIT_TEXT = {
+  es: {
+    'daily-quota': 'Has llegado al límite diario de las herramientas. Se reinicia a medianoche (hora UTC).',
+    'global-quota': 'Las herramientas han llegado a su límite de uso de hoy. Vuelve mañana.',
+  },
+  en: {
+    'daily-quota': "You've reached the daily limit for the tools. It resets at midnight (UTC).",
+    'global-quota': 'The tools have hit their usage limit for today. Come back tomorrow.',
+  },
+};
+
+/** Cuota diaria agotada: el mensaje ya viene en el idioma de la página para enseñarlo tal cual */
+export class ToolLimitError extends Error {}
+
+/**
+ * fetch con la sesión de herramientas. Si el servidor la rechaza (caducada o cambio de IP), se pide otra una vez.
+ * Con otra llamada en curso desde la misma IP (busy) espera y reintenta; con la cuota agotada lanza ToolLimitError.
+ */
 export const toolFetch = async (input: string, init: RequestInit = {}) => {
   const send = async () => {
     const headers = new Headers(init.headers);
     headers.set(SESSION_HEADER, await currentSession());
     return fetch(input, { ...init, headers });
   };
-  const response = await send();
-  if (response.status !== 401) return response;
-  session = null;
-  return send();
+  let renewed = false;
+  for (let attempt = 0; ; attempt++) {
+    const response = await send();
+    if (response.status === 401 && !renewed) {
+      session = null;
+      renewed = true;
+      continue;
+    }
+    if (response.status !== 429) return response;
+    const data = (await response.clone().json().catch(() => null)) as { error?: string } | null;
+    if (data?.error === 'busy' && attempt < BUSY_RETRIES) {
+      await new Promise((resolve) => setTimeout(resolve, BUSY_WAIT_MS));
+      continue;
+    }
+    if (data?.error === 'daily-quota' || data?.error === 'global-quota') {
+      const lang = document.documentElement.lang === 'en' ? 'en' : 'es';
+      throw new ToolLimitError(LIMIT_TEXT[lang][data.error]);
+    }
+    return response;
+  }
 };

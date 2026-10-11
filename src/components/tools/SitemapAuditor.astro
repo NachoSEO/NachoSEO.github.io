@@ -153,7 +153,7 @@ const inputClass =
   import { renderTraceTable } from '../../lib/trace-table';
   import { sitemapsFrom } from '../../lib/robotstxt';
   import { getBrowserRobotsEngine } from '../../lib/robotstxt/browser';
-  import { setChallengeSlot, toolFetch } from '../../lib/tool-session-client';
+  import { setChallengeSlot, ToolLimitError, toolFetch } from '../../lib/tool-session-client';
 
   const GOOGLEBOT = 'Googlebot';
   const MAX_URLS_PER_FILE = 50_000;
@@ -328,8 +328,8 @@ const inputClass =
         result.hidden = false;
         progress.textContent = format(messages.reading, { files: files.length, urls: urls.length });
         if (files.length && files.every((file) => file.error)) showError(messages.noSitemaps);
-      } catch {
-        showError(messages.apiError);
+      } catch (error) {
+        showError(error instanceof ToolLimitError ? error.message : messages.apiError);
       } finally {
         runButton.disabled = false;
       }
@@ -359,8 +359,8 @@ const inputClass =
         }, () => cancelled);
         render();
         exportButton.hidden = traces.length === 0;
-      } catch {
-        showError(messages.apiError);
+      } catch (error) {
+        showError(error instanceof ToolLimitError ? error.message : messages.apiError);
       } finally {
         statusButton.disabled = false;
         stopButton.hidden = true;

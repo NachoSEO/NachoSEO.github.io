@@ -5,6 +5,7 @@
  */
 import { isForeignOrigin } from '../../src/lib/form-guard';
 import { hasValidSession, type ToolEnv } from '../../src/lib/tool-session';
+import { withQuota, type QuotaEnv } from '../../src/lib/tool-quota';
 import { BOTS } from '../../src/data/bots';
 import { BROWSER_UA, json, LOOP_HEADER, parseTarget, traceUrl, type FetchBudget, type Trace } from '../../src/lib/safe-fetch';
 
@@ -12,8 +13,10 @@ const MAX_URLS = 20;
 // 50 subpeticiones en el plan gratis, con margen
 const SUBREQUEST_BUDGET = 45;
 const CONCURRENCY = 6;
+// Como mucho 10 peticiones a la misma web por llamada; el resto vuelve como pending
+const MAX_PER_HOST = 10;
 
-export const onRequestPost = async ({ request, env }: { request: Request; env: ToolEnv }) => {
+export const onRequestPost = async ({ request, env }: { request: Request; env: ToolEnv & QuotaEnv }) => {
   if (request.headers.has(LOOP_HEADER)) return json({ error: 'loop' }, 508);
   if (isForeignOrigin(request)) return json({ error: 'forbidden' }, 403);
   // Sin sesión de Turnstile no se hacen peticiones a otras webs: corta el uso automatizado desde scripts
@@ -29,19 +32,22 @@ export const onRequestPost = async ({ request, env }: { request: Request; env: T
   const bot = payload.agent === 'Googlebot' ? BOTS.find((candidate) => candidate.name === 'Googlebot') : undefined;
   const userAgent = bot?.userAgent ?? BROWSER_UA;
 
-  const budget: FetchBudget = { remaining: SUBREQUEST_BUDGET };
-  const inputs = payload.urls.map((raw) => (typeof raw === 'string' ? raw.slice(0, 2048) : ''));
-  const results: Trace[] = new Array(inputs.length);
-  let next = 0;
-  const worker = async () => {
-    while (next < inputs.length) {
-      const index = next++;
-      const target = parseTarget(inputs[index]);
-      results[index] = target
-        ? { ...(await traceUrl(target.href, userAgent, budget)), url: inputs[index] }
-        : { url: inputs[index], hops: [], finalUrl: inputs[index], status: null, error: 'invalid-url', pending: false, xRobotsTag: null, contentType: null, canonical: null, metaRobots: null, metaRefresh: null };
-    }
-  };
-  await Promise.all(Array.from({ length: CONCURRENCY }, worker));
-  return json({ agent: bot?.name ?? 'browser', results });
+  return withQuota(request, env, SUBREQUEST_BUDGET, async (meter) => {
+    const budget: FetchBudget = { remaining: SUBREQUEST_BUDGET, maxPerHost: MAX_PER_HOST, perHost: new Map() };
+    const inputs = payload.urls.map((raw) => (typeof raw === 'string' ? raw.slice(0, 2048) : ''));
+    const results: Trace[] = new Array(inputs.length);
+    let next = 0;
+    const worker = async () => {
+      while (next < inputs.length) {
+        const index = next++;
+        const target = parseTarget(inputs[index]);
+        results[index] = target
+          ? { ...(await traceUrl(target.href, userAgent, budget)), url: inputs[index] }
+          : { url: inputs[index], hops: [], finalUrl: inputs[index], status: null, error: 'invalid-url', pending: false, xRobotsTag: null, contentType: null, canonical: null, metaRobots: null, metaRefresh: null };
+      }
+    };
+    await Promise.all(Array.from({ length: CONCURRENCY }, worker));
+    meter.used = SUBREQUEST_BUDGET - budget.remaining;
+    return json({ agent: bot?.name ?? 'browser', results });
+  });
 };

@@ -35,7 +35,7 @@ const gunzipStart = async (bytes: Uint8Array) => {
   return text;
 };
 
-export const onRequestGet = async ({ request, env }: { request: Request; env: ToolEnv & QuotaEnv }) => {
+export const onRequestGet = async ({ request, env, waitUntil }: { request: Request; env: ToolEnv & QuotaEnv; waitUntil: (promise: Promise<unknown>) => void }) => {
   if (request.headers.has(LOOP_HEADER)) return json({ error: 'loop' }, 508);
   if (isForeignOrigin(request)) return json({ error: 'forbidden' }, 403);
   // Sin sesión de Turnstile no se hacen peticiones a otras webs: corta el uso automatizado desde scripts
@@ -44,7 +44,7 @@ export const onRequestGet = async ({ request, env }: { request: Request; env: To
   if (!target) return json({ error: 'invalid-url' }, 400);
 
   // Una petición por salto de redirección
-  return withQuota(request, env, MAX_REDIRECTS + 1, async (meter) => {
+  return withQuota({ request, env, waitUntil }, MAX_REDIRECTS + 1, async (meter) => {
     let currentUrl = target.href;
     let response: Response | null = null;
     try {

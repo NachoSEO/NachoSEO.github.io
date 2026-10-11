@@ -59,7 +59,7 @@ const xRobotsFor = (header: string | undefined, token: string) =>
     .filter((part) => !/^[a-z-]+\s*:/i.test(part) || part.toLowerCase().startsWith(`${token}:`))
     .map((part) => part.replace(/^[a-z-]+\s*:\s*/i, ''));
 
-export const onRequestGet = async ({ request, env }: { request: Request; env: ToolEnv & QuotaEnv }) => {
+export const onRequestGet = async ({ request, env, waitUntil }: { request: Request; env: ToolEnv & QuotaEnv; waitUntil: (promise: Promise<unknown>) => void }) => {
   if (request.headers.has(LOOP_HEADER)) return json({ error: 'loop' }, 508);
   // Solo desde la propia web: sin esto, cualquier sitio podría usar el endpoint desde el navegador de sus visitas
   if (isForeignOrigin(request)) return json({ error: 'forbidden' }, 403);
@@ -69,7 +69,7 @@ export const onRequestGet = async ({ request, env }: { request: Request; env: To
   if (!target) return json({ error: 'invalid-url' }, 400);
 
   // Una comprobación hace entre 20 y 45 peticiones (redirecciones incluidas): se cobra una media fija
-  return withQuota(request, env, BOT_CHECK_COST, async () => {
+  return withQuota({ request, env, waitUntil }, BOT_CHECK_COST, async () => {
     // Primero el navegador de referencia: si la URL redirige, los bots piden ya la URL final.
     // Así el total de subpeticiones no pasa de 50 (límite de Cloudflare)
     const browser = await fetchAs(target.href, BROWSER_UA);

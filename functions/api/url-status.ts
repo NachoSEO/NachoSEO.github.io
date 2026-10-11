@@ -16,7 +16,7 @@ const CONCURRENCY = 6;
 // Como mucho 10 peticiones a la misma web por llamada; el resto vuelve como pending
 const MAX_PER_HOST = 10;
 
-export const onRequestPost = async ({ request, env }: { request: Request; env: ToolEnv & QuotaEnv }) => {
+export const onRequestPost = async ({ request, env, waitUntil }: { request: Request; env: ToolEnv & QuotaEnv; waitUntil: (promise: Promise<unknown>) => void }) => {
   if (request.headers.has(LOOP_HEADER)) return json({ error: 'loop' }, 508);
   if (isForeignOrigin(request)) return json({ error: 'forbidden' }, 403);
   // Sin sesión de Turnstile no se hacen peticiones a otras webs: corta el uso automatizado desde scripts
@@ -32,7 +32,7 @@ export const onRequestPost = async ({ request, env }: { request: Request; env: T
   const bot = payload.agent === 'Googlebot' ? BOTS.find((candidate) => candidate.name === 'Googlebot') : undefined;
   const userAgent = bot?.userAgent ?? BROWSER_UA;
 
-  return withQuota(request, env, SUBREQUEST_BUDGET, async (meter) => {
+  return withQuota({ request, env, waitUntil }, SUBREQUEST_BUDGET, async (meter) => {
     const budget: FetchBudget = { remaining: SUBREQUEST_BUDGET, maxPerHost: MAX_PER_HOST, perHost: new Map() };
     const inputs = payload.urls.map((raw) => (typeof raw === 'string' ? raw.slice(0, 2048) : ''));
     const results: Trace[] = new Array(inputs.length);

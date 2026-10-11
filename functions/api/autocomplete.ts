@@ -61,7 +61,7 @@ export const onRequestGet = async ({ request, env, waitUntil }: { request: Reque
   if (cached) return cached;
 
   // Solo cuesta cuota lo que no está en caché: una petición a Google por combinación
-  return withQuota(request, env, MODIFIERS[mode][hl === 'es' ? 'es' : 'en'].words.length + 1, async () => {
+  return withQuota({ request, env, waitUntil }, MODIFIERS[mode][hl === 'es' ? 'es' : 'en'].words.length + 1, async () => {
     const { words, before } = MODIFIERS[mode][hl === 'es' ? 'es' : 'en'];
     const queries = [{ query: seed, modifier: '' }, ...words.map((word) => ({ query: before ? `${word} ${seed}` : `${seed} ${word}`, modifier: word }))];
     const seen = new Set<string>();

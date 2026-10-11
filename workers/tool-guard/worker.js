@@ -9,8 +9,8 @@ const LIMITS = {
   ip: { daily: 1000, concurrent: 2 },
   global: { daily: 20000, concurrent: Infinity },
 };
-// Si una llamada muere sin liberar su hueco, se da por terminada pasado este tiempo
-const LEASE_TTL_MS = 60_000;
+// Si una llamada muere sin liberar su hueco, se da por terminada pasado este tiempo (más que la llamada más lenta)
+const LEASE_TTL_MS = 120_000;
 
 const today = () => new Date().toISOString().slice(0, 10);
 

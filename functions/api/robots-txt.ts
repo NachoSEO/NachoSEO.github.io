@@ -11,7 +11,7 @@ import { BROWSER_UA, fetchAs, json, LOOP_HEADER, parseTarget } from '../../src/l
 const GOOGLE_MAX_BYTES = 500 * 1024;
 const GOOGLE_MAX_REDIRECTS = 5;
 
-export const onRequestGet = async ({ request, env }: { request: Request; env: ToolEnv & QuotaEnv }) => {
+export const onRequestGet = async ({ request, env, waitUntil }: { request: Request; env: ToolEnv & QuotaEnv; waitUntil: (promise: Promise<unknown>) => void }) => {
   if (request.headers.has(LOOP_HEADER)) return json({ error: 'loop' }, 508);
   if (isForeignOrigin(request)) return json({ error: 'forbidden' }, 403);
   // Sin sesión de Turnstile no se hacen peticiones a otras webs: corta el uso automatizado desde scripts
@@ -20,7 +20,7 @@ export const onRequestGet = async ({ request, env }: { request: Request; env: To
   if (!target) return json({ error: 'invalid-url' }, 400);
 
   // Una petición por salto de redirección
-  return withQuota(request, env, GOOGLE_MAX_REDIRECTS + 1, async (meter) => {
+  return withQuota({ request, env, waitUntil }, GOOGLE_MAX_REDIRECTS + 1, async (meter) => {
     const robotsUrl = new URL('/robots.txt', target).href;
     const result = await fetchAs(robotsUrl, BROWSER_UA, GOOGLE_MAX_BYTES, GOOGLE_MAX_REDIRECTS);
     meter.used = result.redirects.length + 1;

@@ -152,6 +152,13 @@ export interface Trace {
 }
 
 const MAX_TRACE_HOPS = 10;
+
+/**
+ * Web a la que pertenece un host para el tope por destino: las dos últimas partes del nombre, sin punto final.
+ * Así a.victima.com, www.victima.com y victima.com. cuentan juntas. Con dominios como .co.uk agrupa de más,
+ * y eso solo hace el tope más estricto
+ */
+const siteOf = (hostname: string) => hostname.toLowerCase().replace(/\.+$/, '').split('.').slice(-2).join('.');
 const HEAD_BYTES = 32 * 1024;
 
 const headOf = (html: string) => {
@@ -179,9 +186,10 @@ export const traceUrl = async (url: string, userAgent: string, budget: FetchBudg
     }
     if (!isFetchable(parsed)) return { ...trace, error: 'blocked-url' };
     if (budget.maxPerHost && budget.perHost) {
-      const sent = budget.perHost.get(parsed.host) ?? 0;
+      const site = siteOf(parsed.hostname);
+      const sent = budget.perHost.get(site) ?? 0;
       if (sent >= budget.maxPerHost) return { ...trace, pending: true };
-      budget.perHost.set(parsed.host, sent + 1);
+      budget.perHost.set(site, sent + 1);
     }
     budget.remaining--;
     try {

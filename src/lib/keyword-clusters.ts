@@ -4,9 +4,6 @@
  * del primer grupo que se le parezca lo suficiente (similitud de Jaccard).
  */
 
-/** Clave de sessionStorage con la que el expansor de Autocomplete pasa sus sugerencias al clusterizador */
-export const CLUSTER_HANDOFF_KEY = 'keyword-clusterer-input';
-
 const STOPWORDS = new Set(
   (
     'a al ante con contra de del desde el en entre es hacia hasta la las le lo los mas mi o para pero por que se sin sobre su sus tu un una uno unos unas y ya como cual cuál ' +

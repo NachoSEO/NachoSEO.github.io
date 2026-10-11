@@ -62,7 +62,7 @@ export class ToolQuota extends DurableObject {
         : `Las herramientas gratis llevan ${state.used} de ${limit} peticiones externas hoy (${state.day}, UTC): un ${Math.round((state.used / limit) * 100)} % del límite global.`,
       '',
       'Si no esperabas este uso, puede ser un abuso. Qué mirar:',
-      '- Cloudflare > Workers & Pages > nachomascort > Functions: picos en /api/bot-check, /api/url-status, /api/sitemap-fetch, /api/robots-txt, /api/autocomplete.',
+      '- Cloudflare > Workers & Pages > nachomascort > Functions: picos en /api/bot-check, /api/url-status, /api/sitemap-fetch, /api/robots-txt.',
       '- Cloudflare > Security > Events: IPs que chocan con la regla de rate limit de /api/*.',
       '- Para cortarlo ya: activa la regla del WAF que bloquea esas rutas.',
     ].join('\n');

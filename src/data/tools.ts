@@ -125,22 +125,6 @@ export const tools: Record<Lang, ToolCopy>[] = [
   },
   {
     es: {
-      href: '/herramientas/keywords-autocomplete/',
-      title: 'Keywords de Google Autocomplete',
-      tagline: 'Long tail y preguntas del autocompletado de Google, por idioma y país.',
-      detail: 'Tu semilla con letras, preguntas y modificadores. Filtra, encadena semillas y descarga en CSV.',
-      summary: 'saca keywords long tail y preguntas del autocompletado de Google combinando una semilla con letras, preguntas y modificadores, por idioma y país.',
-    },
-    en: {
-      href: '/en/tools/google-autocomplete-keywords/',
-      title: 'Google Autocomplete keywords',
-      tagline: 'Long-tail keywords and questions from Google Autocomplete, by language and country.',
-      detail: 'Your seed with letters, questions and modifiers. Filter, chain seeds and download a CSV.',
-      summary: 'pulls long-tail keywords and questions from Google Autocomplete by combining a seed with letters, questions and modifiers, by language and country.',
-    },
-  },
-  {
-    es: {
       href: '/herramientas/clusterizador-keywords/',
       title: 'Clusterizador de keywords',
       tagline: 'Agrupa miles de keywords por tema y suma el volumen de cada grupo.',

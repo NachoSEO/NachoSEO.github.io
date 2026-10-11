@@ -78,7 +78,7 @@ const inputClass =
 </section>
 
 <script>
-  import { CLUSTER_HANDOFF_KEY, clusterKeywords, parseKeywords, type Cluster } from '../../lib/keyword-clusters';
+  import { clusterKeywords, parseKeywords, type Cluster } from '../../lib/keyword-clusters';
   import { toCsv } from '../../lib/csv';
 
   const tool = document.querySelector<HTMLElement>('[data-clusterer]');
@@ -146,16 +146,5 @@ const inputClass =
       link.remove();
       setTimeout(() => URL.revokeObjectURL(url), 1000);
     });
-
-    try {
-      const handoff = sessionStorage.getItem(CLUSTER_HANDOFF_KEY);
-      if (handoff) {
-        sessionStorage.removeItem(CLUSTER_HANDOFF_KEY);
-        keywordsInput.value = handoff;
-        run();
-      }
-    } catch {
-      // Sin sessionStorage (modo privado estricto): se pegan a mano
-    }
   }
 </script>

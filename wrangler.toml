@@ -8,3 +8,9 @@ compatibility_date = "2026-10-01"
 [[services]]
 binding = "CONTACT_MAILER"
 service = "contact-mailer"
+
+# Cuotas de las herramientas gratis (workers/tool-guard): límite diario y llamadas simultáneas por IP
+[[durable_objects.bindings]]
+name = "TOOL_QUOTA"
+class_name = "ToolQuota"
+script_name = "tool-guard"

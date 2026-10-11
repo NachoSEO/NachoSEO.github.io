@@ -1,0 +1,164 @@
+---
+import type { Lang } from '../../i18n/ui';
+import { traceLabels } from '../../data/trace-labels';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const es = lang === 'es';
+const MAX_URLS = 100;
+
+const copy = es
+  ? {
+      urlsLabel: `URLs, una por línea (hasta ${MAX_URLS})`,
+      agentLabel: 'Pedirlas como',
+      browser: 'Navegador',
+      run: 'Comprobar',
+      stop: 'Parar',
+      exportCsv: 'Descargar CSV',
+      noscript: 'El comprobador funciona con JavaScript. Actívalo para comprobar tus URLs.',
+    }
+  : {
+      urlsLabel: `URLs, one per line (up to ${MAX_URLS})`,
+      agentLabel: 'Request them as',
+      browser: 'Browser',
+      run: 'Check',
+      stop: 'Stop',
+      exportCsv: 'Download CSV',
+      noscript: 'The checker runs on JavaScript. Enable it to check your URLs.',
+    };
+
+const messages = {
+  ...(es
+    ? {
+        progress: 'Comprobadas {done} de {total}',
+        summary: '{ok} sin avisos · {warning} con avisos · {blocked} con errores',
+        noUrls: 'Pega al menos una URL.',
+        tooMany: `Como mucho ${MAX_URLS} URLs por vez. Me quedo con las primeras.`,
+        apiError: 'El servidor no ha respondido. Prueba otra vez en un momento.',
+        botNote: 'Las peticiones salen de Cloudflare, no de las IPs del bot: si la web verifica bots por IP, puede bloquear aquí y dejar pasar al bot real.',
+      }
+    : {
+        progress: 'Checked {done} of {total}',
+        summary: '{ok} with no issues · {warning} with issues · {blocked} with errors',
+        noUrls: 'Paste at least one URL.',
+        tooMany: `At most ${MAX_URLS} URLs at a time. I'm keeping the first ones.`,
+        apiError: "The server didn't respond. Try again in a moment.",
+        botNote: "Requests leave from Cloudflare, not from the bot's IPs: if the site verifies bots by IP, it may block here and let the real bot through.",
+      }),
+  labels: traceLabels[lang],
+};
+
+const inputClass =
+  'w-full rounded-lg border border-line bg-paper px-4 py-3 text-[0.95rem] text-ink transition-colors focus:border-ink';
+---
+
+<div class="card sm:p-8" data-redirect-tool data-max={MAX_URLS} data-messages={JSON.stringify(messages)}>
+  <label for="redirect-urls" class="text-sm font-semibold">{copy.urlsLabel}</label>
+  <textarea id="redirect-urls" rows="8" spellcheck="false" autocomplete="off" class:list={[inputClass, 'mt-2 font-mono text-[0.85rem] leading-relaxed']} placeholder={'http://example.com\nhttps://example.com/old-page/'} data-urls></textarea>
+  <div class="mt-5 flex flex-col gap-3 sm:flex-row sm:items-end">
+    <div class="sm:w-64">
+      <label for="redirect-agent" class="text-sm font-semibold">{copy.agentLabel}</label>
+      <select id="redirect-agent" class:list={[inputClass, 'mt-2']} data-agent>
+        <option value="browser">{copy.browser}</option>
+        <option value="Googlebot">Googlebot</option>
+      </select>
+    </div>
+    <button type="button" class="btn" data-run data-umami-event="redirect-checker-run">{copy.run}</button>
+    <button type="button" class="btn btn--ghost" data-stop hidden>{copy.stop}</button>
+  </div>
+  <p class="meta mt-4" aria-live="polite" data-progress></p>
+  <p role="alert" class="mt-2 text-sm font-semibold text-accent-ink" data-error hidden></p>
+  <noscript><p class="mt-4 text-sm font-semibold text-accent-ink">{copy.noscript}</p></noscript>
+</div>
+
+<section class="card mt-5 sm:p-8" data-result hidden>
+  <div class="flex flex-wrap items-baseline justify-between gap-3">
+    <p class="text-[0.95rem] font-semibold" data-summary></p>
+    <button type="button" class="btn btn--ghost" data-export>{copy.exportCsv}</button>
+  </div>
+  <p class="mt-2 text-sm text-muted" data-bot-note hidden>{messages.botNote}</p>
+  <div class="mt-5 overflow-x-auto"><table class="w-full min-w-[40rem] text-left text-sm" data-table></table></div>
+</section>
+
+<script>
+  import { checkUrls, traceTone, tracesToCsv, type Trace } from '../../lib/url-status-client';
+  import { renderTraceTable } from '../../lib/trace-table';
+  import { setChallengeSlot, ToolLimitError } from '../../lib/tool-session-client';
+
+  const tool = document.querySelector<HTMLElement>('[data-redirect-tool]');
+  const result = document.querySelector<HTMLElement>('[data-result]');
+
+  if (tool && result) {
+    setChallengeSlot(tool);
+    const messages = JSON.parse(tool.dataset.messages ?? '{}');
+    const maxUrls = Number(tool.dataset.max);
+    const format = (template: string, values: Record<string, number>) => template.replace(/\{(\w+)\}/g, (_, name) => String(values[name]));
+    const urlsInput = tool.querySelector<HTMLTextAreaElement>('[data-urls]')!;
+    const agentInput = tool.querySelector<HTMLSelectElement>('[data-agent]')!;
+    const runButton = tool.querySelector<HTMLButtonElement>('[data-run]')!;
+    const stopButton = tool.querySelector<HTMLButtonElement>('[data-stop]')!;
+    const progress = tool.querySelector<HTMLElement>('[data-progress]')!;
+    const errorBox = tool.querySelector<HTMLElement>('[data-error]')!;
+    const table = result.querySelector<HTMLTableElement>('[data-table]')!;
+    let traces: Trace[] = [];
+    let cancelled = false;
+
+    const showError = (message: string) => {
+      errorBox.textContent = message;
+      errorBox.hidden = !message;
+    };
+
+    function render() {
+      const tones = traces.map(traceTone);
+      result!.querySelector<HTMLElement>('[data-summary]')!.textContent = format(messages.summary, {
+        ok: tones.filter((tone) => tone === 'ok').length,
+        warning: tones.filter((tone) => tone === 'warning').length,
+        blocked: tones.filter((tone) => tone === 'blocked').length,
+      });
+      // Primero lo que falla, después los avisos
+      const order = { blocked: 0, warning: 1, ok: 2 };
+      renderTraceTable(table, [...traces].sort((a, b) => order[traceTone(a)] - order[traceTone(b)]), messages.labels);
+      result!.hidden = false;
+    }
+
+    runButton.addEventListener('click', async () => {
+      showError('');
+      const lines = [...new Set(urlsInput.value.split('\n').map((line) => line.trim()).filter(Boolean))];
+      if (lines.length === 0) return showError(messages.noUrls);
+      if (lines.length > maxUrls) showError(messages.tooMany);
+      const urls = lines.slice(0, maxUrls);
+      cancelled = false;
+      runButton.disabled = true;
+      stopButton.hidden = false;
+      result.querySelector<HTMLElement>('[data-bot-note]')!.hidden = agentInput.value === 'browser';
+      progress.textContent = format(messages.progress, { done: 0, total: urls.length });
+      try {
+        traces = await checkUrls(urls, agentInput.value, (done, total, partial) => {
+          progress.textContent = format(messages.progress, { done, total });
+          traces = partial;
+          render();
+        }, () => cancelled);
+        render();
+      } catch (error) {
+        showError(error instanceof ToolLimitError ? error.message : messages.apiError);
+      } finally {
+        runButton.disabled = false;
+        stopButton.hidden = true;
+      }
+    });
+
+    stopButton.addEventListener('click', () => (cancelled = true));
+
+    result.querySelector<HTMLButtonElement>('[data-export]')!.addEventListener('click', () => {
+      const url = URL.createObjectURL(new Blob([tracesToCsv(traces)], { type: 'text/csv;charset=utf-8' }));
+      const link = Object.assign(document.createElement('a'), { href: url, download: 'redirects.csv' });
+      document.body.append(link);
+      link.click();
+      link.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    });
+  }
+</script>

@@ -1,0 +1,91 @@
+---
+import Base from '../../../layouts/Base.astro';
+import Cta from '../../../components/Cta.astro';
+import FaqAccordion from '../../../components/service/FaqAccordion.astro';
+import SitemapAuditor from '../../../components/tools/SitemapAuditor.astro';
+
+const path = '/en/tools/sitemap-auditor/';
+
+const faq = [
+  {
+    question: "Which URLs shouldn't be in a sitemap?",
+    answer:
+      "The ones you don't want Google to index: redirects, 4xx and 5xx errors, URLs with noindex, URLs canonicalized to another URL, and URLs blocked by robots.txt. A sitemap with those URLs sends contradictory signals, and Google ends up trusting it less.",
+  },
+  {
+    question: 'Why does it only check a sample?',
+    answer:
+      "Because requesting every URL takes time and a sitemap can have hundreds of thousands. A random sample of 50 or 100 URLs is enough to spot a systematic problem (for example, every URL of one type redirecting). To check them all, run them through a crawler.",
+  },
+  {
+    question: 'Does it read compressed sitemaps and indexes?',
+    answer:
+      'Yes. It reads .xml and .xml.gz files, follows sitemap indexes up to 50 files and 200,000 URLs, and if you give it just the site, it looks for the sitemaps in its robots.txt.',
+  },
+  {
+    question: 'How do I know if a URL is blocked by robots.txt?',
+    answer:
+      "The auditor downloads the site's robots.txt and tests every sitemap URL with Google's official parser, the same one Googlebot uses. To test rules by hand, there's the robots.txt tester.",
+  },
+];
+
+const webApplication = {
+  '@type': 'WebApplication',
+  name: 'XML sitemap auditor',
+  url: `https://nachomascort.com${path}`,
+  applicationCategory: 'DeveloperApplication',
+  operatingSystem: 'Any',
+  browserRequirements: 'Requires JavaScript',
+  inLanguage: 'en',
+  isAccessibleForFree: true,
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' },
+  author: { '@id': 'https://nachomascort.com/#person' },
+};
+---
+
+<Base
+  lang="en"
+  title="Free XML Sitemap Auditor — Nacho Mascort"
+  description="Audit your XML sitemap: it reads indexes and .gz files, detects duplicates, URLs from another domain or blocked by robots.txt, and checks the HTTP status of a sample as Googlebot."
+  path={path}
+  alternatePath="/herramientas/auditor-sitemap/"
+  breadcrumbs={[
+    { name: 'Home', path: '/en/' },
+    { name: 'Tools', path: '/en/tools/' },
+    { name: 'Sitemap auditor', path },
+  ]}
+  faq={faq}
+  extraSchemaNodes={[webApplication]}
+>
+  <div class="mx-auto max-w-5xl px-5 pt-16 sm:px-6 sm:pt-20">
+    <p class="meta"><a href="/en/tools/" class="hover:text-ink">Tools</a> · Technical SEO</p>
+    <h1 class="display-1 mt-5">XML sitemap auditor</h1>
+    <p class="lede mt-6">
+      Enter your sitemap or your site and review what you're asking Google to index: duplicate URLs, URLs from another
+      domain or blocked by robots.txt, plus the HTTP status code, noindex and canonical of a sample requested as Googlebot.
+    </p>
+
+    <div class="mt-10">
+      <SitemapAuditor lang="en" />
+    </div>
+  </div>
+
+  <article class="mx-auto max-w-5xl px-5 pt-16 sm:px-6 md:pt-24">
+    <p class="section-label">How to use it</p>
+    <div class="article-body mt-4">
+      <h2>A sitemap with only indexable URLs</h2>
+      <p>
+        The sitemap tells Google which URLs you consider important. If it mixes in redirects, errors or pages with noindex,
+        the signal loses value and in Search Console you'll see "Submitted" URLs that never get indexed. Ideally every URL
+        returns a 200, is indexable and is its own canonical.
+      </p>
+      <p>
+        If you have to rebuild it, the <a href="/en/tools/sitemap-generator/">XML sitemap generator</a> creates it from a
+        list of clean URLs.
+      </p>
+    </div>
+  </article>
+
+  <FaqAccordion lang="en" faq={faq} />
+  <Cta lang="en" />
+</Base>

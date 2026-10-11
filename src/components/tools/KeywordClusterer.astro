@@ -1,0 +1,150 @@
+---
+import type { Lang } from '../../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const es = lang === 'es';
+const MAX_KEYWORDS = 10_000;
+
+const copy = es
+  ? {
+      keywordsLabel: `Keywords, una por línea (hasta ${MAX_KEYWORDS.toLocaleString('es-ES')})`,
+      keywordsHelp: 'Si añades el volumen detrás («keyword,1200»), los grupos se ordenan y se nombran por volumen.',
+      thresholdLabel: 'Cuánto se tienen que parecer',
+      looser: 'Grupos más amplios',
+      stricter: 'Grupos más finos',
+      run: 'Agrupar',
+      exportCsv: 'Descargar CSV',
+      noscript: 'El clusterizador funciona con JavaScript. Actívalo para agrupar tus keywords.',
+    }
+  : {
+      keywordsLabel: `Keywords, one per line (up to ${MAX_KEYWORDS.toLocaleString('en-US')})`,
+      keywordsHelp: 'If you add the volume after each one ("keyword,1200"), groups are sorted and named by volume.',
+      thresholdLabel: 'How similar they need to be',
+      looser: 'Broader groups',
+      stricter: 'Finer groups',
+      run: 'Group',
+      exportCsv: 'Download CSV',
+      noscript: 'The clusterer runs on JavaScript. Enable it to group your keywords.',
+    };
+
+const messages = es
+  ? {
+      summary: '{keywords} keywords en {clusters} grupos · {singles} sueltas',
+      noKeywords: 'Pega al menos dos keywords.',
+      tooMany: `Como mucho ${MAX_KEYWORDS.toLocaleString('es-ES')} keywords. Me quedo con las primeras.`,
+      volume: '{n} búsquedas',
+      keywordsCount: '{n} keywords',
+    }
+  : {
+      summary: '{keywords} keywords in {clusters} groups · {singles} on their own',
+      noKeywords: 'Paste at least two keywords.',
+      tooMany: `At most ${MAX_KEYWORDS.toLocaleString('en-US')} keywords. I'm keeping the first ones.`,
+      volume: '{n} searches',
+      keywordsCount: '{n} keywords',
+    };
+
+const inputClass =
+  'w-full rounded-lg border border-line bg-paper px-4 py-3 text-[0.95rem] text-ink transition-colors focus:border-ink';
+---
+
+<div class="card sm:p-8" data-clusterer data-lang={lang} data-max={MAX_KEYWORDS} data-messages={JSON.stringify(messages)}>
+  <label for="cluster-keywords" class="text-sm font-semibold">{copy.keywordsLabel}</label>
+  <textarea id="cluster-keywords" rows="10" spellcheck="false" autocomplete="off" aria-describedby="cluster-help" class:list={[inputClass, 'mt-2 font-mono text-[0.85rem] leading-relaxed']} placeholder={es ? 'zapatillas running mujer,1200\nzapatilla running mujer,300\nzapatillas trail hombre,900' : 'running shoes women,1200\nrunning shoe for women,300\ntrail shoes men,900'} data-keywords></textarea>
+  <p id="cluster-help" class="mt-2 text-sm text-muted">{copy.keywordsHelp}</p>
+
+  <div class="mt-6 max-w-md">
+    <label for="cluster-threshold" class="text-sm font-semibold">{copy.thresholdLabel}</label>
+    <input id="cluster-threshold" type="range" min="0.3" max="0.9" step="0.05" value="0.6" class="mt-3 w-full accent-[var(--tone-accent)]" data-threshold />
+    <div class="mt-1 flex justify-between text-xs text-muted" aria-hidden="true"><span>{copy.looser}</span><span>{copy.stricter}</span></div>
+  </div>
+
+  <div class="mt-6">
+    <button type="button" class="btn" data-run data-umami-event="clusterer-run">{copy.run}</button>
+  </div>
+  <p role="alert" class="mt-4 text-sm font-semibold text-accent-ink" data-error hidden></p>
+  <noscript><p class="mt-4 text-sm font-semibold text-accent-ink">{copy.noscript}</p></noscript>
+</div>
+
+<section class="card mt-5 sm:p-8" data-result hidden>
+  <div class="flex flex-wrap items-baseline justify-between gap-3">
+    <p class="text-[0.95rem] font-semibold" aria-live="polite" data-summary></p>
+    <button type="button" class="btn btn--ghost" data-export>{copy.exportCsv}</button>
+  </div>
+  <div class="mt-5" data-clusters></div>
+</section>
+
+<script>
+  import { clusterKeywords, parseKeywords, type Cluster } from '../../lib/keyword-clusters';
+  import { toCsv } from '../../lib/csv';
+
+  const tool = document.querySelector<HTMLElement>('[data-clusterer]');
+  const result = document.querySelector<HTMLElement>('[data-result]');
+
+  if (tool && result) {
+    const messages = JSON.parse(tool.dataset.messages ?? '{}');
+    const maxKeywords = Number(tool.dataset.max);
+    const numberFormat = new Intl.NumberFormat(tool.dataset.lang === 'es' ? 'es-ES' : 'en-US');
+    const format = (template: string, values: Record<string, number>) => template.replace(/\{(\w+)\}/g, (_, name) => numberFormat.format(values[name]));
+    const element = <K extends keyof HTMLElementTagNameMap>(tag: K, className = '', text = '') =>
+      Object.assign(document.createElement(tag), { className, textContent: text });
+
+    const keywordsInput = tool.querySelector<HTMLTextAreaElement>('[data-keywords]')!;
+    const thresholdInput = tool.querySelector<HTMLInputElement>('[data-threshold]')!;
+    const errorBox = tool.querySelector<HTMLElement>('[data-error]')!;
+    let clusters: Cluster[] = [];
+
+    const showError = (message: string) => {
+      errorBox.textContent = message;
+      errorBox.hidden = !message;
+    };
+
+    function run() {
+      showError('');
+      const parsed = parseKeywords(keywordsInput.value);
+      if (parsed.length < 2) {
+        result!.hidden = true;
+        return showError(messages.noKeywords);
+      }
+      if (parsed.length > maxKeywords) showError(messages.tooMany);
+      clusters = clusterKeywords(parsed.slice(0, maxKeywords), Number(thresholdInput.value));
+      const hasVolume = parsed.some((item) => item.volume !== null);
+      const grouped = clusters.filter((cluster) => cluster.keywords.length > 1);
+      result!.querySelector<HTMLElement>('[data-summary]')!.textContent = format(messages.summary, {
+        keywords: Math.min(parsed.length, maxKeywords),
+        clusters: grouped.length,
+        singles: clusters.length - grouped.length,
+      });
+      // Los grupos de una sola keyword van al final y cerrados
+      result!.querySelector<HTMLElement>('[data-clusters]')!.replaceChildren(
+        ...[...grouped, ...clusters.filter((cluster) => cluster.keywords.length === 1)].slice(0, 500).map((cluster, index) => {
+          const details = element('details', 'faq-item border-t border-line py-3');
+          details.open = index < 5 && cluster.keywords.length > 1;
+          const summary = element('summary', 'flex cursor-pointer list-none flex-wrap items-baseline justify-between gap-x-4');
+          summary.append(element('span', 'font-semibold', cluster.name));
+          summary.append(element('span', 'meta', [format(messages.keywordsCount, { n: cluster.keywords.length }), hasVolume ? format(messages.volume, { n: cluster.volume }) : ''].filter(Boolean).join(' · ')));
+          const list = element('ul', 'mt-2 space-y-1 pl-4 text-[0.9rem] text-muted');
+          list.append(...cluster.keywords.map((item) => element('li', '', hasVolume && item.volume !== null ? `${item.keyword} · ${numberFormat.format(item.volume)}` : item.keyword)));
+          details.append(summary, list);
+          return details;
+        })
+      );
+      result!.hidden = false;
+    }
+
+    tool.querySelector<HTMLButtonElement>('[data-run]')!.addEventListener('click', run);
+    thresholdInput.addEventListener('change', () => !result.hidden && run());
+    result.querySelector<HTMLButtonElement>('[data-export]')!.addEventListener('click', () => {
+      const csv = toCsv(['cluster', 'keyword', 'volume'], clusters.flatMap((cluster) => cluster.keywords.map((item) => [cluster.name, item.keyword, item.volume])));
+      const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+      const link = Object.assign(document.createElement('a'), { href: url, download: 'keyword-clusters.csv' });
+      document.body.append(link);
+      link.click();
+      link.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    });
+  }
+</script>

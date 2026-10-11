@@ -9,3 +9,9 @@ npm-debug.log*
 cv/
 design-explorations/
 guia-geo-borradores/
+
+# Variables locales de wrangler pages dev (claves de prueba de Turnstile)
+.dev.vars
+
+# Estado local de wrangler (cuotas, caché, builds)
+.wrangler/

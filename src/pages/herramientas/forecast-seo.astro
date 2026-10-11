@@ -1,0 +1,107 @@
+---
+import Base from '../../layouts/Base.astro';
+import Cta from '../../components/Cta.astro';
+import FaqAccordion from '../../components/service/FaqAccordion.astro';
+import SeoForecast from '../../components/tools/SeoForecast.astro';
+
+const path = '/herramientas/forecast-seo/';
+
+const faq = [
+  {
+    question: '¿De dónde sale la curva de CTR?',
+    answer:
+      'De tus propios datos: clics entre impresiones de tus consultas sin marca, agrupadas por posición. Así la curva ya incluye lo que te quitan los anuncios, los AI Overviews o los resultados enriquecidos en tu sector, algo que una curva genérica de la industria no recoge. Si una posición no tiene impresiones suficientes, se interpola entre sus vecinas.',
+  },
+  {
+    question: '¿Por qué hay que quitar las consultas de marca?',
+    answer:
+      'Porque tienen un CTR muy alto en la posición 1 (el usuario te busca a ti) e inflarían toda la curva. Además, el tráfico de marca no lo trae el SEO. Escribe tu marca como regex, por ejemplo acme|acme corp.',
+  },
+  {
+    question: '¿Cómo calcula la proyección en el tiempo?',
+    answer:
+      'Si tienes más de 60 semanas de histórico, calcula el crecimiento comparando cada semana con la misma del año anterior y repite la forma del último año, así la estacionalidad no se confunde con la tendencia. Con menos histórico ajusta una recta sobre el logaritmo de los clics de las últimas semanas. En los dos casos da un rango del 80 %: lo normal es que el resultado real caiga dentro.',
+  },
+  {
+    question: '¿Qué no tiene en cuenta?',
+    answer:
+      'Core updates, cambios en la SERP, migraciones, lanzamientos o cualquier cosa que no esté en tu histórico. Un forecast extrapola lo que ya pasó. Úsalo como punto de partida y ajusta a mano lo que sabes que va a cambiar.',
+  },
+  {
+    question: '¿Se sube mi export a algún sitio?',
+    answer: 'No. El ZIP se abre y se analiza en tu navegador. No pasa por ningún servidor.',
+  },
+];
+
+const webApplication = {
+  '@type': 'WebApplication',
+  name: 'Forecast SEO con datos de Search Console',
+  url: `https://nachomascort.com${path}`,
+  applicationCategory: 'BusinessApplication',
+  operatingSystem: 'Any',
+  browserRequirements: 'Requires JavaScript',
+  inLanguage: 'es',
+  isAccessibleForFree: true,
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' },
+  author: { '@id': 'https://nachomascort.com/#person' },
+};
+---
+
+<Base
+  lang="es"
+  title="Forecast SEO gratis con tus datos de Search Console — Nacho Mascort"
+  description="Previsión de tráfico SEO a partir del export de Search Console: cuántos clics ganas si tus consultas suben de posición y cuántos tendrás en 3, 6 o 12 meses, con estacionalidad."
+  path={path}
+  alternatePath="/en/tools/seo-forecast/"
+  breadcrumbs={[
+    { name: 'Inicio', path: '/' },
+    { name: 'Herramientas', path: '/herramientas/' },
+    { name: 'Forecast SEO', path },
+  ]}
+  faq={faq}
+  extraSchemaNodes={[webApplication]}
+>
+  <div class="mx-auto max-w-5xl px-5 pt-16 sm:px-6 sm:pt-20">
+    <p class="meta"><a href="/herramientas/" class="hover:text-ink">Herramientas</a> · Negocio</p>
+    <h1 class="display-1 mt-5">Forecast SEO con tus datos de Search Console</h1>
+    <p class="lede mt-6">
+      Sube el export de Search Console y calcula dos cosas: cuántos clics ganarías si tus consultas suben de posición y
+      cuántos tendrás en los próximos meses si sigue la tendencia. Con tu propia curva de CTR y sin enviar nada a ningún
+      servidor.
+    </p>
+
+    <div class="mt-10">
+      <SeoForecast lang="es" />
+    </div>
+  </div>
+
+  <article class="mx-auto max-w-5xl px-5 pt-16 sm:px-6 md:pt-24">
+    <p class="section-label">Cómo usarla</p>
+    <div class="article-body mt-4">
+      <h2>Qué export necesitas</h2>
+      <p>
+        En Search Console, abre <strong>Rendimiento → Resultados de búsqueda</strong>, elige el periodo (para la
+        estacionalidad, los 16 meses) y pulsa <strong>Exportar → Descargar CSV</strong>. Te baja un ZIP con varios CSV: el de
+        consultas sirve para los escenarios y el de fechas, para la proyección. Súbelo tal cual.
+      </p>
+      <p>
+        El export solo trae las 1.000 consultas con más clics. Para webs grandes, el escenario se queda corto por abajo: tómalo
+        como el suelo de lo que puedes ganar.
+      </p>
+      <h2>Cómo leer el escenario</h2>
+      <p>
+        Para cada consulta en el rango de posiciones que elijas, la herramienta calcula su CTR en la nueva posición con tu
+        curva y lo aplica a sus impresiones actuales. Lo ajusta según rinda la consulta frente a la curva (entre la mitad y
+        una vez y media), porque hay consultas a las que anuncios o AI Overviews les quitan clics. Multiplica los clics extra por el valor de una sesión y tienes cuánto vale el
+        escenario al mes.
+      </p>
+      <p>
+        Es el paso que uso para priorizar en mi <a href="/blog/metodologia-proyectos-seo/">metodología para proyectos SEO</a>:
+        primero cuánto vale cada sesión, después cuántas sesiones puedes ganar y dónde.
+      </p>
+    </div>
+  </article>
+
+  <FaqAccordion lang="es" faq={faq} />
+  <Cta lang="es" />
+</Base>

@@ -1,0 +1,90 @@
+---
+import Base from '../../../layouts/Base.astro';
+import Cta from '../../../components/Cta.astro';
+import FaqAccordion from '../../../components/service/FaqAccordion.astro';
+import KeywordClusterer from '../../../components/tools/KeywordClusterer.astro';
+
+const path = '/en/tools/keyword-clusterer/';
+
+const faq = [
+  {
+    question: 'How does it group keywords?',
+    answer:
+      'By the words they share. It strips accents, stopwords ("for", "the", "of"...) and plurals, so "running shoes for women" and "running shoe women" end up identical. Then it joins each keyword to the first group that looks similar enough. The similarity control decides how similar.',
+  },
+  {
+    question: 'Does it group by intent or by SERP?',
+    answer:
+      'No. Grouping by SERP (keywords that share results on Google) means fetching every SERP, and that has a cost. This grouping is lexical: it helps you sort long lists into topics and spot variants. Before deciding whether two groups belong on the same page, check their SERPs.',
+  },
+  {
+    question: 'Are my keywords sent anywhere?',
+    answer: 'No. Everything is calculated in your browser.',
+  },
+  {
+    question: 'Where do I get the keywords?',
+    answer:
+      "From Search Console (Performance → Queries, exporting the CSV), from your keyword tool or from any list. If it comes with volume, clicks or impressions, paste that number after each keyword and the groups are sorted by it.",
+  },
+];
+
+const webApplication = {
+  '@type': 'WebApplication',
+  name: 'Keyword clusterer',
+  url: `https://nachomascort.com${path}`,
+  applicationCategory: 'BusinessApplication',
+  operatingSystem: 'Any',
+  browserRequirements: 'Requires JavaScript',
+  inLanguage: 'en',
+  isAccessibleForFree: true,
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' },
+  author: { '@id': 'https://nachomascort.com/#person' },
+};
+---
+
+<Base
+  lang="en"
+  title="Free Keyword Clustering Tool — Nacho Mascort"
+  description="Group thousands of keywords by topic in your browser: it merges plurals, variants and different word orders, adds up the volume of each group and lets you download the result as a CSV."
+  path={path}
+  alternatePath="/herramientas/clusterizador-keywords/"
+  breadcrumbs={[
+    { name: 'Home', path: '/en/' },
+    { name: 'Tools', path: '/en/tools/' },
+    { name: 'Keyword clusterer', path },
+  ]}
+  faq={faq}
+  extraSchemaNodes={[webApplication]}
+>
+  <div class="mx-auto max-w-5xl px-5 pt-16 sm:px-6 sm:pt-20">
+    <p class="meta"><a href="/en/tools/" class="hover:text-ink">Tools</a> · Keywords</p>
+    <h1 class="display-1 mt-5">Keyword clusterer</h1>
+    <p class="lede mt-6">
+      Paste a list of keywords (with their volume, if you have it) and group them by topic. It merges plurals, variants and
+      words in a different order, adds up the volume of each group and gives you a CSV ready for planning pages.
+    </p>
+
+    <div class="mt-10">
+      <KeywordClusterer lang="en" />
+    </div>
+  </div>
+
+  <article class="mx-auto max-w-5xl px-5 pt-16 sm:px-6 md:pt-24">
+    <p class="section-label">How to use it</p>
+    <div class="article-body mt-4">
+      <h2>From a keyword list to a page map</h2>
+      <p>
+        Each group is a candidate page: the keyword with the most volume names it, and the rest are variants that page
+        should cover. Start with the default similarity and adjust it if the groups come out too broad or too fragmented.
+        Single-keyword groups go at the end.
+      </p>
+      <p>
+        With Search Console queries you see which searches Google already finds you for: paste each query with its
+        impressions as the volume and you will see which topics have demand and which page should take each group.
+      </p>
+    </div>
+  </article>
+
+  <FaqAccordion lang="en" faq={faq} />
+  <Cta lang="en" />
+</Base>

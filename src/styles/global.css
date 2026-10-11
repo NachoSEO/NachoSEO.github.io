@@ -576,6 +576,36 @@ body {
   .tool-advanced[open] > summary .faq-marker {
     rotate: 45deg;
   }
+  /* Estados de las herramientas: verde, ámbar y frambuesa */
+  .bot-tone-ok {
+    color: #17784a;
+  }
+  .bot-tone-warning {
+    color: #9a5b00;
+  }
+  .bot-tone-blocked {
+    color: var(--tone-accent-ink);
+  }
+  .bot-badge {
+    display: inline-block;
+    padding: 0.15rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .bot-badge-ok {
+    background: #e3f4ea;
+    color: #17784a;
+  }
+  .bot-badge-warning {
+    background: #fdf0d8;
+    color: #9a5b00;
+  }
+  .bot-badge-blocked {
+    background: #fbe3ea;
+    color: var(--tone-accent-ink);
+  }
   /* Zona de arrastre: borde discontinuo que se enciende en frambuesa al soltar encima */
   .dropzone {
     display: block;

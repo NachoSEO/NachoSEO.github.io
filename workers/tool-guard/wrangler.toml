@@ -1,0 +1,21 @@
+# Cuotas de las herramientas gratis de nachomascort.com: límite diario por IP, llamadas simultáneas por IP y un
+# límite global diario. Sin rutas ni workers.dev: solo lo usan las Pages Functions de functions/api mediante el
+# binding de Durable Object TOOL_QUOTA (ver wrangler.toml de la raíz).
+name = "tool-guard"
+main = "worker.js"
+compatibility_date = "2026-05-01"
+workers_dev = false
+
+[[durable_objects.bindings]]
+name = "TOOL_QUOTA"
+class_name = "ToolQuota"
+
+# Durable Objects con SQLite: los únicos disponibles en el plan gratis de Workers
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["ToolQuota"]
+
+# Avisos por email cuando el uso global llega al 80 % y al 100 % (mismo Worker que el formulario de contacto)
+[[services]]
+binding = "CONTACT_MAILER"
+service = "contact-mailer"

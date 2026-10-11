@@ -2,6 +2,7 @@ import type { APIRoute } from 'astro';
 import { aboutPage } from '../data/profile';
 import { getAgentDocs, SITE_URL } from '../lib/agent-content';
 import { site } from '../site';
+import { tools } from '../data/tools';
 
 /** Índice para LLMs (https://llmstxt.org), generado a partir del contenido en cada build */
 export const GET: APIRoute = async () => {
@@ -25,8 +26,7 @@ export const GET: APIRoute = async () => {
     [
       '## Free tools',
       '',
-      `- [Generador de sitemap XML](${SITE_URL}/herramientas/generador-sitemap/): crea un sitemap.xml gratis a partir de una lista de URLs o un CSV, sin enviar los datos a ningún servidor.`,
-      `- [XML sitemap generator](${SITE_URL}/en/tools/sitemap-generator/): build a sitemap.xml for free from a list of URLs or a CSV; your data never leaves the browser.`,
+      ...tools.flatMap((tool) => [tool.es, tool.en]).map((tool) => `- [${tool.title}](${SITE_URL}${tool.href}): ${tool.summary}`),
     ].join('\n'),
     section('Optional', (doc) => ['/servicios/', '/en/services/', '/casos/', '/en/case-studies/', '/blog/', '/en/blog/', '/blog/seo-hacks/'].includes(doc.path)),
   ]

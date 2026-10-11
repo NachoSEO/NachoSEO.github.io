@@ -1,0 +1,102 @@
+---
+import Base from '../../layouts/Base.astro';
+import Cta from '../../components/Cta.astro';
+import FaqAccordion from '../../components/service/FaqAccordion.astro';
+import RobotsTester from '../../components/tools/RobotsTester.astro';
+
+const path = '/herramientas/robots-txt-tester/';
+
+const faq = [
+  {
+    question: '¿Da el mismo resultado que Googlebot?',
+    answer:
+      'Usa el mismo código. Google publicó en GitHub la librería con la que Googlebot lee los robots.txt y yo la compilo a WebAssembly sin tocarla, así que las erratas que acepta, el percent-encoding y el desempate entre reglas son los suyos. Lo que no hace la librería es la herencia entre crawlers de Google: Googlebot-Image sigue las reglas de Googlebot si no tiene grupo propio, y eso lo decide el crawler, no el parser.',
+  },
+  {
+    question: '¿Y para ChatGPT, Claude o Perplexity?',
+    answer:
+      'El estándar (RFC 9309) es el mismo para todos y OpenAI, Anthropic y Perplexity dicen respetar el robots.txt, así que el veredicto es una buena aproximación. Cada empresa usa su propio parser, y en casos raros (erratas, líneas sin dos puntos) pueden leer algo distinto que Google.',
+  },
+  {
+    question: '¿Qué pasa si mi robots.txt da error?',
+    answer:
+      'Si devuelve un 4xx, Google entiende que no hay restricciones y rastrea todo. Si devuelve un 5xx o no responde, deja de rastrear la web mientras dure el problema. Al cargar desde una URL, la herramienta te dice en cuál de los dos casos estás.',
+  },
+  {
+    question: '¿Se guarda lo que pruebo?',
+    answer:
+      'No. El parser se ejecuta en tu navegador. Solo pasa por mi servidor la descarga del robots.txt cuando lo cargas desde una URL, y no se guarda.',
+  },
+];
+
+const webApplication = {
+  '@type': 'WebApplication',
+  name: 'Tester de robots.txt con el parser de Google',
+  url: `https://nachomascort.com${path}`,
+  applicationCategory: 'DeveloperApplication',
+  operatingSystem: 'Any',
+  browserRequirements: 'Requires JavaScript and WebAssembly',
+  inLanguage: 'es',
+  isAccessibleForFree: true,
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' },
+  author: { '@id': 'https://nachomascort.com/#person' },
+};
+---
+
+<Base
+  lang="es"
+  title="Tester de robots.txt con el parser oficial de Google — Nacho Mascort"
+  description="Prueba tu robots.txt con el mismo parser que usa Googlebot: qué URLs bloquea para Google, GPTBot, ClaudeBot o PerplexityBot, qué regla decide y qué líneas ignora Google."
+  path={path}
+  alternatePath="/en/tools/robots-txt-tester/"
+  breadcrumbs={[
+    { name: 'Inicio', path: '/' },
+    { name: 'Herramientas', path: '/herramientas/' },
+    { name: 'Tester de robots.txt', path },
+  ]}
+  faq={faq}
+  extraSchemaNodes={[webApplication]}
+>
+  <div class="mx-auto max-w-5xl px-5 pt-16 sm:px-6 sm:pt-20">
+    <p class="meta"><a href="/herramientas/" class="hover:text-ink">Herramientas</a> · SEO técnico</p>
+    <h1 class="display-1 mt-5">Tester de robots.txt con el parser de Google</h1>
+    <p class="lede mt-6">
+      Carga o pega un robots.txt y comprueba qué URLs puede rastrear cada bot. Funciona con el mismo código que usa
+      Googlebot, y te marca la línea que decide cada caso y las que Google no entiende.
+    </p>
+
+    <div class="mt-10">
+      <RobotsTester lang="es" />
+    </div>
+  </div>
+
+  <article class="mx-auto max-w-5xl px-5 pt-16 sm:px-6 md:pt-24">
+    <p class="section-label">Cómo usarla</p>
+    <div class="article-body mt-4">
+      <h2>Por qué otro tester de robots.txt</h2>
+      <p>
+        Google retiró el tester de robots.txt de Search Console en 2023. Casi todos los que quedan reescriben las reglas a su
+        manera, y fallan justo en los casos raros: la regla más larga contra la que permite, un <code>user-agent: Google</code>
+        que no se aplica a Googlebot, una errata como <code>disalow</code> que Google sí acepta o una URL con acentos.
+      </p>
+      <p>
+        Este usa la librería que Google publicó en <a href="https://github.com/google/robotstxt">github.com/google/robotstxt</a>,
+        la que lee los robots.txt en producción, compilada a WebAssembly. El informe de líneas sale de su librería de
+        reporting, la que alimenta el informe de robots.txt de Search Console.
+      </p>
+      <h2>Cómo probar un cambio antes de subirlo</h2>
+      <p>
+        Carga el robots.txt de tu web, edita las reglas en el cuadro y pon las URLs que te preocupan: las que quieres
+        bloquear y, sobre todo, las que no. Prueba con Googlebot y con los bots de IA a la vez para ver si una regla pensada
+        para GPTBot afecta a algo más.
+      </p>
+      <p>
+        Para ver si además el servidor o el firewall dejan pasar a cada bot, usa el
+        <a href="/herramientas/comprobador-bots/">comprobador de acceso de bots</a>.
+      </p>
+    </div>
+  </article>
+
+  <FaqAccordion lang="es" faq={faq} />
+  <Cta lang="es" />
+</Base>

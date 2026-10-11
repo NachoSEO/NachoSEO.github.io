@@ -1,0 +1,107 @@
+---
+import Base from '../../../layouts/Base.astro';
+import Cta from '../../../components/Cta.astro';
+import FaqAccordion from '../../../components/service/FaqAccordion.astro';
+import SeoForecast from '../../../components/tools/SeoForecast.astro';
+
+const path = '/en/tools/seo-forecast/';
+
+const faq = [
+  {
+    question: 'Where does the CTR curve come from?',
+    answer:
+      'From your own data: clicks divided by impressions for your non-brand queries, grouped by position. That way the curve already includes what ads, AI Overviews or rich results take away in your sector, something a generic industry curve does not capture. If a position does not have enough impressions, it is interpolated between its neighbors.',
+  },
+  {
+    question: 'Why do I have to remove brand queries?',
+    answer:
+      'Because they have a very high CTR at position 1 (the user is searching for you) and would inflate the whole curve. Also, brand traffic is not brought in by SEO. Enter your brand as a regex, for example acme|acme corp.',
+  },
+  {
+    question: 'How does it calculate the projection over time?',
+    answer:
+      'If you have more than 60 weeks of history, it calculates growth by comparing each week with the same week of the previous year and repeats the shape of the last year, so seasonality is not mistaken for trend. With less history it fits a line on the logarithm of the clicks of the last weeks. In both cases it gives an 80% range: the real result will normally fall inside it.',
+  },
+  {
+    question: 'What does it not take into account?',
+    answer:
+      'Core updates, SERP changes, migrations, launches or anything that is not in your history. A forecast extrapolates what already happened. Use it as a starting point and adjust by hand for what you know is going to change.',
+  },
+  {
+    question: 'Is my export uploaded anywhere?',
+    answer: 'No. The ZIP is opened and analyzed in your browser. It does not go through any server.',
+  },
+];
+
+const webApplication = {
+  '@type': 'WebApplication',
+  name: 'SEO forecast from Search Console data',
+  url: `https://nachomascort.com${path}`,
+  applicationCategory: 'BusinessApplication',
+  operatingSystem: 'Any',
+  browserRequirements: 'Requires JavaScript',
+  inLanguage: 'en',
+  isAccessibleForFree: true,
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' },
+  author: { '@id': 'https://nachomascort.com/#person' },
+};
+---
+
+<Base
+  lang="en"
+  title="Free SEO Forecast from Your Search Console Data — Nacho Mascort"
+  description="SEO traffic forecast from your Search Console export: how many clicks you gain if your queries move up in position and how many you will have in 3, 6 or 12 months, with seasonality."
+  path={path}
+  alternatePath="/herramientas/forecast-seo/"
+  breadcrumbs={[
+    { name: 'Home', path: '/en/' },
+    { name: 'Tools', path: '/en/tools/' },
+    { name: 'SEO forecast', path },
+  ]}
+  faq={faq}
+  extraSchemaNodes={[webApplication]}
+>
+  <div class="mx-auto max-w-5xl px-5 pt-16 sm:px-6 sm:pt-20">
+    <p class="meta"><a href="/en/tools/" class="hover:text-ink">Tools</a> · Business</p>
+    <h1 class="display-1 mt-5">SEO forecast from your Search Console data</h1>
+    <p class="lede mt-6">
+      Upload your Search Console export and get two numbers: how many clicks you would gain if your queries move up in
+      position, and how many you will have in the coming months if the trend continues. It uses your own CTR curve and
+      sends nothing to any server.
+    </p>
+
+    <div class="mt-10">
+      <SeoForecast lang="en" />
+    </div>
+  </div>
+
+  <article class="mx-auto max-w-5xl px-5 pt-16 sm:px-6 md:pt-24">
+    <p class="section-label">How to use it</p>
+    <div class="article-body mt-4">
+      <h2>Which export you need</h2>
+      <p>
+        In Search Console, open <strong>Performance → Search results</strong>, choose the period (for seasonality, the 16
+        months) and click <strong>Export → Download CSV</strong>. It downloads a ZIP with several CSV files: the queries
+        file is used for the scenarios and the dates file for the projection. Upload it as it is.
+      </p>
+      <p>
+        The export only includes the 1,000 queries with the most clicks. For large sites, the scenario comes out short on
+        the low side: take it as the floor of what you can gain.
+      </p>
+      <h2>How to read the scenario</h2>
+      <p>
+        For each query in the position range you choose, the tool calculates its CTR at the new position using your curve
+        and applies it to its current impressions. It adjusts that according to how the query performs against the curve
+        (between half and one and a half times), because some queries lose clicks to ads or AI Overviews. Multiply the
+        extra clicks by the value of a session and you have what the scenario is worth per month.
+      </p>
+      <p>
+        It is the step I use to prioritize in <a href="/en/blog/seo-project-methodology/">my SEO project methodology</a>:
+        first what each session is worth, then how many sessions you can gain and where.
+      </p>
+    </div>
+  </article>
+
+  <FaqAccordion lang="en" faq={faq} />
+  <Cta lang="en" />
+</Base>

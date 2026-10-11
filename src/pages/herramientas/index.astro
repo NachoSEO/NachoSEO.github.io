@@ -1,27 +1,9 @@
 ---
 import Base from '../../layouts/Base.astro';
 import Cta from '../../components/Cta.astro';
+import { toolsFor } from '../../data/tools';
 
-const tools = [
-  {
-    href: '/herramientas/calculadora-valor-sesion-seo/',
-    title: 'Calculadora del valor de una sesión orgánica',
-    tagline: 'Cuánto deja cada visita de Google según tu modelo de negocio: ventas, leads o publicidad.',
-    detail: 'Valor por sesión, al mes, al año y por cada 1.000 clics más. Para priorizar page types con números.',
-  },
-  {
-    href: '/herramientas/generador-sitemap/',
-    title: 'Generador de sitemap XML',
-    tagline: 'Convierte una lista de URLs o un CSV en un sitemap.xml listo para Search Console.',
-    detail: 'Índices automáticos a partir de 50.000 URLs, un sitemap por dominio y todo en tu navegador.',
-  },
-  {
-    href: '/herramientas/comprobador-bots/',
-    title: 'Comprobador de acceso de bots',
-    tagline: 'Mira si Googlebot y los bots de ChatGPT, Claude o Perplexity pueden entrar en tu web.',
-    detail: 'robots.txt, respuesta HTTP, bloqueos del firewall, noindex y sitemap de 15 bots en una sola pasada.',
-  },
-];
+const tools = toolsFor('es');
 ---
 
 <Base

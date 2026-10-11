@@ -1,0 +1,93 @@
+---
+import Base from '../../../layouts/Base.astro';
+import Cta from '../../../components/Cta.astro';
+import FaqAccordion from '../../../components/service/FaqAccordion.astro';
+import RedirectChecker from '../../../components/tools/RedirectChecker.astro';
+
+const path = '/en/tools/redirect-checker/';
+
+const faq = [
+  {
+    question: "What's the difference between a 301 and a 302 redirect?",
+    answer:
+      'A 301 (and a 308) says the change is permanent, and Google passes the signals to the new URL and ends up indexing that one. A 302 (and a 307) says it is temporary, and Google may keep showing the old one. If the change is final, use a 301 or 308.',
+  },
+  {
+    question: 'Why is a redirect chain a problem?',
+    answer:
+      'Every hop is one more request for the user and for Googlebot, which stops following a chain after 10 hops. Internal links that go through redirects also waste crawl budget. The right fix is to link and redirect straight to the final URL.',
+  },
+  {
+    question: 'What is the point of requesting URLs as Googlebot?',
+    answer:
+      "Some sites respond differently depending on the user-agent: they redirect bots to another version, or block them. The requests leave from Cloudflare, not from Google's IPs, so if a site verifies Googlebot by IP, it may block here and let the real bot through. To see how a URL responds to AI bots, use the bot access checker.",
+  },
+  {
+    question: 'What else does it check besides the HTTP status code?',
+    answer:
+      'On the final URL it looks for noindex (in the X-Robots-Tag header or the meta robots tag), whether its canonical points to another URL, and whether it redirects with a meta refresh. It also warns you if any redirect goes from https to http.',
+  },
+];
+
+const webApplication = {
+  '@type': 'WebApplication',
+  name: 'Redirect and HTTP status checker',
+  url: `https://nachomascort.com${path}`,
+  applicationCategory: 'DeveloperApplication',
+  operatingSystem: 'Any',
+  browserRequirements: 'Requires JavaScript',
+  inLanguage: 'en',
+  isAccessibleForFree: true,
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' },
+  author: { '@id': 'https://nachomascort.com/#person' },
+};
+---
+
+<Base
+  lang="en"
+  title="Bulk Redirect and HTTP Status Checker — Nacho Mascort"
+  description="Check up to 100 URLs at once: HTTP status code, 301 and 302 redirect chains, loops, noindex and canonical. As a browser or as Googlebot."
+  path={path}
+  alternatePath="/herramientas/comprobador-redirecciones/"
+  breadcrumbs={[
+    { name: 'Home', path: '/en/' },
+    { name: 'Tools', path: '/en/tools/' },
+    { name: 'Redirect checker', path },
+  ]}
+  faq={faq}
+  extraSchemaNodes={[webApplication]}
+>
+  <div class="mx-auto max-w-5xl px-5 pt-16 sm:px-6 sm:pt-20">
+    <p class="meta"><a href="/en/tools/" class="hover:text-ink">Tools</a> · Technical SEO</p>
+    <h1 class="display-1 mt-5">Redirect and HTTP status checker</h1>
+    <p class="lede mt-6">
+      Paste a list of URLs and see what each one returns: the HTTP status code, every hop in its redirects, and whether the
+      final URL has a noindex or canonicalizes to another. Up to 100 URLs at once, as a browser or as Googlebot.
+    </p>
+
+    <div class="mt-10">
+      <RedirectChecker lang="en" />
+    </div>
+  </div>
+
+  <article class="mx-auto max-w-5xl px-5 pt-16 sm:px-6 md:pt-24">
+    <p class="section-label">How to use it</p>
+    <div class="article-body mt-4">
+      <h2>After a migration</h2>
+      <p>
+        Paste the old URLs and check that each one reaches its new URL in a single 301 hop, that the new URL returns a 200
+        and that it has no noindex. It's the check I run on launch day in
+        <a href="/en/services/seo-migrations/">SEO migrations</a>, and it's worth repeating a few weeks later.
+      </p>
+      <h2>To audit internal links</h2>
+      <p>
+        Export the internal links from a crawl and run them through here: the ones that go through a redirect should be
+        changed to the final URL. If what you want to check is the URLs in your sitemap, use the
+        <a href="/en/tools/sitemap-auditor/">sitemap auditor</a>, which does the same with a sample of them.
+      </p>
+    </div>
+  </article>
+
+  <FaqAccordion lang="en" faq={faq} />
+  <Cta lang="en" />
+</Base>

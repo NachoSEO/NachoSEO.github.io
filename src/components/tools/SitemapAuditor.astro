@@ -1,0 +1,380 @@
+---
+import type { Lang } from '../../i18n/ui';
+import { traceLabels } from '../../data/trace-labels';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const es = lang === 'es';
+
+const copy = es
+  ? {
+      urlLabel: 'Sitemap o web',
+      urlPlaceholder: 'https://example.com/sitemap.xml',
+      urlHelp: 'Si pones solo la web, busco los sitemaps en su robots.txt (o en /sitemap.xml).',
+      run: 'Auditar sitemap',
+      filesTitle: 'Sitemaps leídos',
+      checksTitle: 'Revisión del contenido',
+      statusTitle: 'Estado de una muestra de URLs',
+      statusHelp: 'Pido cada URL como Googlebot y sigo sus redirecciones. En sitemaps grandes se comprueba una muestra al azar.',
+      sampleLabel: 'Tamaño de la muestra',
+      checkStatus: 'Comprobar la muestra',
+      stop: 'Parar',
+      exportCsv: 'Descargar CSV',
+      noscript: 'El auditor funciona con JavaScript. Actívalo para auditar tu sitemap.',
+    }
+  : {
+      urlLabel: 'Sitemap or site',
+      urlPlaceholder: 'https://example.com/sitemap.xml',
+      urlHelp: "If you enter just the site, I look for the sitemaps in its robots.txt (or at /sitemap.xml).",
+      run: 'Audit sitemap',
+      filesTitle: 'Sitemaps read',
+      checksTitle: 'Content review',
+      statusTitle: 'Status of a sample of URLs',
+      statusHelp: 'Each URL is requested as Googlebot and its redirects are followed. Large sitemaps get a random sample.',
+      sampleLabel: 'Sample size',
+      checkStatus: 'Check the sample',
+      stop: 'Stop',
+      exportCsv: 'Download CSV',
+      noscript: 'The auditor runs on JavaScript. Enable it to audit your sitemap.',
+    };
+
+const messages = {
+  ...(es
+    ? {
+        reading: 'Leyendo sitemaps: {files} archivos · {urls} URLs',
+        noSitemaps: 'No he encontrado ningún sitemap. Pon la URL del sitemap directamente.',
+        invalidUrl: 'Escribe la URL de una web pública o de su sitemap.',
+        apiError: 'El servidor no ha respondido. Prueba otra vez en un momento.',
+        statUrls: 'URLs',
+        statFiles: 'Sitemaps',
+        statDuplicates: 'Duplicadas',
+        statLastmod: 'Con lastmod',
+        fileUrls: '{n} URLs',
+        fileChildren: 'índice · {n} sitemaps',
+        fileChildrenOne: 'índice · 1 sitemap',
+        fileErrors: { 'not-sitemap': 'No es un sitemap', 'invalid-xml': 'XML no válido', timeout: 'Sin respuesta', network: 'Error de red', 'too-large': 'Demasiado grande', 'too-many-redirects': 'Demasiadas redirecciones', 'cross-site-redirect': 'Redirige a otro dominio', api: 'Error' },
+        httpError: 'HTTP {status}',
+        skipped: 'Hay {n} sitemaps más en el índice que no he leído (leo hasta 50).',
+        truncated: 'Paro en 200.000 URLs.',
+        checkDuplicates: '{n} URLs aparecen más de una vez.',
+        checkHost: '{n} URLs son de otro dominio que su sitemap: Google las ignora salvo que declares el sitemap en el robots.txt de ese dominio o verifiques los dos en Search Console.',
+        checkHttp: '{n} URLs van con http:// en un sitio con https.',
+        checkRobots: '{n} URLs están bloqueadas por el robots.txt para Googlebot.',
+        checkOversize: '{n} sitemaps pasan de 50.000 URLs, el máximo que lee Google por archivo.',
+        checkFuture: '{n} URLs tienen un lastmod en el futuro.',
+        checkErrors: '{n} sitemaps no se han podido leer.',
+        checksOk: 'No veo problemas en el contenido del sitemap.',
+        examples: 'Ejemplos: {list}',
+        progress: 'Comprobadas {done} de {total}',
+        summary: '{ok} sin avisos · {warning} con avisos · {blocked} con errores',
+      }
+    : {
+        reading: 'Reading sitemaps: {files} files · {urls} URLs',
+        noSitemaps: "I couldn't find any sitemap. Enter the sitemap URL directly.",
+        invalidUrl: 'Enter the URL of a public site or its sitemap.',
+        apiError: "The server didn't respond. Try again in a moment.",
+        statUrls: 'URLs',
+        statFiles: 'Sitemaps',
+        statDuplicates: 'Duplicates',
+        statLastmod: 'With lastmod',
+        fileUrls: '{n} URLs',
+        fileChildren: 'index · {n} sitemaps',
+        fileChildrenOne: 'index · 1 sitemap',
+        fileErrors: { 'not-sitemap': 'Not a sitemap', 'invalid-xml': 'Invalid XML', timeout: 'No response', network: 'Network error', 'too-large': 'Too large', 'too-many-redirects': 'Too many redirects', 'cross-site-redirect': 'Redirects to another domain', api: 'Error' },
+        httpError: 'HTTP {status}',
+        skipped: "The index lists {n} more sitemaps I didn't read (I read up to 50).",
+        truncated: 'I stop at 200,000 URLs.',
+        checkDuplicates: '{n} URLs appear more than once.',
+        checkHost: "{n} URLs are on a different domain from their sitemap: Google ignores them unless the sitemap is listed in that domain's robots.txt or you verify both in Search Console.",
+        checkHttp: '{n} URLs use http:// on an https site.',
+        checkRobots: '{n} URLs are blocked by robots.txt for Googlebot.',
+        checkOversize: '{n} sitemaps go over 50,000 URLs, the most Google reads per file.',
+        checkFuture: '{n} URLs have a lastmod in the future.',
+        checkErrors: "{n} sitemaps couldn't be read.",
+        checksOk: "I don't see problems in the sitemap's content.",
+        examples: 'Examples: {list}',
+        progress: 'Checked {done} of {total}',
+        summary: '{ok} with no issues · {warning} with issues · {blocked} with errors',
+      }),
+  labels: traceLabels[lang],
+};
+
+const inputClass =
+  'w-full rounded-lg border border-line bg-paper px-4 py-3 text-[0.95rem] text-ink transition-colors focus:border-ink';
+---
+
+<div class="card sm:p-8" data-sitemap-auditor data-lang={lang} data-messages={JSON.stringify(messages)}>
+  <form class="flex flex-col gap-3 sm:flex-row sm:items-end" data-form novalidate>
+    <div class="flex-1">
+      <label for="sitemap-audit-url" class="text-sm font-semibold">{copy.urlLabel}</label>
+      <input id="sitemap-audit-url" type="url" inputmode="url" autocomplete="url" placeholder={copy.urlPlaceholder} aria-describedby="sitemap-audit-help" class:list={[inputClass, 'mt-2']} data-url />
+    </div>
+    <button type="submit" class="btn shrink-0" data-run data-umami-event="sitemap-auditor-run">{copy.run}</button>
+  </form>
+  <p id="sitemap-audit-help" class="mt-2 text-sm text-muted">{copy.urlHelp}</p>
+  <p class="meta mt-4" aria-live="polite" data-progress></p>
+  <p role="alert" class="mt-2 text-sm font-semibold text-accent-ink" data-error hidden></p>
+  <noscript><p class="mt-4 text-sm font-semibold text-accent-ink">{copy.noscript}</p></noscript>
+</div>
+
+<section class="card mt-5 sm:p-8" data-result hidden>
+  <dl class="grid grid-cols-2 gap-x-6 gap-y-5 md:grid-cols-4" data-stats></dl>
+
+  <h2 class="display-3 mt-10">{copy.checksTitle}</h2>
+  <ul class="row-list mt-4 text-[0.95rem]" data-checks></ul>
+
+  <h2 class="display-3 mt-10">{copy.filesTitle}</h2>
+  <ul class="row-list mt-4 text-[0.9rem]" data-files></ul>
+  <p class="mt-3 text-sm text-muted" data-files-note hidden></p>
+
+  <h2 class="display-3 mt-10">{copy.statusTitle}</h2>
+  <p class="mt-2 text-sm text-muted">{copy.statusHelp}</p>
+  <div class="mt-4 flex flex-col gap-3 sm:flex-row sm:items-end">
+    <div class="sm:w-48">
+      <label for="sitemap-audit-sample" class="text-sm font-semibold">{copy.sampleLabel}</label>
+      <select id="sitemap-audit-sample" class:list={[inputClass, 'mt-2']} data-sample>
+        {[50, 100].map((size) => <option value={size} selected={size === 50}>{size}</option>)}
+      </select>
+    </div>
+    <button type="button" class="btn" data-check-status data-umami-event="sitemap-auditor-status">{copy.checkStatus}</button>
+    <button type="button" class="btn btn--ghost" data-stop hidden>{copy.stop}</button>
+    <button type="button" class="btn btn--ghost" data-export hidden>{copy.exportCsv}</button>
+  </div>
+  <p class="meta mt-4" aria-live="polite" data-status-progress></p>
+  <p class="mt-2 text-[0.95rem] font-semibold" data-status-summary></p>
+  <div class="mt-4 overflow-x-auto"><table class="w-full min-w-[40rem] text-left text-sm" data-table></table></div>
+</section>
+
+<script>
+  import { checkUrls, readSitemapTree, sample, traceTone, tracesToCsv, type SitemapFile, type SitemapUrl, type Trace } from '../../lib/url-status-client';
+  import { renderTraceTable } from '../../lib/trace-table';
+  import { sitemapsFrom } from '../../lib/robotstxt';
+  import { getBrowserRobotsEngine } from '../../lib/robotstxt/browser';
+  import { setChallengeSlot, ToolLimitError, toolFetch } from '../../lib/tool-session-client';
+
+  const GOOGLEBOT = 'Googlebot';
+  const MAX_URLS_PER_FILE = 50_000;
+  const EXAMPLES = 3;
+
+  const tool = document.querySelector<HTMLElement>('[data-sitemap-auditor]');
+  const result = document.querySelector<HTMLElement>('[data-result]');
+
+  if (tool && result) {
+    setChallengeSlot(tool);
+    const messages = JSON.parse(tool.dataset.messages ?? '{}');
+    const numberFormat = new Intl.NumberFormat(tool.dataset.lang === 'es' ? 'es-ES' : 'en-US');
+    const percent = new Intl.NumberFormat(tool.dataset.lang === 'es' ? 'es-ES' : 'en-US', { style: 'percent', maximumFractionDigits: 0 });
+    const format = (template: string, values: Record<string, string | number>) =>
+      template.replace(/\{(\w+)\}/g, (_, name) => (typeof values[name] === 'number' ? numberFormat.format(values[name] as number) : String(values[name])));
+    const element = <K extends keyof HTMLElementTagNameMap>(tag: K, className = '', text = '') =>
+      Object.assign(document.createElement(tag), { className, textContent: text });
+    const select = <T extends HTMLElement>(selector: string, root: ParentNode = result!) => root.querySelector<T>(selector)!;
+
+    const urlInput = select<HTMLInputElement>('[data-url]', tool);
+    const runButton = select<HTMLButtonElement>('[data-run]', tool);
+    const progress = select<HTMLElement>('[data-progress]', tool);
+    const errorBox = select<HTMLElement>('[data-error]', tool);
+    const statusButton = select<HTMLButtonElement>('[data-check-status]');
+    const stopButton = select<HTMLButtonElement>('[data-stop]');
+    const exportButton = select<HTMLButtonElement>('[data-export]');
+
+    let sitemapUrls: SitemapUrl[] = [];
+    let traces: Trace[] = [];
+    let cancelled = false;
+
+    const showError = (message: string) => {
+      errorBox.textContent = message;
+      errorBox.hidden = !message;
+    };
+
+    /** robots.txt de la web: para descubrir sitemaps y ver qué URLs bloquea */
+    async function loadRobots(origin: string) {
+      const response = await toolFetch(`/api/robots-txt?url=${encodeURIComponent(origin)}`);
+      if (!response.ok) return '';
+      const data = await response.json();
+      return typeof data.body === 'string' ? data.body : '';
+    }
+
+    function renderFiles(files: SitemapFile[]) {
+      select<HTMLElement>('[data-files]').replaceChildren(
+        ...files.map((file) => {
+          const item = element('li', 'flex flex-wrap items-baseline justify-between gap-x-4 py-2.5');
+          item.append(element('span', 'font-mono text-[0.8rem] break-all', file.url));
+          const detail = file.error
+            ? (file.error.startsWith('http-') ? format(messages.httpError, { status: file.error.slice(5) }) : messages.fileErrors[file.error] ?? file.error)
+            : file.type === 'index'
+              ? file.urls === 1
+                ? messages.fileChildrenOne
+                : format(messages.fileChildren, { n: file.urls })
+              : format(messages.fileUrls, { n: file.urls });
+          item.append(element('span', `meta ${file.error ? 'bot-tone-blocked' : ''}`, detail));
+          return item;
+        })
+      );
+    }
+
+    function renderChecks(files: SitemapFile[], urls: SitemapUrl[], robotsBlocked: string[]) {
+      const counts = new Map<string, number>();
+      for (const url of urls) counts.set(url.loc, (counts.get(url.loc) ?? 0) + 1);
+      const duplicates = [...counts.entries()].filter(([, count]) => count > 1).map(([loc]) => loc);
+      const hostOf = (url: string) => {
+        try {
+          return new URL(url).host;
+        } catch {
+          return '';
+        }
+      };
+      const otherHost = urls.filter((url) => hostOf(url.loc) !== hostOf(url.sitemap)).map((url) => url.loc);
+      const siteIsHttps = urls.some((url) => url.loc.startsWith('https:'));
+      const http = siteIsHttps ? urls.filter((url) => url.loc.startsWith('http:')).map((url) => url.loc) : [];
+      const tomorrow = new Date(Date.now() + 86_400_000).toISOString();
+      const future = urls.filter((url) => url.lastmod && url.lastmod > tomorrow).map((url) => url.loc);
+      const oversize = files.filter((file) => file.type === 'urlset' && file.urls > MAX_URLS_PER_FILE).map((file) => file.url);
+      const broken = files.filter((file) => file.error).map((file) => file.url);
+      const withLastmod = urls.filter((url) => url.lastmod).length;
+
+      select<HTMLElement>('[data-stats]').replaceChildren(
+        ...[
+          [messages.statUrls, numberFormat.format(counts.size)],
+          [messages.statFiles, numberFormat.format(files.length)],
+          [messages.statDuplicates, numberFormat.format(duplicates.length)],
+          [messages.statLastmod, urls.length ? percent.format(withLastmod / urls.length) : '—'],
+        ].map(([label, value]) => {
+          const wrap = element('div');
+          wrap.append(element('dt', 'meta', label), element('dd', 'display-2 mt-1', value));
+          return wrap;
+        })
+      );
+
+      const checks = (
+        [
+          [broken, messages.checkErrors, 'blocked'],
+          [robotsBlocked, messages.checkRobots, 'blocked'],
+          [otherHost, messages.checkHost, 'blocked'],
+          [oversize, messages.checkOversize, 'blocked'],
+          [duplicates, messages.checkDuplicates, 'warning'],
+          [http, messages.checkHttp, 'warning'],
+          [future, messages.checkFuture, 'warning'],
+        ] as [string[], string, string][]
+      ).filter(([items]) => items.length);
+      select<HTMLElement>('[data-checks]').replaceChildren(
+        ...(checks.length
+          ? checks.map(([items, template, tone]) => {
+              const item = element('li', 'py-2.5');
+              item.append(element('span', `block font-semibold bot-tone-${tone}`, format(template, { n: items.length })));
+              item.append(element('span', 'mt-1 block font-mono text-[0.78rem] text-muted break-all', format(messages.examples, { list: items.slice(0, EXAMPLES).join(' · ') })));
+              return item;
+            })
+          : [element('li', 'py-2.5 font-semibold bot-tone-ok', messages.checksOk)])
+      );
+    }
+
+    select<HTMLFormElement>('[data-form]', tool).addEventListener('submit', async (event) => {
+      event.preventDefault();
+      showError('');
+      let target: URL;
+      try {
+        const raw = urlInput.value.trim();
+        target = new URL(/^https?:\/\//i.test(raw) ? raw : `https://${raw}`);
+      } catch {
+        return showError(messages.invalidUrl);
+      }
+      runButton.disabled = true;
+      result.hidden = true;
+      traces = [];
+      select<HTMLTableElement>('[data-table]').replaceChildren();
+      select<HTMLElement>('[data-status-summary]').textContent = '';
+      select<HTMLElement>('[data-status-progress]').textContent = '';
+      exportButton.hidden = true;
+      try {
+        const robotsBody = await loadRobots(target.origin);
+        const engine = await getBrowserRobotsEngine().catch(() => null);
+        const isSite = target.pathname === '/' && !target.search;
+        const roots = isSite ? (engine ? sitemapsFrom(engine, robotsBody) : []) : [target.href];
+        if (roots.length === 0) roots.push(new URL('/sitemap.xml', target.origin).href);
+
+        const files: SitemapFile[] = [];
+        const urls: SitemapUrl[] = [];
+        let skipped = 0;
+        let truncated = false;
+        for (const root of roots.slice(0, 10)) {
+          const tree = await readSitemapTree(root, (partialFiles, partialUrls) =>
+            (progress.textContent = format(messages.reading, { files: files.length + partialFiles.length, urls: urls.length + partialUrls }))
+          );
+          files.push(...tree.files);
+          urls.push(...tree.urls);
+          skipped += tree.skippedFiles;
+          truncated ||= tree.truncated;
+        }
+        sitemapUrls = urls;
+        // El parser pide la URL con %-encoding (RFC 3986): new URL().href lo aplica
+        const encoded = (loc: string) => {
+          try {
+            return new URL(loc).href;
+          } catch {
+            return loc;
+          }
+        };
+        const robotsBlocked = engine && robotsBody ? urls.filter((url) => !engine.check(robotsBody, GOOGLEBOT, encoded(url.loc)).allowed).map((url) => url.loc) : [];
+        renderChecks(files, urls, robotsBlocked);
+        renderFiles(files);
+        const notes = [skipped ? format(messages.skipped, { n: skipped }) : '', truncated ? messages.truncated : ''].filter(Boolean);
+        select<HTMLElement>('[data-files-note]').textContent = notes.join(' ');
+        select<HTMLElement>('[data-files-note]').hidden = notes.length === 0;
+        statusButton.disabled = urls.length === 0;
+        result.hidden = false;
+        progress.textContent = format(messages.reading, { files: files.length, urls: urls.length });
+        if (files.length && files.every((file) => file.error)) showError(messages.noSitemaps);
+      } catch (error) {
+        showError(error instanceof ToolLimitError ? error.message : messages.apiError);
+      } finally {
+        runButton.disabled = false;
+      }
+    });
+
+    statusButton.addEventListener('click', async () => {
+      const urls = sample([...new Set(sitemapUrls.map((url) => url.loc))], Number(select<HTMLSelectElement>('[data-sample]').value));
+      const statusProgress = select<HTMLElement>('[data-status-progress]');
+      const render = () => {
+        const tones = traces.map(traceTone);
+        select<HTMLElement>('[data-status-summary]').textContent = format(messages.summary, {
+          ok: tones.filter((tone) => tone === 'ok').length,
+          warning: tones.filter((tone) => tone === 'warning').length,
+          blocked: tones.filter((tone) => tone === 'blocked').length,
+        });
+        const order = { blocked: 0, warning: 1, ok: 2 };
+        renderTraceTable(select<HTMLTableElement>('[data-table]'), [...traces].sort((a, b) => order[traceTone(a)] - order[traceTone(b)]), messages.labels);
+      };
+      cancelled = false;
+      statusButton.disabled = true;
+      stopButton.hidden = false;
+      try {
+        traces = await checkUrls(urls, GOOGLEBOT, (done, total, partial) => {
+          statusProgress.textContent = format(messages.progress, { done, total });
+          traces = partial;
+          render();
+        }, () => cancelled);
+        render();
+        exportButton.hidden = traces.length === 0;
+      } catch (error) {
+        showError(error instanceof ToolLimitError ? error.message : messages.apiError);
+      } finally {
+        statusButton.disabled = false;
+        stopButton.hidden = true;
+      }
+    });
+
+    stopButton.addEventListener('click', () => (cancelled = true));
+    exportButton.addEventListener('click', () => {
+      const url = URL.createObjectURL(new Blob([tracesToCsv(traces)], { type: 'text/csv;charset=utf-8' }));
+      const link = Object.assign(document.createElement('a'), { href: url, download: 'sitemap-status.csv' });
+      document.body.append(link);
+      link.click();
+      link.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    });
+  }
+</script>

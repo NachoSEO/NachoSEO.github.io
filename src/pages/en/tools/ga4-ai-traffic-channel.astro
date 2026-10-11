@@ -1,0 +1,98 @@
+---
+import Base from '../../../layouts/Base.astro';
+import Cta from '../../../components/Cta.astro';
+import FaqAccordion from '../../../components/service/FaqAccordion.astro';
+import AiTrafficChannelBuilder from '../../../components/tools/AiTrafficChannelBuilder.astro';
+
+const path = '/en/tools/ga4-ai-traffic-channel/';
+
+const faq = [
+  {
+    question: "Why can't I see traffic from AI Overviews or AI Mode?",
+    answer:
+      'Because it arrives as google / organic, like any other click from the search engine. Neither the referrer nor the parameters tell it apart, so no regex can separate it. For that you have the Search Console data, which has included AI Mode in web search since 2025.',
+  },
+  {
+    question: 'Why does ChatGPT show up with medium (not set)?',
+    answer:
+      'ChatGPT adds utm_source=chatgpt.com to many links, but not utm_medium. GA4 keeps the source and leaves the medium empty, which is why those sessions often end up in Unassigned. The channel condition only looks at the source, so it picks them up anyway.',
+  },
+  {
+    question: 'Does this measure all the traffic that comes from AI?',
+    answer:
+      'No. Desktop and mobile apps often send no referrer, and those visits land in Direct. What you measure is the floor: the AI traffic that can be attributed. It is useful for seeing the trend and which pages receive those visits, but not for the total.',
+  },
+  {
+    question: 'How often is the list of assistants updated?',
+    answer:
+      'I review it when a new assistant appears or one changes domain, as happened with chat.openai.com and chatgpt.com. If one is missing, add it under extra domains and write to me so I can include it.',
+  },
+];
+
+const webApplication = {
+  '@type': 'WebApplication',
+  name: 'GA4 AI traffic channel builder',
+  url: `https://nachomascort.com${path}`,
+  applicationCategory: 'BusinessApplication',
+  operatingSystem: 'Any',
+  browserRequirements: 'Requires JavaScript',
+  inLanguage: 'en',
+  isAccessibleForFree: true,
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' },
+  author: { '@id': 'https://nachomascort.com/#person' },
+};
+---
+
+<Base
+  lang="en"
+  title="AI Traffic Channel for GA4: ChatGPT, Perplexity Regex — Nacho Mascort"
+  description="Generate the regex and the GA4 channel group to measure traffic from ChatGPT, Perplexity, Gemini, Copilot, Claude and other AI assistants. Also for Looker Studio and BigQuery."
+  path={path}
+  alternatePath="/herramientas/canal-trafico-ia-ga4/"
+  breadcrumbs={[
+    { name: 'Home', path: '/en/' },
+    { name: 'Tools', path: '/en/tools/' },
+    { name: 'AI traffic channel in GA4', path },
+  ]}
+  faq={faq}
+  extraSchemaNodes={[webApplication]}
+>
+  <div class="mx-auto max-w-5xl px-5 pt-16 sm:px-6 sm:pt-20">
+    <p class="meta"><a href="/en/tools/" class="hover:text-ink">Tools</a> · GEO</p>
+    <h1 class="display-1 mt-5">AI traffic channel in GA4</h1>
+    <p class="lede mt-6">
+      Pick the assistants and I generate the regex, the GA4 channel group, the Looker Studio field and the BigQuery query
+      to see visits from ChatGPT, Perplexity, Gemini, Copilot or Claude together.
+    </p>
+
+    <div class="mt-10">
+      <AiTrafficChannelBuilder lang="en" />
+    </div>
+  </div>
+
+  <article class="mx-auto max-w-5xl px-5 pt-16 sm:px-6 md:pt-24">
+    <p class="section-label">How to use it</p>
+    <div class="article-body mt-4">
+      <h2>Why you need your own channel</h2>
+      <p>
+        GA4 has no channel for AI assistants. Depending on how the visit arrives, it puts it in Referral (if it carries a
+        referrer), in Unassigned (if it carries utm_source without a medium) or in Direct (if it carries nothing). With
+        your own channel group you put them in a single row and can compare them with organic, month by month and by
+        landing page.
+      </p>
+      <h2>What it measures and what it doesn't</h2>
+      <p>
+        It measures visits that arrive with a referrer or a utm_source from an assistant. It does not measure AI Overviews
+        or AI Mode, which arrive as Google organic, or visits from apps that send no referrer. Take it as the AI traffic
+        that can be attributed, which is only part of the total.
+      </p>
+      <p>
+        How to take that traffic through to business results (conversions, dark traffic and CTR with AI Overviews) is
+        covered in <a href="/guia-geo/">my GEO guide (in Spanish)</a>.
+      </p>
+    </div>
+  </article>
+
+  <FaqAccordion lang="en" faq={faq} />
+  <Cta lang="en" />
+</Base>

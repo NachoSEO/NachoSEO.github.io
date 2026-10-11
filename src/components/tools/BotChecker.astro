@@ -59,7 +59,7 @@ const messages = es
       },
       legendTitle: 'Cómo leerlo',
       legend: [
-        'Comprueba el robots.txt con las mismas reglas que Google: gana la regla más larga y, si empatan, la que permite.',
+        'Lee el robots.txt con el parser oficial de Google, el código abierto que usa Googlebot, compilado a WebAssembly.',
         'Pide la página con el user-agent de cada bot y compara la respuesta con la de un navegador normal.',
         'Las peticiones salen de los servidores de Cloudflare, no de los de Google u OpenAI. Si la web verifica los bots por IP, un bloqueo aquí puede no afectar al bot real. Confírmalo en los logs del servidor o en Search Console.',
       ],
@@ -97,7 +97,7 @@ const messages = es
       },
       legendTitle: 'How to read it',
       legend: [
-        'robots.txt is checked with the same rules Google uses: the longest rule wins and, on a tie, the one that allows.',
+        'robots.txt is read with Google\'s official parser, the open-source code Googlebot uses, compiled to WebAssembly.',
         "The page is requested with each bot's user-agent and the response is compared with a regular browser's.",
         "Requests come from Cloudflare's servers, not from Google's or OpenAI's. If the site verifies bots by IP, a block here may not affect the real bot. Confirm it in your server logs or Search Console.",
       ],
@@ -151,7 +151,7 @@ const messages = es
     error?: string;
     checkedUrl: string;
     browser: { status: number | null; error: string | null; challenge: string | null; redirects: string[] };
-    robotsTxt: { url: string; status: number | null; unreachable: boolean; groups: number };
+    robotsTxt: { url: string; status: number | null; unreachable: boolean; rules: number; unused: number };
     sitemaps: { url: string; declared: boolean; status: number | null; type: string | null; valid: boolean; urls: number }[];
     bots: BotRow[];
   }
@@ -177,8 +177,10 @@ const messages = es
       es
         ? `${type === 'index' ? 'Índice' : 'Sitemap'} válido · ${urls} ${type === 'index' ? 'sitemaps' : 'URLs'}`
         : `Valid ${type === 'index' ? 'index' : 'sitemap'} · ${urls} ${type === 'index' ? 'sitemaps' : 'URLs'}`;
-    const robotsFound = (groups: number) =>
-      es ? `Encontrado · ${groups} ${groups === 1 ? 'grupo' : 'grupos'} de reglas` : `Found · ${groups} rule ${groups === 1 ? 'group' : 'groups'}`;
+    const robotsFound = (rules: number, unused: number) =>
+      es
+        ? `Encontrado · ${rules} ${rules === 1 ? 'regla' : 'reglas'}${unused ? ` · ${unused} ${unused === 1 ? 'directiva' : 'directivas'} que Google ignora` : ''}`
+        : `Found · ${rules} ${rules === 1 ? 'rule' : 'rules'}${unused ? ` · ${unused} ${unused === 1 ? 'directive' : 'directives'} Google ignores` : ''}`;
     const summaryText = (ok: number, warning: number, blocked: number) =>
       es ? `${ok} con acceso · ${warning} con avisos · ${blocked} bloqueados` : `${ok} allowed · ${warning} with warnings · ${blocked} blocked`;
     const challengeNote = (name: string) => (es ? `Le sale un reto o bloqueo de ${name}.` : `Gets a ${name} challenge or block page.`);
@@ -216,7 +218,7 @@ const messages = es
       const robotsStatus = data.robotsTxt.status;
       facts.append(
         robotsStatus !== null && robotsStatus >= 200 && robotsStatus < 300
-          ? fact(messages.robotsTxt, robotsFound(data.robotsTxt.groups), 'ok')
+          ? fact(messages.robotsTxt, robotsFound(data.robotsTxt.rules, data.robotsTxt.unused), 'ok')
           : data.robotsTxt.unreachable
             ? fact(messages.robotsTxt, messages.robotsUnreachable, 'blocked')
             : fact(messages.robotsTxt, messages.robotsMissing, 'warning'),
@@ -345,34 +347,5 @@ const messages = es
   .bot-table th,
   .bot-table td {
     white-space: normal;
-  }
-  :global(.bot-tone-ok) {
-    color: #17784a;
-  }
-  :global(.bot-tone-warning) {
-    color: #9a5b00;
-  }
-  :global(.bot-tone-blocked) {
-    color: var(--tone-accent-ink);
-  }
-  :global(.bot-badge) {
-    display: inline-block;
-    padding: 0.15rem 0.6rem;
-    border-radius: 999px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    white-space: nowrap;
-  }
-  :global(.bot-badge-ok) {
-    background: #e3f4ea;
-    color: #17784a;
-  }
-  :global(.bot-badge-warning) {
-    background: #fdf0d8;
-    color: #9a5b00;
-  }
-  :global(.bot-badge-blocked) {
-    background: #fbe3ea;
-    color: var(--tone-accent-ink);
   }
 </style>

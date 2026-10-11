@@ -61,6 +61,22 @@ export const tools: Record<Lang, ToolCopy>[] = [
   },
   {
     es: {
+      href: '/herramientas/robots-txt-tester/',
+      title: 'Tester de robots.txt con el parser de Google',
+      tagline: 'Prueba qué URLs bloquea tu robots.txt para Googlebot, GPTBot, ClaudeBot o PerplexityBot.',
+      detail: 'El mismo código que usa Googlebot, con la línea que decide cada caso y las que Google ignora.',
+      summary: 'prueba un robots.txt con el parser oficial de Google (el de Googlebot, compilado a WebAssembly) para cualquier URL y user-agent, incluidos los bots de IA.',
+    },
+    en: {
+      href: '/en/tools/robots-txt-tester/',
+      title: "robots.txt tester with Google's parser",
+      tagline: 'Test which URLs your robots.txt blocks for Googlebot, GPTBot, ClaudeBot or PerplexityBot.',
+      detail: 'The same code Googlebot runs, with the line that decides each case and the lines Google ignores.',
+      summary: "tests a robots.txt with Google's official parser (Googlebot's, compiled to WebAssembly) for any URL and user-agent, AI bots included.",
+    },
+  },
+  {
+    es: {
       href: '/herramientas/canal-trafico-ia-ga4/',
       title: 'Canal de tráfico de IA en GA4',
       tagline: 'La regex y el grupo de canales para ver juntas las visitas de ChatGPT, Perplexity, Gemini o Claude.',

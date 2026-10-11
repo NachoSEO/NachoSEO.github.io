@@ -3,6 +3,7 @@
  * El WAF de Cloudflare deja 5 llamadas a /api/* cada 10 s por IP: aquí se hacen 4 como mucho.
  */
 import type { Trace } from './safe-fetch';
+import { toCsv } from './csv';
 
 export type { Trace };
 
@@ -86,27 +87,21 @@ export const traceTone = (trace: Trace): 'ok' | 'warning' | 'blocked' => {
   return issues.length ? 'warning' : 'ok';
 };
 
-const csvCell = (value: string | number | null) => `"${String(value ?? '').replace(/"/g, '""')}"`;
-
 export const tracesToCsv = (traces: Trace[]) =>
-  [
-    'url,final_status,chain,final_url,issues,canonical,x_robots_tag,meta_robots,error',
-    ...traces.map((trace) =>
-      [
-        trace.url,
-        trace.status,
-        trace.hops.map((hop) => hop.status).join(' > '),
-        trace.finalUrl,
-        traceIssues(trace).join(' '),
-        trace.canonical,
-        trace.xRobotsTag,
-        trace.metaRobots,
-        trace.error,
-      ]
-        .map(csvCell)
-        .join(',')
-    ),
-  ].join('\n');
+  toCsv(
+    ['url', 'final_status', 'chain', 'final_url', 'issues', 'canonical', 'x_robots_tag', 'meta_robots', 'error'],
+    traces.map((trace) => [
+      trace.url,
+      trace.status,
+      trace.hops.map((hop) => hop.status).join(' > '),
+      trace.finalUrl,
+      traceIssues(trace).join(' '),
+      trace.canonical,
+      trace.xRobotsTag,
+      trace.metaRobots,
+      trace.error,
+    ])
+  );
 
 // ---------- Sitemaps ----------
 
@@ -135,7 +130,7 @@ const fetchSitemapText = async (url: string) => {
     const data = await response.json().catch(() => ({}));
     throw new Error(data.error === 'http' ? `http-${data.status}` : (data.error ?? 'api'));
   }
-  const stream = response.headers.get('content-type')?.includes('gzip') ? response.body!.pipeThrough(new DecompressionStream('gzip')) : response.body!;
+  const stream = response.headers.get('x-sitemap-encoding') === 'gzip' ? response.body!.pipeThrough(new DecompressionStream('gzip')) : response.body!;
   return new Response(stream).text();
 };
 

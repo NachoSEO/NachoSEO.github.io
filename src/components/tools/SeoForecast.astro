@@ -285,6 +285,7 @@ const labelClass = 'text-sm font-semibold';
     type QueryRow,
     type ScenarioRow,
   } from '../../lib/forecast';
+  import { toCsv } from '../../lib/csv';
 
   const tool = document.querySelector<HTMLElement>('[data-forecast-tool]');
   const scenarioBox = document.querySelector<HTMLElement>('[data-result="scenario"]');
@@ -622,12 +623,14 @@ const labelClass = 'text-sm font-semibold';
       link.remove();
       setTimeout(() => URL.revokeObjectURL(url), 1000);
     }
-    const csvCell = (value: string | number) => (typeof value === 'number' ? String(Math.round(value * 100) / 100) : `"${value.replace(/"/g, '""')}"`);
 
     document.querySelector<HTMLButtonElement>('[data-export="scenario"]')!.addEventListener('click', () =>
       download(
         'forecast-escenario.csv',
-        ['query,impressions,clicks,position,new_position,projected_clicks,extra_clicks', ...scenarioRows.map((row) => [row.query, row.impressions, row.clicks, row.position, row.newPosition, row.projectedClicks, row.extraClicks].map(csvCell).join(','))].join('\n')
+        toCsv(
+          ['query', 'impressions', 'clicks', 'position', 'new_position', 'projected_clicks', 'extra_clicks'],
+          scenarioRows.map((row) => [row.query, row.impressions, row.clicks, row.position, row.newPosition, row.projectedClicks, row.extraClicks])
+        )
       )
     );
     document.querySelector<HTMLButtonElement>('[data-export="trend"]')!.addEventListener('click', () => download('forecast-proyeccion.csv', trendCsv));

@@ -105,9 +105,13 @@ export const onRequestGet = async ({ request }: { request: Request }) => {
     },
     cancel: () => reader.cancel(),
   });
+  // Contenido de terceros servido desde este dominio: nunca como XML/HTML que el navegador pueda ejecutar si alguien abre la URL
   return new Response(capped, {
     headers: {
-      'Content-Type': gzip ? 'application/gzip' : 'application/xml; charset=utf-8',
+      'Content-Type': gzip ? 'application/octet-stream' : 'text/plain; charset=utf-8',
+      'Content-Security-Policy': "default-src 'none'; sandbox",
+      'Content-Disposition': 'attachment',
+      'X-Sitemap-Encoding': gzip ? 'gzip' : 'identity',
       'X-Sitemap-Url': currentUrl,
       'Cache-Control': 'no-store',
       'X-Robots-Tag': 'noindex',

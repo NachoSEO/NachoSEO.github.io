@@ -166,11 +166,11 @@ const loading = eager ? 'eager' : 'lazy';
     object-position: top;
   }
   /* La página se apaga un poco para que el popup mande */
-  .scene-view:not(.scene-view--bare)::after {
+  .scene-view:not(.scene-view--bare):not(.scene-view--full)::after {
     content: '';
     position: absolute;
     inset: 0;
-    background: rgb(20 51 63 / 0.08);
+    background: rgb(20 51 63 / 0.14);
     pointer-events: none;
   }
   .scene-popup {
@@ -178,7 +178,7 @@ const loading = eager ? 'eager' : 'lazy';
     z-index: 1;
     top: 0.4rem;
     right: clamp(0.6rem, 2.5%, 1.6rem);
-    width: min(46%, 34rem);
+    width: min(50%, 36rem);
     border-radius: 0.7rem;
     overflow: hidden;
     border: 1px solid rgb(20 51 63 / 0.18);

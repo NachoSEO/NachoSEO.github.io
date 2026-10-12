@@ -36,10 +36,13 @@ export type ExtensionShot =
   | 'enlaces'
   | 'popup-hreflang'
   | 'popup-fanout'
+  | 'popup-resumen-elmundo'
   | 'pagina-blog'
   | 'pagina-elmundo';
 
 export interface ExtensionBlock {
+  /** Ancla de la sección (la usa el índice de funciones) */
+  id?: string;
   title: string;
   /** Párrafos; admiten enlaces como [texto](url) */
   detail: string[];
@@ -47,6 +50,8 @@ export interface ExtensionBlock {
 }
 
 export interface ExtensionLandingCopy {
+  /** Índice de todas las funciones, arriba de la página. `section` = id de la sección donde se explica */
+  overview: { group: string; items: { name: string; detail: string; section?: string }[] }[];
   /** Texto alternativo de la captura de la cabecera (el resumen del popup) */
   heroAlt: string;
   differentiators: ExtensionBlock[];
@@ -60,9 +65,47 @@ const GOOGLE_EXTENDED = 'https://developers.google.com/search/docs/crawling-inde
 
 export const extensionLanding: Record<Lang, ExtensionLandingCopy> = {
   es: {
+    overview: [
+      {
+        group: 'Indexación y rastreo',
+        items: [
+          { name: 'Semáforo de indexabilidad', detail: 'Estado, meta robots, X-Robots-Tag y canonical.', section: 'resumen' },
+          { name: 'Redirecciones salto a salto', detail: 'También JavaScript, meta refresh y HSTS.', section: 'resumen' },
+          { name: 'robots.txt con el parser de Google', detail: 'Con la línea que decide cada bot.', section: 'robots' },
+          { name: 'Icono de dos mitades', detail: 'Indexación y rastreo mientras navegas.', section: 'icono' },
+        ],
+      },
+      {
+        group: 'Bots e IA',
+        items: [
+          { name: 'Bots de IA', detail: 'GPTBot, ClaudeBot, PerplexityBot y el resto.', section: 'robots' },
+          { name: 'Navegar como un bot', detail: 'Con su user-agent o uno tuyo.', section: 'robots' },
+          { name: 'Fan-out de la IA', detail: 'Las búsquedas de ChatGPT, Claude y Perplexity.', section: 'fanout' },
+          { name: 'Con y sin JavaScript', detail: 'Lado a lado y con el diff completo.', section: 'javascript' },
+        ],
+      },
+      {
+        group: 'Contenido y rendimiento',
+        items: [
+          { name: 'Core Web Vitals', detail: 'Con el elemento culpable marcado.', section: 'vitals' },
+          { name: 'Schema legible', detail: 'Cada entidad en árbol, para copiar.', section: 'schema' },
+          { name: 'Metadatos y headings', detail: 'Title, description, Open Graph y H1 a H6.' },
+          { name: 'Enlaces', detail: 'Tabla completa, rel y CSV.', section: 'enlaces' },
+        ],
+      },
+      {
+        group: 'Internacional y SERPs',
+        items: [
+          { name: 'Hreflang con reciprocidad', detail: 'Códigos, x-default y enlaces de vuelta.', section: 'hreflang' },
+          { name: 'Entidades en las SERPs', detail: 'Los kgmid del Knowledge Graph.' },
+          { name: 'Volúmenes en Google y Trends', detail: 'Con tu cuenta de DataForSEO.' },
+        ],
+      },
+    ],
     heroAlt: 'Resumen de la extensión: página indexable, HTTP 200, sin meta robots ni X-Robots-Tag, canonical a sí misma y permitida en robots.txt',
     differentiators: [
       {
+        id: 'robots',
         title: 'robots.txt leído con el parser de Google, línea a línea',
         detail: [
           `La extensión lee el robots.txt con [el parser que Google publica como código abierto](${ROBOTSTXT_REPO}), el de producción de Googlebot, compilado a WebAssembly. Para cada bot te dice si puede rastrear la URL y qué línea lo decide.`,
@@ -78,6 +121,7 @@ export const extensionLanding: Record<Lang, ExtensionLandingCopy> = {
         ],
       },
       {
+        id: 'javascript',
         title: 'La página con JavaScript y sin JavaScript, lado a lado',
         detail: [
           'Muchos bots de IA no ejecutan JavaScript: ven el HTML que sirve el servidor. Un botón abre una pestaña con las dos versiones de la página una al lado de la otra, y otra vista con el diff completo del HTML contra el DOM renderizado.',
@@ -99,6 +143,7 @@ export const extensionLanding: Record<Lang, ExtensionLandingCopy> = {
         ],
       },
       {
+        id: 'fanout',
         title: 'Las búsquedas que lanza la IA antes de responder',
         detail: [
           'Mientras usas Claude o Perplexity, la extensión recoge las búsquedas web que lanza el modelo para responderte (el query fan-out), agrupadas por pregunta, para copiarlas o exportarlas a CSV. Con ChatGPT funciona si tienes la sesión iniciada.',
@@ -113,6 +158,7 @@ export const extensionLanding: Record<Lang, ExtensionLandingCopy> = {
         ],
       },
       {
+        id: 'icono',
         title: 'Un icono que separa indexación y rastreo',
         detail: [
           'El icono de la barra tiene dos mitades. La izquierda es la indexación: roja si hay noindex (en la meta o en la cabecera X-Robots-Tag) o un error, ámbar si la canonical apunta a otra URL. La derecha es el rastreo: roja si el robots.txt bloquea a Googlebot.',
@@ -129,6 +175,7 @@ export const extensionLanding: Record<Lang, ExtensionLandingCopy> = {
     ],
     diagnostics: [
       {
+        id: 'resumen',
         title: 'Indexabilidad y redirecciones en un clic',
         detail: [
           'Código de estado, meta robots, X-Robots-Tag, canonical y robots.txt en una pantalla, con cada redirección salto a salto (también las de JavaScript y meta refresh, y las internas del navegador por HSTS).',
@@ -136,11 +183,13 @@ export const extensionLanding: Record<Lang, ExtensionLandingCopy> = {
         shots: [],
       },
       {
+        id: 'js-aviso',
         title: 'Aviso cuando el JavaScript cambia lo importante',
         detail: ['Compara title, description, canonical, robots, H1, headings, enlaces y palabras entre el HTML del servidor y la página renderizada, y marca lo que cambia.'],
         shots: [{ shot: 'popup-js', alt: 'Pestaña JS vs HTML de elmundo.es: headings, enlaces y palabras distintos entre el HTML del servidor y el renderizado', caption: 'En elmundo.es el JavaScript añade headings, enlaces y texto.' }],
       },
       {
+        id: 'vitals',
         title: 'Core Web Vitals con el culpable marcado',
         detail: [
           'LCP, CLS, INP, FCP y TTFB de tu visita, con las fases del LCP para saber si el problema es el servidor, la carga del recurso o el pintado. Un botón recuadra sobre la página el elemento del LCP, los que se desplazan y la interacción más lenta.',
@@ -152,16 +201,19 @@ export const extensionLanding: Record<Lang, ExtensionLandingCopy> = {
         ],
       },
       {
+        id: 'schema',
         title: 'Schema que se lee',
         detail: ['Cada entidad del JSON-LD como un árbol, con su tipo destacado y un botón para copiarla. Avisa del JSON roto y del schema que solo aparece con JavaScript, y abre la Prueba de resultados enriquecidos con la URL puesta.'],
         shots: [{ shot: 'popup-schema', alt: 'Pestaña Schema con las entidades WebSite y Person en forma de árbol y botones de copiar', caption: 'Cada entidad del @graph en su tarjeta, lista para copiar.' }],
       },
       {
+        id: 'enlaces',
         title: 'Todos los enlaces, adónde apuntan y con qué rel',
         detail: ['Una tabla con todos los enlaces de la página, filtrable por interno o externo y por rel (nofollow, sponsored, ugc), y exportable a CSV. Sobre la propia página, un punto de color en cada enlace según su rel.'],
         shots: [{ shot: 'enlaces', alt: 'Tabla de enlaces de elmundo.es con texto, URL, tipo y rel', caption: 'Los 465 enlaces de la portada de elmundo.es, filtrables y exportables.', wide: true }],
       },
       {
+        id: 'hreflang',
         title: 'Hreflang con reciprocidad',
         detail: ['Valida los códigos, avisa si falta la autorreferencia o el x-default y comprueba que cada versión enlaza de vuelta a las demás.'],
         shots: [{ shot: 'popup-hreflang', alt: 'Pestaña Hreflang con las versiones es, en y x-default, todas con estado 200 y enlace de vuelta', caption: 'Tres versiones, las tres responden 200 y se enlazan entre sí.' }],
@@ -176,9 +228,47 @@ export const extensionLanding: Record<Lang, ExtensionLandingCopy> = {
     changelog: [{ version: '0.1.0', date: '12 de octubre de 2026', notes: 'Primera versión: todo lo de esta página.' }],
   },
   en: {
+    overview: [
+      {
+        group: 'Indexing and crawling',
+        items: [
+          { name: 'Indexability lights', detail: 'Status, meta robots, X-Robots-Tag and canonical.', section: 'resumen' },
+          { name: 'Redirects hop by hop', detail: 'JavaScript, meta refresh and HSTS too.', section: 'resumen' },
+          { name: 'robots.txt with Google’s parser', detail: 'With the line that decides each bot.', section: 'robots' },
+          { name: 'Two-half icon', detail: 'Indexing and crawling as you browse.', section: 'icono' },
+        ],
+      },
+      {
+        group: 'Bots and AI',
+        items: [
+          { name: 'AI bots', detail: 'GPTBot, ClaudeBot, PerplexityBot and the rest.', section: 'robots' },
+          { name: 'Browse as a bot', detail: 'With its user agent or your own.', section: 'robots' },
+          { name: 'AI fan-out', detail: 'The searches ChatGPT, Claude and Perplexity run.', section: 'fanout' },
+          { name: 'With and without JavaScript', detail: 'Side by side and with the full diff.', section: 'javascript' },
+        ],
+      },
+      {
+        group: 'Content and performance',
+        items: [
+          { name: 'Core Web Vitals', detail: 'With the culprit element marked.', section: 'vitals' },
+          { name: 'Readable schema', detail: 'Every entity as a tree, ready to copy.', section: 'schema' },
+          { name: 'Metadata and headings', detail: 'Title, description, Open Graph and H1 to H6.' },
+          { name: 'Links', detail: 'Full table, rel and CSV.', section: 'enlaces' },
+        ],
+      },
+      {
+        group: 'International and SERPs',
+        items: [
+          { name: 'Hreflang with reciprocity', detail: 'Codes, x-default and links back.', section: 'hreflang' },
+          { name: 'Entities in SERPs', detail: 'The Knowledge Graph kgmids.' },
+          { name: 'Volumes in Google and Trends', detail: 'With your DataForSEO account.' },
+        ],
+      },
+    ],
     heroAlt: 'Extension summary: indexable page, HTTP 200, no meta robots or X-Robots-Tag, self-referencing canonical, allowed in robots.txt',
     differentiators: [
       {
+        id: 'robots',
         title: 'robots.txt read with Google’s parser, line by line',
         detail: [
           `The extension reads robots.txt with [the parser Google publishes as open source](${ROBOTSTXT_REPO}), Googlebot’s production code, compiled to WebAssembly. For each bot it tells you whether it can crawl the URL and which line decides it.`,
@@ -194,6 +284,7 @@ export const extensionLanding: Record<Lang, ExtensionLandingCopy> = {
         ],
       },
       {
+        id: 'javascript',
         title: 'The page with and without JavaScript, side by side',
         detail: [
           'Many AI bots don’t run JavaScript: they see the HTML the server sends. One button opens a tab with both versions of the page side by side, and another view with the full diff of the server HTML against the rendered DOM.',
@@ -205,6 +296,7 @@ export const extensionLanding: Record<Lang, ExtensionLandingCopy> = {
         ],
       },
       {
+        id: 'fanout',
         title: 'The searches AI runs before it answers',
         detail: [
           'While you use Claude or Perplexity, the extension collects the web searches the model runs to answer you (the query fan-out), grouped by question, to copy or export to CSV. With ChatGPT it works when you are signed in.',
@@ -219,6 +311,7 @@ export const extensionLanding: Record<Lang, ExtensionLandingCopy> = {
         ],
       },
       {
+        id: 'icono',
         title: 'An icon that splits indexing from crawling',
         detail: [
           'The toolbar icon has two halves. The left one is indexing: red if there is a noindex (in the meta tag or the X-Robots-Tag header) or an error, amber if the canonical points to another URL. The right one is crawling: red if robots.txt blocks Googlebot.',
@@ -229,16 +322,19 @@ export const extensionLanding: Record<Lang, ExtensionLandingCopy> = {
     ],
     diagnostics: [
       {
+        id: 'resumen',
         title: 'Indexability and redirects in one click',
         detail: ['Status code, meta robots, X-Robots-Tag, canonical and robots.txt on one screen, with every redirect hop by hop (JavaScript and meta refresh ones too, and the browser’s internal HSTS redirects).'],
         shots: [],
       },
       {
+        id: 'js-aviso',
         title: 'A warning when JavaScript changes what matters',
         detail: ['Compares title, description, canonical, robots, H1, headings, links and word count between the server HTML and the rendered page, and flags what changes.'],
         shots: [{ shot: 'popup-js', alt: 'JS vs HTML tab on elmundo.es: headings, links and words differ between server HTML and rendered page', caption: 'On elmundo.es, JavaScript adds headings, links and text.' }],
       },
       {
+        id: 'vitals',
         title: 'Core Web Vitals with the culprit marked',
         detail: [
           'LCP, CLS, INP, FCP and TTFB for your visit, with the LCP phases so you know whether the problem is the server, the resource load or the paint. One button boxes the LCP element, the shifting elements and the slowest interaction on the page.',
@@ -250,16 +346,19 @@ export const extensionLanding: Record<Lang, ExtensionLandingCopy> = {
         ],
       },
       {
+        id: 'schema',
         title: 'Schema you can read',
         detail: ['Every JSON-LD entity as a tree, with its type highlighted and a button to copy it. It flags broken JSON and schema that only shows up with JavaScript, and opens the Rich Results Test with the URL filled in.'],
         shots: [{ shot: 'popup-schema', alt: 'Schema tab with the WebSite and Person entities as trees and copy buttons', caption: 'Each @graph entity in its own card, ready to copy.' }],
       },
       {
+        id: 'enlaces',
         title: 'Every link, where it points and its rel',
         detail: ['A table with every link on the page, filterable by internal or external and by rel (nofollow, sponsored, ugc), and exportable to CSV. On the page itself, a colored dot on each link by its rel.'],
         shots: [{ shot: 'enlaces', alt: 'Links table for elmundo.es with text, URL, type and rel', caption: 'The 465 links on the elmundo.es homepage, filterable and exportable.', wide: true }],
       },
       {
+        id: 'hreflang',
         title: 'Hreflang with reciprocity',
         detail: ['Validates the codes, flags a missing self-reference or x-default and checks that every version links back to the others.'],
         shots: [{ shot: 'popup-hreflang', alt: 'Hreflang tab with es, en and x-default versions, all 200 and linking back', caption: 'Three versions, all answer 200 and link to each other.' }],

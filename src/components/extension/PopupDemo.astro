@@ -1,0 +1,211 @@
+---
+/**
+ * Demo interactiva del popup: cabecera y pestañas dibujadas en HTML (como en la extensión) y, en cada panel, la
+ * captura real de esa pestaña sin su cabecera. Se cambia de pestaña con clic o con las flechas. Sin JavaScript se
+ * ve el resumen.
+ */
+import type { ImageMetadata } from 'astro';
+import { Image } from 'astro:assets';
+import type { Lang } from '../../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const es = lang === 'es';
+
+const files = import.meta.glob<{ default: ImageMetadata }>('../../assets/img/extension/*/demo/*.png', { eager: true });
+const body = (key: string) => files[`../../assets/img/extension/${lang}/demo/${key}.png`].default;
+
+const blog = es ? 'https://nachomascort.com/blog/quality-google-core-updates/' : 'https://nachomascort.com/en/blog/google-quality-core-updates/';
+const tabs = [
+  { key: 'resumen', label: es ? 'Resumen' : 'Summary', url: 'https://www.elmundo.es/', alt: es ? 'Resumen de indexabilidad de elmundo.es' : 'Indexability summary for elmundo.es' },
+  { key: 'meta', label: 'Meta', url: 'https://www.elmundo.es/', alt: es ? 'Metadatos de elmundo.es' : 'Metadata for elmundo.es' },
+  { key: 'schema', label: 'Schema', url: blog, alt: es ? 'Entidades JSON-LD en árbol' : 'JSON-LD entities as trees' },
+  { key: 'headings', label: 'Headings', url: blog, alt: es ? 'Estructura de headings anidada' : 'Nested heading outline' },
+  { key: 'links', label: es ? 'Enlaces' : 'Links', url: 'https://www.elmundo.es/', alt: es ? 'Enlaces por tipo y rel' : 'Links by type and rel' },
+  { key: 'render', label: 'JS vs HTML', url: 'https://www.elmundo.es/', alt: es ? 'Comparación del HTML del servidor con el renderizado' : 'Server HTML compared with the rendered page' },
+  { key: 'vitals', label: 'Vitals', url: 'https://www.elmundo.es/', alt: es ? 'Core Web Vitals de la visita' : 'Core Web Vitals of the visit' },
+  { key: 'hreflang', label: 'Hreflang', url: blog, alt: es ? 'Hreflang con reciprocidad comprobada' : 'Hreflang with reciprocity checked' },
+  { key: 'bots', label: 'Bots', url: 'https://www.elmundo.es/', alt: es ? 'robots.txt para cada bot de IA con la línea que decide' : 'robots.txt for each AI bot with the deciding line' },
+  { key: 'fanout', label: 'Fan-out', url: 'https://claude.ai/', alt: es ? 'Búsquedas que lanzó Claude antes de responder' : 'Searches Claude ran before answering' },
+];
+---
+
+<div class="demo" data-demo>
+  <div class="demo-popup">
+    <div class="demo-head">
+      <span class="demo-brand">SEO <span>&amp;</span> GEO Inspector</span>
+      <span class="demo-url" data-demo-url>{tabs[0].url}</span>
+    </div>
+    <div class="demo-tabs" role="tablist" aria-label={es ? 'Pestañas de la extensión' : 'Extension tabs'}>
+      {
+        tabs.map((tab, index) => (
+          <button
+            type="button"
+            role="tab"
+            id={`demo-tab-${tab.key}`}
+            aria-controls={`demo-panel-${tab.key}`}
+            aria-selected={index === 0 ? 'true' : 'false'}
+            tabindex={index === 0 ? undefined : '-1'}
+            data-url={tab.url}
+          >
+            {tab.label}
+          </button>
+        ))
+      }
+    </div>
+    {
+      tabs.map((tab, index) => (
+        <div class="demo-panel" role="tabpanel" id={`demo-panel-${tab.key}`} aria-labelledby={`demo-tab-${tab.key}`} hidden={index > 0} tabindex="0">
+          <Image src={body(tab.key)} alt={tab.alt} width={1280} format="webp" loading={index === 0 ? 'eager' : 'lazy'} fetchpriority={index === 0 ? 'high' : undefined} />
+        </div>
+      ))
+    }
+  </div>
+  <p class="demo-hint">{es ? 'Es la extensión de verdad: pulsa las pestañas.' : 'This is the real extension: click the tabs.'}</p>
+</div>
+
+<script>
+  // Pestañas de la demo: clic, flechas, Inicio y Fin. La URL de la cabecera cambia con la página de cada captura.
+  for (const demo of document.querySelectorAll<HTMLElement>('[data-demo]')) {
+    const tabs = [...demo.querySelectorAll<HTMLButtonElement>('[role="tab"]')];
+    const panels = [...demo.querySelectorAll<HTMLElement>('[role="tabpanel"]')];
+    const url = demo.querySelector<HTMLElement>('[data-demo-url]');
+    const select = (index: number, focus = false) => {
+      tabs.forEach((tab, position) => {
+        const active = position === index;
+        tab.setAttribute('aria-selected', String(active));
+        tab.tabIndex = active ? 0 : -1;
+        panels[position].hidden = !active;
+      });
+      if (url) url.textContent = tabs[index].dataset.url ?? '';
+      if (focus) tabs[index].focus();
+      const strip = tabs[index].parentElement;
+      if (strip) strip.scrollLeft = tabs[index].offsetLeft - strip.clientWidth / 2 + tabs[index].clientWidth / 2;
+    };
+    // Los enlaces «Verlo en la demo» de la página abren su pestaña aquí
+    document.addEventListener('click', (event) => {
+      const link = (event.target as HTMLElement).closest<HTMLAnchorElement>('[data-demo-open]');
+      if (!link) return;
+      const index = tabs.findIndex((tab) => tab.id === `demo-tab-${link.dataset.demoOpen}`);
+      if (index >= 0) select(index);
+    });
+    tabs.forEach((tab, index) => {
+      tab.addEventListener('click', () => select(index));
+      tab.addEventListener('keydown', (event) => {
+        const last = tabs.length - 1;
+        const next = { ArrowRight: index === last ? 0 : index + 1, ArrowLeft: index === 0 ? last : index - 1, Home: 0, End: last }[event.key];
+        if (next === undefined) return;
+        event.preventDefault();
+        select(next, true);
+      });
+    });
+  }
+</script>
+
+<style>
+  .demo {
+    width: 100%;
+    max-width: 34rem;
+    margin-inline: auto;
+  }
+  /* Mismo aspecto que el popup de la extensión: cabecera tinta, pestañas, fondo papel */
+  .demo-popup {
+    border-radius: 0.9rem;
+    overflow: hidden;
+    background: #f4f5f5;
+    border: 1px solid rgb(20 51 63 / 0.16);
+    box-shadow:
+      0 40px 80px -36px rgb(20 51 63 / 0.6),
+      0 12px 24px -16px rgb(20 51 63 / 0.3);
+  }
+  .demo-head {
+    display: flex;
+    align-items: baseline;
+    gap: 0.9rem;
+    padding: 0.85rem 1rem 0.55rem;
+    background: #14333f;
+    color: #fff;
+  }
+  .demo-brand {
+    flex: none;
+    font-weight: 700;
+    font-size: 0.95rem;
+  }
+  .demo-brand span {
+    color: #ff5c86;
+  }
+  .demo-url {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 0.72rem;
+    color: #c9d6da;
+  }
+  .demo-tabs {
+    display: flex;
+    padding: 0 0.4rem;
+    background: #14333f;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .demo-tabs::-webkit-scrollbar {
+    display: none;
+  }
+  .demo-tabs button {
+    flex: none;
+    padding: 0.5rem 0.55rem;
+    border: 0;
+    border-radius: 0.5rem 0.5rem 0 0;
+    background: transparent;
+    color: #c9d6da;
+    font: inherit;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition:
+      background-color 180ms cubic-bezier(0.16, 1, 0.3, 1),
+      color 180ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .demo-tabs button:hover {
+    color: #fff;
+  }
+  .demo-tabs button[aria-selected='true'] {
+    background: #f4f5f5;
+    color: #14333f;
+  }
+  .demo-tabs button:focus-visible {
+    outline: 2px solid #ff5c86;
+    outline-offset: -2px;
+  }
+  /* El panel se desplaza por dentro, como el popup real */
+  .demo-panel {
+    height: min(25rem, 68vh);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: rgb(20 51 63 / 0.25) transparent;
+  }
+  .demo-panel[hidden] {
+    display: none;
+  }
+  .demo-panel:focus-visible {
+    outline: 2px solid var(--tone-accent);
+    outline-offset: -2px;
+  }
+  .demo-panel :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .demo-hint {
+    margin-top: 0.9rem;
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--tone-muted);
+  }
+</style>

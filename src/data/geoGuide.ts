@@ -154,12 +154,19 @@ export const guideParts: GuidePart[] = [
           },
           {
             number: 13,
+            title: 'Comunidades, creadores y webs pequeñas',
+            summary: 'Qué peso tienen las comunidades, los creadores de contenido y las webs pequeñas en lo que cita la IA.',
+            status: 'reservado',
+            author: { name: 'Clara Soteras', slug: 'clara-soteras' },
+          },
+          {
+            number: 14,
             title: 'Enlaces en la era de la IA',
             summary: 'Qué aporta un enlace hoy y qué link building merece la pena.',
             status: 'disponible',
           },
           {
-            number: 14,
+            number: 15,
             title: 'Listas, directorios, reseñas y comunidades',
             summary: 'Las fuentes de terceros que más cita la IA, y lo que es spam.',
             status: 'disponible',
@@ -175,21 +182,21 @@ export const guideParts: GuidePart[] = [
       {
         chapters: [
           {
-            number: 15,
+            number: 16,
             title: 'Medir la visibilidad en IA sin engañarse',
             summary: 'Muestras, ruido y qué mide de verdad una herramienta.',
             status: 'reservado',
             author: { name: 'Esteve Castells', slug: 'esteve-castells' },
           },
           {
-            number: 16,
+            number: 17,
             title: 'Del tráfico de IA al negocio',
             summary: 'Atribución, tráfico oscuro y el CTR con AI Overviews.',
             status: 'reservado',
             author: { name: 'Toni Villaró', slug: 'toni-villaro' },
           },
           {
-            number: 17,
+            number: 18,
             title: 'Experimentos en GEO con grupo de control',
             summary: 'Cómo saber si un cambio funcionó y no fue casualidad.',
             status: 'reservado',

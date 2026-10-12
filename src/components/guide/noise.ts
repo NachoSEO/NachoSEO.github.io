@@ -1,4 +1,4 @@
-/** Ruido de muestreo para el simulador del capítulo 15: semanas medidas con una visibilidad real fija. */
+/** Ruido de muestreo para el simulador del capítulo 16: semanas medidas con una visibilidad real fija. */
 
 /** Generador pseudoaleatorio con semilla, para que el build pinte siempre la misma simulación inicial */
 export const seededRandom = (seed: number) => () => {

@@ -19,6 +19,8 @@ const platforms = [
   { key: 'chatgpt', label: 'ChatGPT' },
   { key: 'aiMode', label: 'Modo IA de Google' },
   { key: 'aio', label: 'AI Overviews' },
+  { key: 'perplexity', label: 'Perplexity' },
+  { key: 'gemini', label: 'Gemini' },
 ] as const;
 const platformRankings = platforms.map((platform) => {
   const rows = [...people]
@@ -60,11 +62,11 @@ const points = people.map((person) => ({
       </div>
       <div>
         <dt>Plataformas</dt>
-        <dd>3</dd>
+        <dd>{Object.keys(study.surfaces).length}</dd>
       </div>
       <div>
-        <dt>Días de datos</dt>
-        <dd>5</dd>
+        <dt>Medido con</dt>
+        <dd>{study.tool}</dd>
       </div>
     </dl>
   )

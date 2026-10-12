@@ -82,7 +82,8 @@ export const guideParts: GuidePart[] = [
             number: 4,
             title: 'Las patentes de AI Mode y AI Overviews, leídas',
             summary: 'Qué dicen, qué está confirmado y qué es inferencia.',
-            status: 'disponible',
+            status: 'reservado',
+            author: { name: 'Juan González Villa', slug: 'juan-gonzalez-villa' },
           },
           {
             number: 5,

@@ -152,6 +152,13 @@ const isCurrent = (item: NavItem) =>
         <span class="sr-only">{t('a11y.menu')}</span>
         <span class="menu-icon" aria-hidden="true"></span>
       </button>
+      <noscript>
+        <!-- Sin JS el botón no hace nada: un enlace al menú lo abre con :target, sin tapar la página hasta pulsarlo -->
+        <a href="#mobile-menu" class="menu-toggle -mr-2 flex h-11 w-11 items-center justify-center rounded-full md:hidden">
+          <span class="sr-only">{t('a11y.menu')}</span>
+          <span class="menu-icon" aria-hidden="true"></span>
+        </a>
+      </noscript>
     </div>
   </div>
 

@@ -53,7 +53,7 @@ export default defineConfig({
     sitemap({
       filter: (page) => {
         const path = new URL(page).pathname;
-        return !redirectTargetsBySource.has(path) && !/^\/(en\/thanks|gracias|contacto\/(gracias|error)|en\/contact\/(thanks|error)|presupuesto\/(gracias|error)|en\/quote\/(thanks|error))\//.test(path);
+        return !redirectTargetsBySource.has(path) && !/^\/(en\/thanks|gracias|contacto\/(gracias|error)|en\/contact\/(thanks|error)|presupuesto\/(gracias|error)|en\/quote\/(thanks|error)|herramientas\/extension-seo-geo\/(bienvenida|desinstalada)|en\/tools\/seo-geo-extension\/(welcome|uninstalled))\//.test(path);
       },
       // Fecha del último commit de los ficheros propios de cada URL (ver src/integrations/sitemap-lastmod.mjs)
       serialize: (item) => {

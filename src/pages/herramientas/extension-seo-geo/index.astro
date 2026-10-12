@@ -1,0 +1,117 @@
+---
+import Base from '../../../layouts/Base.astro';
+import Cta from '../../../components/Cta.astro';
+import FaqAccordion from '../../../components/service/FaqAccordion.astro';
+import { EXTENSION_STORE_URL, extensionFeatures, extensionPaths } from '../../../data/extension';
+
+const paths = extensionPaths.es;
+const path = paths.landing;
+const features = extensionFeatures.es;
+
+const faq = [
+  {
+    question: '¿Es gratis?',
+    answer:
+      'Sí, entera y sin registro. Lo único que puede costarte dinero son los volúmenes de búsqueda, porque salen de tu propia cuenta de DataForSEO: pagas a DataForSEO solo lo que consultas, y la extensión guarda cada volumen 30 días para no repetir consultas.',
+  },
+  {
+    question: '¿Qué datos recoge?',
+    answer:
+      'Ninguno. No tiene cuentas, ni analítica, ni servidor propio: todo se calcula en tu navegador. Si añades tus credenciales de DataForSEO, se guardan solo en tu navegador y las llamadas van directamente de tu equipo a DataForSEO.',
+  },
+  {
+    question: '¿Por qué pide acceso a todas las webs?',
+    answer:
+      'Para registrar las redirecciones y las cabeceras de cada página que visitas (como hace Redirect Path), descargar su robots.txt y su HTML sin renderizar y comprobar los hreflang de las otras versiones. Esas peticiones salen de tu navegador y sus resultados no se envían a ningún sitio.',
+  },
+  {
+    question: '¿En qué se diferencia de otras extensiones de SEO?',
+    answer:
+      'Lee el robots.txt con el parser oficial de Google, comprueba los bots de IA, avisa cuando el JavaScript cambia la indexabilidad y muestra entidades y volúmenes en las SERPs. Además está en español y en inglés.',
+  },
+];
+
+const softwareApplication = {
+  '@type': 'SoftwareApplication',
+  name: 'SEO & GEO Inspector',
+  url: `https://nachomascort.com${path}`,
+  applicationCategory: 'BrowserApplication',
+  operatingSystem: 'Chrome',
+  inLanguage: ['es', 'en'],
+  isAccessibleForFree: true,
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' },
+  author: { '@id': 'https://nachomascort.com/#person' },
+};
+---
+
+<Base
+  lang="es"
+  title="SEO & GEO Inspector: extensión de Chrome gratis para SEO y GEO — Nacho Mascort"
+  description="Extensión de Chrome gratis para SEO y GEO: indexabilidad, redirecciones, robots.txt con el parser de Google, bots de IA, meta, headings, nofollow, JS vs HTML, hreflang, entidades y volúmenes."
+  path={path}
+  alternatePath={extensionPaths.en.landing}
+  breadcrumbs={[
+    { name: 'Inicio', path: '/' },
+    { name: 'Herramientas', path: '/herramientas/' },
+    { name: 'Extensión SEO & GEO Inspector', path },
+  ]}
+  faq={faq}
+  extraSchemaNodes={[softwareApplication]}
+>
+  <div class="mx-auto max-w-5xl px-5 pt-16 sm:px-6 sm:pt-20">
+    <p class="meta"><a href="/herramientas/" class="hover:text-ink">Herramientas</a> · Extensión de Chrome</p>
+    <h1 class="display-1 mt-5">SEO &amp; GEO Inspector</h1>
+    <p class="lede mt-6">
+      Una extensión de Chrome gratis para revisar cualquier página como la ven Google y los buscadores de IA: si es
+      indexable, cómo redirige, qué bloquea su robots.txt, qué cambia el JavaScript y cómo enlaza.
+    </p>
+
+    <div class="mt-10 flex flex-wrap items-center gap-4">
+      {
+        EXTENSION_STORE_URL ? (
+          <a href={EXTENSION_STORE_URL} class="btn" data-umami-event="extension-install">Añadir a Chrome, es gratis</a>
+        ) : (
+          <span class="btn opacity-60" aria-disabled="true">Muy pronto en la Chrome Web Store</span>
+        )
+      }
+      <a href="/herramientas/" class="link-arrow text-[0.95rem]">Mientras tanto, las herramientas web</a>
+    </div>
+    <p class="meta mt-4">Gratis · Sin registro · Sin analítica · Español e inglés</p>
+  </div>
+
+  <section class="mx-auto max-w-5xl px-5 pt-16 sm:px-6 md:pt-20" aria-labelledby="extension-features">
+    <p class="section-label">Qué hace</p>
+    <h2 id="extension-features" class="display-2 mt-3 max-w-[24ch]">Todo lo que miro en una página, en un clic</h2>
+    <div class="mt-10 grid gap-5 md:grid-cols-2">
+      {
+        features.map((feature) => (
+          <div class="card">
+            <h3 class="display-3">{feature.title}</h3>
+            <p class="mt-3 text-[0.95rem]">{feature.detail}</p>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <article class="mx-auto max-w-5xl px-5 pt-16 sm:px-6 md:pt-24">
+    <p class="section-label">Privacidad</p>
+    <div class="article-body mt-4">
+      <h2>Nada sale de tu navegador</h2>
+      <p>
+        La extensión no tiene servidor: las comprobaciones se hacen en tu navegador y no recoge datos de uso. La única
+        excepción la eliges tú: si añades tu cuenta de DataForSEO, las consultas de volumen van de tu navegador a DataForSEO.
+        Los detalles están en la <a href={paths.privacy}>política de privacidad de la extensión</a>.
+      </p>
+      <p>
+        Si prefieres no instalar nada, varias de estas comprobaciones están como herramientas web: el
+        <a href="/herramientas/robots-txt-tester/">tester de robots.txt</a>, el
+        <a href="/herramientas/comprobador-bots/">comprobador de acceso de bots</a> y el
+        <a href="/herramientas/comprobador-redirecciones/">comprobador de redirecciones</a>.
+      </p>
+    </div>
+  </article>
+
+  <FaqAccordion lang="es" faq={faq} />
+  <Cta lang="es" />
+</Base>

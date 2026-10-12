@@ -1,0 +1,117 @@
+---
+import Base from '../../../../layouts/Base.astro';
+import Cta from '../../../../components/Cta.astro';
+import FaqAccordion from '../../../../components/service/FaqAccordion.astro';
+import { EXTENSION_STORE_URL, extensionFeatures, extensionPaths } from '../../../../data/extension';
+
+const paths = extensionPaths.en;
+const path = paths.landing;
+const features = extensionFeatures.en;
+
+const faq = [
+  {
+    question: 'Is it free?',
+    answer:
+      'Yes, all of it, with no sign-up. The only thing that can cost you money is search volumes, because they come from your own DataForSEO account: you pay DataForSEO only for what you query, and the extension caches each volume for 30 days to avoid repeat queries.',
+  },
+  {
+    question: 'What data does it collect?',
+    answer:
+      'None. It has no accounts, no analytics and no server of its own: everything is calculated in your browser. If you add your DataForSEO credentials, they are stored only in your browser and the calls go directly from your computer to DataForSEO.',
+  },
+  {
+    question: 'Why does it ask for access to all websites?',
+    answer:
+      'To record the redirects and headers of each page you visit (as Redirect Path does), download its robots.txt and its unrendered HTML, and check the hreflang of the other versions. Those requests leave your browser and their results are not sent anywhere.',
+  },
+  {
+    question: 'How is it different from other SEO extensions?',
+    answer:
+      'It reads robots.txt with Google\'s official parser, checks AI bots, warns you when JavaScript changes indexability and shows entities and volumes in the SERPs. It is also available in Spanish and English.',
+  },
+];
+
+const softwareApplication = {
+  '@type': 'SoftwareApplication',
+  name: 'SEO & GEO Inspector',
+  url: `https://nachomascort.com${path}`,
+  applicationCategory: 'BrowserApplication',
+  operatingSystem: 'Chrome',
+  inLanguage: ['es', 'en'],
+  isAccessibleForFree: true,
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' },
+  author: { '@id': 'https://nachomascort.com/#person' },
+};
+---
+
+<Base
+  lang="en"
+  title="SEO & GEO Inspector: Free Chrome Extension for SEO and GEO — Nacho Mascort"
+  description="Free Chrome extension for SEO and GEO: indexability, redirects, robots.txt with Google's parser, AI bots, meta, headings, nofollow, JS vs HTML, hreflang, entities and volumes."
+  path={path}
+  alternatePath={extensionPaths.es.landing}
+  breadcrumbs={[
+    { name: 'Home', path: '/en/' },
+    { name: 'Tools', path: '/en/tools/' },
+    { name: 'SEO & GEO Inspector extension', path },
+  ]}
+  faq={faq}
+  extraSchemaNodes={[softwareApplication]}
+>
+  <div class="mx-auto max-w-5xl px-5 pt-16 sm:px-6 sm:pt-20">
+    <p class="meta"><a href="/en/tools/" class="hover:text-ink">Tools</a> · Chrome extension</p>
+    <h1 class="display-1 mt-5">SEO &amp; GEO Inspector</h1>
+    <p class="lede mt-6">
+      A free Chrome extension to review any page the way Google and AI search engines see it: whether it is indexable,
+      how it redirects, what its robots.txt blocks, what JavaScript changes and how it links.
+    </p>
+
+    <div class="mt-10 flex flex-wrap items-center gap-4">
+      {
+        EXTENSION_STORE_URL ? (
+          <a href={EXTENSION_STORE_URL} class="btn" data-umami-event="extension-install">Add to Chrome, it's free</a>
+        ) : (
+          <span class="btn opacity-60" aria-disabled="true">Coming soon to the Chrome Web Store</span>
+        )
+      }
+      <a href="/en/tools/" class="link-arrow text-[0.95rem]">Meanwhile, the web tools</a>
+    </div>
+    <p class="meta mt-4">Free · No sign-up · No analytics · Spanish and English</p>
+  </div>
+
+  <section class="mx-auto max-w-5xl px-5 pt-16 sm:px-6 md:pt-20" aria-labelledby="extension-features">
+    <p class="section-label">What it does</p>
+    <h2 id="extension-features" class="display-2 mt-3 max-w-[24ch]">Everything I check on a page, in one click</h2>
+    <div class="mt-10 grid gap-5 md:grid-cols-2">
+      {
+        features.map((feature) => (
+          <div class="card">
+            <h3 class="display-3">{feature.title}</h3>
+            <p class="mt-3 text-[0.95rem]">{feature.detail}</p>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <article class="mx-auto max-w-5xl px-5 pt-16 sm:px-6 md:pt-24">
+    <p class="section-label">Privacy</p>
+    <div class="article-body mt-4">
+      <h2>Nothing leaves your browser</h2>
+      <p>
+        The extension has no server: checks run in your browser and it collects no usage data. The only exception is your
+        choice: if you add your DataForSEO account, volume queries go from your browser to DataForSEO. The details are in
+        the <a href={paths.privacy}>extension's privacy policy</a>.
+      </p>
+      <p>
+        If you prefer not to install anything, several of these checks are available as web tools: the
+        <a href="/en/tools/robots-txt-tester/">robots.txt tester</a>, the
+        <a href="/en/tools/bot-access-checker/">bot access checker</a> and the
+        <a href="/en/tools/redirect-checker/">redirect checker</a>.
+      </p>
+    </div>
+  </article>
+
+  <FaqAccordion lang="en" faq={faq} />
+  <Cta lang="en" />
+</Base>

@@ -1,0 +1,81 @@
+---
+import Base from '../../../layouts/Base.astro';
+import { extensionPaths } from '../../../data/extension';
+
+const paths = extensionPaths.es;
+---
+
+<Base
+  lang="es"
+  title="Privacidad de la extensión SEO & GEO Inspector — Nacho Mascort"
+  description="Qué datos usa la extensión de Chrome SEO & GEO Inspector, dónde se guardan y qué permisos pide."
+  path={paths.privacy}
+  alternatePath={extensionPaths.en.privacy}
+  breadcrumbs={[
+    { name: 'Inicio', path: '/' },
+    { name: 'Herramientas', path: '/herramientas/' },
+    { name: 'Extensión SEO & GEO Inspector', path: paths.landing },
+    { name: 'Privacidad', path: paths.privacy },
+  ]}
+>
+  <article class="mx-auto max-w-3xl px-5 pt-16 sm:px-6 sm:pt-20">
+    <p class="meta"><a href={paths.landing} class="hover:text-ink">SEO &amp; GEO Inspector</a> · Privacidad</p>
+    <h1 class="display-1 mt-5">Privacidad de la extensión</h1>
+    <p class="lede mt-6">Versión corta: la extensión no recoge ni envía tus datos a ningún servidor mío.</p>
+
+    <div class="article-body mt-10">
+      <h2>Qué datos usa y dónde se quedan</h2>
+      <ul>
+        <li>
+          <strong>Las páginas que visitas.</strong> Para mostrar el código de estado y las redirecciones, la extensión lee
+          las cabeceras de la página principal de cada pestaña. Esa información se guarda en la memoria de la sesión de
+          Chrome y se borra al cerrar la pestaña.
+        </li>
+        <li>
+          <strong>El contenido de la página que analizas.</strong> Solo cuando abres la extensión: headings, metadatos,
+          enlaces y HTML se procesan en tu navegador y no se envían a ningún sitio.
+        </li>
+        <li>
+          <strong>Tus credenciales de DataForSEO, si las añades.</strong> Se guardan en el almacenamiento local de Chrome, en
+          tu equipo. Se usan solo para pedir volúmenes a DataForSEO desde tu navegador. Los volúmenes se guardan 30 días en
+          tu equipo para no repetir consultas.
+        </li>
+      </ul>
+
+      <h2>Peticiones que hace la extensión</h2>
+      <p>
+        Todas salen de tu navegador, con tu conexión, y sus resultados se quedan en tu equipo: el robots.txt y el HTML sin
+        renderizar de la página que analizas, las otras versiones de idioma para comprobar los hreflang y, si lo has
+        configurado, la API de DataForSEO.
+      </p>
+
+      <h2>Lo que no hace</h2>
+      <ul>
+        <li>No tiene analítica, ni cookies, ni identificadores de usuario.</li>
+        <li>No vende ni comparte datos con nadie.</li>
+        <li>No ejecuta código descargado de internet: todo el código va dentro de la extensión.</li>
+      </ul>
+
+      <h2>Permisos</h2>
+      <ul>
+        <li><strong>Acceso a las webs</strong>: leer las cabeceras y redirecciones y descargar robots.txt, HTML y hreflang.</li>
+        <li><strong>Pestaña activa y scripting</strong>: leer la página que analizas cuando abres la extensión.</li>
+        <li><strong>Peticiones web y navegación</strong>: registrar las redirecciones de la página principal.</li>
+        <li><strong>Configuración de contenido</strong>: desactivar el JavaScript de una web cuando lo pides en JS vs HTML.</li>
+        <li><strong>Almacenamiento</strong>: guardar tus ajustes y la caché de volúmenes en tu equipo.</li>
+      </ul>
+
+      <h2>Al desinstalarla</h2>
+      <p>
+        Chrome borra todo lo que la extensión guardaba en tu equipo y abre una página donde puedes contarme, si quieres,
+        por qué la quitas. Ese formulario es opcional y me llega por email.
+      </p>
+
+      <h2>Contacto</h2>
+      <p>
+        Responsable: Nacho Mascort, <a href="mailto:hola@nachomascort.com">hola@nachomascort.com</a>. Para la web, sigue
+        valiendo la <a href="/privacidad/">política de privacidad general</a>.
+      </p>
+    </div>
+  </article>
+</Base>

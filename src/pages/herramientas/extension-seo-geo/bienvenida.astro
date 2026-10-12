@@ -1,0 +1,73 @@
+---
+import Base from '../../../layouts/Base.astro';
+import { extensionPaths } from '../../../data/extension';
+
+const paths = extensionPaths.es;
+
+const steps = [
+  {
+    title: 'Fíjala en la barra',
+    detail: 'Pulsa el icono del puzle, arriba a la derecha de Chrome, y la chincheta junto a SEO & GEO Inspector. Así ves el código de estado de cada página sin abrir nada.',
+  },
+  {
+    title: 'Abre cualquier web y pulsa el icono',
+    detail: 'El resumen te dice si la página es indexable y por qué, con las redirecciones que ha hecho hasta llegar. Las pestañas de arriba llevan al detalle: meta, headings, enlaces, JS vs HTML, hreflang y bots de IA.',
+  },
+  {
+    title: 'Opcional: añade tu cuenta de DataForSEO',
+    detail: 'En Ajustes. Con ella verás el volumen y el CPC de las búsquedas en Google y en Google Trends. Sin ella, todo lo demás funciona igual.',
+  },
+];
+
+const tips = [
+  'En la pestaña Enlaces, activa los puntos de colores para ver sobre la página qué enlaces son nofollow, sponsored o ugc.',
+  'En JS vs HTML puedes recargar la web con el JavaScript desactivado y volver a activarlo con un clic.',
+  'En las búsquedas de Google, el recuadro de la extensión muestra las entidades del Knowledge Graph que aparecen en los resultados.',
+];
+---
+
+<Base
+  lang="es"
+  title="Ya tienes SEO & GEO Inspector — Nacho Mascort"
+  description="Primeros pasos con la extensión de Chrome SEO & GEO Inspector."
+  path={paths.welcome}
+  alternatePath={extensionPaths.en.welcome}
+  noindex
+>
+  <div class="mx-auto max-w-3xl px-5 pt-16 sm:px-6 sm:pt-20">
+    <p class="meta"><a href={paths.landing} class="hover:text-ink">SEO &amp; GEO Inspector</a></p>
+    <h1 class="display-1 mt-5">Ya la tienes instalada</h1>
+    <p class="lede mt-6">Tres pasos para sacarle partido desde la primera página que abras.</p>
+
+    <ol class="mt-10 space-y-5">
+      {
+        steps.map((step, index) => (
+          <li class="card flex gap-5">
+            <span class="display-2 text-accent-ink" aria-hidden="true">{index + 1}</span>
+            <div>
+              <h2 class="display-3">{step.title}</h2>
+              <p class="mt-2 text-[0.95rem]">{step.detail}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+
+    <h2 class="display-3 mt-14">Tres trucos</h2>
+    <ul class="mt-4 list-disc space-y-2 pl-5 text-[0.95rem]">
+      {tips.map((tip) => <li>{tip}</li>)}
+    </ul>
+
+    <div class="article-body mt-14">
+      <h2>Tu privacidad</h2>
+      <p>
+        La extensión no tiene servidor ni recoge datos de uso: todo se calcula en tu navegador. Lo tienes explicado en la
+        <a href={paths.privacy}>política de privacidad</a>.
+      </p>
+      <p>
+        ¿Echas algo en falta o algo no funciona? Escríbeme a <a href="mailto:hola@nachomascort.com">hola@nachomascort.com</a>.
+        Y si te sirve, una valoración en la Chrome Web Store me ayuda mucho a que la encuentren otras personas.
+      </p>
+    </div>
+  </div>
+</Base>

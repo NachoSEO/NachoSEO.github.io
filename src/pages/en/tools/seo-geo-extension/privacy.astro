@@ -1,0 +1,81 @@
+---
+import Base from '../../../../layouts/Base.astro';
+import { extensionPaths } from '../../../../data/extension';
+
+const paths = extensionPaths.en;
+---
+
+<Base
+  lang="en"
+  title="SEO & GEO Inspector Extension Privacy — Nacho Mascort"
+  description="What data the SEO & GEO Inspector Chrome extension uses, where it is stored and what permissions it asks for."
+  path={paths.privacy}
+  alternatePath={extensionPaths.es.privacy}
+  breadcrumbs={[
+    { name: 'Home', path: '/en/' },
+    { name: 'Tools', path: '/en/tools/' },
+    { name: 'SEO & GEO Inspector extension', path: paths.landing },
+    { name: 'Privacy', path: paths.privacy },
+  ]}
+>
+  <article class="mx-auto max-w-3xl px-5 pt-16 sm:px-6 sm:pt-20">
+    <p class="meta"><a href={paths.landing} class="hover:text-ink">SEO &amp; GEO Inspector</a> · Privacy</p>
+    <h1 class="display-1 mt-5">Extension privacy</h1>
+    <p class="lede mt-6">Short version: the extension does not collect or send your data to any server of mine.</p>
+
+    <div class="article-body mt-10">
+      <h2>What data it uses and where it stays</h2>
+      <ul>
+        <li>
+          <strong>The pages you visit.</strong> To show the status code and redirects, the extension reads the headers of
+          the main page of each tab. That information is kept in Chrome's session memory and is deleted when you close the
+          tab.
+        </li>
+        <li>
+          <strong>The content of the page you analyze.</strong> Only when you open the extension: headings, metadata, links
+          and HTML are processed in your browser and are not sent anywhere.
+        </li>
+        <li>
+          <strong>Your DataForSEO credentials, if you add them.</strong> They are stored in Chrome's local storage, on your
+          computer. They are used only to request volumes from DataForSEO from your browser. Volumes are cached for 30 days
+          on your computer to avoid repeat queries.
+        </li>
+      </ul>
+
+      <h2>Requests the extension makes</h2>
+      <p>
+        All of them leave your browser, over your connection, and their results stay on your computer: the robots.txt and
+        the unrendered HTML of the page you analyze, the other language versions to check hreflang and, if you have set it
+        up, the DataForSEO API.
+      </p>
+
+      <h2>What it doesn't do</h2>
+      <ul>
+        <li>It has no analytics, no cookies and no user identifiers.</li>
+        <li>It doesn't sell or share data with anyone.</li>
+        <li>It doesn't run code downloaded from the internet: all the code ships inside the extension.</li>
+      </ul>
+
+      <h2>Permissions</h2>
+      <ul>
+        <li><strong>Access to websites</strong>: read headers and redirects and download robots.txt, HTML and hreflang.</li>
+        <li><strong>Active tab and scripting</strong>: read the page you analyze when you open the extension.</li>
+        <li><strong>Web requests and navigation</strong>: record the main page's redirects.</li>
+        <li><strong>Content settings</strong>: disable a site's JavaScript when you ask for it in JS vs HTML.</li>
+        <li><strong>Storage</strong>: save your settings and the volume cache on your computer.</li>
+      </ul>
+
+      <h2>When you uninstall it</h2>
+      <p>
+        Chrome deletes everything the extension stored on your computer and opens a page where you can tell me, if you
+        want, why you are removing it. That form is optional and reaches me by email.
+      </p>
+
+      <h2>Contact</h2>
+      <p>
+        Data controller: Nacho Mascort, <a href="mailto:hola@nachomascort.com">hola@nachomascort.com</a>. For the website,
+        the <a href="/en/privacy/">general privacy policy</a> still applies.
+      </p>
+    </div>
+  </article>
+</Base>

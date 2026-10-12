@@ -13,6 +13,22 @@ interface ToolCopy {
 export const tools: Record<Lang, ToolCopy>[] = [
   {
     es: {
+      href: '/herramientas/extension-seo-geo/',
+      title: 'Extensión de Chrome SEO & GEO Inspector',
+      tagline: 'Indexabilidad, redirecciones, robots.txt con el parser de Google, bots de IA y mucho más, en un clic.',
+      detail: 'Meta, headings, nofollow, JS vs HTML, hreflang con reciprocidad, entidades y volúmenes en las SERPs.',
+      summary: 'extensión de Chrome gratis para SEO y GEO: indexabilidad, redirecciones, robots.txt con el parser oficial de Google, bots de IA, meta, headings, enlaces, JS vs HTML, hreflang, entidades y volúmenes.',
+    },
+    en: {
+      href: '/en/tools/seo-geo-extension/',
+      title: 'SEO & GEO Inspector Chrome extension',
+      tagline: 'Indexability, redirects, robots.txt with Google’s parser, AI bots and more, in one click.',
+      detail: 'Meta, headings, nofollow, JS vs HTML, hreflang with reciprocity, entities and volumes in SERPs.',
+      summary: 'free Chrome extension for SEO and GEO: indexability, redirects, robots.txt with Google’s official parser, AI bots, meta, headings, links, JS vs HTML, hreflang, entities and volumes.',
+    },
+  },
+  {
+    es: {
       href: '/herramientas/calculadora-valor-sesion-seo/',
       title: 'Calculadora del valor de una sesión orgánica',
       tagline: 'Cuánto deja cada visita de Google según tu modelo de negocio: ventas, leads o publicidad.',

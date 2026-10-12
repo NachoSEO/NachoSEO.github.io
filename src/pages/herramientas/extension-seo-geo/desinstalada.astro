@@ -1,0 +1,82 @@
+---
+import Base from '../../../layouts/Base.astro';
+import Turnstile from '../../../components/Turnstile.astro';
+import { EXTENSION_STORE_URL, extensionPaths, uninstallReasons } from '../../../data/extension';
+
+const paths = extensionPaths.es;
+const reasons = uninstallReasons.es;
+---
+
+<Base
+  lang="es"
+  title="Has desinstalado SEO & GEO Inspector — Nacho Mascort"
+  description="Cuéntame por qué has desinstalado la extensión SEO & GEO Inspector."
+  path={paths.uninstalled}
+  alternatePath={extensionPaths.en.uninstalled}
+  noindex
+>
+  <div class="mx-auto max-w-2xl px-5 pt-16 sm:px-6 sm:pt-20">
+    <p class="meta"><a href={paths.landing} class="hover:text-ink">SEO &amp; GEO Inspector</a></p>
+    <h1 class="display-1 mt-5">Has desinstalado la extensión</h1>
+
+    <div data-sent hidden>
+      <p class="lede mt-6">Gracias por contármelo. Lo leo todo y me sirve para decidir qué mejorar.</p>
+    </div>
+
+    <div data-ask>
+      <p class="lede mt-6">¿Me dices por qué? Son diez segundos y me ayuda a mejorarla.</p>
+      <form action="/api/extension-feedback" method="post" class="card mt-8 sm:p-8">
+        <input type="hidden" name="lang" value="es" />
+        <input type="hidden" name="version" value="" data-version />
+        <div class="sr-only" aria-hidden="true">
+          <label for="feedback-website">Website</label>
+          <input type="text" id="feedback-website" name="website" tabindex="-1" autocomplete="off" />
+        </div>
+        <fieldset>
+          <legend class="text-sm font-semibold">Motivo</legend>
+          <div class="mt-3 space-y-2 text-[0.95rem]">
+            {
+              reasons.map((reason) => (
+                <label class="flex cursor-pointer items-center gap-3">
+                  <input type="radio" name="reason" value={reason.value} required class="h-4 w-4 accent-[var(--tone-accent)]" />
+                  {reason.label}
+                </label>
+              ))
+            }
+          </div>
+        </fieldset>
+        <label for="feedback-comment" class="mt-6 block text-sm font-semibold">¿Qué le faltaba o qué fallaba? (opcional)</label>
+        <textarea
+          id="feedback-comment"
+          name="comment"
+          rows="4"
+          maxlength="2000"
+          class="mt-2 w-full rounded-lg border border-line bg-paper px-4 py-3 text-[0.95rem] text-ink transition-colors focus:border-ink"
+        ></textarea>
+        <div class="mt-5"><Turnstile lang="es" /></div>
+        <button type="submit" class="btn mt-5">Enviar</button>
+        <p class="mt-3 text-sm text-muted" data-error hidden>No se ha podido enviar. Prueba otra vez en un momento.</p>
+      </form>
+    </div>
+
+    {
+      EXTENSION_STORE_URL && (
+        <p class="mt-8 text-[0.95rem]">
+          ¿La has quitado sin querer? <a href={EXTENSION_STORE_URL}>Vuelve a instalarla</a>.
+        </p>
+      )
+    }
+  </div>
+</Base>
+
+<script>
+  // Chrome abre esta página con ?v=<versión> (setUninstallURL); tras enviar, el endpoint vuelve con ?enviado=1
+  const params = new URLSearchParams(location.search);
+  const version = document.querySelector<HTMLInputElement>('[data-version]');
+  if (version) version.value = (params.get('v') ?? '').slice(0, 20);
+  if (params.get('enviado') === '1') {
+    document.querySelector<HTMLElement>('[data-sent]')!.hidden = false;
+    document.querySelector<HTMLElement>('[data-ask]')!.hidden = true;
+  }
+  if (params.get('error')) document.querySelector<HTMLElement>('[data-error]')!.hidden = false;
+</script>

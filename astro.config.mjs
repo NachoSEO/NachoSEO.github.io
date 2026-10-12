@@ -5,6 +5,9 @@ import sitemap from '@astrojs/sitemap';
 import { writeFile } from 'node:fs/promises';
 import tailwindcss from '@tailwindcss/vite';
 import ogImages from './src/integrations/og-images.mjs';
+import { createLastmod } from './src/integrations/sitemap-lastmod.mjs';
+
+const lastmod = createLastmod();
 
 /** Rutas antiguas del Hexo de 2023 → destinos nuevos. Fuente única: genera el _redirects de Cloudflare Pages (301 reales)
     y los stubs meta-refresh de respaldo, que quedan fuera del sitemap. */
@@ -51,6 +54,11 @@ export default defineConfig({
       filter: (page) => {
         const path = new URL(page).pathname;
         return !redirectTargetsBySource.has(path) && !/^\/(en\/thanks|gracias|contacto\/(gracias|error)|en\/contact\/(thanks|error)|presupuesto\/(gracias|error)|en\/quote\/(thanks|error))\//.test(path);
+      },
+      // Fecha del último commit de los ficheros propios de cada URL (ver src/integrations/sitemap-lastmod.mjs)
+      serialize: (item) => {
+        const date = lastmod(item.url);
+        return date ? { ...item, lastmod: date } : item;
       },
     }),
     cloudflareRedirects,

@@ -46,6 +46,10 @@ export const extensionFeatures: Record<Lang, { title: string; detail: string }[]
       detail: 'Title y description con su longitud, canonical, robots, Open Graph, Twitter, idioma y tipos de schema.',
     },
     {
+      title: 'Schema legible',
+      detail: 'Cada entidad del JSON-LD como un árbol que se lee de un vistazo, con botón de copiar, aviso de JSON roto y de schema que solo aparece con JavaScript.',
+    },
+    {
       title: 'Headings anidados',
       detail: 'La estructura de H1 a H6 con sangría, con avisos de saltos de nivel, encabezados vacíos y ocultos.',
     },
@@ -98,6 +102,10 @@ export const extensionFeatures: Record<Lang, { title: string; detail: string }[]
     {
       title: 'Full metadata',
       detail: 'Title and description with their length, canonical, robots, Open Graph, Twitter, language and schema types.',
+    },
+    {
+      title: 'Readable schema',
+      detail: 'Every JSON-LD entity as a tree you can read at a glance, with a copy button and warnings for broken JSON and schema that only shows up with JavaScript.',
     },
     {
       title: 'Nested headings',

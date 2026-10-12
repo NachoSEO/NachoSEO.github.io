@@ -98,6 +98,7 @@ export const extensionLanding: Record<Lang, ExtensionLandingCopy> = {
         items: [
           { name: 'Hreflang con reciprocidad', detail: 'Códigos, x-default y enlaces de vuelta.', section: 'hreflang' },
           { name: 'Entidades en las SERPs', detail: 'Los kgmid del Knowledge Graph.' },
+          { name: 'Entidades del top 10', detail: 'Qué tratan los 10 primeros resultados.' },
           { name: 'Volúmenes en Google y Trends', detail: 'Con tu cuenta de DataForSEO.' },
         ],
       },
@@ -261,6 +262,7 @@ export const extensionLanding: Record<Lang, ExtensionLandingCopy> = {
         items: [
           { name: 'Hreflang with reciprocity', detail: 'Codes, x-default and links back.', section: 'hreflang' },
           { name: 'Entities in SERPs', detail: 'The Knowledge Graph kgmids.' },
+          { name: 'Top 10 entities', detail: 'What the top 10 results cover.' },
           { name: 'Volumes in Google and Trends', detail: 'With your DataForSEO account.' },
         ],
       },

@@ -45,6 +45,11 @@ const paths = extensionPaths.en;
           computer.
         </li>
         <li>
+          <strong>Your Google Natural Language API key, if you add it.</strong> It is stored in Chrome's local storage, on your
+          computer. When you ask for the top 10 entities on a Google search, the extension downloads those results from your
+          browser and sends their text to Google's API with your key. At most 100 pages a day.
+        </li>
+        <li>
           <strong>AI assistant searches (fan-out).</strong> On ChatGPT, Perplexity and Claude, the extension reads the
           responses your browser already receives to extract the web searches the model runs and your question. They are kept
           in Chrome's session memory, for that tab only, and cleared when you close it. They are not sent anywhere.

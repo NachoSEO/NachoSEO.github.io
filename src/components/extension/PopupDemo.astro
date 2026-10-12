@@ -34,6 +34,10 @@ const tabs = [
 ---
 
 <div class="demo" data-demo>
+  <p class="demo-hint" data-demo-hint>
+    <span class="demo-pulse" aria-hidden="true"></span>
+    {es ? 'Demo interactiva: pulsa cualquier pestaña' : 'Interactive demo: click any tab'}
+  </p>
   <div class="demo-popup">
     <div class="demo-head">
       <span class="demo-brand">SEO <span>&amp;</span> GEO Inspector</span>
@@ -64,7 +68,7 @@ const tabs = [
       ))
     }
   </div>
-  <p class="demo-hint">{es ? 'Es la extensión de verdad: pulsa las pestañas.' : 'This is the real extension: click the tabs.'}</p>
+  <p class="demo-note">{es ? 'Capturas reales de la extensión en elmundo.es, nachomascort.com y claude.ai.' : 'Real captures of the extension on elmundo.es, nachomascort.com and claude.ai.'}</p>
 </div>
 
 <script>
@@ -82,8 +86,7 @@ const tabs = [
       });
       if (url) url.textContent = tabs[index].dataset.url ?? '';
       if (focus) tabs[index].focus();
-      const strip = tabs[index].parentElement;
-      if (strip) strip.scrollLeft = tabs[index].offsetLeft - strip.clientWidth / 2 + tabs[index].clientWidth / 2;
+      if (index !== 0) demo.classList.add('is-used');
     };
     // Los enlaces «Verlo en la demo» de la página abren su pestaña aquí
     document.addEventListener('click', (event) => {
@@ -146,23 +149,21 @@ const tabs = [
     font-size: 0.72rem;
     color: #c9d6da;
   }
+  /* Todas las pestañas a la vista, en dos líneas: nada se desplaza al pulsar */
   .demo-tabs {
     display: flex;
-    padding: 0 0.4rem;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    padding: 0.2rem 0.75rem 0.75rem;
     background: #14333f;
-    overflow-x: auto;
-    scrollbar-width: none;
-  }
-  .demo-tabs::-webkit-scrollbar {
-    display: none;
   }
   .demo-tabs button {
     flex: none;
-    padding: 0.5rem 0.55rem;
-    border: 0;
-    border-radius: 0.5rem 0.5rem 0 0;
-    background: transparent;
-    color: #c9d6da;
+    padding: 0.38rem 0.7rem;
+    border: 1px solid rgb(255 255 255 / 0.16);
+    border-radius: 999px;
+    background: rgb(255 255 255 / 0.06);
+    color: #dbe5e8;
     font: inherit;
     font-size: 0.8rem;
     font-weight: 600;
@@ -173,14 +174,17 @@ const tabs = [
   }
   .demo-tabs button:hover {
     color: #fff;
+    background: rgb(255 255 255 / 0.14);
+    border-color: rgb(255 255 255 / 0.32);
   }
   .demo-tabs button[aria-selected='true'] {
     background: #f4f5f5;
+    border-color: #f4f5f5;
     color: #14333f;
   }
   .demo-tabs button:focus-visible {
     outline: 2px solid #ff5c86;
-    outline-offset: -2px;
+    outline-offset: 2px;
   }
   /* El panel se desplaza por dentro, como el popup real */
   .demo-panel {
@@ -193,6 +197,11 @@ const tabs = [
   .demo-panel[hidden] {
     display: none;
   }
+  @media (max-width: 640px) {
+    .demo-panel {
+      height: 18rem;
+    }
+  }
   .demo-panel:focus-visible {
     outline: 2px solid var(--tone-accent);
     outline-offset: -2px;
@@ -202,10 +211,56 @@ const tabs = [
     width: 100%;
     height: auto;
   }
+  /* Invitación a pulsar: un punto que late hasta la primera interacción */
   .demo-hint {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--tone-ink);
+  }
+  .demo-pulse {
+    position: relative;
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 50%;
+    background: var(--tone-accent);
+  }
+  .demo-pulse::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: var(--tone-accent);
+    animation: demo-pulse 1.8s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+  }
+  .demo.is-used .demo-pulse::after {
+    animation: none;
+    opacity: 0;
+  }
+  @keyframes demo-pulse {
+    from {
+      transform: scale(1);
+      opacity: 0.55;
+    }
+    to {
+      transform: scale(3.2);
+      opacity: 0;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .demo-pulse::after {
+      animation: none;
+      opacity: 0;
+    }
+  }
+  .demo-note {
     margin-top: 0.9rem;
     text-align: center;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     color: var(--tone-muted);
   }
 </style>

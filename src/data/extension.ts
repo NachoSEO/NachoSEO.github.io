@@ -51,7 +51,7 @@ export const extensionFeatures: Record<Lang, { title: string; detail: string }[]
     },
     {
       title: 'Enlaces nofollow, sponsored y ugc',
-      detail: 'Un punto de color sobre cada enlace según su rel y una tabla con todos los enlaces de la página, con su código y adónde redirigen.',
+      detail: 'Un punto de color sobre cada enlace según su rel y una tabla con todos los enlaces de la página y adónde apunta cada uno, para filtrar y exportar.',
     },
     {
       title: 'Con JavaScript y sin JavaScript',
@@ -105,7 +105,7 @@ export const extensionFeatures: Record<Lang, { title: string; detail: string }[]
     },
     {
       title: 'Nofollow, sponsored and ugc links',
-      detail: 'A colored dot on every link by its rel, and a table with every link on the page, its status code and where it redirects.',
+      detail: 'A colored dot on every link by its rel, and a table with every link on the page and where each one points, to filter and export.',
     },
     {
       title: 'With and without JavaScript',

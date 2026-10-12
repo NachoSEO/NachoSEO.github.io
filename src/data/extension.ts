@@ -34,7 +34,10 @@ export type ExtensionShot =
   | 'vitals-pagina'
   | 'popup-schema'
   | 'enlaces'
-  | 'popup-hreflang';
+  | 'popup-hreflang'
+  | 'popup-fanout'
+  | 'pagina-blog'
+  | 'pagina-elmundo';
 
 export interface ExtensionBlock {
   title: string;
@@ -92,6 +95,20 @@ export const extensionLanding: Record<Lang, ExtensionLandingCopy> = {
             alt: 'Resumen y diff de código de elmundo.es: enlaces y headings que solo existen con JavaScript',
             caption: 'El diff marca en verde lo que añade el JavaScript y en rojo lo que quita, con el resumen de enlaces y headings arriba.',
             wide: true,
+          },
+        ],
+      },
+      {
+        title: 'Las búsquedas que lanza la IA antes de responder',
+        detail: [
+          'Mientras usas Claude o Perplexity, la extensión recoge las búsquedas web que lanza el modelo para responderte (el query fan-out), agrupadas por pregunta, para copiarlas o exportarlas a CSV. Con ChatGPT funciona si tienes la sesión iniciada.',
+          'Se leen de las respuestas que ya recibe tu navegador: no se envía nada a ningún sitio. Gemini y AI Mode de Google no muestran sus búsquedas, así que no se pueden capturar.',
+        ],
+        shots: [
+          {
+            shot: 'popup-fanout',
+            alt: 'Pestaña Fan-out con las dos búsquedas web que lanzó Claude para responder qué consultores de GEO recomienda en España',
+            caption: 'Las dos búsquedas reales que lanzó Claude el 12 de octubre de 2026 para responder «¿Qué consultores de GEO recomiendas en España?».',
           },
         ],
       },
@@ -185,6 +202,20 @@ export const extensionLanding: Record<Lang, ExtensionLandingCopy> = {
         shots: [
           { shot: 'comparar-vista', alt: 'elmundo.es with JavaScript on the left and without JavaScript on the right', caption: 'Without JavaScript, elmundo.es loses its games and paywall: that is what a bot that doesn’t render sees.', wide: true },
           { shot: 'comparar-codigo', alt: 'Summary and code diff for elmundo.es: links and headings that only exist with JavaScript', caption: 'The diff marks what JavaScript adds in green and what it removes in red, with links and headings summarized on top.', wide: true },
+        ],
+      },
+      {
+        title: 'The searches AI runs before it answers',
+        detail: [
+          'While you use Claude or Perplexity, the extension collects the web searches the model runs to answer you (the query fan-out), grouped by question, to copy or export to CSV. With ChatGPT it works when you are signed in.',
+          'They are read from the responses your browser already receives: nothing is sent anywhere. Gemini and Google AI Mode don’t show their searches, so they can’t be captured.',
+        ],
+        shots: [
+          {
+            shot: 'popup-fanout',
+            alt: 'Fan-out tab with the two web searches Claude ran to answer which GEO consultants it recommends in Spain',
+            caption: 'The two real searches Claude ran on October 12, 2026 to answer “Which GEO consultants do you recommend in Spain?”.',
+          },
         ],
       },
       {

@@ -8,6 +8,7 @@ import { getImage, Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import Cta from '../Cta.astro';
 import AuthorByline from '../AuthorByline.astro';
+import BrowserScene from './BrowserScene.astro';
 import FaqAccordion from '../service/FaqAccordion.astro';
 import type { Lang } from '../../i18n/ui';
 import {
@@ -49,7 +50,7 @@ const t = es
       meanwhile: 'Mientras tanto, las herramientas web',
       facts: 'Gratis · Sin registro · La extensión no lleva analítica · Español e inglés',
       uniqueLabel: 'Lo que la hace distinta',
-      uniqueTitle: 'Tres cosas que no vas a encontrar juntas en otra extensión',
+      uniqueTitle: 'Cuatro cosas que no vas a encontrar juntas en otra extensión',
       diagnosticsLabel: 'Diagnóstico técnico',
       diagnosticsTitle: 'Todo lo que reviso en una página, en un clic',
       basicsTitle: 'Y lo básico, bien hecho',
@@ -84,7 +85,7 @@ const t = es
       meanwhile: 'Meanwhile, the web tools',
       facts: 'Free · No sign-up · The extension has no analytics · English and Spanish',
       uniqueLabel: 'What sets it apart',
-      uniqueTitle: 'Three things you won’t find together in another extension',
+      uniqueTitle: 'Four things you won’t find together in another extension',
       diagnosticsLabel: 'Technical diagnosis',
       diagnosticsTitle: 'Everything I check on a page, in one click',
       basicsTitle: 'And the basics, done well',
@@ -184,6 +185,27 @@ const softwareApplication = {
 };
 
 const [indexability, ...gallery] = copy.diagnostics;
+
+/** Cada captura dentro de su escena: qué página hay detrás, qué URL y qué estado muestra el icono */
+const blogUrl = es ? 'nachomascort.com/blog/quality-google-core-updates/' : 'nachomascort.com/en/blog/google-quality-core-updates/';
+type Light = 'ok' | 'warn' | 'bad';
+type Scene = { url: string; page?: ExtensionShot; kind: 'popup' | 'full' | 'bare' | 'plain'; icon?: [Light, Light]; badge?: string };
+const SCENES: Record<ExtensionShot, Scene> = {
+  'popup-resumen': { url: blogUrl, page: 'pagina-blog', kind: 'popup' },
+  'popup-bots': { url: 'www.elmundo.es', page: 'pagina-elmundo', kind: 'popup' },
+  'popup-js': { url: 'www.elmundo.es', page: 'pagina-elmundo', kind: 'popup' },
+  'popup-vitals': { url: 'www.elmundo.es', page: 'pagina-elmundo', kind: 'popup' },
+  'popup-schema': { url: blogUrl, page: 'pagina-blog', kind: 'popup' },
+  'popup-hreflang': { url: blogUrl, page: 'pagina-blog', kind: 'popup' },
+  'popup-fanout': { url: 'claude.ai', kind: 'bare' },
+  'comparar-vista': { url: es ? 'SEO & GEO Inspector · Comparar renderizado' : 'SEO & GEO Inspector · Compare rendering', kind: 'full' },
+  'comparar-codigo': { url: es ? 'SEO & GEO Inspector · Comparar renderizado' : 'SEO & GEO Inspector · Compare rendering', kind: 'full' },
+  enlaces: { url: es ? 'SEO & GEO Inspector · Enlaces' : 'SEO & GEO Inspector · Links', kind: 'full' },
+  'vitals-pagina': { url: 'www.elmundo.es', kind: 'full' },
+  'icono-estados': { url: '', kind: 'plain' },
+  'pagina-blog': { url: blogUrl, kind: 'full' },
+  'pagina-elmundo': { url: 'www.elmundo.es', kind: 'full' },
+};
 const slug = (text: string) =>
   text
     .toLowerCase()
@@ -207,13 +229,13 @@ const slug = (text: string) =>
   faq={faq}
   extraSchemaNodes={[softwareApplication]}
 >
-  <!-- Cabecera: la promesa y su prueba -->
+  <!-- Cabecera: la promesa centrada y, debajo, la extensión funcionando sobre una página real -->
   <div class="ext-hero mx-auto max-w-6xl px-5 pt-14 sm:px-6 sm:pt-20">
     <div class="ext-hero-copy">
       <p class="meta"><a href={toolsPath} class="hover:text-ink">{t.crumbs[1]}</a> · {t.meta}</p>
-      <h1 class="display-1 mt-5">SEO &amp; GEO Inspector</h1>
-      <p class="lede mt-6 max-w-[38ch]">{t.lede}</p>
-      <div class="mt-9 flex flex-wrap items-center gap-x-5 gap-y-4">
+      <h1 class="ext-title mt-5">SEO &amp; GEO Inspector</h1>
+      <p class="lede ext-lede mt-6">{t.lede}</p>
+      <div class="mt-9 flex flex-wrap items-center justify-center gap-x-6 gap-y-4">
         {
           EXTENSION_STORE_URL ? (
             <a href={EXTENSION_STORE_URL} class="btn" data-umami-event="extension-install">{t.install}</a>
@@ -227,33 +249,50 @@ const slug = (text: string) =>
       </div>
       <p class="meta mt-6">{t.facts}</p>
     </div>
-    <figure class="ext-shot ext-shot--popup ext-hero-shot">
-      <Image src={shot('popup-resumen')} alt={copy.heroAlt} width={1280} format="webp" loading="eager" fetchpriority="high" />
-      <figcaption><strong>{indexability.title}.</strong> {indexability.detail[0]}</figcaption>
-    </figure>
+    <div class="ext-hero-scene">
+      <BrowserScene url={blogUrl} page={shot('pagina-blog')} popup={shot('popup-resumen')} alt={copy.heroAlt} eager>
+        <figcaption><strong>{indexability.title}.</strong> {indexability.detail[0]}</figcaption>
+      </BrowserScene>
+    </div>
   </div>
 
-  <!-- Lo que la hace distinta: una fila por diferencial, con la captura a su tamaño natural -->
-  <section class="mx-auto max-w-6xl px-5 pt-24 sm:px-6 md:pt-32" aria-labelledby="ext-unique">
-    <h2 id="ext-unique" class="display-2 max-w-[22ch]">{t.uniqueTitle}</h2>
-    <div class="ext-rows">
+  <!-- Lo que la hace distinta: cada diferencial es una escena a todo el ancho con poco texto encima -->
+  <section class="mx-auto max-w-6xl px-5 pt-28 sm:px-6 md:pt-40" aria-labelledby="ext-unique">
+    <h2 id="ext-unique" class="display-2 max-w-[20ch]">{t.uniqueTitle}</h2>
+    <div class="ext-scenes">
       {
-        copy.differentiators.map((block, index) => {
-          const wide = block.shots.some((item) => item.wide);
+        copy.differentiators.map((block) => {
           const id = `unique-${slug(block.title)}`;
           return (
-            <article class:list={['ext-row', wide ? 'ext-row--wide' : index % 2 === 1 && 'ext-row--flip']} aria-labelledby={id}>
-              <div class="ext-row-text">
+            <article class="ext-scene-block" aria-labelledby={id}>
+              <div class="ext-scene-text">
                 <h3 id={id} class="display-3">{block.title}</h3>
-                {block.detail.map((paragraph) => <p set:html={withLinks(paragraph)} />)}
+                <div class="ext-scene-detail">
+                  {block.detail.map((paragraph) => <p set:html={withLinks(paragraph)} />)}
+                </div>
               </div>
-              <div class="ext-row-shots">
-                {block.shots.map((item) => (
-                  <figure class:list={['ext-shot', !item.wide && item.shot !== 'icono-estados' && 'ext-shot--popup']}>
-                    <Image src={shot(item.shot)} alt={item.alt} width={item.wide ? 1600 : 1280} format="webp" />
-                    <figcaption>{item.caption}</figcaption>
-                  </figure>
-                ))}
+              <div class:list={['ext-scene-shots', block.shots.length > 1 && 'ext-scene-shots--pair']}>
+                {block.shots.map((item) => {
+                  const scene = SCENES[item.shot];
+                  if (scene.kind === 'plain')
+                    return (
+                      <figure class="ext-plain">
+                        <Image src={shot(item.shot)} alt={item.alt} width={1520} format="webp" />
+                        <figcaption>{item.caption}</figcaption>
+                      </figure>
+                    );
+                  return (
+                    <BrowserScene
+                      url={scene.url}
+                      alt={item.alt}
+                      page={scene.page ? shot(scene.page) : undefined}
+                      popup={scene.kind === 'popup' || scene.kind === 'bare' ? shot(item.shot) : undefined}
+                      full={scene.kind === 'full' ? shot(item.shot) : undefined}
+                    >
+                      <figcaption>{item.caption}</figcaption>
+                    </BrowserScene>
+                  );
+                })}
               </div>
             </article>
           );
@@ -262,10 +301,10 @@ const slug = (text: string) =>
     </div>
   </section>
 
-  <!-- Diagnóstico técnico: galería con pestañas. Sin JavaScript se ven todos los paneles seguidos -->
-  <section class="ext-tour-band mt-24 md:mt-32" aria-labelledby="ext-diagnostics">
-    <div class="mx-auto max-w-6xl px-5 py-20 sm:px-6 md:py-24">
-      <h2 id="ext-diagnostics" class="display-2 max-w-[22ch]">{t.diagnosticsTitle}</h2>
+  <!-- Diagnóstico técnico: galería con pestañas; cada panel es una escena. Sin JavaScript se ven todos seguidos -->
+  <section class="ext-tour-band mt-28 md:mt-40" aria-labelledby="ext-diagnostics">
+    <div class="mx-auto max-w-6xl px-5 py-20 sm:px-6 md:py-28">
+      <h2 id="ext-diagnostics" class="display-2 max-w-[20ch]">{t.diagnosticsTitle}</h2>
       <div class="ext-tour mt-10" data-ext-tour>
         <div class="ext-tour-tabs" role="tablist" aria-label={t.diagnosticsTitle} hidden data-ext-tablist>
           {
@@ -284,19 +323,27 @@ const slug = (text: string) =>
           }
         </div>
         {
-          gallery.map((block, index) => (
+          gallery.map((block) => (
             <article class="ext-tour-panel" id={`panel-${slug(block.title)}`} role="tabpanel" aria-labelledby={`tab-${slug(block.title)}`} data-ext-panel>
               <div class="ext-tour-text">
                 <h3 class="display-3">{block.title}</h3>
                 {block.detail.map((paragraph) => <p set:html={withLinks(paragraph)} />)}
               </div>
-              <div class:list={['ext-tour-shots', block.shots.length > 1 && 'ext-tour-shots--pair']}>
-                {block.shots.map((item) => (
-                  <figure class:list={['ext-shot', !item.wide && 'ext-shot--popup']}>
-                    <Image src={shot(item.shot)} alt={item.alt} width={item.wide ? 1600 : 1280} format="webp" loading={index === 0 ? 'eager' : 'lazy'} />
-                    <figcaption>{item.caption}</figcaption>
-                  </figure>
-                ))}
+              <div class="ext-tour-shots">
+                {block.shots.map((item) => {
+                  const scene = SCENES[item.shot];
+                  return (
+                    <BrowserScene
+                      url={scene.url}
+                      alt={item.alt}
+                      page={scene.page ? shot(scene.page) : undefined}
+                      popup={scene.kind === 'popup' || scene.kind === 'bare' ? shot(item.shot) : undefined}
+                      full={scene.kind === 'full' ? shot(item.shot) : undefined}
+                    >
+                      <figcaption>{item.caption}</figcaption>
+                    </BrowserScene>
+                  );
+                })}
               </div>
             </article>
           ))
@@ -382,17 +429,27 @@ const slug = (text: string) =>
 </script>
 
 <style>
-  /* Cabecera: texto y prueba lado a lado desde tablet ancha */
-  .ext-hero {
-    display: grid;
-    gap: 3rem;
-    align-items: center;
+  /* Cabecera centrada: el título manda y la escena va debajo, más ancha que el texto */
+  .ext-hero-copy {
+    max-width: 48rem;
+    margin-inline: auto;
+    text-align: center;
   }
-  @media (min-width: 1024px) {
-    .ext-hero {
-      grid-template-columns: minmax(0, 1fr) minmax(0, 33rem);
-      gap: 4rem;
-    }
+  .ext-title {
+    font-family: var(--font-display, inherit);
+    font-size: clamp(2.6rem, 7vw, 5.4rem);
+    line-height: 0.98;
+    letter-spacing: -0.035em;
+    font-weight: 600;
+    text-wrap: balance;
+  }
+  .ext-lede {
+    max-width: 40ch;
+    margin-inline: auto;
+    text-wrap: pretty;
+  }
+  .ext-hero-scene {
+    margin-top: clamp(3rem, 7vw, 5rem);
   }
   .ext-status {
     display: inline-flex;
@@ -410,90 +467,69 @@ const slug = (text: string) =>
     box-shadow: 0 0 0 4px rgb(224 154 0 / 0.18);
   }
 
-  /* Capturas: marco fino, sombra con desplazamiento y pie en texto real */
-  .ext-shot {
-    margin: 0;
+  /* Diferenciales: título y texto en dos columnas, escena a todo el ancho debajo */
+  .ext-scenes > *,
+  .ext-scene-shots > *,
+  .ext-tour-panel > * {
+    min-width: 0;
   }
-  .ext-shot :global(img) {
-    display: block;
-    width: 100%;
-    height: auto;
-    border-radius: 0.85rem;
-    border: 1px solid var(--tone-line);
-    box-shadow: 0 22px 44px -28px rgb(20 51 63 / 0.55), 0 2px 6px -2px rgb(20 51 63 / 0.12);
-    background: var(--tone-raised);
-  }
-  /* El popup se lee mejor a su tamaño natural (640 px de ancho), no estirado */
-  .ext-shot--popup {
-    max-width: 34rem;
-  }
-  .ext-shot figcaption {
-    margin-top: 0.8rem;
-    max-width: 60ch;
-    font-size: 0.86rem;
-    line-height: 1.5;
-    color: var(--tone-muted);
-  }
-  .ext-shot figcaption strong {
-    color: var(--tone-ink);
-    font-weight: 600;
-  }
-  .ext-hero-shot {
-    justify-self: end;
-    width: 100%;
-  }
-
-  /* Diferenciales: filas con texto y captura, separadas por aire, no por cajas */
-  .ext-rows {
+  .ext-scenes {
     display: grid;
-    gap: 5.5rem;
-    margin-top: 3.5rem;
+    gap: clamp(5rem, 10vw, 8.5rem);
+    margin-top: clamp(3rem, 6vw, 4.5rem);
   }
-  .ext-row {
+  .ext-scene-text {
     display: grid;
-    gap: 2rem;
-    align-items: center;
+    gap: 1rem 4rem;
+    align-items: start;
   }
-  .ext-row-text {
-    max-width: 36rem;
+  @media (min-width: 1024px) {
+    .ext-scene-text {
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    }
   }
-  .ext-row-text p {
-    margin-top: 0.9rem;
-    font-size: 1rem;
+  .ext-scene-detail p {
     line-height: 1.65;
   }
-  .ext-row-text :global(a),
+  .ext-scene-detail p + p {
+    margin-top: 0.9rem;
+  }
+  .ext-scene-detail :global(a),
   .ext-tour-text :global(a) {
     text-decoration: underline;
     text-decoration-color: var(--tone-accent);
     text-underline-offset: 0.2em;
   }
-  .ext-row-shots {
+  .ext-scene-shots {
+    margin-top: 2.5rem;
     display: grid;
-    gap: 1.75rem;
+    gap: 2rem;
   }
   @media (min-width: 1024px) {
-    .ext-row {
-      grid-template-columns: minmax(0, 1fr) minmax(0, 34rem);
-      gap: 4.5rem;
-    }
-    .ext-row--flip {
-      grid-template-columns: minmax(0, 34rem) minmax(0, 1fr);
-    }
-    .ext-row--flip .ext-row-text {
-      order: 2;
-    }
-    .ext-row--wide {
-      grid-template-columns: minmax(0, 1fr);
-      gap: 2.5rem;
-    }
-    .ext-row--wide .ext-row-shots {
+    .ext-scene-shots--pair {
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 2rem;
     }
   }
+  .ext-plain {
+    margin: 0;
+    max-width: 50rem;
+  }
+  .ext-plain :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 1rem;
+    border: 1px solid var(--tone-line);
+    background: var(--tone-raised);
+  }
+  .ext-plain figcaption {
+    margin-top: 1rem;
+    font-size: 0.88rem;
+    line-height: 1.5;
+    color: var(--tone-muted);
+  }
 
-  /* Diagnóstico: banda en superficie elevada, pestañas arriba y un panel a la vez */
+  /* Diagnóstico: banda elevada, pestañas arriba y un panel a la vez */
   .ext-tour-band {
     background: var(--tone-raised);
     border-block: 1px solid var(--tone-line);
@@ -509,7 +545,6 @@ const slug = (text: string) =>
   .ext-tour-tabs::-webkit-scrollbar {
     display: none;
   }
-  /* Desde tablet caben en dos líneas: mejor que esconder pestañas tras un scroll */
   @media (min-width: 768px) {
     .ext-tour-tabs {
       flex-wrap: wrap;
@@ -566,7 +601,6 @@ const slug = (text: string) =>
     margin-top: 0.9rem;
     line-height: 1.65;
   }
-  /* Con pestañas el título ya está en la pestaña: el h3 queda para lectores de pantalla y sin JS */
   .ext-tour.is-tabbed .ext-tour-text h3 {
     position: absolute;
     width: 1px;
@@ -580,20 +614,15 @@ const slug = (text: string) =>
   }
   .ext-tour-shots {
     display: grid;
-    gap: 1.75rem;
+    gap: 2rem;
   }
   @media (min-width: 1024px) {
     .ext-tour-panel {
-      grid-template-columns: minmax(0, 20rem) minmax(0, 1fr);
-      gap: 4rem;
-    }
-    .ext-tour-shots--pair {
-      grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
-      align-items: start;
+      grid-template-columns: minmax(0, 18rem) minmax(0, 1fr);
+      gap: 3.5rem;
     }
   }
 
-  /* Lo básico: lista compacta en dos columnas, sin tarjetas */
   .ext-basics {
     display: grid;
     gap: 0 3rem;

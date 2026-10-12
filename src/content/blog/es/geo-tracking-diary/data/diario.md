@@ -228,7 +228,7 @@ Pendiente de publicar: logo de Reverse Tech en los casos (antes salía como text
 
 ## Día 7 · 2026-10-12 · Cambio a LLM Pulse, primera tanda y segunda medición del estudio
 
-Cambio de herramienta: me han dado acceso a LLM Pulse y el seguimiento pasa allí. El geo-tracker propio queda en pausa.
+Cambio de herramienta: me han dado acceso a [LLM Pulse](https://llmpulse.ai/) y el seguimiento pasa allí. El geo-tracker propio queda en pausa.
 - Proyecto 1 del geo-tracker en pausa en la base de datos ("el seguimiento GEO pasa a LLM Pulse"). Arreglo de paso: las tareas del día 1 de cada mes (muestra de control y métricas de keywords en DataForSEO) se lanzaban aunque el proyecto estuviera en pausa. Ya no.
 - Motivo: LLM Pulse mide cinco plataformas (ChatGPT, modo IA de Google, AI Overviews, Perplexity y Gemini) frente a las tres del tracker, y da sentimiento, fuentes y fan-outs sin mantener infraestructura.
 - Conectado por MCP: los datos se leen desde aquí, sin exportar a mano.

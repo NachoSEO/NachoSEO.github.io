@@ -7,7 +7,7 @@ const paths = extensionPaths.en;
 const steps = [
   {
     title: 'Pin it to the toolbar',
-    detail: 'Click the puzzle icon at the top right of Chrome, then the pin next to SEO & GEO Inspector. That way you see each page\'s status code without opening anything.',
+    detail: 'Click the puzzle icon at the top right of Chrome, then the pin next to SEO & GEO Inspector. That way you can see at a glance, without opening anything, whether each page is indexable and crawlable.',
   },
   {
     title: 'Open any site and click the icon',
@@ -20,6 +20,7 @@ const steps = [
 ];
 
 const tips = [
+  'The icon has two halves: the left one is indexing (red if there is a noindex or an error) and the right one is crawling (red if robots.txt blocks Googlebot). Two greens, all good.',
   'In the Links tab, turn on the colored dots to see on the page which links are nofollow, sponsored or ugc.',
   'In JS vs HTML you can reload the site with JavaScript disabled and turn it back on with one click.',
   'On Google searches, the extension\'s box shows the Knowledge Graph entities that appear in the results.',
@@ -53,7 +54,7 @@ const tips = [
       }
     </ol>
 
-    <h2 class="display-3 mt-14">Three tips</h2>
+    <h2 class="display-3 mt-14">Four tips</h2>
     <ul class="mt-4 list-disc space-y-2 pl-5 text-[0.95rem]">
       {tips.map((tip) => <li>{tip}</li>)}
     </ul>

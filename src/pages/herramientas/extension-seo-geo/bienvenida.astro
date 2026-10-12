@@ -7,7 +7,7 @@ const paths = extensionPaths.es;
 const steps = [
   {
     title: 'Fíjala en la barra',
-    detail: 'Pulsa el icono del puzle, arriba a la derecha de Chrome, y la chincheta junto a SEO & GEO Inspector. Así ves el código de estado de cada página sin abrir nada.',
+    detail: 'Pulsa el icono del puzle, arriba a la derecha de Chrome, y la chincheta junto a SEO & GEO Inspector. Así ves de un vistazo, sin abrir nada, si cada página es indexable y rastreable.',
   },
   {
     title: 'Abre cualquier web y pulsa el icono',
@@ -20,6 +20,7 @@ const steps = [
 ];
 
 const tips = [
+  'El icono tiene dos mitades: la izquierda es la indexación (roja si hay noindex o error) y la derecha el rastreo (roja si el robots.txt bloquea a Googlebot). Dos verdes, todo bien.',
   'En la pestaña Enlaces, activa los puntos de colores para ver sobre la página qué enlaces son nofollow, sponsored o ugc.',
   'En JS vs HTML puedes recargar la web con el JavaScript desactivado y volver a activarlo con un clic.',
   'En las búsquedas de Google, el recuadro de la extensión muestra las entidades del Knowledge Graph que aparecen en los resultados.',
@@ -53,7 +54,7 @@ const tips = [
       }
     </ol>
 
-    <h2 class="display-3 mt-14">Tres trucos</h2>
+    <h2 class="display-3 mt-14">Cuatro trucos</h2>
     <ul class="mt-4 list-disc space-y-2 pl-5 text-[0.95rem]">
       {tips.map((tip) => <li>{tip}</li>)}
     </ul>

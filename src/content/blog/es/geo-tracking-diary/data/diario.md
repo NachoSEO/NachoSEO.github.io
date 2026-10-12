@@ -226,7 +226,46 @@ Revisión técnica del sitio (en producción el 11 por la tarde), con lo que afe
 
 Pendiente de publicar: logo de Reverse Tech en los casos (antes salía como texto), sacado de reverse.tech.
 
+## Día 7 · 2026-10-12 · Cambio a LLM Pulse, primera tanda y segunda medición del estudio
+
+Cambio de herramienta: me han dado acceso a LLM Pulse y el seguimiento pasa allí. El geo-tracker propio queda en pausa.
+- Proyecto 1 del geo-tracker en pausa en la base de datos ("el seguimiento GEO pasa a LLM Pulse"). Arreglo de paso: las tareas del día 1 de cada mes (muestra de control y métricas de keywords en DataForSEO) se lanzaban aunque el proyecto estuviera en pausa. Ya no.
+- Motivo: LLM Pulse mide cinco plataformas (ChatGPT, modo IA de Google, AI Overviews, Perplexity y Gemini) frente a las tres del tracker, y da sentimiento, fuentes y fan-outs sin mantener infraestructura.
+- Conectado por MCP: los datos se leen desde aquí, sin exportar a mano.
+
+Configuración (proyecto LLM Pulse 3944, España y español, una tanda por semana):
+- 76 prompts. 51 son mis prompts: los 48 del tracker, con la misma redacción para que la línea base del 5 de octubre siga siendo comparable, y 3 de marca nuevos. Los otros 25 los sugirió LLM Pulse al crear el proyecto y los mantengo.
+- Incidente: al pegar la lista desde la terminal se colaron 66 prompts basura (bordes de tabla, frases de la conversación, prompts cortados). Borrados y recreados los 17 que faltaban. Aprendizaje: pegar desde un fichero, no desde la terminal.
+- Etiquetas = entidades: cada prompt tiene una sola etiqueta, su entidad. 19 entidades: las 16 del tracker, más Marca, Estrategia SEO y negocio, y Formación SEO e IA. Control: SEO ecommerce y SEO WordPress.
+- Nombre: añado "Ignacio Mascort" e "Ignacio Mascort Colomer" a los nombres que cuentan como mención (Nacho es el diminutivo). Gemini ya me llamaba así.
+- 10 competidores que precargó LLM Pulse: Orainti, Human Level, iSocialWeb, MJ Cachón, BIGSEO, Rodanet, USEO, David Ayala, Carles Duarte y SEO Alive.
+
+Primera tanda (12 oct, 376 respuestas reales):
+- Preguntas sin mi nombre (335 respuestas): salgo en 2, las dos en Gemini y en auditoría SEO, en tercera y cuarta posición ("consultor con un enfoque muy analítico, ideal para e-commerce y proyectos de gran volumen de URLs"). En la línea base del tracker también eran 2, en ChatGPT.
+- Competidores, respuestas que los nombran (de unas 376): Orainti 46, Human Level 41, iSocialWeb 36, MJ Cachón 29, BIGSEO 27, Rodanet 16, USEO 14, David Ayala 8, SEO Alive 2.
+- Preguntas con mi nombre (25 respuestas): sentimiento positivo en todas las plataformas. Lo que dicen bien: Softonic, word.tips, SEO técnico, GEO, automatización, webs grandes. Problemas:
+  - AI Overviews y Gemini dicen que hay "dos perfiles profesionales con este nombre" y mezclan a otra persona. Es un problema de desambiguación de entidad.
+  - Perplexity dice "director de SEO en Grupo Planeta": sale de mi propio schema, así que es correcto.
+- Fan-outs: 145 búsquedas distintas, casi todas de ChatGPT. Ya hay búsquedas con mi nombre ("\"Nacho Mascort\" consultor SEO opiniones reseñas"), pero solo en preguntas de marca.
+
+Segunda medición del estudio /estudios/consultores-seo-ia/ (con los datos de LLM Pulse):
+- Mismas 36 preguntas SEO y GEO, 179 respuestas de cinco plataformas. Personas extraídas leyendo cada respuesta con un modelo de lenguaje y uniendo variantes a mano.
+- Aleyda Solís 52 de 179 y Natzir Turrado 38: los mismos dos primeros puestos que en la primera medición. Después, Lino Uruñuela 26, MJ Cachón 26, Fernando Maciá 25 y Juan González Villa 23.
+- Novedades: los AI Overviews ya nombran a personas (Aleyda y Lino, 14 cada uno), Gemini concentra a MJ Cachón y a Natzir (15 cada uno) y Perplexity casi no nombra a nadie (15 de 36 respuestas).
+- La primera medición (6-10 oct) se conserva tal cual en su propia sección. La lista de opinión indica ahora que sus cifras son de la primera medición.
+
+Otras cosas del día:
+- Guía GEO: Nacho Benavides reserva el capítulo 10 (GEO en ecommerce). En producción.
+- Menú sin JavaScript: estaba siempre desplegado y tapaba la página por debajo de 768 px; ahora se abre con un enlace. Lo vi al comparar la web con y sin JS en la extensión. En producción.
+
+Acciones (de los datos de hoy):
+1. Desambiguar la entidad: añadir alternateName "Ignacio Mascort Colomer" al schema Person y revisar los perfiles de sameAs, para que AI Overviews y Gemini dejen de mezclarme con otra persona.
+2. Reforzar auditoría SEO, la entidad donde Gemini ya me nombra: casos y metodología enlazados desde la página del servicio.
+3. Entrar en las fuentes que más cita la IA en SEO: listas de consultores en webs personales (mecagoenlos.com, soymanugomez.com, xaviercastellnou.es) y WhitePress.
+4. Revisar el copy del servicio de consultoría GEO, que dice que mido "cada día con un tracker propio".
+5. Esperar a 3 o 4 tandas semanales antes de leer tendencias: con una respuesta por pregunta y plataforma, una tanda es ruido.
+
 ## Referencias para el post
 - Wil Reynolds, Seer Interactive. Re-imagining AI visibility KPIs in a query fan-out world. https://www.seerinteractive.com/insights/ai-visibility-kpis (hardwired, anti-recomendación, KPIs de credibilidad).
 - Dan Petrovic, DEJAN. Why we don't do prompt tracking. https://dejan.ai/blog/prompt-tracking (medir por entidades canónicas con una sonda fija y muchas muestras; es el método del geo-tracker).
-
+- Samanyou Garg (Writesonic), brightonSEO octubre 2026. Drowning in prompts? How to build an AEO program around the data that matters. https://speakerdeck.com/samanyougarg/drowning-in-prompts-how-to-build-an-aeo-program-around-the-data-that-matters (panel de 30-50 prompts por tema; criterio para mantener los 48 y no inflar).

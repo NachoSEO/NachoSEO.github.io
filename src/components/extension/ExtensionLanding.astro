@@ -15,7 +15,6 @@ import {
   extensionLanding,
   extensionPaths,
   extensionVersion,
-  type ExtensionBlock,
   type ExtensionShot,
 } from '../../data/extension';
 
@@ -184,7 +183,14 @@ const softwareApplication = {
   ...(EXTENSION_STORE_URL ? { downloadUrl: EXTENSION_STORE_URL, installUrl: EXTENSION_STORE_URL } : {}),
 };
 
-const blockId = (block: ExtensionBlock, prefix: string, index: number) => `${prefix}-${index + 1}`;
+const [indexability, ...gallery] = copy.diagnostics;
+const slug = (text: string) =>
+  text
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
 ---
 
 <Base
@@ -201,103 +207,133 @@ const blockId = (block: ExtensionBlock, prefix: string, index: number) => `${pre
   faq={faq}
   extraSchemaNodes={[softwareApplication]}
 >
-  <div class="mx-auto grid max-w-6xl items-center gap-10 px-5 pt-16 sm:px-6 sm:pt-20 lg:grid-cols-[minmax(0,1fr)_minmax(0,30rem)]">
-    <div>
+  <!-- Cabecera: la promesa y su prueba -->
+  <div class="ext-hero mx-auto max-w-6xl px-5 pt-14 sm:px-6 sm:pt-20">
+    <div class="ext-hero-copy">
       <p class="meta"><a href={toolsPath} class="hover:text-ink">{t.crumbs[1]}</a> · {t.meta}</p>
       <h1 class="display-1 mt-5">SEO &amp; GEO Inspector</h1>
-      <p class="lede mt-6">{t.lede}</p>
-      <div class="mt-10 flex flex-wrap items-center gap-4">
+      <p class="lede mt-6 max-w-[38ch]">{t.lede}</p>
+      <div class="mt-9 flex flex-wrap items-center gap-x-5 gap-y-4">
         {
           EXTENSION_STORE_URL ? (
             <a href={EXTENSION_STORE_URL} class="btn" data-umami-event="extension-install">{t.install}</a>
           ) : (
-            <span class="btn opacity-60" aria-disabled="true">{t.soon}</span>
+            <>
+              <a href={toolsPath} class="btn">{t.meanwhile}</a>
+              <span class="ext-status"><span class="ext-status-dot" aria-hidden="true" />{t.soon}</span>
+            </>
           )
         }
-        <a href={toolsPath} class="link-arrow text-[0.95rem]">{t.meanwhile}</a>
       </div>
-      <p class="meta mt-4">{t.facts}</p>
+      <p class="meta mt-6">{t.facts}</p>
     </div>
-    <figure class="ext-shot ext-shot--hero">
-      <Image src={shot('popup-resumen')} alt={copy.heroAlt} width={960} format="webp" loading="eager" fetchpriority="high" />
+    <figure class="ext-shot ext-shot--popup ext-hero-shot">
+      <Image src={shot('popup-resumen')} alt={copy.heroAlt} width={1280} format="webp" loading="eager" fetchpriority="high" />
+      <figcaption><strong>{indexability.title}.</strong> {indexability.detail[0]}</figcaption>
     </figure>
   </div>
 
-  <section class="mx-auto max-w-6xl px-5 pt-20 sm:px-6 md:pt-28" aria-labelledby="ext-unique">
-    <p class="section-label">{t.uniqueLabel}</p>
-    <h2 id="ext-unique" class="display-2 mt-3 max-w-[26ch]">{t.uniqueTitle}</h2>
-    {
-      copy.differentiators.map((block, index) => {
-        const wide = block.shots.some((item) => item.wide);
-        return (
-          <article class:list={['ext-block', wide ? 'ext-block--wide' : index % 2 === 1 && 'ext-block--flip']} aria-labelledby={blockId(block, 'unique', index)}>
-            <div class="ext-block-text">
-              <h3 id={blockId(block, 'unique', index)} class="display-3">{block.title}</h3>
-              {block.detail.map((paragraph) => <p class="mt-3 text-[0.98rem]" set:html={withLinks(paragraph)} />)}
-            </div>
-            <div class="ext-block-shots">
-              {block.shots.map((item) => (
-                <figure class="ext-shot">
-                  <Image src={shot(item.shot)} alt={item.alt} width={item.wide ? 1600 : 960} format="webp" />
-                  <figcaption>{item.caption}</figcaption>
-                </figure>
-              ))}
-            </div>
-          </article>
-        );
-      })
-    }
-  </section>
-
-  <section class="mx-auto max-w-6xl px-5 pt-20 sm:px-6 md:pt-28" aria-labelledby="ext-diagnostics">
-    <p class="section-label">{t.diagnosticsLabel}</p>
-    <h2 id="ext-diagnostics" class="display-2 mt-3 max-w-[26ch]">{t.diagnosticsTitle}</h2>
-    <div class="mt-10 grid gap-x-8 gap-y-14 md:grid-cols-2">
+  <!-- Lo que la hace distinta: una fila por diferencial, con la captura a su tamaño natural -->
+  <section class="mx-auto max-w-6xl px-5 pt-24 sm:px-6 md:pt-32" aria-labelledby="ext-unique">
+    <h2 id="ext-unique" class="display-2 max-w-[22ch]">{t.uniqueTitle}</h2>
+    <div class="ext-rows">
       {
-        copy.diagnostics.map((block, index) => (
-          <article class:list={['ext-diag', block.shots.some((item) => item.wide) && 'md:col-span-2']} aria-labelledby={blockId(block, 'diag', index)}>
-            <h3 id={blockId(block, 'diag', index)} class="display-3">{block.title}</h3>
-            {block.detail.map((paragraph) => <p class="mt-3 text-[0.95rem]" set:html={withLinks(paragraph)} />)}
-            {block.shots.length > 0 && (
-            <div class:list={['mt-5 grid gap-5', block.shots.length > 1 && 'sm:grid-cols-2']}>
-              {block.shots.map((item) => (
-                <figure class="ext-shot">
-                  <Image src={shot(item.shot)} alt={item.alt} width={item.wide ? 1600 : 960} format="webp" />
-                  <figcaption>{item.caption}</figcaption>
-                </figure>
-              ))}
-            </div>
-            )}
-          </article>
-        ))
+        copy.differentiators.map((block, index) => {
+          const wide = block.shots.some((item) => item.wide);
+          const id = `unique-${slug(block.title)}`;
+          return (
+            <article class:list={['ext-row', wide ? 'ext-row--wide' : index % 2 === 1 && 'ext-row--flip']} aria-labelledby={id}>
+              <div class="ext-row-text">
+                <h3 id={id} class="display-3">{block.title}</h3>
+                {block.detail.map((paragraph) => <p set:html={withLinks(paragraph)} />)}
+              </div>
+              <div class="ext-row-shots">
+                {block.shots.map((item) => (
+                  <figure class:list={['ext-shot', !item.wide && item.shot !== 'icono-estados' && 'ext-shot--popup']}>
+                    <Image src={shot(item.shot)} alt={item.alt} width={item.wide ? 1600 : 1280} format="webp" />
+                    <figcaption>{item.caption}</figcaption>
+                  </figure>
+                ))}
+              </div>
+            </article>
+          );
+        })
       }
     </div>
-
-    <h3 class="display-3 mt-20">{t.basicsTitle}</h3>
-    <dl class="mt-5 grid gap-x-8 gap-y-5 md:grid-cols-2">
-      {
-        copy.basics.map((item) => (
-          <div class="border-t border-line pt-4">
-            <dt class="font-semibold">{item.title}</dt>
-            <dd class="mt-1 text-[0.95rem] text-muted">{item.detail}</dd>
-          </div>
-        ))
-      }
-    </dl>
   </section>
 
-  <section class="mx-auto max-w-3xl px-5 pt-20 sm:px-6 md:pt-28" aria-labelledby="ext-who">
-    <p class="section-label">{t.whoLabel}</p>
-    <div class="mt-5 border-y border-line py-5">
-      <AuthorByline lang={lang} lead={es ? 'Hecha por' : 'Built by'} />
-      <p id="ext-who" class="mt-4 text-[0.98rem]">{t.who}</p>
+  <!-- Diagnóstico técnico: galería con pestañas. Sin JavaScript se ven todos los paneles seguidos -->
+  <section class="ext-tour-band mt-24 md:mt-32" aria-labelledby="ext-diagnostics">
+    <div class="mx-auto max-w-6xl px-5 py-20 sm:px-6 md:py-24">
+      <h2 id="ext-diagnostics" class="display-2 max-w-[22ch]">{t.diagnosticsTitle}</h2>
+      <div class="ext-tour mt-10" data-ext-tour>
+        <div class="ext-tour-tabs" role="tablist" aria-label={t.diagnosticsTitle} hidden data-ext-tablist>
+          {
+            gallery.map((block, index) => (
+              <button
+                type="button"
+                role="tab"
+                id={`tab-${slug(block.title)}`}
+                aria-controls={`panel-${slug(block.title)}`}
+                aria-selected={index === 0 ? 'true' : 'false'}
+                tabindex={index === 0 ? undefined : '-1'}
+              >
+                {block.title}
+              </button>
+            ))
+          }
+        </div>
+        {
+          gallery.map((block, index) => (
+            <article class="ext-tour-panel" id={`panel-${slug(block.title)}`} role="tabpanel" aria-labelledby={`tab-${slug(block.title)}`} data-ext-panel>
+              <div class="ext-tour-text">
+                <h3 class="display-3">{block.title}</h3>
+                {block.detail.map((paragraph) => <p set:html={withLinks(paragraph)} />)}
+              </div>
+              <div class:list={['ext-tour-shots', block.shots.length > 1 && 'ext-tour-shots--pair']}>
+                {block.shots.map((item) => (
+                  <figure class:list={['ext-shot', !item.wide && 'ext-shot--popup']}>
+                    <Image src={shot(item.shot)} alt={item.alt} width={item.wide ? 1600 : 1280} format="webp" loading={index === 0 ? 'eager' : 'lazy'} />
+                    <figcaption>{item.caption}</figcaption>
+                  </figure>
+                ))}
+              </div>
+            </article>
+          ))
+        }
+      </div>
+
+      <h3 class="display-3 mt-20">{t.basicsTitle}</h3>
+      <dl class="ext-basics mt-6">
+        {
+          copy.basics.map((item) => (
+            <div>
+              <dt>{item.title}</dt>
+              <dd>{item.detail}</dd>
+            </div>
+          ))
+        }
+      </dl>
     </div>
   </section>
 
-  <article class="mx-auto max-w-3xl px-5 pt-16 sm:px-6 md:pt-20">
-    <p class="section-label">{t.privacyLabel}</p>
-    <div class="article-body mt-4">
-      <h2>{t.privacyTitle}</h2>
+  <!-- Quién la ha hecho, privacidad y versión -->
+  <section class="mx-auto grid max-w-6xl gap-14 px-5 pt-24 sm:px-6 md:pt-28 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]" aria-labelledby="ext-privacy">
+    <div>
+      <h2 class="display-3">{t.whoLabel}</h2>
+      <div class="mt-5">
+        <AuthorByline lang={lang} lead={es ? 'Hecha por' : 'Built by'} />
+      </div>
+      <p class="mt-5 text-[0.98rem] leading-relaxed">{t.who}</p>
+      <p class="meta mt-6">
+        {t.versionLabel} {extensionVersion.number} · {t.updated} {extensionVersion.updated[lang]}
+      </p>
+      <ul class="mt-2 text-sm text-muted">
+        {copy.changelog.map((entry) => <li>{entry.version}: {entry.notes}</li>)}
+      </ul>
+    </div>
+    <div class="article-body">
+      <h2 id="ext-privacy" class="!mt-0">{t.privacyTitle}</h2>
       {t.privacy.map((paragraph) => <p>{paragraph}</p>)}
       <p><a href={paths.privacy}>{t.privacyLink}</a></p>
       <p>
@@ -306,18 +342,75 @@ const blockId = (block: ExtensionBlock, prefix: string, index: number) => `${pre
         <a href={t.webToolsLinks[1][0]}>{t.webToolsLinks[1][1]}</a> {es ? 'y el' : 'and the'}{' '}
         <a href={t.webToolsLinks[2][0]}>{t.webToolsLinks[2][1]}</a>.
       </p>
-      <p class="text-sm text-muted">
-        {t.versionLabel} {extensionVersion.number} · {t.updated} {extensionVersion.updated[lang]}.
-        {copy.changelog.map((entry) => ` ${entry.version}: ${entry.notes}`)}
-      </p>
     </div>
-  </article>
+  </section>
 
   <FaqAccordion lang={lang} faq={faq} />
   <Cta lang={lang} title={t.ctaTitle} />
 </Base>
 
+<script>
+  // Galería de diagnóstico: pestañas accesibles (flechas, Inicio, Fin). Sin JS, todos los paneles quedan visibles.
+  for (const tour of document.querySelectorAll<HTMLElement>('[data-ext-tour]')) {
+    const tablist = tour.querySelector<HTMLElement>('[data-ext-tablist]');
+    const tabs = [...tour.querySelectorAll<HTMLButtonElement>('[role="tab"]')];
+    const panels = [...tour.querySelectorAll<HTMLElement>('[data-ext-panel]')];
+    if (!tablist || !tabs.length) continue;
+    tablist.hidden = false;
+    tour.classList.add('is-tabbed');
+    const select = (index: number, focus = false) => {
+      tabs.forEach((tab, position) => {
+        const active = position === index;
+        tab.setAttribute('aria-selected', String(active));
+        tab.tabIndex = active ? 0 : -1;
+        panels[position].hidden = !active;
+      });
+      if (focus) tabs[index].focus();
+    };
+    tabs.forEach((tab, index) => {
+      tab.addEventListener('click', () => select(index));
+      tab.addEventListener('keydown', (event) => {
+        const last = tabs.length - 1;
+        const next = { ArrowRight: index === last ? 0 : index + 1, ArrowLeft: index === 0 ? last : index - 1, Home: 0, End: last }[event.key];
+        if (next === undefined) return;
+        event.preventDefault();
+        select(next, true);
+      });
+    });
+    select(0);
+  }
+</script>
+
 <style>
+  /* Cabecera: texto y prueba lado a lado desde tablet ancha */
+  .ext-hero {
+    display: grid;
+    gap: 3rem;
+    align-items: center;
+  }
+  @media (min-width: 1024px) {
+    .ext-hero {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 33rem);
+      gap: 4rem;
+    }
+  }
+  .ext-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--tone-muted);
+  }
+  .ext-status-dot {
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 999px;
+    background: #e09a00;
+    box-shadow: 0 0 0 4px rgb(224 154 0 / 0.18);
+  }
+
+  /* Capturas: marco fino, sombra con desplazamiento y pie en texto real */
   .ext-shot {
     margin: 0;
   }
@@ -325,54 +418,201 @@ const blockId = (block: ExtensionBlock, prefix: string, index: number) => `${pre
     display: block;
     width: 100%;
     height: auto;
-    border-radius: 0.9rem;
-    border: 1px solid var(--color-line, rgb(20 51 63 / 0.12));
-    box-shadow: 0 18px 40px -24px rgb(20 51 63 / 0.45);
-    background: #fff;
+    border-radius: 0.85rem;
+    border: 1px solid var(--tone-line);
+    box-shadow: 0 22px 44px -28px rgb(20 51 63 / 0.55), 0 2px 6px -2px rgb(20 51 63 / 0.12);
+    background: var(--tone-raised);
+  }
+  /* El popup se lee mejor a su tamaño natural (640 px de ancho), no estirado */
+  .ext-shot--popup {
+    max-width: 34rem;
   }
   .ext-shot figcaption {
-    margin-top: 0.7rem;
-    font-size: 0.85rem;
-    line-height: 1.45;
-    color: var(--color-muted, #5b6b71);
+    margin-top: 0.8rem;
+    max-width: 60ch;
+    font-size: 0.86rem;
+    line-height: 1.5;
+    color: var(--tone-muted);
   }
-  .ext-shot--hero :global(img) {
-    max-height: 32rem;
-    object-fit: cover;
-    object-position: top;
+  .ext-shot figcaption strong {
+    color: var(--tone-ink);
+    font-weight: 600;
   }
-  .ext-block {
+  .ext-hero-shot {
+    justify-self: end;
+    width: 100%;
+  }
+
+  /* Diferenciales: filas con texto y captura, separadas por aire, no por cajas */
+  .ext-rows {
+    display: grid;
+    gap: 5.5rem;
+    margin-top: 3.5rem;
+  }
+  .ext-row {
     display: grid;
     gap: 2rem;
-    margin-top: 3.5rem;
-    align-items: start;
+    align-items: center;
+  }
+  .ext-row-text {
+    max-width: 36rem;
+  }
+  .ext-row-text p {
+    margin-top: 0.9rem;
+    font-size: 1rem;
+    line-height: 1.65;
+  }
+  .ext-row-text :global(a),
+  .ext-tour-text :global(a) {
+    text-decoration: underline;
+    text-decoration-color: var(--tone-accent);
+    text-underline-offset: 0.2em;
+  }
+  .ext-row-shots {
+    display: grid;
+    gap: 1.75rem;
   }
   @media (min-width: 1024px) {
-    .ext-block {
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
-      gap: 3.5rem;
+    .ext-row {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 34rem);
+      gap: 4.5rem;
     }
-    .ext-block--flip .ext-block-text {
+    .ext-row--flip {
+      grid-template-columns: minmax(0, 34rem) minmax(0, 1fr);
+    }
+    .ext-row--flip .ext-row-text {
       order: 2;
     }
-    .ext-block--wide {
+    .ext-row--wide {
       grid-template-columns: minmax(0, 1fr);
+      gap: 2.5rem;
     }
-    .ext-block--wide .ext-block-text {
-      max-width: 46rem;
-    }
-    .ext-block--wide .ext-block-shots {
-      display: grid;
+    .ext-row--wide .ext-row-shots {
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 1.5rem;
+      gap: 2rem;
     }
   }
-  .ext-block-shots {
-    display: grid;
-    gap: 1.5rem;
+
+  /* Diagnóstico: banda en superficie elevada, pestañas arriba y un panel a la vez */
+  .ext-tour-band {
+    background: var(--tone-raised);
+    border-block: 1px solid var(--tone-line);
   }
-  .ext-block-text :global(a) {
-    text-decoration: underline;
-    text-underline-offset: 0.2em;
+  .ext-tour-tabs {
+    display: flex;
+    gap: 0.4rem;
+    overflow-x: auto;
+    padding-bottom: 0.25rem;
+    margin-bottom: 2.5rem;
+    scrollbar-width: none;
+  }
+  .ext-tour-tabs::-webkit-scrollbar {
+    display: none;
+  }
+  /* Desde tablet caben en dos líneas: mejor que esconder pestañas tras un scroll */
+  @media (min-width: 768px) {
+    .ext-tour-tabs {
+      flex-wrap: wrap;
+      overflow: visible;
+    }
+  }
+  .ext-tour-tabs button {
+    flex: none;
+    padding: 0.6rem 1rem;
+    border-radius: 999px;
+    border: 1px solid var(--tone-line);
+    background: transparent;
+    color: var(--tone-muted);
+    font: inherit;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition:
+      background-color 180ms cubic-bezier(0.16, 1, 0.3, 1),
+      color 180ms cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 180ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .ext-tour-tabs button:hover {
+    color: var(--tone-ink);
+    border-color: var(--tone-ink);
+  }
+  .ext-tour-tabs button[aria-selected='true'] {
+    background: var(--tone-ink);
+    border-color: var(--tone-ink);
+    color: var(--tone-paper);
+  }
+  .ext-tour-tabs button:focus-visible {
+    outline: 2px solid var(--tone-accent);
+    outline-offset: 2px;
+  }
+  .ext-tour-panel {
+    display: grid;
+    gap: 2rem;
+    align-items: start;
+  }
+  .ext-tour-panel + .ext-tour-panel {
+    margin-top: 4.5rem;
+  }
+  .ext-tour.is-tabbed .ext-tour-panel + .ext-tour-panel {
+    margin-top: 0;
+  }
+  .ext-tour-panel[hidden] {
+    display: none;
+  }
+  .ext-tour-text {
+    max-width: 30rem;
+  }
+  .ext-tour-text p {
+    margin-top: 0.9rem;
+    line-height: 1.65;
+  }
+  /* Con pestañas el título ya está en la pestaña: el h3 queda para lectores de pantalla y sin JS */
+  .ext-tour.is-tabbed .ext-tour-text h3 {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .ext-tour.is-tabbed .ext-tour-text p:first-of-type {
+    margin-top: 0;
+  }
+  .ext-tour-shots {
+    display: grid;
+    gap: 1.75rem;
+  }
+  @media (min-width: 1024px) {
+    .ext-tour-panel {
+      grid-template-columns: minmax(0, 20rem) minmax(0, 1fr);
+      gap: 4rem;
+    }
+    .ext-tour-shots--pair {
+      grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+      align-items: start;
+    }
+  }
+
+  /* Lo básico: lista compacta en dos columnas, sin tarjetas */
+  .ext-basics {
+    display: grid;
+    gap: 0 3rem;
+  }
+  @media (min-width: 768px) {
+    .ext-basics {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  .ext-basics div {
+    padding-block: 1.1rem;
+    border-top: 1px solid var(--tone-line);
+  }
+  .ext-basics dt {
+    font-weight: 600;
+  }
+  .ext-basics dd {
+    margin: 0.3rem 0 0;
+    font-size: 0.95rem;
+    color: var(--tone-muted);
   }
 </style>

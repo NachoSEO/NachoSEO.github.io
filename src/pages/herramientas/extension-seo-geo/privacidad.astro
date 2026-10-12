@@ -40,13 +40,21 @@ const paths = extensionPaths.es;
           tu equipo. Se usan solo para pedir volúmenes a DataForSEO desde tu navegador. Los volúmenes se guardan 30 días en
           tu equipo para no repetir consultas.
         </li>
+        <li>
+          <strong>Tus user-agents propios, si los añades.</strong> Se guardan en el almacenamiento local de Chrome, en tu
+          equipo.
+        </li>
+        <li>
+          <strong>Las métricas de Core Web Vitals.</strong> Se miden en la pestaña con la API de rendimiento del navegador
+          y solo se muestran en la extensión.
+        </li>
       </ul>
 
       <h2>Peticiones que hace la extensión</h2>
       <p>
         Todas salen de tu navegador, con tu conexión, y sus resultados se quedan en tu equipo: el robots.txt y el HTML sin
-        renderizar de la página que analizas, las otras versiones de idioma para comprobar los hreflang y, si lo has
-        configurado, la API de DataForSEO.
+        renderizar de la página que analizas, las otras versiones de idioma para comprobar los hreflang, los enlaces de la página cuando pulsas
+        «Comprobar destinos» y, si lo has configurado, la API de DataForSEO.
       </p>
 
       <h2>Lo que no hace</h2>

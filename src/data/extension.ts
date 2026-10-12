@@ -39,7 +39,7 @@ export const extensionFeatures: Record<Lang, { title: string; detail: string }[]
     },
     {
       title: 'Navega como un bot',
-      detail: 'Cambia el user-agent de una pestaña a Googlebot, Bingbot, GPTBot, ClaudeBot, PerplexityBot y el resto, para ver qué les sirve la web.',
+      detail: 'Cambia el user-agent de una pestaña a Googlebot, Bingbot, GPTBot, ClaudeBot, PerplexityBot y el resto, o a uno tuyo, para ver qué les sirve la web.',
     },
     {
       title: 'Metadatos completos',
@@ -51,11 +51,15 @@ export const extensionFeatures: Record<Lang, { title: string; detail: string }[]
     },
     {
       title: 'Enlaces nofollow, sponsored y ugc',
-      detail: 'Un punto de color sobre cada enlace según su rel, con leyenda, para ver de un vistazo cómo enlaza una página.',
+      detail: 'Un punto de color sobre cada enlace según su rel y una tabla con todos los enlaces de la página, con su código y adónde redirigen.',
     },
     {
       title: 'Con JavaScript y sin JavaScript',
-      detail: 'Compara el HTML que sirve el servidor con el DOM renderizado y te deja ver la página con el JavaScript desactivado.',
+      detail: 'Las dos versiones de la página lado a lado y un diff completo del HTML del servidor contra el DOM renderizado: enlaces, headings y texto que solo existen con JS.',
+    },
+    {
+      title: 'Core Web Vitals',
+      detail: 'LCP, CLS, INP, FCP y TTFB de tu visita, las fases del LCP y los elementos que causan cada problema, marcados sobre la página.',
     },
     {
       title: 'Hreflang con reciprocidad',
@@ -89,7 +93,7 @@ export const extensionFeatures: Record<Lang, { title: string; detail: string }[]
     },
     {
       title: 'Browse as a bot',
-      detail: 'Switch one tab’s user-agent to Googlebot, Bingbot, GPTBot, ClaudeBot, PerplexityBot and the rest, to see what the site serves them.',
+      detail: 'Switch one tab’s user-agent to Googlebot, Bingbot, GPTBot, ClaudeBot, PerplexityBot and the rest, or to your own, to see what the site serves them.',
     },
     {
       title: 'Full metadata',
@@ -101,11 +105,15 @@ export const extensionFeatures: Record<Lang, { title: string; detail: string }[]
     },
     {
       title: 'Nofollow, sponsored and ugc links',
-      detail: 'A colored dot on every link by its rel, with a legend, so you can see how a page links at a glance.',
+      detail: 'A colored dot on every link by its rel, and a table with every link on the page, its status code and where it redirects.',
     },
     {
       title: 'With and without JavaScript',
-      detail: 'Compares the HTML the server sends with the rendered DOM, and lets you view the page with JavaScript turned off.',
+      detail: 'Both versions of the page side by side and a full diff of the server HTML against the rendered DOM: links, headings and text that only exist with JS.',
+    },
+    {
+      title: 'Core Web Vitals',
+      detail: 'LCP, CLS, INP, FCP and TTFB of your visit, the LCP phases and the elements behind each problem, marked on the page.',
     },
     {
       title: 'Hreflang with reciprocity',

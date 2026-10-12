@@ -1,0 +1,378 @@
+---
+/**
+ * Landing de la extensión SEO & GEO Inspector (es y en). Lo único va primero, con capturas reales de la extensión
+ * en webs públicas; después el diagnóstico técnico, lo básico, quién la hizo, privacidad, versión y FAQ.
+ */
+import type { ImageMetadata } from 'astro';
+import { getImage, Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import Cta from '../Cta.astro';
+import AuthorByline from '../AuthorByline.astro';
+import FaqAccordion from '../service/FaqAccordion.astro';
+import type { Lang } from '../../i18n/ui';
+import {
+  EXTENSION_STORE_URL,
+  extensionLanding,
+  extensionPaths,
+  extensionVersion,
+  type ExtensionBlock,
+  type ExtensionShot,
+} from '../../data/extension';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const es = lang === 'es';
+const paths = extensionPaths[lang];
+const copy = extensionLanding[lang];
+const toolsPath = es ? '/herramientas/' : '/en/tools/';
+
+const shotFiles = import.meta.glob<{ default: ImageMetadata }>('../../assets/img/extension/*/*.png', { eager: true });
+const shot = (name: ExtensionShot) => shotFiles[`../../assets/img/extension/${lang}/${name}.png`].default;
+
+/** Párrafos con enlaces [texto](url): se escapa todo y solo se convierten esos enlaces */
+const escape = (text: string) => text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+const withLinks = (text: string) =>
+  escape(text).replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g, (_, label: string, url: string) => `<a href="${url}" rel="noopener">${label}</a>`);
+
+const t = es
+  ? {
+      title: 'SEO & GEO Inspector: extensión de Chrome gratis para SEO y GEO — Nacho Mascort',
+      description:
+        'Extensión de Chrome gratis para SEO y GEO: robots.txt con el parser de Google para Googlebot y los bots de IA, la página con y sin JavaScript lado a lado, Core Web Vitals, schema, enlaces y hreflang.',
+      crumbs: ['Inicio', 'Herramientas', 'Extensión SEO & GEO Inspector'],
+      meta: 'Extensión de Chrome',
+      lede: 'Mira cualquier URL como la ven Googlebot y los bots de IA: qué la bloquea y en qué línea del robots.txt, qué cambia el JavaScript y por qué no es indexable.',
+      install: 'Añadir a Chrome, es gratis',
+      soon: 'Muy pronto en la Chrome Web Store',
+      meanwhile: 'Mientras tanto, las herramientas web',
+      facts: 'Gratis · Sin registro · La extensión no lleva analítica · Español e inglés',
+      uniqueLabel: 'Lo que la hace distinta',
+      uniqueTitle: 'Tres cosas que no vas a encontrar juntas en otra extensión',
+      diagnosticsLabel: 'Diagnóstico técnico',
+      diagnosticsTitle: 'Todo lo que reviso en una página, en un clic',
+      basicsTitle: 'Y lo básico, bien hecho',
+      whoLabel: 'Quién la ha hecho',
+      who: 'Es lo que reviso en cada página cuando hago una auditoría, ahora en un clic. Llevo en SEO técnico desde 2014: he dirigido el SEO de Softonic, con más de 1.000 millones de usuarios al año, y el de word.tips.',
+      privacyLabel: 'Privacidad',
+      privacyTitle: 'Nada sale de tu navegador',
+      privacy: [
+        'La extensión no tiene servidor ni recoge datos de uso: todo se calcula en tu navegador. La única excepción la eliges tú: si añades tu cuenta de DataForSEO, las consultas de volumen van de tu navegador a DataForSEO.',
+        'Nunca hace peticiones a tu red local (routers, IPs privadas), ni siquiera si una web redirige a ellas.',
+      ],
+      privacyLink: 'Política de privacidad de la extensión',
+      webTools: 'Si prefieres no instalar nada, varias comprobaciones están como herramientas web: el',
+      webToolsLinks: [
+        ['/herramientas/robots-txt-tester/', 'tester de robots.txt'],
+        ['/herramientas/comprobador-bots/', 'comprobador de acceso de bots'],
+        ['/herramientas/comprobador-redirecciones/', 'comprobador de redirecciones'],
+      ],
+      versionLabel: 'Versión',
+      updated: 'Actualizada el',
+      ctaTitle: '¿Prefieres que alguien lo mire por ti?',
+    }
+  : {
+      title: 'SEO & GEO Inspector: free Chrome extension for SEO and GEO — Nacho Mascort',
+      description:
+        'Free Chrome extension for SEO and GEO: robots.txt with Google’s parser for Googlebot and AI bots, the page with and without JavaScript side by side, Core Web Vitals, schema, links and hreflang.',
+      crumbs: ['Home', 'Tools', 'SEO & GEO Inspector extension'],
+      meta: 'Chrome extension',
+      lede: 'See any URL the way Googlebot and AI bots see it: what blocks it and on which robots.txt line, what JavaScript changes and why it isn’t indexable.',
+      install: 'Add to Chrome, it’s free',
+      soon: 'Coming soon to the Chrome Web Store',
+      meanwhile: 'Meanwhile, the web tools',
+      facts: 'Free · No sign-up · The extension has no analytics · English and Spanish',
+      uniqueLabel: 'What sets it apart',
+      uniqueTitle: 'Three things you won’t find together in another extension',
+      diagnosticsLabel: 'Technical diagnosis',
+      diagnosticsTitle: 'Everything I check on a page, in one click',
+      basicsTitle: 'And the basics, done well',
+      whoLabel: 'Who built it',
+      who: 'It is what I check on every page when I run an audit, now in one click. I have worked in technical SEO since 2014: I led SEO at Softonic, with over 1 billion users a year, and at word.tips.',
+      privacyLabel: 'Privacy',
+      privacyTitle: 'Nothing leaves your browser',
+      privacy: [
+        'The extension has no server and collects no usage data: everything is computed in your browser. The only exception is your choice: if you add your DataForSEO account, volume lookups go from your browser to DataForSEO.',
+        'It never makes requests to your local network (routers, private IPs), not even when a site redirects to them.',
+      ],
+      privacyLink: 'Extension privacy policy',
+      webTools: 'If you’d rather not install anything, several checks are available as web tools: the',
+      webToolsLinks: [
+        ['/en/tools/robots-txt-tester/', 'robots.txt tester'],
+        ['/en/tools/bot-access-checker/', 'bot access checker'],
+        ['/en/tools/redirect-checker/', 'redirect checker'],
+      ],
+      versionLabel: 'Version',
+      updated: 'Updated on',
+      ctaTitle: 'Would you rather have someone look at it for you?',
+    };
+
+const faq = es
+  ? [
+      {
+        question: '¿Es gratis?',
+        answer:
+          'Sí, entera y sin registro. Lo único que puede costarte dinero son los volúmenes de búsqueda, porque salen de tu propia cuenta de DataForSEO: pagas a DataForSEO solo lo que consultas, y la extensión guarda cada volumen 30 días para no repetir consultas.',
+      },
+      {
+        question: '¿En qué se diferencia de otras extensiones de SEO?',
+        answer:
+          'Otras extensiones te dicen si una URL está bloqueada. Esta usa el parser oficial de Google y te dice qué línea del robots.txt lo decide, para Googlebot y para cada bot de IA. Además enseña la página con y sin JavaScript lado a lado, con el diff completo, y su icono te dice de un vistazo si el problema es de indexación o de rastreo.',
+      },
+      {
+        question: '¿Qué datos recoge?',
+        answer:
+          'Ninguno. No tiene cuentas, ni analítica, ni servidor propio: todo se calcula en tu navegador. Si añades tus credenciales de DataForSEO, se guardan solo en tu navegador y las llamadas van directamente de tu equipo a DataForSEO.',
+      },
+      {
+        question: '¿Por qué pide acceso a todas las webs?',
+        answer:
+          'Para registrar las redirecciones y las cabeceras de cada página que visitas, descargar su robots.txt y su HTML sin renderizar, y comprobar los hreflang de las otras versiones. Esas peticiones salen de tu navegador y sus resultados no se envían a ningún sitio. Los permisos están explicados uno a uno en la política de privacidad.',
+      },
+      {
+        question: '¿Cuándo estará en la Chrome Web Store?',
+        answer:
+          'La estoy preparando para publicarla. Cuando salga, el botón de arriba llevará a la ficha. Mientras tanto, el tester de robots.txt, el comprobador de bots y el de redirecciones funcionan como herramientas web.',
+      },
+    ]
+  : [
+      {
+        question: 'Is it free?',
+        answer:
+          'Yes, all of it, with no sign-up. The only thing that can cost money is search volume, because it comes from your own DataForSEO account: you pay DataForSEO only for what you look up, and the extension caches each volume for 30 days to avoid repeat lookups.',
+      },
+      {
+        question: 'How is it different from other SEO extensions?',
+        answer:
+          'Other extensions tell you whether a URL is blocked. This one uses Google’s official parser and tells you which robots.txt line decides it, for Googlebot and for every AI bot. It also shows the page with and without JavaScript side by side, with the full diff, and its icon tells you at a glance whether the problem is indexing or crawling.',
+      },
+      {
+        question: 'What data does it collect?',
+        answer:
+          'None. No accounts, no analytics, no server of its own: everything runs in your browser. If you add your DataForSEO credentials, they stay in your browser and the calls go straight from your computer to DataForSEO.',
+      },
+      {
+        question: 'Why does it ask for access to all sites?',
+        answer:
+          'To record the redirects and headers of each page you visit, download its robots.txt and unrendered HTML, and check the hreflang of the other versions. Those requests leave your browser and their results are not sent anywhere. Each permission is explained in the privacy policy.',
+      },
+      {
+        question: 'When will it be on the Chrome Web Store?',
+        answer:
+          'I’m getting it ready to publish. Once it’s out, the button above will link to the listing. In the meantime, the robots.txt tester, the bot access checker and the redirect checker work as web tools.',
+      },
+    ];
+
+const screenshots = await Promise.all(
+  (['popup-bots', 'comparar-vista', 'popup-resumen'] as const).map(async (name) => `https://nachomascort.com${(await getImage({ src: shot(name), format: 'webp', width: 1280 })).src}`)
+);
+
+const softwareApplication = {
+  '@type': 'SoftwareApplication',
+  name: 'SEO & GEO Inspector',
+  url: `https://nachomascort.com${paths.landing}`,
+  applicationCategory: 'BrowserApplication',
+  operatingSystem: 'Chrome',
+  softwareVersion: extensionVersion.number,
+  inLanguage: ['es', 'en'],
+  isAccessibleForFree: true,
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' },
+  screenshot: screenshots,
+  author: { '@id': 'https://nachomascort.com/#person' },
+  ...(EXTENSION_STORE_URL ? { downloadUrl: EXTENSION_STORE_URL, installUrl: EXTENSION_STORE_URL } : {}),
+};
+
+const blockId = (block: ExtensionBlock, prefix: string, index: number) => `${prefix}-${index + 1}`;
+---
+
+<Base
+  lang={lang}
+  title={t.title}
+  description={t.description}
+  path={paths.landing}
+  alternatePath={extensionPaths[es ? 'en' : 'es'].landing}
+  breadcrumbs={[
+    { name: t.crumbs[0], path: es ? '/' : '/en/' },
+    { name: t.crumbs[1], path: toolsPath },
+    { name: t.crumbs[2], path: paths.landing },
+  ]}
+  faq={faq}
+  extraSchemaNodes={[softwareApplication]}
+>
+  <div class="mx-auto grid max-w-6xl items-center gap-10 px-5 pt-16 sm:px-6 sm:pt-20 lg:grid-cols-[minmax(0,1fr)_minmax(0,30rem)]">
+    <div>
+      <p class="meta"><a href={toolsPath} class="hover:text-ink">{t.crumbs[1]}</a> · {t.meta}</p>
+      <h1 class="display-1 mt-5">SEO &amp; GEO Inspector</h1>
+      <p class="lede mt-6">{t.lede}</p>
+      <div class="mt-10 flex flex-wrap items-center gap-4">
+        {
+          EXTENSION_STORE_URL ? (
+            <a href={EXTENSION_STORE_URL} class="btn" data-umami-event="extension-install">{t.install}</a>
+          ) : (
+            <span class="btn opacity-60" aria-disabled="true">{t.soon}</span>
+          )
+        }
+        <a href={toolsPath} class="link-arrow text-[0.95rem]">{t.meanwhile}</a>
+      </div>
+      <p class="meta mt-4">{t.facts}</p>
+    </div>
+    <figure class="ext-shot ext-shot--hero">
+      <Image src={shot('popup-resumen')} alt={copy.heroAlt} width={960} format="webp" loading="eager" fetchpriority="high" />
+    </figure>
+  </div>
+
+  <section class="mx-auto max-w-6xl px-5 pt-20 sm:px-6 md:pt-28" aria-labelledby="ext-unique">
+    <p class="section-label">{t.uniqueLabel}</p>
+    <h2 id="ext-unique" class="display-2 mt-3 max-w-[26ch]">{t.uniqueTitle}</h2>
+    {
+      copy.differentiators.map((block, index) => {
+        const wide = block.shots.some((item) => item.wide);
+        return (
+          <article class:list={['ext-block', wide ? 'ext-block--wide' : index % 2 === 1 && 'ext-block--flip']} aria-labelledby={blockId(block, 'unique', index)}>
+            <div class="ext-block-text">
+              <h3 id={blockId(block, 'unique', index)} class="display-3">{block.title}</h3>
+              {block.detail.map((paragraph) => <p class="mt-3 text-[0.98rem]" set:html={withLinks(paragraph)} />)}
+            </div>
+            <div class="ext-block-shots">
+              {block.shots.map((item) => (
+                <figure class="ext-shot">
+                  <Image src={shot(item.shot)} alt={item.alt} width={item.wide ? 1600 : 960} format="webp" />
+                  <figcaption>{item.caption}</figcaption>
+                </figure>
+              ))}
+            </div>
+          </article>
+        );
+      })
+    }
+  </section>
+
+  <section class="mx-auto max-w-6xl px-5 pt-20 sm:px-6 md:pt-28" aria-labelledby="ext-diagnostics">
+    <p class="section-label">{t.diagnosticsLabel}</p>
+    <h2 id="ext-diagnostics" class="display-2 mt-3 max-w-[26ch]">{t.diagnosticsTitle}</h2>
+    <div class="mt-10 grid gap-x-8 gap-y-14 md:grid-cols-2">
+      {
+        copy.diagnostics.map((block, index) => (
+          <article class:list={['ext-diag', block.shots.some((item) => item.wide) && 'md:col-span-2']} aria-labelledby={blockId(block, 'diag', index)}>
+            <h3 id={blockId(block, 'diag', index)} class="display-3">{block.title}</h3>
+            {block.detail.map((paragraph) => <p class="mt-3 text-[0.95rem]" set:html={withLinks(paragraph)} />)}
+            {block.shots.length > 0 && (
+            <div class:list={['mt-5 grid gap-5', block.shots.length > 1 && 'sm:grid-cols-2']}>
+              {block.shots.map((item) => (
+                <figure class="ext-shot">
+                  <Image src={shot(item.shot)} alt={item.alt} width={item.wide ? 1600 : 960} format="webp" />
+                  <figcaption>{item.caption}</figcaption>
+                </figure>
+              ))}
+            </div>
+            )}
+          </article>
+        ))
+      }
+    </div>
+
+    <h3 class="display-3 mt-20">{t.basicsTitle}</h3>
+    <dl class="mt-5 grid gap-x-8 gap-y-5 md:grid-cols-2">
+      {
+        copy.basics.map((item) => (
+          <div class="border-t border-line pt-4">
+            <dt class="font-semibold">{item.title}</dt>
+            <dd class="mt-1 text-[0.95rem] text-muted">{item.detail}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </section>
+
+  <section class="mx-auto max-w-3xl px-5 pt-20 sm:px-6 md:pt-28" aria-labelledby="ext-who">
+    <p class="section-label">{t.whoLabel}</p>
+    <div class="mt-5 border-y border-line py-5">
+      <AuthorByline lang={lang} lead={es ? 'Hecha por' : 'Built by'} />
+      <p id="ext-who" class="mt-4 text-[0.98rem]">{t.who}</p>
+    </div>
+  </section>
+
+  <article class="mx-auto max-w-3xl px-5 pt-16 sm:px-6 md:pt-20">
+    <p class="section-label">{t.privacyLabel}</p>
+    <div class="article-body mt-4">
+      <h2>{t.privacyTitle}</h2>
+      {t.privacy.map((paragraph) => <p>{paragraph}</p>)}
+      <p><a href={paths.privacy}>{t.privacyLink}</a></p>
+      <p>
+        {t.webTools}{' '}
+        <a href={t.webToolsLinks[0][0]}>{t.webToolsLinks[0][1]}</a>, {es ? 'el' : 'the'}{' '}
+        <a href={t.webToolsLinks[1][0]}>{t.webToolsLinks[1][1]}</a> {es ? 'y el' : 'and the'}{' '}
+        <a href={t.webToolsLinks[2][0]}>{t.webToolsLinks[2][1]}</a>.
+      </p>
+      <p class="text-sm text-muted">
+        {t.versionLabel} {extensionVersion.number} · {t.updated} {extensionVersion.updated[lang]}.
+        {copy.changelog.map((entry) => ` ${entry.version}: ${entry.notes}`)}
+      </p>
+    </div>
+  </article>
+
+  <FaqAccordion lang={lang} faq={faq} />
+  <Cta lang={lang} title={t.ctaTitle} />
+</Base>
+
+<style>
+  .ext-shot {
+    margin: 0;
+  }
+  .ext-shot :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 0.9rem;
+    border: 1px solid var(--color-line, rgb(20 51 63 / 0.12));
+    box-shadow: 0 18px 40px -24px rgb(20 51 63 / 0.45);
+    background: #fff;
+  }
+  .ext-shot figcaption {
+    margin-top: 0.7rem;
+    font-size: 0.85rem;
+    line-height: 1.45;
+    color: var(--color-muted, #5b6b71);
+  }
+  .ext-shot--hero :global(img) {
+    max-height: 32rem;
+    object-fit: cover;
+    object-position: top;
+  }
+  .ext-block {
+    display: grid;
+    gap: 2rem;
+    margin-top: 3.5rem;
+    align-items: start;
+  }
+  @media (min-width: 1024px) {
+    .ext-block {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+      gap: 3.5rem;
+    }
+    .ext-block--flip .ext-block-text {
+      order: 2;
+    }
+    .ext-block--wide {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .ext-block--wide .ext-block-text {
+      max-width: 46rem;
+    }
+    .ext-block--wide .ext-block-shots {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1.5rem;
+    }
+  }
+  .ext-block-shots {
+    display: grid;
+    gap: 1.5rem;
+  }
+  .ext-block-text :global(a) {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+</style>

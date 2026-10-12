@@ -38,6 +38,10 @@ export const extensionFeatures: Record<Lang, { title: string; detail: string }[]
       detail: 'Qué pueden rastrear GPTBot, OAI-SearchBot, ClaudeBot, PerplexityBot, Google-Extended y el resto, separados en entrenamiento, búsqueda y navegación.',
     },
     {
+      title: 'Navega como un bot',
+      detail: 'Cambia el user-agent de una pestaña a Googlebot, Bingbot, GPTBot, ClaudeBot, PerplexityBot y el resto, para ver qué les sirve la web.',
+    },
+    {
       title: 'Metadatos completos',
       detail: 'Title y description con su longitud, canonical, robots, Open Graph, Twitter, idioma y tipos de schema.',
     },
@@ -82,6 +86,10 @@ export const extensionFeatures: Record<Lang, { title: string; detail: string }[]
     {
       title: 'AI bots',
       detail: 'What GPTBot, OAI-SearchBot, ClaudeBot, PerplexityBot, Google-Extended and the rest can crawl, split into training, search and browsing.',
+    },
+    {
+      title: 'Browse as a bot',
+      detail: 'Switch one tab’s user-agent to Googlebot, Bingbot, GPTBot, ClaudeBot, PerplexityBot and the rest, to see what the site serves them.',
     },
     {
       title: 'Full metadata',

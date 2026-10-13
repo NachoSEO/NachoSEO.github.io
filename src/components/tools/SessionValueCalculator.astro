@@ -1,8 +1,11 @@
 ---
 /**
- * Calculadora del valor de una sesión orgánica según el modelo de negocio (ventas, leads o publicidad).
- * Todo en el navegador. Sin JS muestra el ejemplo de ventas con sus valores por defecto.
+ * Calculadora del valor de una sesión orgánica según el modelo de negocio (ventas, leads o publicidad), con reparto
+ * por tipo de página, comparación con Google Ads y retorno de la inversión SEO por escenarios.
+ * Todo en el navegador; los datos solo salen de él si el usuario copia el enlace. Sin JS muestra el ejemplo por defecto.
  */
+import { pageTypeResults, roi, SCENARIOS, sessionValue, type Model, type PageType } from '../../lib/session-value';
+
 interface Props {
   lang?: 'es' | 'en';
 }
@@ -12,34 +15,78 @@ const copy = {
   es: {
     modelsAria: 'Modelo de negocio',
     formulaPrefix: 'Valor por sesión =',
+    stepTraffic: 'Tráfico orgánico',
+    trafficAria: 'Cómo introducir el tráfico',
+    trafficTotal: 'Total',
+    trafficTypes: 'Por tipo de página',
     clicks: 'Clics orgánicos sin marca al mes',
+    typeName: 'Tipo de página',
+    typeClicks: 'Clics/mes',
+    rateLabel: { sales: 'Conv. %', leads: 'Conv. %', ads: 'Págs./sesión' },
+    addType: 'Añadir tipo de página',
+    remove: 'Quitar',
+    newType: 'Nuevo tipo',
+    byType: 'según cada tipo de página',
+    stepAds: 'Comparar con Google Ads',
+    cpc: 'CPC medio de tus búsquedas',
+    stepInvest: 'Inversión SEO',
+    fee: 'Cuota SEO al mes',
+    setup: 'Inversión inicial (opcional)',
+    extra: 'Clics extra al mes que esperas ganar (al año)',
+    investHint: 'La ganancia sube poco a poco: un 25 % al tercer mes, un 55 % al sexto y el 100 % al año.',
     session: 'Valor por sesión',
     month: 'Al mes',
     year: 'Al año',
     thousand: 'Cada 1.000 clics más al mes',
-    sessionOut: '0,48 €',
-    monthOut: '9.600 €',
-    yearOut: '115.200 €',
-    thousandOut: '480 €',
+    adsTitle: 'Frente a Google Ads',
+    adsCost: 'Comprar estos clics en Ads',
+    adsMax: 'CPC máximo rentable',
+    adsOk: 'Pujar a tu CPC actual en Ads te deja margen.',
+    adsBad: 'A ese CPC, cada clic de Ads cuesta más de lo que deja: el SEO es la vía rentable.',
+    investTitle: 'Retorno de la inversión SEO',
+    roiYear: 'ROI el primer año',
+    payback: 'Recuperas la inversión',
+    paybackMonth: (month: number) => `en el mes ${month}`,
+    paybackNever: 'en más de 36 meses',
+    maxFee: 'Cuota máxima rentable',
+    perMonthShort: '/mes',
+    breakdownTitle: 'Valor por tipo de página',
+    breakdownHead: ['Tipo de página', 'Clics/mes', 'Por sesión', 'Al mes', 'Peso'],
+    scenariosTitle: 'Escenarios del primer año',
+    scenarioNames: ['Conservador (×0,5)', 'Esperado', 'Optimista (×1,5)'],
+    scenarioRows: ['Margen extra', 'Inversión', 'ROI', 'Recuperas la inversión'],
+    copyLink: 'Copiar enlace con mis datos',
+    copySummary: 'Copiar resumen',
+    copied: 'Copiado',
+    copyFailed: 'No se ha podido copiar',
+    privacy: 'Los cálculos se hacen en tu navegador. El enlace lleva tus cifras: compártelo solo con quien quieras.',
+    summaryTitle: 'Valor de una sesión orgánica',
+    pageTypes: [
+      { name: 'Categorías', clicks: 8000, rates: { sales: 2, leads: 1.2, ads: 2 } },
+      { name: 'Fichas / servicios', clicks: 5000, rates: { sales: 1.8, leads: 1.5, ads: 1.5 } },
+      { name: 'Blog', clicks: 7000, rates: { sales: 0.3, leads: 0.3, ads: 3 } },
+    ],
     models: [
       {
         id: 'sales',
         label: 'Ventas',
-        formula: 'conversión × ticket medio × margen bruto',
+        formula: 'conversión × ticket medio × compras por cliente × margen bruto',
         fields: [
           { name: 'conv', label: 'Tasa de conversión', unit: '%', value: 1.5, step: 0.1 },
           { name: 'ticket', label: 'Ticket medio', unit: '€', value: 80, step: 1 },
+          { name: 'repeat', label: 'Compras por cliente', unit: '', value: 1, step: 0.1 },
           { name: 'margin', label: 'Margen bruto', unit: '%', value: 40, step: 1 },
         ],
       },
       {
         id: 'leads',
         label: 'Leads B2B',
-        formula: 'conversión a lead × tasa de cierre × valor del contrato × margen',
+        formula: 'conversión a lead × tasa de cierre × valor del contrato × contratos por cliente × margen',
         fields: [
           { name: 'conv', label: 'Conversión a lead', unit: '%', value: 1, step: 0.1 },
           { name: 'close', label: 'Tasa de cierre', unit: '%', value: 15, step: 1 },
           { name: 'deal', label: 'Valor medio del contrato', unit: '€', value: 6000, step: 100 },
+          { name: 'repeat', label: 'Contratos por cliente', unit: '', value: 1, step: 0.1 },
           { name: 'margin', label: 'Margen', unit: '%', value: 60, step: 1 },
         ],
       },
@@ -57,34 +104,78 @@ const copy = {
   en: {
     modelsAria: 'Business model',
     formulaPrefix: 'Value per session =',
+    stepTraffic: 'Organic traffic',
+    trafficAria: 'How to enter traffic',
+    trafficTotal: 'Total',
+    trafficTypes: 'By page type',
     clicks: 'Non-brand organic clicks per month',
+    typeName: 'Page type',
+    typeClicks: 'Clicks/mo',
+    rateLabel: { sales: 'Conv. %', leads: 'Conv. %', ads: 'Pages/session' },
+    addType: 'Add page type',
+    remove: 'Remove',
+    newType: 'New type',
+    byType: 'set per page type',
+    stepAds: 'Compare with Google Ads',
+    cpc: 'Average CPC of your keywords',
+    stepInvest: 'SEO investment',
+    fee: 'Monthly SEO fee',
+    setup: 'Upfront investment (optional)',
+    extra: 'Extra clicks a month you expect to win (in a year)',
+    investHint: 'The gain builds up slowly: 25% by month 3, 55% by month 6 and 100% after a year.',
     session: 'Value per session',
     month: 'Per month',
     year: 'Per year',
     thousand: 'Per 1,000 extra clicks a month',
-    sessionOut: '€0.48',
-    monthOut: '€9,600',
-    yearOut: '€115,200',
-    thousandOut: '€480',
+    adsTitle: 'Versus Google Ads',
+    adsCost: 'Buying these clicks on Ads',
+    adsMax: 'Highest profitable CPC',
+    adsOk: 'Bidding at your current CPC on Ads still leaves margin.',
+    adsBad: 'At that CPC, each Ads click costs more than it brings in: SEO is the profitable route.',
+    investTitle: 'Return on SEO investment',
+    roiYear: 'First-year ROI',
+    payback: 'You get your money back',
+    paybackMonth: (month: number) => `in month ${month}`,
+    paybackNever: 'after more than 36 months',
+    maxFee: 'Highest profitable fee',
+    perMonthShort: '/mo',
+    breakdownTitle: 'Value by page type',
+    breakdownHead: ['Page type', 'Clicks/mo', 'Per session', 'Per month', 'Share'],
+    scenariosTitle: 'First-year scenarios',
+    scenarioNames: ['Conservative (×0.5)', 'Expected', 'Optimistic (×1.5)'],
+    scenarioRows: ['Extra margin', 'Investment', 'ROI', 'Money back'],
+    copyLink: 'Copy link with my numbers',
+    copySummary: 'Copy summary',
+    copied: 'Copied',
+    copyFailed: "Couldn't copy",
+    privacy: 'Everything is calculated in your browser. The link carries your numbers: share it only with whoever you want.',
+    summaryTitle: 'Organic session value',
+    pageTypes: [
+      { name: 'Categories', clicks: 8000, rates: { sales: 2, leads: 1.2, ads: 2 } },
+      { name: 'Product / service pages', clicks: 5000, rates: { sales: 1.8, leads: 1.5, ads: 1.5 } },
+      { name: 'Blog', clicks: 7000, rates: { sales: 0.3, leads: 0.3, ads: 3 } },
+    ],
     models: [
       {
         id: 'sales',
         label: 'Sales',
-        formula: 'conversion rate × average order value × gross margin',
+        formula: 'conversion rate × average order value × purchases per customer × gross margin',
         fields: [
           { name: 'conv', label: 'Conversion rate', unit: '%', value: 1.5, step: 0.1 },
           { name: 'ticket', label: 'Average order value', unit: '€', value: 80, step: 1 },
+          { name: 'repeat', label: 'Purchases per customer', unit: '', value: 1, step: 0.1 },
           { name: 'margin', label: 'Gross margin', unit: '%', value: 40, step: 1 },
         ],
       },
       {
         id: 'leads',
         label: 'B2B leads',
-        formula: 'lead conversion × close rate × contract value × margin',
+        formula: 'lead conversion × close rate × contract value × contracts per customer × margin',
         fields: [
           { name: 'conv', label: 'Lead conversion', unit: '%', value: 1, step: 0.1 },
           { name: 'close', label: 'Close rate', unit: '%', value: 15, step: 1 },
           { name: 'deal', label: 'Average contract value', unit: '€', value: 6000, step: 100 },
+          { name: 'repeat', label: 'Contracts per customer', unit: '', value: 1, step: 0.1 },
           { name: 'margin', label: 'Margin', unit: '%', value: 60, step: 1 },
         ],
       },
@@ -101,21 +192,30 @@ const copy = {
   },
 }[lang];
 const { models } = copy;
+
+const DEFAULTS = { clicks: 20000, cpc: 0.8, fee: 1500, setup: 0, extra: 5000 };
+
+// Resultado del ejemplo por defecto, para quien no tenga JavaScript
+const isEnglish = lang === 'en';
+const euro = (value: number, decimals = 0) => {
+  const formatted = value.toLocaleString(isEnglish ? 'en-US' : 'es-ES', { minimumFractionDigits: decimals, maximumFractionDigits: decimals, useGrouping: 'always' } as Intl.NumberFormatOptions);
+  return isEnglish ? `€${formatted}` : `${formatted} €`;
+};
+const percent = (value: number) => `${Math.round(value * 100).toLocaleString(isEnglish ? 'en-US' : 'es-ES')}${isEnglish ? '%' : ' %'}`;
+const defaultValues = Object.fromEntries(models[0].fields.map((field) => [field.name, field.value]));
+const perSession = sessionValue('sales', defaultValues);
+const defaultRoi = SCENARIOS.map((factor) => roi({ monthlyGain: DEFAULTS.extra * perSession * factor, fee: DEFAULTS.fee, setup: DEFAULTS.setup }));
+const expected = defaultRoi[1];
+const pageTypes: PageType[] = copy.pageTypes.map((pageType) => ({ ...pageType, rates: pageType.rates as Record<Model, number> }));
+const defaultBreakdown = pageTypeResults('sales', defaultValues, pageTypes);
+const breakdownTotal = defaultBreakdown.reduce((sum, row) => sum + row.monthly, 0);
 ---
 
-<div class="svc not-prose" data-session-calc data-lang={lang}>
+<div class="svc not-prose" data-session-calc data-lang={lang} data-copy={JSON.stringify({ rateLabel: copy.rateLabel, adsOk: copy.adsOk, adsBad: copy.adsBad, paybackMonth: copy.paybackMonth(0), paybackNever: copy.paybackNever, newType: copy.newType, remove: copy.remove, copied: copy.copied, copyFailed: copy.copyFailed, summaryTitle: copy.summaryTitle, session: copy.session, month: copy.month, year: copy.year, thousand: copy.thousand, adsCost: copy.adsCost, adsMax: copy.adsMax, roiYear: copy.roiYear, payback: copy.payback, maxFee: copy.maxFee, perMonthShort: copy.perMonthShort, breakdownTitle: copy.breakdownTitle, models: Object.fromEntries(models.map((model) => [model.id, model.label])) })}>
   <div class="svc-tabs" role="tablist" aria-label={copy.modelsAria}>
     {
       models.map((model, index) => (
-        <button
-          type="button"
-          role="tab"
-          id={`svc-tab-${model.id}`}
-          aria-selected={index === 0 ? 'true' : 'false'}
-          aria-controls={`svc-panel-${model.id}`}
-          tabindex={index === 0 ? undefined : '-1'}
-          data-model={model.id}
-        >
+        <button type="button" role="tab" id={`svc-tab-${model.id}`} aria-selected={index === 0 ? 'true' : 'false'} aria-controls={`svc-panel-${model.id}`} tabindex={index === 0 ? undefined : '-1'} data-model={model.id}>
           {model.label}
         </button>
       ))
@@ -130,7 +230,10 @@ const { models } = copy;
             <legend class="svc-formula">{copy.formulaPrefix} {model.formula}</legend>
             {model.fields.map((field) => (
               <label>
-                <span>{field.label}</span>
+                <span>
+                  {field.label}
+                  <small class="svc-by-type" data-by-type={field.name} hidden>{copy.byType}</small>
+                </span>
                 <span class="svc-input">
                   <input type="number" min="0" step={field.step} value={field.value} data-field={field.name} inputmode="decimal" />
                   <em>{field.unit}</em>
@@ -140,25 +243,162 @@ const { models } = copy;
           </fieldset>
         ))
       }
-      <label class="svc-clicks">
-        <span>{copy.clicks}</span>
-        <span class="svc-input">
-          <input type="number" min="0" step="100" value="20000" data-clicks inputmode="numeric" />
-          <em></em>
-        </span>
-      </label>
+
+      <section class="svc-step">
+        <div class="svc-step-head">
+          <h3>{copy.stepTraffic}</h3>
+          <div class="svc-switch" role="group" aria-label={copy.trafficAria}>
+            <button type="button" aria-pressed="true" data-traffic="total">{copy.trafficTotal}</button>
+            <button type="button" aria-pressed="false" data-traffic="types">{copy.trafficTypes}</button>
+          </div>
+        </div>
+        <label data-traffic-panel="total">
+          <span>{copy.clicks}</span>
+          <span class="svc-input">
+            <input type="number" min="0" step="100" value={DEFAULTS.clicks} data-clicks inputmode="numeric" />
+            <em></em>
+          </span>
+        </label>
+        <div class="svc-types" data-traffic-panel="types" hidden>
+          <div class="svc-row svc-row-head" aria-hidden="true">
+            <span>{copy.typeName}</span>
+            <span>{copy.typeClicks}</span>
+            <span data-rate-label>{copy.rateLabel.sales}</span>
+            <span></span>
+          </div>
+          <div data-rows>
+            {
+              pageTypes.map((pageType) => (
+                <div class="svc-row" data-row data-sales={pageType.rates.sales} data-leads={pageType.rates.leads} data-ads={pageType.rates.ads}>
+                  <input type="text" maxlength="40" value={pageType.name} aria-label={copy.typeName} data-row-name />
+                  <input type="number" min="0" step="100" value={pageType.clicks} aria-label={copy.typeClicks} inputmode="numeric" data-row-clicks />
+                  <input type="number" min="0" step="0.1" value={pageType.rates.sales} aria-label={copy.rateLabel.sales} inputmode="decimal" data-row-rate />
+                  <button type="button" class="svc-remove" aria-label={`${copy.remove} ${pageType.name}`} data-row-remove>×</button>
+                </div>
+              ))
+            }
+          </div>
+          <button type="button" class="svc-add" data-row-add>+ {copy.addType}</button>
+        </div>
+      </section>
+
+      <section class="svc-step">
+        <h3>{copy.stepAds}</h3>
+        <label>
+          <span>{copy.cpc}</span>
+          <span class="svc-input">
+            <input type="number" min="0" step="0.05" value={DEFAULTS.cpc} data-cpc inputmode="decimal" />
+            <em>€</em>
+          </span>
+        </label>
+      </section>
+
+      <section class="svc-step">
+        <h3>{copy.stepInvest}</h3>
+        <label>
+          <span>{copy.fee}</span>
+          <span class="svc-input">
+            <input type="number" min="0" step="100" value={DEFAULTS.fee} data-fee inputmode="decimal" />
+            <em>€</em>
+          </span>
+        </label>
+        <label>
+          <span>{copy.setup}</span>
+          <span class="svc-input">
+            <input type="number" min="0" step="100" value={DEFAULTS.setup} data-setup inputmode="decimal" />
+            <em>€</em>
+          </span>
+        </label>
+        <label>
+          <span>{copy.extra}</span>
+          <span class="svc-input">
+            <input type="number" min="0" step="100" value={DEFAULTS.extra} data-extra inputmode="numeric" />
+            <em></em>
+          </span>
+        </label>
+        <p class="svc-hint">{copy.investHint}</p>
+      </section>
     </div>
 
     <div class="svc-result" aria-live="polite">
       <p class="svc-label">{copy.session}</p>
-      <p class="svc-big" data-out="session">{copy.sessionOut}</p>
+      <p class="svc-big" data-out="session">{euro(perSession, 2)}</p>
       <dl>
-        <div><dt>{copy.month}</dt><dd data-out="month">{copy.monthOut}</dd></div>
-        <div><dt>{copy.year}</dt><dd data-out="year">{copy.yearOut}</dd></div>
-        <div><dt>{copy.thousand}</dt><dd data-out="thousand">{copy.thousandOut}</dd></div>
+        <div><dt>{copy.month}</dt><dd data-out="month">{euro(perSession * DEFAULTS.clicks)}</dd></div>
+        <div><dt>{copy.year}</dt><dd data-out="year">{euro(perSession * DEFAULTS.clicks * 12)}</dd></div>
+        <div><dt>{copy.thousand}</dt><dd data-out="thousand">{euro(perSession * 1000)}</dd></div>
+      </dl>
+
+      <p class="svc-label svc-sub">{copy.adsTitle}</p>
+      <dl>
+        <div><dt>{copy.adsCost}</dt><dd><span data-out="adsCost">{euro(DEFAULTS.clicks * DEFAULTS.cpc)}</span>{copy.perMonthShort}</dd></div>
+        <div><dt>{copy.adsMax}</dt><dd data-out="adsMax">{euro(perSession, 2)}</dd></div>
+      </dl>
+      <p class="svc-verdict" data-out="adsVerdict">{perSession >= DEFAULTS.cpc ? copy.adsOk : copy.adsBad}</p>
+
+      <p class="svc-label svc-sub">{copy.investTitle}</p>
+      <dl>
+        <div><dt>{copy.roiYear}</dt><dd data-out="roi">{expected.roiYear === null ? '—' : percent(expected.roiYear)}</dd></div>
+        <div><dt>{copy.payback}</dt><dd class="svc-text" data-out="payback">{expected.paybackMonth ? copy.paybackMonth(expected.paybackMonth) : copy.paybackNever}</dd></div>
+        <div><dt>{copy.maxFee}</dt><dd><span data-out="maxFee">{euro(DEFAULTS.extra * perSession)}</span>{copy.perMonthShort}</dd></div>
       </dl>
     </div>
   </div>
+
+  <div class="svc-tables">
+    <section data-breakdown hidden>
+      <h3>{copy.breakdownTitle}</h3>
+      <div class="svc-scroll">
+        <table>
+          <thead><tr>{copy.breakdownHead.map((head) => <th scope="col">{head}</th>)}</tr></thead>
+          <tbody data-breakdown-body>
+            {
+              defaultBreakdown.map((row) => (
+                <tr>
+                  <th scope="row">{row.name}</th>
+                  <td>{row.clicks.toLocaleString(isEnglish ? 'en-US' : 'es-ES', { useGrouping: 'always' } as Intl.NumberFormatOptions)}</td>
+                  <td>{euro(row.perSession, 2)}</td>
+                  <td>{euro(row.monthly)}</td>
+                  <td><span class="svc-bar"><span style={`width:${breakdownTotal ? (row.monthly / breakdownTotal) * 100 : 0}%`} /></span>{percent(breakdownTotal ? row.monthly / breakdownTotal : 0)}</td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h3>{copy.scenariosTitle}</h3>
+      <div class="svc-scroll">
+        <table>
+          <thead><tr><td></td>{copy.scenarioNames.map((name, index) => <th scope="col" class:list={{ 'svc-expected': index === 1 }}>{name}</th>)}</tr></thead>
+          <tbody>
+            <tr><th scope="row">{copy.scenarioRows[0]}</th>{defaultRoi.map((scenario, index) => <td class:list={{ 'svc-expected': index === 1 }} data-scenario={`gain-${index}`}>{euro(scenario.gainYear)}</td>)}</tr>
+            <tr><th scope="row">{copy.scenarioRows[1]}</th>{defaultRoi.map((scenario, index) => <td class:list={{ 'svc-expected': index === 1 }} data-scenario={`cost-${index}`}>{euro(scenario.costYear)}</td>)}</tr>
+            <tr><th scope="row">{copy.scenarioRows[2]}</th>{defaultRoi.map((scenario, index) => <td class:list={{ 'svc-expected': index === 1 }} data-scenario={`roi-${index}`}>{scenario.roiYear === null ? '—' : percent(scenario.roiYear)}</td>)}</tr>
+            <tr><th scope="row">{copy.scenarioRows[3]}</th>{defaultRoi.map((scenario, index) => <td class:list={['svc-text', { 'svc-expected': index === 1 }]} data-scenario={`payback-${index}`}>{scenario.paybackMonth ? copy.paybackMonth(scenario.paybackMonth) : copy.paybackNever}</td>)}</tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <div class="svc-actions">
+    <button type="button" data-copy-link>{copy.copyLink}</button>
+    <button type="button" data-copy-summary>{copy.copySummary}</button>
+    <span class="svc-status" role="status" data-copy-status></span>
+  </div>
+  <p class="svc-hint">{copy.privacy}</p>
+
+  <template data-row-template>
+    <div class="svc-row" data-row>
+      <input type="text" maxlength="40" aria-label={copy.typeName} data-row-name />
+      <input type="number" min="0" step="100" aria-label={copy.typeClicks} inputmode="numeric" data-row-clicks />
+      <input type="number" min="0" step="0.1" inputmode="decimal" data-row-rate />
+      <button type="button" class="svc-remove" aria-label={copy.remove} data-row-remove>×</button>
+    </div>
+  </template>
 </div>
 
 <style>
@@ -168,21 +408,28 @@ const { models } = copy;
     background: var(--color-raised);
     padding: 1rem;
   }
-  .svc-tabs {
+  .svc-tabs,
+  .svc-switch {
     display: inline-flex;
     gap: 0.15rem;
     border: 1px solid var(--color-line);
     border-radius: 999px;
     padding: 0.15rem;
   }
-  .svc-tabs button {
+  .svc-tabs button,
+  .svc-switch button {
     border-radius: 999px;
     padding: 0.3rem 0.9rem;
     font-size: 0.85rem;
     font-weight: 600;
     color: var(--color-muted);
   }
-  .svc-tabs button[aria-selected='true'] {
+  .svc-switch button {
+    padding: 0.2rem 0.7rem;
+    font-size: 0.78rem;
+  }
+  .svc-tabs button[aria-selected='true'],
+  .svc-switch button[aria-pressed='true'] {
     background: var(--color-ink);
     color: var(--color-on-dark);
   }
@@ -191,9 +438,31 @@ const { models } = copy;
     grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
     gap: 1.25rem;
     margin-top: 1rem;
+    align-items: start;
   }
-  .svc-inputs fieldset {
+  .svc-inputs fieldset,
+  .svc-step {
     display: grid;
+    gap: 0.5rem;
+  }
+  .svc-step {
+    margin-top: 0.9rem;
+    border-top: 1px solid var(--color-line);
+    padding-top: 0.9rem;
+  }
+  .svc-step h3,
+  .svc-tables h3 {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+  .svc-step-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
     gap: 0.5rem;
   }
   .svc-formula {
@@ -209,30 +478,90 @@ const { models } = copy;
     gap: 0.75rem;
     font-size: 0.9rem;
   }
-  .svc-clicks {
-    margin-top: 0.75rem;
-    border-top: 1px solid var(--color-line);
-    padding-top: 0.75rem;
+  .svc-inputs label[hidden],
+  .svc-types[hidden] {
+    display: none;
+  }
+  .svc-by-type {
+    display: block;
+    font-size: 0.72rem;
+    color: var(--color-accent-ink);
+  }
+  .svc-by-type[hidden] {
+    display: none;
   }
   .svc-input {
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
   }
-  .svc-input input {
-    width: 6.5rem;
+  .svc input {
     border: 1px solid var(--color-line);
     border-radius: 0.4rem;
     padding: 0.3rem 0.45rem;
     font-family: var(--font-mono);
+    background: var(--color-paper);
+    min-width: 0;
+  }
+  .svc input[type='number'] {
     text-align: right;
+  }
+  .svc input:disabled {
+    opacity: 0.45;
+  }
+  .svc-input input {
+    width: 6.5rem;
   }
   .svc-input em {
     width: 1rem;
     font-style: normal;
     color: var(--color-muted);
   }
+  .svc-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 5.5rem 4.5rem 1.6rem;
+    gap: 0.35rem;
+    align-items: center;
+    margin-bottom: 0.35rem;
+  }
+  .svc-row input[type='text'] {
+    font-family: inherit;
+    font-size: 0.88rem;
+  }
+  .svc-row-head {
+    font-size: 0.72rem;
+    color: var(--color-muted);
+    margin-bottom: 0.2rem;
+  }
+  .svc-row-head span:nth-child(2),
+  .svc-row-head span:nth-child(3) {
+    text-align: right;
+  }
+  .svc-remove {
+    border-radius: 999px;
+    color: var(--color-muted);
+    font-size: 1.1rem;
+    line-height: 1;
+    height: 1.6rem;
+  }
+  .svc-remove:hover,
+  .svc-add:hover {
+    color: var(--color-ink);
+  }
+  .svc-add {
+    justify-self: start;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--color-accent-ink);
+  }
+  .svc-hint {
+    margin-top: 0.4rem;
+    font-size: 0.75rem;
+    color: var(--color-muted);
+  }
   .svc-result {
+    position: sticky;
+    top: 5.5rem;
     border-radius: 0.75rem;
     background: var(--color-dark);
     color: var(--color-on-dark);
@@ -245,6 +574,9 @@ const { models } = copy;
     text-transform: uppercase;
     color: var(--color-accent-on-dark);
   }
+  .svc-sub {
+    margin-top: 1.1rem;
+  }
   .svc-big {
     font-family: var(--font-display);
     font-size: 2.4rem;
@@ -254,7 +586,7 @@ const { models } = copy;
   .svc-result dl {
     display: grid;
     gap: 0.35rem;
-    margin-top: 0.9rem;
+    margin-top: 0.5rem;
     font-size: 0.88rem;
   }
   .svc-result dl div {
@@ -269,69 +601,374 @@ const { models } = copy;
   }
   .svc-result dd {
     font-family: var(--font-mono);
+    text-align: right;
+    white-space: nowrap;
   }
-  @media (max-width: 640px) {
+  .svc-result dd.svc-text,
+  .svc :global(td.svc-text) {
+    font-family: inherit;
+  }
+  .svc-verdict {
+    margin-top: 0.5rem;
+    font-size: 0.8rem;
+    color: var(--color-on-dark-muted);
+  }
+  .svc-tables {
+    display: grid;
+    gap: 1.25rem;
+    margin-top: 1.5rem;
+  }
+  .svc-tables section {
+    min-width: 0;
+  }
+  .svc-tables section[hidden] {
+    display: none;
+  }
+  .svc-scroll {
+    overflow-x: auto;
+    margin-top: 0.5rem;
+  }
+  .svc table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.86rem;
+  }
+  .svc :global(th),
+  .svc :global(td) {
+    border-bottom: 1px solid var(--color-line);
+    padding: 0.4rem 0.5rem;
+    text-align: right;
+    white-space: nowrap;
+  }
+  .svc :global(th:first-child),
+  .svc :global(td:first-child) {
+    text-align: left;
+    padding-left: 0;
+  }
+  .svc thead th {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-muted);
+  }
+  .svc tbody :global(th) {
+    font-weight: 500;
+  }
+  .svc :global(td) {
+    font-family: var(--font-mono);
+  }
+  .svc .svc-expected {
+    background: color-mix(in srgb, var(--color-accent) 9%, transparent);
+    font-weight: 600;
+  }
+  .svc :global(.svc-bar) {
+    display: inline-block;
+    width: 3.5rem;
+    height: 0.4rem;
+    margin-right: 0.5rem;
+    border-radius: 999px;
+    background: var(--color-line);
+    overflow: hidden;
+    vertical-align: middle;
+  }
+  .svc :global(.svc-bar span) {
+    display: block;
+    height: 100%;
+    background: var(--color-accent);
+  }
+  .svc-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1.25rem;
+  }
+  .svc-actions button {
+    border: 1px solid var(--color-line);
+    border-radius: 999px;
+    padding: 0.4rem 0.95rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    background: var(--color-paper);
+  }
+  .svc-actions button:hover {
+    border-color: var(--color-ink);
+  }
+  .svc-status {
+    font-size: 0.8rem;
+    color: var(--color-accent-ink);
+  }
+  .svc button:focus-visible,
+  .svc input:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+  @media (max-width: 760px) {
     .svc-grid {
       grid-template-columns: 1fr;
+    }
+    .svc-row {
+      grid-template-columns: minmax(0, 1fr) 4.6rem 3.6rem 1.4rem;
+    }
+    .svc-inputs label {
+      font-size: 0.85rem;
+    }
+    .svc-input input {
+      width: 5.5rem;
+    }
+    .svc-result {
+      position: static;
     }
   }
 </style>
 
 <script>
-  const formulas: Record<string, (v: Record<string, number>) => number> = {
-    sales: (v) => (v.conv / 100) * v.ticket * (v.margin / 100),
-    leads: (v) => (v.conv / 100) * (v.close / 100) * v.deal * (v.margin / 100),
-    ads: (v) => (v.rpm / 1000) * v.pages,
-  };
+  import { pageTypeResults, rateField, roi, SCENARIOS, sessionValue, type Model, type PageType } from '../../lib/session-value';
+
+  const MODELS: Model[] = ['sales', 'leads', 'ads'];
 
   for (const root of document.querySelectorAll<HTMLElement>('[data-session-calc]')) {
-    let model = 'sales';
+    const text = JSON.parse(root.dataset.copy!);
     const isEnglish = root.dataset.lang === 'en';
+    const locale = isEnglish ? 'en-US' : 'es-ES';
+    let model: Model = 'sales';
+    let traffic: 'total' | 'types' = 'total';
+
+    const $ = <T extends HTMLElement>(selector: string) => root.querySelector<T>(selector)!;
+    const number = (input: HTMLInputElement | null) => Math.max(0, Number(input?.value) || 0);
     const euro = (value: number, decimals = 0) => {
-      const formatted = value.toLocaleString(isEnglish ? 'en-US' : 'es-ES', {
-        minimumFractionDigits: decimals,
-        maximumFractionDigits: decimals,
-        useGrouping: 'always',
-      } as Intl.NumberFormatOptions);
+      const formatted = value.toLocaleString(locale, { minimumFractionDigits: decimals, maximumFractionDigits: decimals, useGrouping: 'always' } as Intl.NumberFormatOptions);
       return isEnglish ? `€${formatted}` : `${formatted} €`;
     };
-    const out = (name: string) => root.querySelector<HTMLElement>(`[data-out="${name}"]`)!;
+    const euroSession = (value: number) => euro(value, value < 10 ? 2 : 0);
+    const count = (value: number) => value.toLocaleString(locale, { useGrouping: 'always' } as Intl.NumberFormatOptions);
+    const percent = (value: number) => `${Math.round(value * 100).toLocaleString(locale)}${isEnglish ? '%' : ' %'}`;
+    const paybackText = (month: number | null) => (month ? text.paybackMonth.replace('0', String(month)) : text.paybackNever);
+    const out = (name: string, value: string) => ($(`[data-out="${name}"]`).textContent = value);
 
-    const update = () => {
-      const values: Record<string, number> = {};
-      root.querySelectorAll<HTMLInputElement>(`[data-fields="${model}"] [data-field]`).forEach((input) => {
-        values[input.dataset.field!] = Math.max(0, Number(input.value) || 0);
+    const rowsBox = $('[data-rows]');
+    const template = $<HTMLTemplateElement>('[data-row-template]');
+    const rows = () => [...rowsBox.querySelectorAll<HTMLElement>('[data-row]')];
+
+    const readPageTypes = (): PageType[] =>
+      rows().map((row) => ({
+        name: row.querySelector<HTMLInputElement>('[data-row-name]')!.value.trim() || text.newType,
+        clicks: number(row.querySelector('[data-row-clicks]')),
+        rates: Object.fromEntries(MODELS.map((id) => [id, Math.max(0, Number(row.dataset[id]) || 0)])) as Record<Model, number>,
+      }));
+
+    const addRow = (pageType: PageType) => {
+      const row = template.content.firstElementChild!.cloneNode(true) as HTMLElement;
+      MODELS.forEach((id) => (row.dataset[id] = String(pageType.rates[id])));
+      row.querySelector<HTMLInputElement>('[data-row-name]')!.value = pageType.name;
+      row.querySelector<HTMLInputElement>('[data-row-clicks]')!.value = String(pageType.clicks);
+      rowsBox.append(row);
+      syncRows();
+      return row;
+    };
+
+    // Las filas guardan la conversión de cada modelo; el campo visible es el del modelo activo
+    const syncRows = () => {
+      $('[data-rate-label]').textContent = text.rateLabel[model];
+      rows().forEach((row) => {
+        const rate = row.querySelector<HTMLInputElement>('[data-row-rate]')!;
+        rate.value = row.dataset[model] ?? '0';
+        rate.setAttribute('aria-label', text.rateLabel[model]);
+        const name = row.querySelector<HTMLInputElement>('[data-row-name]')!.value;
+        row.querySelector('[data-row-remove]')!.setAttribute('aria-label', `${text.remove} ${name}`);
       });
-      const clicks = Math.max(0, Number(root.querySelector<HTMLInputElement>('[data-clicks]')!.value) || 0);
-      const perSession = formulas[model](values);
-      out('session').textContent = euro(perSession, perSession < 10 ? 2 : 0);
-      out('month').textContent = euro(perSession * clicks);
-      out('year').textContent = euro(perSession * clicks * 12);
-      out('thousand').textContent = euro(perSession * 1000);
+    };
+
+    const modelValues = () => {
+      const values: Record<string, number> = {};
+      root.querySelectorAll<HTMLInputElement>(`[data-fields="${model}"] [data-field]`).forEach((input) => (values[input.dataset.field!] = number(input)));
+      return values;
+    };
+
+    let summary = '';
+    const update = () => {
+      const values = modelValues();
+      const byType = traffic === 'types';
+      const breakdown = byType ? pageTypeResults(model, values, readPageTypes()) : [];
+      const clicks = byType ? breakdown.reduce((sum, row) => sum + row.clicks, 0) : number($('[data-clicks]'));
+      const monthly = byType ? breakdown.reduce((sum, row) => sum + row.monthly, 0) : sessionValue(model, values) * clicks;
+      const perSession = byType ? (clicks ? monthly / clicks : 0) : sessionValue(model, values);
+
+      // El campo que se reparte por tipo de página queda desactivado en el bloque general
+      root.querySelectorAll<HTMLInputElement>('[data-field]').forEach((input) => {
+        const replaced = byType && input.closest<HTMLElement>('[data-fields]')!.dataset.fields === model && input.dataset.field === rateField[model];
+        input.disabled = replaced;
+        const note = input.closest('label')!.querySelector<HTMLElement>('[data-by-type]');
+        if (note) note.hidden = !replaced;
+      });
+
+      const cpc = number($('[data-cpc]'));
+      const fee = number($('[data-fee]'));
+      const setup = number($('[data-setup]'));
+      const extra = number($('[data-extra]'));
+      const scenarios = SCENARIOS.map((factor) => roi({ monthlyGain: extra * perSession * factor, fee, setup }));
+      const expected = scenarios[1];
+
+      out('session', euroSession(perSession));
+      out('month', euro(monthly));
+      out('year', euro(monthly * 12));
+      out('thousand', euro(perSession * 1000));
+      out('adsCost', euro(clicks * cpc));
+      out('adsMax', euro(perSession, 2));
+      out('adsVerdict', perSession >= cpc ? text.adsOk : text.adsBad);
+      out('roi', expected.roiYear === null ? '—' : percent(expected.roiYear));
+      out('payback', paybackText(expected.paybackMonth));
+      out('maxFee', euro(extra * perSession));
+
+      scenarios.forEach((scenario, index) => {
+        $(`[data-scenario="gain-${index}"]`).textContent = euro(scenario.gainYear);
+        $(`[data-scenario="cost-${index}"]`).textContent = euro(scenario.costYear);
+        $(`[data-scenario="roi-${index}"]`).textContent = scenario.roiYear === null ? '—' : percent(scenario.roiYear);
+        $(`[data-scenario="payback-${index}"]`).textContent = paybackText(scenario.paybackMonth);
+      });
+
+      $('[data-breakdown]').hidden = !byType;
+      const body = $('[data-breakdown-body]');
+      body.replaceChildren(
+        ...breakdown.map((row) => {
+          const share = monthly ? row.monthly / monthly : 0;
+          const tr = document.createElement('tr');
+          const name = document.createElement('th');
+          name.scope = 'row';
+          name.textContent = row.name;
+          const cells = [count(row.clicks), euro(row.perSession, 2), euro(row.monthly)].map((value) => {
+            const td = document.createElement('td');
+            td.textContent = value;
+            return td;
+          });
+          const shareCell = document.createElement('td');
+          const bar = document.createElement('span');
+          bar.className = 'svc-bar';
+          const fill = document.createElement('span');
+          fill.style.width = `${share * 100}%`;
+          bar.append(fill);
+          shareCell.append(bar, percent(share));
+          tr.append(name, ...cells, shareCell);
+          return tr;
+        })
+      );
+
+      summary = [
+        `${text.summaryTitle} · ${text.models[model]}`,
+        `${text.session}: ${euroSession(perSession)}`,
+        `${text.month}: ${euro(monthly)} · ${text.year}: ${euro(monthly * 12)}`,
+        `${text.thousand}: ${euro(perSession * 1000)}`,
+        ...breakdown.map((row) => `  ${row.name}: ${euro(row.perSession, 2)} × ${count(row.clicks)} = ${euro(row.monthly)}`),
+        `${text.adsCost}: ${euro(clicks * cpc)}${text.perMonthShort} · ${text.adsMax}: ${euro(perSession, 2)}`,
+        `${text.roiYear}: ${expected.roiYear === null ? '—' : percent(expected.roiYear)} · ${text.payback} ${paybackText(expected.paybackMonth)} · ${text.maxFee}: ${euro(extra * perSession)}${text.perMonthShort}`,
+      ].join('\n');
+    };
+
+    const selectModel = (id: Model) => {
+      model = id;
+      tabs.forEach((tab) => {
+        const active = tab.dataset.model === id;
+        tab.setAttribute('aria-selected', String(active));
+        tab.tabIndex = active ? 0 : -1;
+      });
+      root.querySelectorAll<HTMLElement>('[data-fields]').forEach((set) => (set.hidden = set.dataset.fields !== model));
+      syncRows();
+      update();
+    };
+
+    const selectTraffic = (mode: 'total' | 'types') => {
+      traffic = mode;
+      root.querySelectorAll<HTMLButtonElement>('[data-traffic]').forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.traffic === mode)));
+      root.querySelectorAll<HTMLElement>('[data-traffic-panel]').forEach((panel) => (panel.hidden = panel.dataset.trafficPanel !== mode));
+      update();
     };
 
     const tabs = [...root.querySelectorAll<HTMLButtonElement>('[data-model]')];
-    const selectTab = (tab: HTMLButtonElement) => {
-      model = tab.dataset.model!;
-      tabs.forEach((other) => {
-        other.setAttribute('aria-selected', String(other === tab));
-        other.tabIndex = other === tab ? 0 : -1;
-      });
-      root.querySelectorAll<HTMLElement>('[data-fields]').forEach((set) => (set.hidden = set.dataset.fields !== model));
-      update();
-    };
     tabs.forEach((tab, index) => {
-      tab.addEventListener('click', () => selectTab(tab));
+      tab.addEventListener('click', () => selectModel(tab.dataset.model as Model));
       tab.addEventListener('keydown', (event) => {
         const target = ({ ArrowRight: index + 1, ArrowLeft: index - 1, Home: 0, End: tabs.length - 1 } as Record<string, number | undefined>)[event.key];
         if (target === undefined) return;
         event.preventDefault();
         const next = tabs[(target + tabs.length) % tabs.length];
-        selectTab(next);
+        selectModel(next.dataset.model as Model);
         next.focus();
       });
     });
-    root.querySelectorAll('input').forEach((input) => input.addEventListener('input', update));
+    root.querySelectorAll<HTMLButtonElement>('[data-traffic]').forEach((button) => button.addEventListener('click', () => selectTraffic(button.dataset.traffic as 'total' | 'types')));
+
+    root.addEventListener('input', (event) => {
+      const target = event.target as HTMLInputElement;
+      if (target.matches('[data-row-rate]')) target.closest<HTMLElement>('[data-row]')!.dataset[model] = target.value;
+      if (target.matches('[data-row-name]')) syncRows();
+      update();
+    });
+    root.addEventListener('click', (event) => {
+      const target = event.target as HTMLElement;
+      if (target.closest('[data-row-remove]')) {
+        target.closest('[data-row]')!.remove();
+        update();
+      } else if (target.closest('[data-row-add]')) {
+        const row = addRow({ name: '', clicks: 1000, rates: { sales: 1, leads: 1, ads: 2 } });
+        row.querySelector<HTMLInputElement>('[data-row-name]')!.focus();
+        update();
+      }
+    });
+
+    // Enlace con los datos en el hash (no llega al servidor ni a la analítica)
+    const stateHash = () => {
+      const params = new URLSearchParams({ m: model, t: traffic });
+      Object.entries(modelValues()).forEach(([key, value]) => params.set(key, String(value)));
+      (['clicks', 'cpc', 'fee', 'setup', 'extra'] as const).forEach((key) => params.set(key, String(number($(`[data-${key}]`)))));
+      if (traffic === 'types') params.set('p', readPageTypes().map((pageType) => [pageType.name.replace(/[:;]/g, ' '), pageType.clicks, ...MODELS.map((id) => pageType.rates[id])].join(':')).join(';'));
+      return `#${params}`;
+    };
+
+    const restore = () => {
+      const params = new URLSearchParams(location.hash.slice(1));
+      const savedModel = params.get('m') as Model | null;
+      if (!savedModel || !MODELS.includes(savedModel)) return;
+      root.querySelectorAll<HTMLInputElement>(`[data-fields="${savedModel}"] [data-field]`).forEach((input) => {
+        const saved = params.get(input.dataset.field!);
+        if (saved !== null && Number.isFinite(Number(saved))) input.value = saved;
+      });
+      (['clicks', 'cpc', 'fee', 'setup', 'extra'] as const).forEach((key) => {
+        const saved = params.get(key);
+        if (saved !== null && Number.isFinite(Number(saved))) $<HTMLInputElement>(`[data-${key}]`).value = saved;
+      });
+      const savedTypes = params.get('p');
+      if (savedTypes) {
+        rowsBox.replaceChildren();
+        savedTypes
+          .split(';')
+          .slice(0, 30)
+          .forEach((entry) => {
+            const [name, clicks, ...rates] = entry.split(':');
+            addRow({ name: name.slice(0, 40), clicks: Number(clicks) || 0, rates: Object.fromEntries(MODELS.map((id, index) => [id, Number(rates[index]) || 0])) as Record<Model, number> });
+          });
+      }
+      selectModel(savedModel);
+      selectTraffic(params.get('t') === 'types' ? 'types' : 'total');
+    };
+
+    const status = $('[data-copy-status]');
+    const copyText = async (value: string) => {
+      try {
+        await navigator.clipboard.writeText(value);
+        status.textContent = text.copied;
+      } catch {
+        status.textContent = text.copyFailed;
+      }
+      setTimeout(() => (status.textContent = ''), 2500);
+    };
+    $('[data-copy-link]').addEventListener('click', () => {
+      const url = `${location.origin}${location.pathname}${stateHash()}`;
+      history.replaceState(null, '', stateHash());
+      copyText(url);
+    });
+    $('[data-copy-summary]').addEventListener('click', () => copyText(`${summary}\n${location.origin}${location.pathname}${stateHash()}`));
+
+    restore();
+    syncRows();
     update();
   }
 </script>

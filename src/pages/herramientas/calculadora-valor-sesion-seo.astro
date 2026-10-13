@@ -25,7 +25,22 @@ const faq = [
   {
     question: '¿Cómo lo uso para priorizar?',
     answer:
-      'Calcula el valor por sesión de cada page type (categorías, fichas, blog…) y multiplícalo por los clics que puedes ganar en cada uno. El orden que sale casi nunca coincide con el del volumen de búsquedas.',
+      'Activa «Por tipo de página» y pon los clics y la conversión de cada uno (categorías, fichas, blog…). La tabla te dice cuánto deja cada page type y qué peso tiene. El orden que sale casi nunca coincide con el del volumen de búsquedas.',
+  },
+  {
+    question: '¿Qué me dice la comparación con Google Ads?',
+    answer:
+      'Dos cosas. Cuánto te costaría comprar en Ads los clics que hoy te trae el SEO, y el CPC máximo que puedes pagar sin perder dinero, que es justo el valor de una sesión. Si tu CPC está por encima, pujar en esas búsquedas no sale a cuenta y el SEO es la vía rentable.',
+  },
+  {
+    question: '¿Cómo calcula el ROI y cuándo recupero la inversión?',
+    answer:
+      'Multiplica los clics extra que esperas ganar por el valor de una sesión y los va sumando mes a mes con una curva de arranque prudente: un 25 % del efecto al tercer mes, un 55 % al sexto y el 100 % al año. Compara ese margen acumulado con la cuota y la inversión inicial. Los escenarios conservador y optimista usan la mitad y una vez y media de esos clics.',
+  },
+  {
+    question: '¿Qué datos guarda el enlace para compartir?',
+    answer:
+      'Tus cifras van en la parte del enlace que va detrás de «#», que el navegador no envía al servidor. No se guarda nada: quien abra el enlace verá la calculadora con tus datos y nada más.',
   },
 ];
 
@@ -46,7 +61,7 @@ const webApplication = {
 <Base
   lang="es"
   title="Calculadora del valor de una sesión orgánica (SEO) — Nacho Mascort"
-  description="Calcula cuánto vale cada sesión orgánica de tu web según tu modelo de negocio (ventas, leads o publicidad) y cuánto deja tu SEO al mes y al año."
+  description="Calcula cuánto vale cada sesión orgánica según tu negocio (ventas, leads o publicidad), por tipo de página, frente a Google Ads y con el ROI de tu inversión SEO."
   path={path}
   alternatePath="/en/tools/organic-session-value-calculator/"
   breadcrumbs={[
@@ -62,7 +77,7 @@ const webApplication = {
     <h1 class="display-1 mt-5">Calculadora del valor de una sesión orgánica</h1>
     <p class="lede mt-6">
       Cuánto deja de verdad cada visita que te trae Google, según tu modelo de negocio. Con ese número puedes comparar page
-      types, priorizar el plan SEO y saber qué vale cada mil clics más.
+      types, ver si te sale más a cuenta el SEO o Google Ads y calcular cuándo recuperas lo que inviertes.
     </p>
 
     <div class="mt-10">

@@ -219,12 +219,12 @@ export const extensionLanding: Record<Lang, ExtensionLandingCopy> = {
         id: 'serps',
         title: 'Entidades y volúmenes en Google y Trends',
         detail: [
-          'En cada búsqueda de Google, un recuadro con las entidades del Knowledge Graph que aparecen en la SERP, con su kgmid y su enlace a Wikidata. Con tu cuenta de DataForSEO suma el volumen mensual, el CPC y la tendencia de 12 meses de la búsqueda y de sus relacionadas. En Google Trends, el volumen de los términos que comparas.',
+          'En cada búsqueda de Google, un recuadro con las entidades del Knowledge Graph que aparecen en la SERP, con su kgmid y su enlace a Wikidata. Con tu cuenta de DataForSEO suma el volumen mensual, el CPC y la tendencia de 12 meses de la búsqueda y de sus relacionadas. En Google Trends, el volumen de los términos que comparas y, al pasar el ratón por la gráfica, las búsquedas reales de cada mes.',
           'Pagas a DataForSEO solo lo que consultas y cada volumen se guarda 30 días. Con una clave de la API Natural Language de Google, además, saca las entidades que tratan los 10 primeros resultados.',
         ],
         shots: [
           { shot: 'serp-volumenes', alt: 'Búsqueda de softonic en Google con el recuadro de la extensión: la entidad Softonic con su kgmid y el volumen de la búsqueda y de sus relacionadas', caption: 'softonic: 14.800 búsquedas al mes en España, y el volumen de cada búsqueda relacionada.', wide: true },
-          { shot: 'trends-volumenes', alt: 'Google Trends comparando softonic y uptodown, con el volumen mensual de cada término en el recuadro de la extensión', caption: 'Trends enseña el interés relativo; la extensión añade cuántas búsquedas son.', wide: true },
+          { shot: 'trends-volumenes', alt: 'Google Trends comparando softonic y uptodown: el tooltip de la semana del 29 de marzo añade 18.100 y 14.800 búsquedas en abril de 2026, y el recuadro de la extensión da el volumen mensual de cada término', caption: 'Trends enseña el interés de 0 a 100; la extensión añade cuántas búsquedas son, mes a mes, en el propio tooltip.', wide: true },
         ],
       },
       {
@@ -375,12 +375,12 @@ export const extensionLanding: Record<Lang, ExtensionLandingCopy> = {
         id: 'serps',
         title: 'Entities and volumes in Google and Trends',
         detail: [
-          'On every Google search, a box with the Knowledge Graph entities that show up in the SERP, with their kgmid and a link to Wikidata. With your DataForSEO account it adds the monthly volume, CPC and 12-month trend of the search and its related searches. On Google Trends, the volume of the terms you compare.',
+          'On every Google search, a box with the Knowledge Graph entities that show up in the SERP, with their kgmid and a link to Wikidata. With your DataForSEO account it adds the monthly volume, CPC and 12-month trend of the search and its related searches. On Google Trends, the volume of the terms you compare and, when you hover over the chart, the real searches for each month.',
           'You pay DataForSEO only for what you look up, and each volume is cached for 30 days. With a Google Natural Language API key, it also extracts the entities the top 10 results cover.',
         ],
         shots: [
           { shot: 'serp-volumenes', alt: 'Google search for softonic with the extension box: the Softonic entity with its kgmid and the volume of the search and its related searches', caption: 'softonic: 14,800 searches a month in Spain, plus the volume of every related search.', wide: true },
-          { shot: 'trends-volumenes', alt: 'Google Trends comparing softonic and uptodown, with each term’s monthly volume in the extension box', caption: 'Trends shows relative interest; the extension adds how many searches that is.', wide: true },
+          { shot: 'trends-volumenes', alt: 'Google Trends comparing softonic and uptodown: the tooltip for the week of March 29 adds 18,100 and 14,800 searches in April 2026, and the extension box shows each term’s monthly volume', caption: 'Trends shows interest from 0 to 100; the extension adds how many searches that is, month by month, right in the tooltip.', wide: true },
         ],
       },
       {

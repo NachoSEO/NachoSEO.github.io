@@ -70,7 +70,8 @@ export const guideParts: GuidePart[] = [
             number: 2,
             title: 'Query fan-out: las búsquedas que lanza la IA',
             summary: 'Cómo una pregunta se convierte en muchas búsquedas, y en qué idioma.',
-            status: 'disponible',
+            status: 'reservado',
+            author: { name: 'Lino Uruñuela', slug: 'lino-urunuela' },
           },
           {
             number: 3,

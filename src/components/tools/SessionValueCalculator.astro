@@ -402,6 +402,22 @@ const breakdownTotal = defaultBreakdown.reduce((sum, row) => sum + row.monthly, 
 </div>
 
 <style>
+  /* Dentro de un post, los estilos del artículo no deben tocar la calculadora */
+  .svc :global(h3),
+  .svc :global(p),
+  .svc :global(table) {
+    margin-top: 0;
+  }
+  .svc :global(th) {
+    font-family: inherit;
+    font-size: inherit;
+    color: inherit;
+    text-transform: none;
+    letter-spacing: normal;
+  }
+  .svc :global(a) {
+    text-decoration: none;
+  }
   .svc {
     border: 1px solid var(--color-line);
     border-radius: 1rem;
@@ -445,13 +461,14 @@ const breakdownTotal = defaultBreakdown.reduce((sum, row) => sum + row.monthly, 
     display: grid;
     gap: 0.5rem;
   }
-  .svc-step {
+  .svc .svc-step {
     margin-top: 0.9rem;
     border-top: 1px solid var(--color-line);
     padding-top: 0.9rem;
   }
-  .svc-step h3,
-  .svc-tables h3 {
+  .svc .svc-step h3,
+  .svc .svc-tables h3 {
+    font-family: inherit;
     font-size: 0.72rem;
     font-weight: 700;
     letter-spacing: 0.07em;
@@ -554,7 +571,7 @@ const breakdownTotal = defaultBreakdown.reduce((sum, row) => sum + row.monthly, 
     font-weight: 600;
     color: var(--color-accent-ink);
   }
-  .svc-hint {
+  .svc .svc-hint {
     margin-top: 0.4rem;
     font-size: 0.75rem;
     color: var(--color-muted);
@@ -574,7 +591,7 @@ const breakdownTotal = defaultBreakdown.reduce((sum, row) => sum + row.monthly, 
     text-transform: uppercase;
     color: var(--color-accent-on-dark);
   }
-  .svc-sub {
+  .svc .svc-sub {
     margin-top: 1.1rem;
   }
   .svc-big {
@@ -608,12 +625,12 @@ const breakdownTotal = defaultBreakdown.reduce((sum, row) => sum + row.monthly, 
   .svc :global(td.svc-text) {
     font-family: inherit;
   }
-  .svc-verdict {
+  .svc .svc-verdict {
     margin-top: 0.5rem;
     font-size: 0.8rem;
     color: var(--color-on-dark-muted);
   }
-  .svc-tables {
+  .svc .svc-tables {
     display: grid;
     gap: 1.25rem;
     margin-top: 1.5rem;
@@ -624,7 +641,7 @@ const breakdownTotal = defaultBreakdown.reduce((sum, row) => sum + row.monthly, 
   .svc-tables section[hidden] {
     display: none;
   }
-  .svc-scroll {
+  .svc .svc-scroll {
     overflow-x: auto;
     margin-top: 0.5rem;
   }

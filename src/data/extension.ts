@@ -224,7 +224,7 @@ export const extensionLanding: Record<Lang, ExtensionLandingCopy> = {
         ],
         shots: [
           { shot: 'serp-volumenes', alt: 'Búsqueda de softonic en Google con el recuadro de la extensión: la entidad Softonic con su kgmid y el volumen de la búsqueda y de sus relacionadas', caption: 'softonic: 14.800 búsquedas al mes en España, y el volumen de cada búsqueda relacionada.', wide: true },
-          { shot: 'trends-volumenes', alt: 'Google Trends comparando softonic y uptodown: el tooltip de la semana del 29 de marzo añade 18.100 y 14.800 búsquedas en abril de 2026, y el recuadro de la extensión da el volumen mensual de cada término', caption: 'Trends enseña el interés de 0 a 100; la extensión añade cuántas búsquedas son, mes a mes, en el propio tooltip.', wide: true },
+          { shot: 'trends-volumenes', alt: 'Google Trends comparando softonic y uptodown: el tooltip de la semana del 8 al 14 de febrero añade 14.800 y 12.100 búsquedas en febrero de 2026, y el recuadro de la extensión da el volumen mensual de cada término', caption: 'Trends enseña el interés de 0 a 100; la extensión añade cuántas búsquedas son, mes a mes, en el propio tooltip.', wide: true },
         ],
       },
       {
@@ -380,7 +380,7 @@ export const extensionLanding: Record<Lang, ExtensionLandingCopy> = {
         ],
         shots: [
           { shot: 'serp-volumenes', alt: 'Google search for softonic with the extension box: the Softonic entity with its kgmid and the volume of the search and its related searches', caption: 'softonic: 14,800 searches a month in Spain, plus the volume of every related search.', wide: true },
-          { shot: 'trends-volumenes', alt: 'Google Trends comparing softonic and uptodown: the tooltip for the week of March 29 adds 18,100 and 14,800 searches in April 2026, and the extension box shows each term’s monthly volume', caption: 'Trends shows interest from 0 to 100; the extension adds how many searches that is, month by month, right in the tooltip.', wide: true },
+          { shot: 'trends-volumenes', alt: 'Google Trends comparing softonic and uptodown: the tooltip for the week of February 22–28 adds 14,800 and 12,100 searches in February 2026, and the extension box shows each term’s monthly volume', caption: 'Trends shows interest from 0 to 100; the extension adds how many searches that is, month by month, right in the tooltip.', wide: true },
         ],
       },
       {

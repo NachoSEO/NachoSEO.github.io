@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "description": "Functions solo en páginas y /api: los recursos estáticos no gastan invocaciones (ver functions/_middleware.ts)",
+  "include": ["/*"],
+  "exclude": [
+    "/_astro/*",
+    "/fonts/*",
+    "/img/*",
+    "/og/*",
+    "/descargas/*",
+    "/cv/*",
+    "/.well-known/*",
+    "/favicon.svg",
+    "/apple-touch-icon.png",
+    "/og-fallback.png",
+    "/fx.js",
+    "/robots.txt",
+    "/rss.xml",
+    "/en/rss.xml",
+    "/llms.txt",
+    "/llms-full.txt",
+    "/sitemap-index.xml",
+    "/sitemap-0.xml"
+  ]
+}

@@ -1,6 +1,8 @@
 # nachomascort.com — todos bienvenidos, incluidos los crawlers de IA
 User-agent: *
 Allow: /
+# Content Signals (contentsignals.org): búsqueda, respuestas de IA y entrenamiento, permitidos
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
 
 # Crawlers de motores generativos (GEO/AEO): acceso explícito
 User-agent: GPTBot

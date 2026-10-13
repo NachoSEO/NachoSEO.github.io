@@ -36,6 +36,8 @@ export type ExtensionShot =
   | 'enlaces'
   | 'popup-hreflang'
   | 'popup-fanout'
+  | 'serp-volumenes'
+  | 'trends-volumenes'
   | 'popup-resumen-elmundo'
   | 'pagina-blog'
   | 'pagina-elmundo';
@@ -97,9 +99,9 @@ export const extensionLanding: Record<Lang, ExtensionLandingCopy> = {
         group: 'Internacional y SERPs',
         items: [
           { name: 'Hreflang con reciprocidad', detail: 'Códigos, x-default y enlaces de vuelta.', section: 'hreflang' },
-          { name: 'Entidades en las SERPs', detail: 'Los kgmid del Knowledge Graph.' },
-          { name: 'Entidades del top 10', detail: 'Qué tratan los 10 primeros resultados.' },
-          { name: 'Volúmenes en Google y Trends', detail: 'Con tu cuenta de DataForSEO.' },
+          { name: 'Entidades en las SERPs', detail: 'Los kgmid del Knowledge Graph.', section: 'serps' },
+          { name: 'Entidades del top 10', detail: 'Qué tratan los 10 primeros resultados.', section: 'serps' },
+          { name: 'Volúmenes en Google y Trends', detail: 'Con tu cuenta de DataForSEO.', section: 'serps' },
         ],
       },
     ],
@@ -214,6 +216,18 @@ export const extensionLanding: Record<Lang, ExtensionLandingCopy> = {
         shots: [{ shot: 'enlaces', alt: 'Tabla de enlaces de elmundo.es con texto, URL, tipo y rel', caption: 'Los 465 enlaces de la portada de elmundo.es, filtrables y exportables.', wide: true }],
       },
       {
+        id: 'serps',
+        title: 'Entidades y volúmenes en Google y Trends',
+        detail: [
+          'En cada búsqueda de Google, un recuadro con las entidades del Knowledge Graph que aparecen en la SERP, con su kgmid y su enlace a Wikidata. Con tu cuenta de DataForSEO suma el volumen mensual, el CPC y la tendencia de 12 meses de la búsqueda y de sus relacionadas. En Google Trends, el volumen de los términos que comparas.',
+          'Pagas a DataForSEO solo lo que consultas y cada volumen se guarda 30 días. Con una clave de la API Natural Language de Google, además, saca las entidades que tratan los 10 primeros resultados.',
+        ],
+        shots: [
+          { shot: 'serp-volumenes', alt: 'Búsqueda de softonic en Google con el recuadro de la extensión: la entidad Softonic con su kgmid y el volumen de la búsqueda y de sus relacionadas', caption: 'softonic: 14.800 búsquedas al mes en España, y el volumen de cada búsqueda relacionada.', wide: true },
+          { shot: 'trends-volumenes', alt: 'Google Trends comparando softonic y uptodown, con el volumen mensual de cada término en el recuadro de la extensión', caption: 'Trends enseña el interés relativo; la extensión añade cuántas búsquedas son.', wide: true },
+        ],
+      },
+      {
         id: 'hreflang',
         title: 'Hreflang con reciprocidad',
         detail: ['Valida los códigos, avisa si falta la autorreferencia o el x-default y comprueba que cada versión enlaza de vuelta a las demás.'],
@@ -223,8 +237,6 @@ export const extensionLanding: Record<Lang, ExtensionLandingCopy> = {
     basics: [
       { title: 'Metadatos completos', detail: 'Title y description con su longitud, canonical, robots, Open Graph, Twitter e idioma.' },
       { title: 'Headings anidados', detail: 'De H1 a H6 con sangría, con avisos de saltos de nivel, vacíos y ocultos.' },
-      { title: 'Entidades en las SERPs', detail: 'Las entidades del Knowledge Graph (kgmid) que aparecen en los resultados de Google.' },
-      { title: 'Volúmenes en Google y Trends', detail: 'Volumen y CPC con tu propia cuenta de DataForSEO. Pagas solo lo que consultas.' },
     ],
     changelog: [{ version: '0.1.0', date: '12 de octubre de 2026', notes: 'Primera versión: todo lo de esta página.' }],
   },
@@ -261,9 +273,9 @@ export const extensionLanding: Record<Lang, ExtensionLandingCopy> = {
         group: 'International and SERPs',
         items: [
           { name: 'Hreflang with reciprocity', detail: 'Codes, x-default and links back.', section: 'hreflang' },
-          { name: 'Entities in SERPs', detail: 'The Knowledge Graph kgmids.' },
-          { name: 'Top 10 entities', detail: 'What the top 10 results cover.' },
-          { name: 'Volumes in Google and Trends', detail: 'With your DataForSEO account.' },
+          { name: 'Entities in SERPs', detail: 'The Knowledge Graph kgmids.', section: 'serps' },
+          { name: 'Top 10 entities', detail: 'What the top 10 results cover.', section: 'serps' },
+          { name: 'Volumes in Google and Trends', detail: 'With your DataForSEO account.', section: 'serps' },
         ],
       },
     ],
@@ -360,6 +372,18 @@ export const extensionLanding: Record<Lang, ExtensionLandingCopy> = {
         shots: [{ shot: 'enlaces', alt: 'Links table for elmundo.es with text, URL, type and rel', caption: 'The 465 links on the elmundo.es homepage, filterable and exportable.', wide: true }],
       },
       {
+        id: 'serps',
+        title: 'Entities and volumes in Google and Trends',
+        detail: [
+          'On every Google search, a box with the Knowledge Graph entities that show up in the SERP, with their kgmid and a link to Wikidata. With your DataForSEO account it adds the monthly volume, CPC and 12-month trend of the search and its related searches. On Google Trends, the volume of the terms you compare.',
+          'You pay DataForSEO only for what you look up, and each volume is cached for 30 days. With a Google Natural Language API key, it also extracts the entities the top 10 results cover.',
+        ],
+        shots: [
+          { shot: 'serp-volumenes', alt: 'Google search for softonic with the extension box: the Softonic entity with its kgmid and the volume of the search and its related searches', caption: 'softonic: 14,800 searches a month in Spain, plus the volume of every related search.', wide: true },
+          { shot: 'trends-volumenes', alt: 'Google Trends comparing softonic and uptodown, with each term’s monthly volume in the extension box', caption: 'Trends shows relative interest; the extension adds how many searches that is.', wide: true },
+        ],
+      },
+      {
         id: 'hreflang',
         title: 'Hreflang with reciprocity',
         detail: ['Validates the codes, flags a missing self-reference or x-default and checks that every version links back to the others.'],
@@ -369,8 +393,6 @@ export const extensionLanding: Record<Lang, ExtensionLandingCopy> = {
     basics: [
       { title: 'Full metadata', detail: 'Title and description with their length, canonical, robots, Open Graph, Twitter and language.' },
       { title: 'Nested headings', detail: 'H1 to H6, indented, with warnings for skipped levels, empty and hidden headings.' },
-      { title: 'Entities in SERPs', detail: 'The Knowledge Graph entities (kgmid) that show up in Google’s results.' },
-      { title: 'Volumes in Google and Trends', detail: 'Volume and CPC with your own DataForSEO account. You only pay for what you look up.' },
     ],
     changelog: [{ version: '0.1.0', date: 'October 12, 2026', notes: 'First version: everything on this page.' }],
   },

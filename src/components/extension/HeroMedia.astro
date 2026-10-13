@@ -1,0 +1,148 @@
+---
+/**
+ * Cabecera de la landing de la extensión: pestañas para alternar entre la demo interactiva del popup y el vídeo de
+ * lanzamiento (45 s, sin voz). Sin JavaScript se ven las dos, una debajo de otra.
+ */
+import type { Lang } from '../../i18n/ui';
+import PopupDemo from './PopupDemo.astro';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const es = lang === 'es';
+const t = es
+  ? { label: 'Ver la extensión', demo: 'Demo interactiva', video: 'Vídeo · 45 s', videoAlt: 'Vídeo de SEO & GEO Inspector: indexabilidad, bots de IA, fan-out, JavaScript, Core Web Vitals, volúmenes en Google y Trends', note: 'Vídeo sin voz, con capturas reales de la extensión.' }
+  : { label: 'See the extension', demo: 'Interactive demo', video: 'Video · 45 s', videoAlt: 'SEO & GEO Inspector video: indexability, AI bots, fan-out, JavaScript, Core Web Vitals, volumes on Google and Trends', note: 'No voiceover, real captures of the extension.' };
+---
+
+<div class="media" data-media>
+  <div class="media-tabs" role="tablist" aria-label={t.label} hidden data-media-tabs>
+    <button type="button" role="tab" id="media-tab-demo" aria-controls="media-panel-demo" aria-selected="true">{t.demo}</button>
+    <button type="button" role="tab" id="media-tab-video" aria-controls="media-panel-video" aria-selected="false" tabindex="-1">
+      <span class="media-play" aria-hidden="true"></span>{t.video}
+    </button>
+  </div>
+  <div id="media-panel-demo" role="tabpanel" aria-labelledby="media-tab-demo">
+    <PopupDemo lang={lang} />
+  </div>
+  <div id="media-panel-video" role="tabpanel" aria-labelledby="media-tab-video" class="media-video" data-media-video>
+    <video controls playsinline preload="none" poster="/video/seo-geo-inspector-poster.jpg" aria-label={t.videoAlt} width="1920" height="1080">
+      <source src="/video/seo-geo-inspector.mp4" type="video/mp4" />
+    </video>
+    <p class="media-note">{t.note}</p>
+  </div>
+</div>
+
+<script>
+  // Pestañas demo / vídeo: con JavaScript se enseña una cada vez; al volver a la demo, el vídeo se pausa
+  for (const media of document.querySelectorAll<HTMLElement>('[data-media]')) {
+    // Solo las dos pestañas de aquí: la demo del popup tiene las suyas dentro
+    const tabs = [...media.querySelectorAll<HTMLButtonElement>('[data-media-tabs] [role="tab"]')];
+    const panels = tabs.map((tab) => document.getElementById(tab.getAttribute('aria-controls') ?? '')!);
+    const video = media.querySelector('video');
+    media.querySelector<HTMLElement>('[data-media-tabs]')!.hidden = false;
+    const select = (index: number, focus = false) => {
+      tabs.forEach((tab, position) => {
+        const active = position === index;
+        tab.setAttribute('aria-selected', String(active));
+        tab.tabIndex = active ? 0 : -1;
+        panels[position].hidden = !active;
+      });
+      if (index === 1) void video?.play().catch(() => {});
+      else video?.pause();
+      if (focus) tabs[index].focus();
+    };
+    select(0);
+    tabs.forEach((tab, index) => {
+      tab.addEventListener('click', () => select(index));
+      tab.addEventListener('keydown', (event) => {
+        if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft') return;
+        event.preventDefault();
+        select(index === 0 ? 1 : 0, true);
+      });
+    });
+  }
+</script>
+
+<style>
+  .media {
+    width: 100%;
+    max-width: 34rem;
+    margin-inline: auto;
+  }
+  .media-tabs {
+    display: flex;
+    gap: 0.3rem;
+    width: fit-content;
+    margin: 0 auto 1.1rem;
+    padding: 0.3rem;
+    border-radius: 999px;
+    background: rgb(20 51 63 / 0.07);
+  }
+  .media-tabs[hidden] {
+    display: none;
+  }
+  .media-tabs button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    color: var(--tone-muted);
+    font: inherit;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition:
+      background-color 180ms cubic-bezier(0.16, 1, 0.3, 1),
+      color 180ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .media-tabs button:hover {
+    color: var(--tone-ink);
+  }
+  .media-tabs button[aria-selected='true'] {
+    background: var(--tone-ink);
+    color: #fff;
+  }
+  .media-tabs button:focus-visible {
+    outline: 2px solid var(--tone-accent);
+    outline-offset: 2px;
+  }
+  .media-play {
+    width: 0;
+    height: 0;
+    border-left: 0.5rem solid currentColor;
+    border-top: 0.32rem solid transparent;
+    border-bottom: 0.32rem solid transparent;
+  }
+  [role='tabpanel'][hidden] {
+    display: none;
+  }
+  .media-video {
+    margin-top: 1.5rem;
+  }
+  .media-tabs:not([hidden]) ~ .media-video {
+    margin-top: 0;
+  }
+  .media-video video {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    border-radius: 0.9rem;
+    background: #14333f;
+    box-shadow:
+      0 40px 80px -36px rgb(20 51 63 / 0.6),
+      0 12px 24px -16px rgb(20 51 63 / 0.3);
+  }
+  .media-note {
+    margin-top: 0.9rem;
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--tone-muted);
+  }
+</style>

@@ -9,7 +9,7 @@ import Base from '../../layouts/Base.astro';
 import Cta from '../Cta.astro';
 import AuthorByline from '../AuthorByline.astro';
 import BrowserScene from './BrowserScene.astro';
-import PopupDemo from './PopupDemo.astro';
+import HeroMedia from './HeroMedia.astro';
 import FaqAccordion from '../service/FaqAccordion.astro';
 import type { Lang } from '../../i18n/ui';
 import {
@@ -48,7 +48,7 @@ const t = es
       meta: 'Extensión de Chrome',
       lede: 'Mira cualquier URL como la ven Googlebot y los bots de IA: qué la bloquea y en qué línea del robots.txt, qué cambia el JavaScript y por qué no es indexable.',
       install: 'Añadir a Chrome, es gratis',
-      soon: 'Muy pronto en la Chrome Web Store',
+      soon: 'En revisión en la Chrome Web Store',
       meanwhile: 'Mientras tanto, las herramientas web',
       facts: 'Gratis · Sin registro · La extensión no lleva analítica · Español e inglés',
       uniqueLabel: 'Lo que la hace distinta',
@@ -91,7 +91,7 @@ const t = es
       meta: 'Chrome extension',
       lede: 'See any URL the way Googlebot and AI bots see it: what blocks it and on which robots.txt line, what JavaScript changes and why it isn’t indexable.',
       install: 'Add to Chrome, it’s free',
-      soon: 'Coming soon to the Chrome Web Store',
+      soon: 'In review on the Chrome Web Store',
       meanwhile: 'Meanwhile, the web tools',
       facts: 'Free · No sign-up · The extension has no analytics · English and Spanish',
       uniqueLabel: 'What sets it apart',
@@ -152,7 +152,7 @@ const faq = es
       {
         question: '¿Cuándo estará en la Chrome Web Store?',
         answer:
-          'La estoy preparando para publicarla. Cuando salga, el botón de arriba llevará a la ficha. Mientras tanto, el tester de robots.txt, el comprobador de bots y el de redirecciones funcionan como herramientas web.',
+          'Ya está enviada a revisión en la Chrome Web Store. Cuando Google la apruebe, el botón de arriba llevará a la ficha. Mientras tanto, el tester de robots.txt, el comprobador de bots y el de redirecciones funcionan como herramientas web.',
       },
     ]
   : [
@@ -179,7 +179,7 @@ const faq = es
       {
         question: 'When will it be on the Chrome Web Store?',
         answer:
-          'I’m getting it ready to publish. Once it’s out, the button above will link to the listing. In the meantime, the robots.txt tester, the bot access checker and the redirect checker work as web tools.',
+          'It’s already submitted for review on the Chrome Web Store. Once Google approves it, the button above will link to the listing. In the meantime, the robots.txt tester, the bot access checker and the redirect checker work as web tools.',
       },
     ];
 
@@ -200,6 +200,21 @@ const softwareApplication = {
   screenshot: screenshots,
   author: { '@id': 'https://nachomascort.com/#person' },
   ...(EXTENSION_STORE_URL ? { downloadUrl: EXTENSION_STORE_URL, installUrl: EXTENSION_STORE_URL } : {}),
+};
+
+// Vídeo de lanzamiento (45 s, sin voz, rótulos en inglés)
+const videoObject = {
+  '@type': 'VideoObject',
+  name: 'SEO & GEO Inspector: SEO and GEO for any page, in one click',
+  description: es
+    ? 'Qué hace la extensión de Chrome SEO & GEO Inspector: indexabilidad, robots.txt con el parser de Google, bots de IA, fan-out, JavaScript, Core Web Vitals y volúmenes en Google y Trends.'
+    : 'What the SEO & GEO Inspector Chrome extension does: indexability, robots.txt with Google’s parser, AI bots, fan-out, JavaScript, Core Web Vitals and volumes on Google and Trends.',
+  thumbnailUrl: 'https://nachomascort.com/video/seo-geo-inspector-poster.jpg',
+  contentUrl: 'https://nachomascort.com/video/seo-geo-inspector.mp4',
+  uploadDate: '2026-10-13T12:00:00+02:00',
+  duration: 'PT45S',
+  inLanguage: 'en',
+  author: { '@id': 'https://nachomascort.com/#person' },
 };
 
 const [indexability, ...gallery] = copy.diagnostics;
@@ -262,7 +277,7 @@ const slug = (text: string) =>
     { name: t.crumbs[2], path: paths.landing },
   ]}
   faq={faq}
-  extraSchemaNodes={[softwareApplication]}
+  extraSchemaNodes={[softwareApplication, videoObject]}
 >
   <!-- Cabecera: la promesa a un lado y la extensión de verdad al otro, para probarla sin instalar nada -->
   <div class="ext-hero mx-auto max-w-6xl px-5 pt-14 sm:px-6 sm:pt-20">
@@ -285,7 +300,7 @@ const slug = (text: string) =>
       <p class="meta mt-6">{t.facts}</p>
     </div>
     <div class="ext-hero-demo" id="resumen">
-      <PopupDemo lang={lang} />
+      <HeroMedia lang={lang} />
     </div>
   </div>
 

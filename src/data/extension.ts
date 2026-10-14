@@ -93,6 +93,7 @@ export const extensionLanding: Record<Lang, ExtensionLandingCopy> = {
           { name: 'Schema legible', detail: 'Cada entidad en árbol, para copiar.', section: 'schema' },
           { name: 'Metadatos y headings', detail: 'Title, description, Open Graph y H1 a H6.' },
           { name: 'Enlaces', detail: 'Tabla completa, rel y CSV.', section: 'enlaces' },
+          { name: 'Boilerplate por tipo de página', detail: 'Qué se repite y qué % es contenido único.' },
         ],
       },
       {
@@ -237,6 +238,7 @@ export const extensionLanding: Record<Lang, ExtensionLandingCopy> = {
     basics: [
       { title: 'Metadatos completos', detail: 'Title y description con su longitud, canonical, robots, Open Graph, Twitter e idioma.' },
       { title: 'Headings anidados', detail: 'De H1 a H6 con sangría, con avisos de saltos de nivel, vacíos y ocultos.' },
+      { title: 'Boilerplate por tipo de página', detail: 'Pega URLs del mismo tipo (o deja que sugiera las de la página) y marca qué zonas se repiten como plantilla y qué % de cada página es contenido único, bloque a bloque y exportable a CSV.' },
     ],
     changelog: [{ version: '0.1.0', date: '12 de octubre de 2026', notes: 'Primera versión: todo lo de esta página.' }],
   },
@@ -267,6 +269,7 @@ export const extensionLanding: Record<Lang, ExtensionLandingCopy> = {
           { name: 'Readable schema', detail: 'Every entity as a tree, ready to copy.', section: 'schema' },
           { name: 'Metadata and headings', detail: 'Title, description, Open Graph and H1 to H6.' },
           { name: 'Links', detail: 'Full table, rel and CSV.', section: 'enlaces' },
+          { name: 'Boilerplate by page type', detail: 'What repeats and what % is unique content.' },
         ],
       },
       {
@@ -393,6 +396,7 @@ export const extensionLanding: Record<Lang, ExtensionLandingCopy> = {
     basics: [
       { title: 'Full metadata', detail: 'Title and description with their length, canonical, robots, Open Graph, Twitter and language.' },
       { title: 'Nested headings', detail: 'H1 to H6, indented, with warnings for skipped levels, empty and hidden headings.' },
+      { title: 'Boilerplate by page type', detail: 'Paste URLs of the same type (or let it suggest them from the page) and it marks which zones repeat as template and what % of each page is unique content, block by block and exportable to CSV.' },
     ],
     changelog: [{ version: '0.1.0', date: 'October 12, 2026', notes: 'First version: everything on this page.' }],
   },

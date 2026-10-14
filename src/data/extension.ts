@@ -240,7 +240,10 @@ export const extensionLanding: Record<Lang, ExtensionLandingCopy> = {
       { title: 'Headings anidados', detail: 'De H1 a H6 con sangría, con avisos de saltos de nivel, vacíos y ocultos.' },
       { title: 'Boilerplate por tipo de página', detail: 'Pega URLs del mismo tipo (o deja que sugiera las de la página) y marca qué zonas se repiten como plantilla y qué % de cada página es contenido único, bloque a bloque y exportable a CSV.' },
     ],
-    changelog: [{ version: '0.1.0', date: '12 de octubre de 2026', notes: 'Primera versión: todo lo de esta página.' }],
+    changelog: [
+      { version: '0.2.0', date: '14 de octubre de 2026', notes: 'Boilerplate por tipo de página: qué zonas se repiten como plantilla y qué % de cada página es contenido único.' },
+      { version: '0.1.0', date: '12 de octubre de 2026', notes: 'Primera versión.' },
+    ],
   },
   en: {
     overview: [
@@ -398,7 +401,10 @@ export const extensionLanding: Record<Lang, ExtensionLandingCopy> = {
       { title: 'Nested headings', detail: 'H1 to H6, indented, with warnings for skipped levels, empty and hidden headings.' },
       { title: 'Boilerplate by page type', detail: 'Paste URLs of the same type (or let it suggest them from the page) and it marks which zones repeat as template and what % of each page is unique content, block by block and exportable to CSV.' },
     ],
-    changelog: [{ version: '0.1.0', date: 'October 12, 2026', notes: 'First version: everything on this page.' }],
+    changelog: [
+      { version: '0.2.0', date: 'October 14, 2026', notes: 'Boilerplate by page type: which zones repeat as template and what % of each page is unique content.' },
+      { version: '0.1.0', date: 'October 12, 2026', notes: 'First version.' },
+    ],
   },
 };
 

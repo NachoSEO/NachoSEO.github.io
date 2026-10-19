@@ -5,6 +5,7 @@ lang: es
 translationKey: google-quality
 slug: quality-google-core-updates
 pubDate: 2026-10-03
+updatedDate: 2026-10-19
 cover: ./cover.png
 tags: ['quality', 'core updates', 'google']
 citations:
@@ -117,6 +118,11 @@ citations:
     url: 'https://patents.google.com/patent/US11354342B2/en'
     author: 'Victor Carbune, Pedro Gonnet Anders'
     publisher: 'Google Patents'
+  - title: 'How Google May Understand Unique Content'
+    url: 'https://www.searchenginejournal.com/how-google-may-understand-unique-content/581959/'
+    author: 'Harry Clarkson-Bennett'
+    publisher: 'Search Engine Journal'
+    date: '2026-07-15'
   - title: '74% of New Webpages Include AI Content (Study of 900k Pages)'
     url: 'https://ahrefs.com/blog/what-percentage-of-new-content-is-ai-generated'
     publisher: 'Ahrefs'
@@ -187,9 +193,11 @@ En una web grande, effort se traduce en preguntas incómodas. ¿Cuántas de tus 
 
 > The extent to which the content offers unique, original content that is not available on other websites. If other websites have similar content, consider whether the page is the original source.
 
-La segunda frase es la que importa. Si tu contenido existe en otras 50 webs, la pregunta pasa a ser quién lo publicó primero.
+La segunda frase es la que importa. Si tu contenido existe en otras 50 webs, la pregunta pasa a ser quién lo publicó primero. En Barcelona lo resumieron con otra pregunta: si algo parecido ya existe, ¿estás aportando más valor?
 
-Google tiene una patente que le da vueltas a esto, la de [information gain](https://patents.google.com/patent/US11354342B2/en): puntúa cuánta información nueva aporta un documento respecto a lo que el usuario ya ha visto y reordena los resultados en base a eso. En el leak también hay un `OriginalContentScore`, aunque solo aparece en páginas con poco contenido.
+Google tiene una patente que le da vueltas a esto, la de [information gain](https://patents.google.com/patent/US11354342B2/en), concedida en 2022: puntúa cuánta información nueva aporta un documento respecto a lo que el usuario ya ha visto y, con esa nota, puede reordenar los siguientes resultados. Una patente protege una idea y no demuestra que esté en uso, como recuerda [Harry Clarkson-Bennett en Search Engine Journal](https://www.searchenginejournal.com/how-google-may-understand-unique-content/581959/).
+
+En el leak también hay un [`OriginalContentScore`](https://google-api-content-warehouse.hexdocs.pm/0.4.0/GoogleApi.ContentWarehouse.V1.Model.PerDocData.html) que va de 0 a 512, pero solo aparece en páginas con poco contenido. En un ecommerce eso apunta a fichas cortas y listados, aunque esto ya es una lectura mía.
 
 Si copias o reescribes lo que ya hay, el sistema no tiene ningún motivo para enseñarte a ti. Ya lo decía en el post de [thin content](/blog/que-es-thin-content/): copiar es Pandazo. Ahora el listón está en aportar algo que no tenga nadie más.
 

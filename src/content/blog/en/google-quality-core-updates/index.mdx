@@ -5,6 +5,7 @@ lang: en
 translationKey: google-quality
 slug: google-quality-core-updates
 pubDate: 2026-10-03
+updatedDate: 2026-10-19
 cover: ./cover.png
 tags: ['quality', 'core updates', 'google']
 citations:
@@ -117,6 +118,11 @@ citations:
     url: 'https://patents.google.com/patent/US11354342B2/en'
     author: 'Victor Carbune, Pedro Gonnet Anders'
     publisher: 'Google Patents'
+  - title: 'How Google May Understand Unique Content'
+    url: 'https://www.searchenginejournal.com/how-google-may-understand-unique-content/581959/'
+    author: 'Harry Clarkson-Bennett'
+    publisher: 'Search Engine Journal'
+    date: '2026-07-15'
   - title: '74% of New Webpages Include AI Content (Study of 900k Pages)'
     url: 'https://ahrefs.com/blog/what-percentage-of-new-content-is-ai-generated'
     publisher: 'Ahrefs'
@@ -187,9 +193,11 @@ On a big site, effort turns into uncomfortable questions. How many of your pages
 
 > The extent to which the content offers unique, original content that is not available on other websites. If other websites have similar content, consider whether the page is the original source.
 
-The second sentence is the one that matters. If your content exists on 50 other sites, the question becomes who published it first.
+The second sentence is the one that matters. If your content exists on 50 other sites, the question becomes who published it first. In Barcelona they put it as another question: if something similar already exists, are you adding more value?
 
-Google has a patent that circles this idea, the one on [information gain](https://patents.google.com/patent/US11354342B2/en): it scores how much new information a document adds compared to what the user has already seen and reorders the results based on that. The leak also has an `OriginalContentScore`, although it only shows up on pages with little content.
+Google has a patent that circles this idea, the one on [information gain](https://patents.google.com/patent/US11354342B2/en), granted in 2022: it scores how much new information a document adds compared to what the user has already seen and can use that score to reorder the next results. A patent protects an idea and doesn't prove it's in use, as [Harry Clarkson-Bennett points out in Search Engine Journal](https://www.searchenginejournal.com/how-google-may-understand-unique-content/581959/).
+
+The leak also has an [`OriginalContentScore`](https://google-api-content-warehouse.hexdocs.pm/0.4.0/GoogleApi.ContentWarehouse.V1.Model.PerDocData.html) that ranges from 0 to 512, but it only shows up on pages with little content. On an ecommerce site that points to thin product pages and listings, although that part is my own reading.
 
 If you copy or rewrite what's already out there, the system has no reason to show you. I said it in the post on [thin content](/blog/que-es-thin-content/) (in Spanish): copying is how you get hit by Panda. Now the bar is contributing something nobody else has.
 

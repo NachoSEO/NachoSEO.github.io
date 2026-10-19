@@ -120,7 +120,8 @@ export const guideParts: GuidePart[] = [
             number: 8,
             title: 'GEO en webs grandes: plantillas y escala',
             summary: 'Cómo se trabaja con millones de URLs y no página a página.',
-            status: 'disponible',
+            status: 'reservado',
+            author: { name: 'Fernando Maciá', slug: 'fernando-macia' },
           },
           {
             number: 9,

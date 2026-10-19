@@ -123,6 +123,21 @@ citations:
     author: 'Harry Clarkson-Bennett'
     publisher: 'Search Engine Journal'
     date: '2026-07-15'
+  - title: 'Knowledge-Based Trust: Estimating the Trustworthiness of Web Sources'
+    url: 'https://arxiv.org/abs/1502.03519'
+    author: 'Xin Luna Dong et al.'
+    publisher: 'Google (arXiv)'
+    date: '2015-02-12'
+  - title: 'US7565358B2: Agent rank'
+    url: 'https://patents.google.com/patent/US7565358B2/en'
+    author: 'David Minogue, Paul A. Tucker'
+    publisher: 'Google Patents'
+    date: '2009-07-21'
+  - title: 'US11275895B1: Generating author vectors'
+    url: 'https://patents.google.com/patent/US11275895B1/en'
+    author: 'Brian Patrick Strope, Quoc V. Le'
+    publisher: 'Google Patents'
+    date: '2022-03-15'
   - title: '74% of New Webpages Include AI Content (Study of 900k Pages)'
     url: 'https://ahrefs.com/blog/what-percentage-of-new-content-is-ai-generated'
     publisher: 'Ahrefs'
@@ -207,11 +222,17 @@ If you copy or rewrite what's already out there, the system has no reason to sho
 
 This is the most subjective one. Google's new documentation adds a nuance I like: not all content needs an expert. A personal experience doesn't require credentials. A technical article does require someone who knows the topic.
 
+I haven't found anything that measures talent itself. What exists measures who writes. In the leak, Google stores the author of each document ([`authorObfuscatedGaiaStr`](https://google-api-content-warehouse.hexdocs.pm/0.4.0/GoogleApi.ContentWarehouse.V1.Model.PerDocData.html)), and it has patents to score an author by what they've signed ([Agent Rank](https://patents.google.com/patent/US7565358B2/en), from 2005) or to recognise them by their writing style ([author vectors](https://patents.google.com/patent/US11275895B1/en), from 2022). None of them measures whether someone writes well, and Google has said several times that individual author reputation isn't a ranking factor. What has been in writing since October 1 is the opposite: a made-up author is a low-quality signal.
+
 ### Accuracy
 
 > For informational pages, consider the extent to which the content is factually accurate. For pages on YMYL topics, consider the extent to which the content is accurate and consistent with well-established expert consensus.
 
 In YMYL, besides being correct, you have to be aligned with expert consensus. The October 1 documentation specifically warns about unreviewed AI hallucinations.
+
+The leak has two fields that fit this pillar: [`ymylHealthScore` and `ymylNewsScore`](https://google-api-content-warehouse.hexdocs.pm/0.4.0/GoogleApi.ContentWarehouse.V1.Model.PerDocData.html), the "scores of ymyl health classifier" and its news equivalent. Google classifies each page by whether it touches health or news. The field only says what the page is about, not whether it's right. That this label raises the accuracy bar is my own reading, although it matches what the guidelines ask for in YMYL.
+
+Google Research tried to measure accuracy itself in 2015 with [Knowledge-Based Trust](https://arxiv.org/abs/1502.03519): scoring a source by how many correct facts it contains instead of by its links, tested on 2.8 billion facts and 119 million pages. It's a paper, not a confirmed system, but it shows the idea exists.
 
 ### What about AI?
 

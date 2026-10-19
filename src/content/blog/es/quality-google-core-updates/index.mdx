@@ -123,6 +123,21 @@ citations:
     author: 'Harry Clarkson-Bennett'
     publisher: 'Search Engine Journal'
     date: '2026-07-15'
+  - title: 'Knowledge-Based Trust: Estimating the Trustworthiness of Web Sources'
+    url: 'https://arxiv.org/abs/1502.03519'
+    author: 'Xin Luna Dong et al.'
+    publisher: 'Google (arXiv)'
+    date: '2015-02-12'
+  - title: 'US7565358B2: Agent rank'
+    url: 'https://patents.google.com/patent/US7565358B2/en'
+    author: 'David Minogue, Paul A. Tucker'
+    publisher: 'Google Patents'
+    date: '2009-07-21'
+  - title: 'US11275895B1: Generating author vectors'
+    url: 'https://patents.google.com/patent/US11275895B1/en'
+    author: 'Brian Patrick Strope, Quoc V. Le'
+    publisher: 'Google Patents'
+    date: '2022-03-15'
   - title: '74% of New Webpages Include AI Content (Study of 900k Pages)'
     url: 'https://ahrefs.com/blog/what-percentage-of-new-content-is-ai-generated'
     publisher: 'Ahrefs'
@@ -207,11 +222,17 @@ Si copias o reescribes lo que ya hay, el sistema no tiene ningún motivo para en
 
 Este es el más subjetivo. La documentación nueva de Google añade un matiz que me gusta: no todo el contenido necesita un experto. Una experiencia personal no requiere credenciales. Un artículo técnico sí requiere a alguien que sepa del tema.
 
+No he encontrado nada que mida el talento en sí. Lo que hay mide quién escribe. En el leak, Google guarda el autor de cada documento ([`authorObfuscatedGaiaStr`](https://google-api-content-warehouse.hexdocs.pm/0.4.0/GoogleApi.ContentWarehouse.V1.Model.PerDocData.html)), y tiene patentes para puntuar a un autor por lo que ha firmado ([Agent Rank](https://patents.google.com/patent/US7565358B2/en), de 2005) o para reconocerlo por su forma de escribir ([author vectors](https://patents.google.com/patent/US11275895B1/en), de 2022). Ninguna mide si escribe bien, y Google ha dicho varias veces que la reputación individual del autor no es un factor de ranking. Lo que sí está por escrito desde el 1 de octubre es lo contrario: un autor inventado es señal de baja calidad.
+
 ### Accuracy
 
 > For informational pages, consider the extent to which the content is factually accurate. For pages on YMYL topics, consider the extent to which the content is accurate and consistent with well-established expert consensus.
 
 En YMYL, además de ser correcto, tienes que estar alineado con el consenso de los expertos. La documentación del 1 de octubre avisa en concreto de las alucinaciones de IA sin revisar.
+
+En el leak hay dos campos que encajan con este pilar: [`ymylHealthScore` y `ymylNewsScore`](https://google-api-content-warehouse.hexdocs.pm/0.4.0/GoogleApi.ContentWarehouse.V1.Model.PerDocData.html), los "scores of ymyl health classifier" y de noticias. Google clasifica cada página según si toca salud o noticias. El campo solo dice de qué tema va la página, no si acierta. Que esa etiqueta suba el listón de precisión es una lectura mía, aunque cuadra con lo que piden las guidelines para YMYL.
+
+Medir la precisión en sí lo intentó Google Research en 2015 con [Knowledge-Based Trust](https://arxiv.org/abs/1502.03519): puntuar una fuente por cuántos hechos correctos contiene en vez de por sus enlaces, probado sobre 2.800 millones de hechos y 119 millones de páginas. Es un paper, no un sistema confirmado, pero deja claro que la idea existe.
 
 ### ¿Y la IA?
 

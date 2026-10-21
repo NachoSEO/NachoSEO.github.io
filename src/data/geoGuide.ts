@@ -208,7 +208,7 @@ export const guideParts: GuidePart[] = [
           },
           {
             number: 19,
-            title: 'El GEO en el comité de dirección',
+            title: 'Cómo presentar el GEO a dirección',
             summary: 'Qué reportar a dirección, con qué métricas y cómo pedir inversión.',
             status: 'reservado',
             author: { name: 'Marc Herrera', slug: 'marc-herrera' },

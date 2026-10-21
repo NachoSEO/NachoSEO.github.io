@@ -90,7 +90,8 @@ export const guideParts: GuidePart[] = [
             number: 5,
             title: 'Memoria frente a búsqueda: a quién recomienda la IA',
             summary: 'Por qué la IA nombra a unas marcas y no a otras, y qué lo cambia.',
-            status: 'disponible',
+            status: 'reservado',
+            author: { name: 'Betlem Cardona', slug: 'betlem-cardona' },
           },
           {
             number: 6,
@@ -204,6 +205,13 @@ export const guideParts: GuidePart[] = [
             summary: 'Cómo saber si un cambio funcionó y no fue casualidad.',
             status: 'reservado',
             author: { name: 'Álvaro Peña', slug: 'alvaro-pena' },
+          },
+          {
+            number: 19,
+            title: 'El GEO en el comité de dirección',
+            summary: 'Qué reportar a dirección, con qué métricas y cómo pedir inversión.',
+            status: 'reservado',
+            author: { name: 'Marc Herrera', slug: 'marc-herrera' },
           },
         ],
       },

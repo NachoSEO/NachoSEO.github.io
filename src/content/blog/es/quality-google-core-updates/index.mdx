@@ -5,7 +5,7 @@ lang: es
 translationKey: google-quality
 slug: quality-google-core-updates
 pubDate: 2026-10-03
-updatedDate: 2026-10-19
+updatedDate: 2026-10-22
 cover: ./cover.png
 tags: ['quality', 'core updates', 'google']
 citations:
@@ -78,6 +78,14 @@ citations:
   - title: 'Google Content Warehouse API: QualityNsrPQData'
     url: 'https://google-api-content-warehouse.hexdocs.pm/0.4.0/GoogleApi.ContentWarehouse.V1.Model.QualityNsrPQData.html'
     publisher: 'HexDocs'
+  - title: 'Google Content Warehouse API: QualityNsrNsrData'
+    url: 'https://google-api-content-warehouse.hexdocs.pm/0.4.0/GoogleApi.ContentWarehouse.V1.Model.QualityNsrNsrData.html'
+    publisher: 'HexDocs'
+  - title: 'Site-level AI generated score in the Google docs leak'
+    url: 'https://x.com/seostrategaEN/status/1812137816517697845'
+    author: 'Juan González Villa'
+    publisher: 'X'
+    date: '2024-07-13'
   - title: 'Google Content Warehouse API: CompressedQualitySignals'
     url: 'https://google-api-content-warehouse.hexdocs.pm/0.4.0/GoogleApi.ContentWarehouse.V1.Model.CompressedQualitySignals.html'
     publisher: 'HexDocs'
@@ -239,6 +247,8 @@ Medir la precisión en sí lo intentó Google Research en 2015 con [Knowledge-Ba
 Duy lo dejó claro en la charla: la calidad se juzga igual venga el contenido de una persona o de un modelo. Las guidelines lo dicen con estas palabras en la sección 4.6.6: "the use of Generative AI tools alone does not determine the level of effort or Page Quality rating".
 
 El problema es otro. La IA hace que producir contenido mediocre a escala sea gratis, y eso es exactamente lo que penalizan los cuatro pilares. La documentación nueva añade también la **autoría engañosa**: perfiles de autor inventados, fotos generadas con IA o credenciales falsas son ahora una señal explícita de baja calidad.
+
+Eso no quiere decir que Google no mire si el contenido es automático. Juan González Villa [encontró en el leak](https://x.com/seostrategaEN/status/1812137816517697845) el atributo [`racterScores`](https://google-api-content-warehouse.hexdocs.pm/0.4.0/GoogleApi.ContentWarehouse.V1.Model.QualityNsrNsrData.html), descrito como "Site-level AGC classification score". AGC parece referirse a contenido generado artificial o automáticamente, igual que UGC es el contenido generado por usuarios. Está en `QualityNsrNsrData`, el mismo módulo de señales a nivel de site que `chardEncoded`. El leak no dice qué hace Google con esa puntuación, pero mi lectura es que estima qué parte de un site se produce de forma automática. Encaja con lo anterior: usar IA no te penaliza, pero un site que publica a escala sin que nadie revise lo que sale se puede detectar. Gracias a [Natzir Turrado](https://natzir.com/) por pasármelo.
 
 <LeadMagnet lang="es" source="quality-google-core-updates" id="skill" />
 

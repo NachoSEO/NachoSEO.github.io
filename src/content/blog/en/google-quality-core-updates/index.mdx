@@ -5,7 +5,7 @@ lang: en
 translationKey: google-quality
 slug: google-quality-core-updates
 pubDate: 2026-10-03
-updatedDate: 2026-10-19
+updatedDate: 2026-10-22
 cover: ./cover.png
 tags: ['quality', 'core updates', 'google']
 citations:
@@ -78,6 +78,14 @@ citations:
   - title: 'Google Content Warehouse API: QualityNsrPQData'
     url: 'https://google-api-content-warehouse.hexdocs.pm/0.4.0/GoogleApi.ContentWarehouse.V1.Model.QualityNsrPQData.html'
     publisher: 'HexDocs'
+  - title: 'Google Content Warehouse API: QualityNsrNsrData'
+    url: 'https://google-api-content-warehouse.hexdocs.pm/0.4.0/GoogleApi.ContentWarehouse.V1.Model.QualityNsrNsrData.html'
+    publisher: 'HexDocs'
+  - title: 'Site-level AI generated score in the Google docs leak'
+    url: 'https://x.com/seostrategaEN/status/1812137816517697845'
+    author: 'Juan González Villa'
+    publisher: 'X'
+    date: '2024-07-13'
   - title: 'Google Content Warehouse API: CompressedQualitySignals'
     url: 'https://google-api-content-warehouse.hexdocs.pm/0.4.0/GoogleApi.ContentWarehouse.V1.Model.CompressedQualitySignals.html'
     publisher: 'HexDocs'
@@ -239,6 +247,8 @@ Google Research tried to measure accuracy itself in 2015 with [Knowledge-Based T
 Duy made it clear in the talk: quality is judged the same whether the content comes from a person or a model. The guidelines put it in these words in section 4.6.6: "the use of Generative AI tools alone does not determine the level of effort or Page Quality rating".
 
 The problem is a different one. AI makes producing mediocre content at scale free, and that is exactly what the four pillars penalize. The new documentation also adds **deceptive authorship**: made-up author profiles, AI-generated photos or fake credentials are now an explicit low-quality signal.
+
+That does not mean Google ignores whether content is automated. Juan González Villa [found in the leak](https://x.com/seostrategaEN/status/1812137816517697845) the attribute [`racterScores`](https://google-api-content-warehouse.hexdocs.pm/0.4.0/GoogleApi.ContentWarehouse.V1.Model.QualityNsrNsrData.html), described as "Site-level AGC classification score". AGC seems to stand for artificially or automatically generated content, the same way UGC stands for user-generated content. It sits in `QualityNsrNsrData`, the same module of site-level signals as `chardEncoded`. The leak does not say what Google does with that score, but my reading is that it estimates how much of a site is produced automatically. It fits what came before: using AI does not penalize you, but a site that publishes at scale with nobody reviewing the output can be detected. Thanks to [Natzir Turrado](https://natzir.com/) for flagging it.
 
 <LeadMagnet lang="en" source="google-quality-core-updates" id="skill" />
 

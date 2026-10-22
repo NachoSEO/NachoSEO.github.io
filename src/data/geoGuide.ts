@@ -77,7 +77,8 @@ export const guideParts: GuidePart[] = [
             number: 3,
             title: 'Del documento a la frase: grounding y reranking',
             summary: 'Qué fragmento de una página acaba en la respuesta y por qué.',
-            status: 'disponible',
+            status: 'reservado',
+            author: { name: 'Natzir Turrado', slug: 'natzir-turrado' },
           },
           {
             number: 4,

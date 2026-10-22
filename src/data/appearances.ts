@@ -62,6 +62,12 @@ export const teachingPeriod = (item: (typeof teaching)[number], lang: 'es' | 'en
 
 export const talks: { year: string; event: string; title: Localized; url: string }[] = [
   {
+    year: '2026',
+    event: 'Grupo Inditex',
+    title: { es: 'Formación interna: Quality en Google', en: 'In-house training: quality at Google' },
+    url: 'https://speakerdeck.com/nachomascort/quality-en-google',
+  },
+  {
     year: '2022',
     event: 'DoYouSEO',
     title: {
